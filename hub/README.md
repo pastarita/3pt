@@ -65,6 +65,13 @@ reusable policy **3PT team** (Allow: emails ending in `@factorita.com`, plus the
 Gmail addresses). `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` are set in both Pages environments.
 To add a person: Zero Trust → Access controls → Policies → *3PT team* → add an email. No redeploy.
 
+Login method is **One-time PIN** (code emailed to the address). The team also has a "Cloudflare"
+identity provider, which signs people in with a Cloudflare dashboard account and then fetches their
+account membership; anyone who is not a member of this Cloudflare account gets *"Failed to fetch
+user group information from the identity provider"*. That is what a collaborator sees if they pick
+it, so the 3PT hub app is restricted to One-time PIN. If a PIN never arrives, check spam for
+`noreply@notify.cloudflare.com`; relay aliases do not match the policy.
+
 ```sh
 # to (re)create the app from the API instead of the dashboard — needs an API token with
 # Access: Apps and Policies · Edit + Access: Organizations · Read in ~/.config/3pt/CF_API_TOKEN

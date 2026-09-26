@@ -72,17 +72,21 @@ local, main is live, everything behind a gate).
   glyph/art helper APIs. All leaves read the same model; interactive state lives in
   `localStorage` under one key prefix (e.g. `chx_*`) so a later sync Worker is just another
   reader/writer, not a migration.
-- **Gate** — `functions/_middleware.js`: auth at the edge. Everything — assets included —
-  sits behind it. Three tiers, and the ladder is a real progression, not a preference:
-  **0** Basic auth with the allowlist as an array in the middleware (day zero, and correct
-  there); **1** a managed identity provider (Cloudflare Access / SSO), allowlist in its
-  policy; **2** self-service — magic link over a KV allowlist, with a request-and-approve
-  flow. Graduate to Tier 2 the first time a collaborator is locked out, or the first time
-  someone outside the founding pair needs in: Tiers 0 and 1 have no *request* verb, so the
-  only recourse is a person waiting on you to edit an array. Tier 2 runs *beside* Tier 1
-  (two doors, one room), never instead of it. Delete the `DISABLE_GATE` escape on
-  graduation — once a hostname deliberately sits outside the identity provider, an
-  open-by-default switch is a hole. See `references/collaborator-access.md`.
+- **Gate** — **Cloudflare Access first, One-time PIN always, from day zero.** One self-hosted
+  Access app over `<project>.pages.dev` *and* `*.<project>.pages.dev`, one reusable policy
+  (`<Project> team`: emails-ending-in your domain OR the principals' actual login addresses,
+  consumer Gmail included), and the app restricted to the **One-time PIN** provider. Not the
+  "Cloudflare" provider — it signs in only members of the Cloudflare account and fails every
+  collaborator with *"Failed to fetch user group information"*. The click path, the URL shape,
+  how to read the AUD out of the redirect, and the failure table are in
+  `references/access-runbook.md`; follow it verbatim, by hand or through browser automation.
+  Beside Access, `functions/_middleware.js` **verifies the Access assertion** (signature, issuer,
+  audience, expiry; 503 when keys are unreachable) and keeps Basic auth as the second door for
+  curl and for the day the app is removed — two doors, one room. Everything, assets included,
+  sits behind it. The old Tier 0 (Basic auth alone) is no longer a starting state; it is only
+  ever the second door. Tier 2 (self-service request-and-approve over KV) is the graduation the
+  first time someone outside the policy needs in without you editing it; it runs beside Access,
+  never instead. No `DISABLE_GATE`, ever. See `references/collaborator-access.md`.
 - **Rails** — CI (`.github/workflows/deploy.yml`): deploy `site/` (or repo root) to Cloudflare
   Pages on merge to main; **preview URL per PR**. "The hub is the deploy: if it's on main,
   it's live."

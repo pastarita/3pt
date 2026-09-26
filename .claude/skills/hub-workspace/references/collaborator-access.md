@@ -4,6 +4,13 @@ A hub workspace is gated from day zero. What changes over a project's life is
 not *whether* there is a gate but *who can open it and how they ask*. This is
 the tier ladder for that, and the failure that makes it necessary.
 
+> **Standing rule (2026-09-26): start at Tier 1, not Tier 0.** Cloudflare Access
+> goes on first, with the One-time PIN provider added explicitly and the app
+> restricted to it, and the wildcard preview hostname included. The click path is
+> `access-runbook.md`. Basic auth is only ever the second door beside Access.
+> The reason is the ladder below: Tier 0 exists to be climbed out of, and the
+> climb costs a collaborator's afternoon every time. Skip it.
+
 ## The failure this exists to prevent
 
 Every hub workspace begins with the Gate as one file and the allowlist as a

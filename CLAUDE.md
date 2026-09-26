@@ -35,6 +35,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Goal over time, the interior-design use case, value props, screen-capture onboarding | `docs/06-goal-and-use-case.md` |
 | Theses, hypotheses, the measurement system, partner-incentive mapping, requirement set | `docs/07-assessment-and-measurement.md` |
 | Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `hub/site/direction.html` (hub leaf "Direction") |
+| The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
+| Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `docs/11-design-system.html` (hub leaf "Design system") |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 
@@ -48,6 +50,11 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 - Keep `main` installable. If you break the install loop, fix it before anything else.
 - Two humans (Patrick, Yash) run agents concurrently. Stay inside your lane's directories; if you
   must touch another lane, say so in the commit message.
+- **The tree is three lanes:** `ui/` (surfaces), `harness/` (the pipeline), `infra/` (batteries).
+  Dependency direction is `apps → packages → @3pt/core`; stages never import batteries; surfaces
+  reach the harness only over HTTP. Adding anything follows a recipe in `docs/10-architecture.md` §5.
+  `pnpm turbo run build` must stay green; `make check` is what CI will run.
+- Atlas collection names live in `COLLECTIONS` (`harness/packages/core`) and nowhere else.
 - **Provenance.** When a doc section or a piece of code implements something said in the brainstorm,
   cite the segment in a comment (`<!-- @s1.28 -->`, `// @s1.28`); ids are in `docs/provenance-index.md`.
   Never edit the spoken text in `brainstorming.md`; add or enrich the `<!-- sN.NN -->` markers instead.
@@ -96,3 +103,11 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   policy "3PT team" allows `@factorita.com` plus kothariwork@gmail.com and patrickastarita@gmail.com.
   `ACCESS_TEAM_DOMAIN` + `ACCESS_AUD` set in both Pages environments; middleware verifies the
   assertion. Verified: anon, forged header, and preview all 302 to Access. Add people in the policy.
+- 2026-09-26 13:40 ET: Yash hit "Failed to fetch user group information" because the team's only
+  identity provider was "Cloudflare" (account members only). Added the One-time PIN provider and
+  restricted the 3PT hub app to it, instant authentication on. Standing rule now in the skill
+  (`.claude/skills/hub-workspace/references/access-runbook.md`): Access first, PIN always.
+- 2026-09-26 13:40 ET: monorepo skeleton landed. `ui/ harness/ infra/` with Turborepo + pnpm; 17
+  workspaces build, `3pt loop` runs one iteration against the memory store (policy v0 → v1, cp/1),
+  `3PT.app` builds ad hoc via xcodegen. `docs/10-architecture.md` + hub leaf `architecture.html`.
+  Still open: Atlas driver in the atlas battery, Sandbox cluster, worker deploy, web inspector host.

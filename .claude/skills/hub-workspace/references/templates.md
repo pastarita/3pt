@@ -21,10 +21,16 @@ repo/
 └── .gitignore               # .dev.vars, *.env, .wrangler/, node_modules/
 ```
 
-1. `wrangler pages project create <project>` · 2. write Gate + set secret
-(`wrangler pages secret put ACCESS_PASS`) · 3. hub + Shell + one leaf · 4. deploy from the
-functions dir · 5. three-way curl (anon 401 / valid 200 / wrong-domain 401) · 6. Actions
-secrets → CI green · 7. AGENTS.md records all of it.
+1. `wrangler pages project create <project>` (needs a staged dir to exist first) · 2. **Cloudflare
+Access app + `<Project> team` policy + One-time PIN provider, restricted to PIN** — the click
+path is `references/access-runbook.md`, do it before writing a leaf · 3. read
+`ACCESS_TEAM_DOMAIN` + `ACCESS_AUD` from the app's redirect (`kid=`), `wrangler pages secret put`
+both in production *and* `--env preview`, plus `ACCESS_PASS` for the second door · 4. Gate that
+verifies the assertion (crib the 3PT hub's `functions/_middleware.js`) · 5. hub + Shell + one
+leaf · 6. deploy from the dir containing `functions/` · 7. verify: anon 302 → team domain,
+forged header 302, preview 302 · 8. **the non-owner collaborator signs in with a PIN** · 9.
+Actions secrets → CI green · 10. AGENTS.md records all of it, including the team domain and
+policy name.
 
 ## Leaf skeleton
 
@@ -188,10 +194,17 @@ Two more hard-won Shell rules:
 
 ## Gate — functions/_middleware.js
 
+**Access fronts the hostnames; this file verifies the assertion Access attaches and keeps the
+Basic door beside it.** The full two-door verifier (RS256 against the team certs, pinned `kid`,
+`iss`/`aud`/`exp`, 503 on unreachable keys, no `DISABLE_GATE`) is
+`~/Documents/Code/3pt_dev/3pt/hub/functions/_middleware.js` — copy it whole. The Basic-only
+skeleton below is the *second door* on its own, kept for reference; it is not a day-zero gate
+any more.
+
 ```js
 export async function onRequest(ctx){
   const { request, env, next } = ctx;
-  if (env.DISABLE_GATE === '1') return next();          // Cloudflare Access upgrade path
+  // no DISABLE_GATE — see SKILL.md → Gate
   const auth = request.headers.get('Authorization') || '';
   if (auth.startsWith('Basic ')) {
     const [user, pass] = atob(auth.slice(6)).split(':');
