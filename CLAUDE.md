@@ -52,6 +52,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
 | Open-sourcing and submission due diligence: admissibility, hygiene, the package, each row with a status | `docs/15-open-source-checklist.md` |
 | Submission: what the platform asks, the filming tool, artifacts, claims with evidence, priority order to 5 PM | `docs/18-submission.md` |
+| The technical interview: use case → three points → expand, why Atlas, what is real, questions; the canvas to drive | `docs/23-interview-talking-points.md` (hub leaf `canvas.html`) |
 
 ## Working rules for agents in this repo
 

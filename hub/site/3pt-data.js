@@ -88,6 +88,8 @@
       epigram:'Segment markers in the transcript, @cites everywhere else, one tool that refuses broken pointers.' },
     { id:'DR', slug:'charter',        name:'README',               verb:'Entering',  cluster:'orient', temp:'hot',  doc:'README.md',
       epigram:'The front door: what 3PT is and is not, who it serves, sixty seconds for the judges, built · due · simulated, the loop, the lanes, the lineage. Four generated figures.' },
+    { id:'DH', slug:'talking-points', name:'Talking points',      verb:'Speaking',  cluster:'build',  temp:'hot',  doc:'docs/23-interview-talking-points.md',
+      epigram:'The technical interview in order: use case, the three points, expand; why it centres on MongoDB; what is real today; the canvas path.' },
     { id:'DY', slug:'the-cut',        name:'The cut',              verb:'Ranking',   cluster:'orient', temp:'hot',  doc:'docs/21-the-cut.md',
       epigram:'Every hub asset ranked for the room; twelve doors in four beats; the tree as one figure; the same fact carried twice, and its typed source.' },
   ];

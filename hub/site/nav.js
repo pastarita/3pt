@@ -63,6 +63,8 @@
     'ci':             g('<path d="M4 6h6v6H4ZM14 6h6v6h-6ZM9 15h6v6H9Z"/><path d="M10 9h4M7 12v3h5M17 12v3h-5"/><circle cx="12" cy="18" r="1" fill="currentColor"/>'),
     'sim':            g('<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5Z"/>'),
     'view':           g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>'),
+    'canvas':         g('<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 11h8M11 4v14M11 11h10"/><circle cx="7" cy="7.5" r="1.2" fill="currentColor"/>'),
+    'talking-points': g('<path d="M4 5h16v10H9l-5 4z"/><circle cx="8.5" cy="10" r="1.1" fill="currentColor"/><circle cx="12" cy="10" r="1.1" fill="currentColor"/><circle cx="15.5" cy="10" r="1.1" fill="currentColor"/>'),
     'the-cut':        g('<path d="M4 6h16M4 12h11M4 18h7"/><path d="M17 15l2 2 3-3"/><circle cx="20" cy="6" r="1.4" fill="currentColor"/>'),
     'fold':           g('<path d="M7 3h8l4 4v6"/><path d="M15 3v4h4"/><path d="M5 9h8l3 3v9H5Z"/><path d="M8 15h6M8 18h4"/>')
   };
@@ -82,11 +84,11 @@
   ['vision','goal','rules','checklist','submission'].forEach(function(k){ GLYPH[k+'-doc'] = GLYPH[k]; });
 
   var GROUPS = [
-    ['',       [['index','Hub'], ['results','Results']]],   /* Results rides at the top: the judges' first stop after the hub */
+    ['',       [['index','Hub'], ['canvas','Canvas'], ['results','Results']]],   /* Canvas: every surface on one board, the screen to drive while talking */   /* Results rides at the top: the judges' first stop after the hub */
     ['orient', [['charter','README','DR'], ['the-cut','Start here','DY'], ['vision','Vision'], ['goal','Goal'], ['use-case','Use case'], ['rules','Rules & judging'], ['checklist','Open-source checklist'], ['submission','Submission'],
                 ['vision-doc','Vision doc','D0'], ['goal-doc','Goal doc','D6'], ['rules-doc','Rules doc','D5'], ['checklist-doc','Checklist doc','DL'], ['submission-doc','Submission doc','DU']]],
     ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['design-spec','Design system spec','DK'], ['sketches','Sketch gallery'], ['icons','Icons'], ['components','Components'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
-    ['build', [['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['how-it-works','How it works'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['system-map','System map','DE'], ['system-ladder','System ladder','DF'], ['strands-journey','Strands, answered'], ['strands-questions','Strands questions','DJ'], ['resources','Resources & credits','D4']]],
+    ['build', [['talking-points','Talking points','DH'], ['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['how-it-works','How it works'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['system-map','System map','DE'], ['system-ladder','System ladder','DF'], ['strands-journey','Strands, answered'], ['strands-questions','Strands questions','DJ'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG']]]
   ];
   /* ROUTE: slugs that are not their own .html file. Documents route through the Viewer. */
@@ -117,6 +119,7 @@
     'glossary':       'view.html?f=docs/glossary.md',
     'charter':        'view.html?f=README.md',
     'the-cut':        'view.html?f=docs/21-the-cut.md',
+    'talking-points': 'view.html?f=docs/23-interview-talking-points.md',
     'provenance':     'view.html?f=docs/09-provenance.md'
   };
   /* PUBLISHED: every surface of this project that exists outside the repo, with its state. AUTHORED;

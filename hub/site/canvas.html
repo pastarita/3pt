@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Canvas</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+  .bar button,.bar label{font:600 12px/1 var(--mono);letter-spacing:.04em;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 11px;cursor:pointer}
+  .bar button:hover{border-color:var(--line-strong)}
+  .bar .step{font:600 12px/1.3 var(--mono);color:var(--soft);padding:0 6px}
+  .bar .step b{color:var(--ink)}
+  .bar input[type=search]{font:13px var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:180px}
+  .bar .sp{flex:1}
+  figure.board{margin:12px 0 0}
+  .vp{position:relative;height:min(74vh,820px);overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);cursor:grab;touch-action:none;
+      background-image:radial-gradient(circle,var(--line) 1px,transparent 1.2px);background-size:24px 24px}
+  .vp.drag{cursor:grabbing}
+  .world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;display:flex;gap:56px;padding:40px}
+  .col{display:flex;flex-direction:column;gap:18px;min-width:340px}
+  .col>h3{margin:0 0 4px;font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;gap:8px;align-items:center}
+  .col>h3 i{width:8px;height:8px;border-radius:50%;background:var(--faint)}
+  .col[data-cluster=orient]>h3 i{background:var(--plan)}.col[data-cluster=decide]>h3 i{background:var(--cyan,#3aa6d9)}.col[data-cluster=build]>h3 i{background:var(--build)}.col[data-cluster=record]>h3 i{background:var(--instrument)}
+  .tile{width:340px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+  .tile:hover{border-color:var(--line-strong)}
+  .tile.on{border-color:var(--flag);box-shadow:0 0 0 3px color-mix(in srgb,var(--flag) 28%,transparent)}
+  .tile.dim{opacity:.28}
+  .tile .hd{display:flex;gap:9px;align-items:center;padding:9px 11px;border-bottom:1px solid var(--line)}
+  .tile .hd svg{width:20px;height:20px;color:var(--ink);flex:none}
+  .tile .hd b{font:600 13px/1.2 var(--sans);color:var(--ink);flex:1}
+  .tile .hd small{font:600 10px/1 var(--mono);letter-spacing:.08em;color:var(--faint)}
+  .tile .hd .n{font:700 10px/1 var(--mono);color:var(--flag);min-width:14px;text-align:right}
+  .tile .th{position:relative;height:212px;background:var(--bg);overflow:hidden}
+  .tile .th iframe{position:absolute;left:0;top:0;width:1360px;height:848px;transform:scale(.25);transform-origin:0 0;border:0;pointer-events:none;background:var(--bg)}
+  .tile .th .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--faint)}
+  .tile .th .ph svg{width:64px;height:64px;opacity:.5}
+  .tile .th a.go{position:absolute;inset:0;display:block}
+  .tile .ft{display:flex;gap:8px;align-items:center;padding:7px 11px;font:11.5px/1.3 var(--sans);color:var(--soft)}
+  .tile .ft .sp{flex:1}
+  .tile .ft button{font:600 11px/1 var(--mono);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 8px;cursor:pointer}
+  .peek{position:fixed;inset:0;background:color-mix(in srgb,var(--bg) 82%,transparent);display:none;z-index:60;padding:28px}
+  .peek.open{display:grid;grid-template-rows:auto 1fr}
+  .peek .ph{display:flex;gap:10px;align-items:center;color:var(--ink);font:600 14px var(--sans);padding:0 0 10px}
+  .peek .ph a,.peek .ph button{font:600 12px/1 var(--mono);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 11px;cursor:pointer;text-decoration:none}
+  .peek iframe{width:100%;height:100%;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font:12px/1.4 var(--sans);color:var(--soft)}
+  .legend .pv{margin-right:4px}
+  @media(max-width:700px){.vp{height:70vh}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Orient · hot · navigation utility · the board to drive while talking</p>
+    <h1>Canvas: every surface of the hub on one board</h1>
+    <p class="lede">Live thumbnails of every leaf and document, grouped by cluster. Drag to pan, wheel to zoom, follow the numbered path through the talk.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Canvas controls">
+    <button id="fit" title="Fit all (F)">Fit</button>
+    <button id="zin" title="Zoom in (+)">+</button>
+    <button id="zout" title="Zoom out (−)">−</button>
+    <label><input type="checkbox" id="live" checked> live thumbnails</label>
+    <input type="search" id="q" placeholder="filter surfaces…" aria-label="Filter surfaces">
+    <span class="sp"></span>
+    <button id="prev" title="Previous step (←)">← Prev</button>
+    <span class="step" id="step">path · <b>press Next</b></span>
+    <button id="next" title="Next step (→)">Next →</button>
+  </div>
+
+  <figure class="board">
+    <div class="vp" id="vp"><div class="world" id="world"></div></div>
+    <figcaption class="legend">
+      <span><span class="pv d">DERIVED</span><span id="tally">—</span></span>
+      <span><span class="pv a">AUTHORED</span>the path: use case → the three points → expand (<code>docs/23</code> §8)</span>
+      <span>Click a thumbnail to open it · <b>peek</b> previews it here · keys: ← → step, + − zoom, F fit</span>
+    </figcaption>
+  </figure>
+</div>
+
+<div class="peek" id="peek" aria-hidden="true">
+  <div class="ph"><span id="pk-name"></span><span class="sp" style="flex:1"></span><a id="pk-open" href="#">open →</a><button id="pk-close">close</button></div>
+  <iframe id="pk-frame" title="preview"></iframe>
+</div>
+
+<script>
+(function(){
+  var N = globalThis.TPTNAV; if (!N) return;
+  /* the path (AUTHORED): beat 1 the use case, beat 2 the three points, beat 3 expand. Slugs not registered are skipped. */
+  var PATH = [
+    ['1 · Use case',        ['use-case','app','results','sim']],
+    ['2 · The three points',['how-it-works','architecture','charter']],
+    ['3 · Expand',          ['design-system','strands-journey','timeline','lanes','submission']]
+  ];
+  var CLUSTER_NAME = { '':'hub', orient:'orient', decide:'decide', build:'build', record:'record' };
+  var world = document.getElementById('world'), vp = document.getElementById('vp');
+  var tiles = {}, order = [], registered = {};
+
+  /* ---------- build the board from GROUPS (one Register, never retyped) ---------- */
+  N.GROUPS.forEach(function(gr){
+    var col = document.createElement('div'); col.className = 'col'; col.setAttribute('data-cluster', gr[0]);
+    col.innerHTML = '<h3><i></i>' + CLUSTER_NAME[gr[0]] + '</h3>';
+    gr[1].forEach(function(p){
+      var slug = p[0], name = p[1], id = p[2] || '';
+      if (slug === 'index' || slug === 'canvas') return;          /* the hub itself and this board */
+      registered[slug] = 1; order.push(slug);
+      var href = N.href(slug);
+      var t = document.createElement('div'); t.className = 'tile'; t.setAttribute('data-slug', slug); t.setAttribute('data-name', name.toLowerCase());
+      t.innerHTML = '<div class="hd">' + (N.GLYPH[slug] || '') + '<b>' + name + '</b>' + (id ? '<small>' + id + '</small>' : '') + '<span class="n"></span></div>'
+        + '<div class="th"><div class="ph">' + (N.GLYPH[slug] || '') + '</div><a class="go" href="' + href + '" aria-label="open ' + name + '"></a></div>'
+        + '<div class="ft"><span>' + (id ? 'document' : 'leaf') + ' · ' + href.replace('./','').replace(/\?.*/,'') + '</span><span class="sp"></span><button data-peek="' + slug + '">peek</button></div>';
+      col.appendChild(t); tiles[slug] = { el: t, href: href, name: name, loaded: false };
+    });
+    world.appendChild(col);
+  });
+  document.getElementById('tally').textContent = order.length + ' surfaces from nav.js GROUPS · ' + N.GROUPS.length + ' clusters';
+
+  /* ---------- live thumbnails: an iframe per tile, loaded only when on screen ---------- */
+  var live = document.getElementById('live');
+  function load(slug){ var t = tiles[slug]; if (!t || t.loaded || !live.checked) return; t.loaded = true;
+    var f = document.createElement('iframe'); f.loading = 'lazy'; f.title = t.name + ' thumbnail'; f.tabIndex = -1; f.src = t.href;
+    t.el.querySelector('.th').insertBefore(f, t.el.querySelector('.go')); }
+  function unloadAll(){ Object.keys(tiles).forEach(function(k){ var f = tiles[k].el.querySelector('iframe'); if (f) f.remove(); tiles[k].loaded = false; }); }
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) load(e.target.getAttribute('data-slug')); }); }, { root: vp, rootMargin: '200px' });
+  order.forEach(function(k){ io.observe(tiles[k].el); });
+  live.addEventListener('change', function(){ if (!live.checked) unloadAll(); else order.forEach(function(k){ var r = tiles[k].el.getBoundingClientRect(), v = vp.getBoundingClientRect(); if (r.bottom > v.top - 200 && r.top < v.bottom + 200 && r.right > v.left - 200 && r.left < v.right + 200) load(k); }); });
+
+  /* ---------- pan and zoom ---------- */
+  var X = 0, Y = 0, S = 0.6;
+  function apply(){ world.style.transform = 'translate(' + X + 'px,' + Y + 'px) scale(' + S + ')'; }
+  function fit(){ var w = world.scrollWidth, h = world.scrollHeight, W = vp.clientWidth, H = vp.clientHeight; S = Math.max(0.08, Math.min(W / w, H / h) * 0.96); X = (W - w * S) / 2; Y = (H - h * S) / 2; apply(); }
+  function zoomAt(f, cx, cy){ var s2 = Math.max(0.08, Math.min(2.5, S * f)); X = cx - (cx - X) * (s2 / S); Y = cy - (cy - Y) * (s2 / S); S = s2; apply(); }
+  vp.addEventListener('wheel', function(e){ e.preventDefault(); var r = vp.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top); }, { passive: false });
+  var drag = null;
+  vp.addEventListener('pointerdown', function(e){ if (e.target.closest('button')) return; drag = { x: e.clientX, y: e.clientY, X: X, Y: Y, moved: false }; vp.classList.add('drag'); vp.setPointerCapture(e.pointerId); });
+  vp.addEventListener('pointermove', function(e){ if (!drag) return; var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true; X = drag.X + dx; Y = drag.Y + dy; apply(); });
+  function endDrag(e){ if (!drag) return; vp.classList.remove('drag'); if (drag.moved) { var a = e.target.closest && e.target.closest('a.go'); if (a) { a.addEventListener('click', function(ev){ ev.preventDefault(); }, { once: true }); } } drag = null; }
+  vp.addEventListener('pointerup', endDrag); vp.addEventListener('pointercancel', endDrag);
+  document.getElementById('fit').onclick = fit;
+  document.getElementById('zin').onclick = function(){ zoomAt(1.25, vp.clientWidth / 2, vp.clientHeight / 2); };
+  document.getElementById('zout').onclick = function(){ zoomAt(0.8, vp.clientWidth / 2, vp.clientHeight / 2); };
+  function centerOn(slug){ var t = tiles[slug]; if (!t) return; var r = t.el.getBoundingClientRect(), v = vp.getBoundingClientRect();
+    var cx = (r.left + r.width / 2 - v.left - X) / S, cy = (r.top + r.height / 2 - v.top - Y) / S; S = Math.max(S, 0.9); X = vp.clientWidth / 2 - cx * S; Y = vp.clientHeight / 2 - cy * S; apply(); load(slug); }
+
+  /* ---------- the path ---------- */
+  var steps = []; PATH.forEach(function(b){ b[1].forEach(function(s){ if (registered[s]) steps.push({ beat: b[0], slug: s }); }); });
+  steps.forEach(function(s, i){ tiles[s.slug].el.querySelector('.n').textContent = String(i + 1); });
+  var KEY = 'tpt_canvas_step', cur = -1; try { cur = Math.min(steps.length - 1, parseInt(localStorage.getItem(KEY) || '-1', 10)); } catch (e) {}
+  function show(i){ cur = Math.max(-1, Math.min(steps.length - 1, i)); try { localStorage.setItem(KEY, String(cur)); } catch (e) {}
+    order.forEach(function(k){ tiles[k].el.classList.remove('on'); });
+    var st = document.getElementById('step');
+    if (cur < 0) { st.innerHTML = 'path · <b>press Next</b>'; return; }
+    var s = steps[cur]; tiles[s.slug].el.classList.add('on'); centerOn(s.slug);
+    st.innerHTML = s.beat + ' · <b>' + tiles[s.slug].name + '</b> · ' + (cur + 1) + '/' + steps.length; }
+  document.getElementById('next').onclick = function(){ show(cur + 1); };
+  document.getElementById('prev').onclick = function(){ show(cur - 1); };
+
+  /* ---------- filter ---------- */
+  document.getElementById('q').addEventListener('input', function(e){ var q = e.target.value.trim().toLowerCase();
+    order.forEach(function(k){ tiles[k].el.classList.toggle('dim', !!q && tiles[k].el.getAttribute('data-name').indexOf(q) < 0 && k.indexOf(q) < 0); }); });
+
+  /* ---------- peek ---------- */
+  var peek = document.getElementById('peek'), pf = document.getElementById('pk-frame');
+  function openPeek(slug){ var t = tiles[slug]; if (!t) return; document.getElementById('pk-name').textContent = t.name; document.getElementById('pk-open').href = t.href; pf.src = t.href; peek.classList.add('open'); peek.setAttribute('aria-hidden', 'false'); }
+  function closePeek(){ peek.classList.remove('open'); peek.setAttribute('aria-hidden', 'true'); pf.src = 'about:blank'; }
+  world.addEventListener('click', function(e){ var b = e.target.closest('button[data-peek]'); if (b) { e.preventDefault(); openPeek(b.getAttribute('data-peek')); } });
+  document.getElementById('pk-close').onclick = closePeek;
+  peek.addEventListener('click', function(e){ if (e.target === peek) closePeek(); });
+
+  /* ---------- keys ---------- */
+  document.addEventListener('keydown', function(e){ if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') show(cur + 1); else if (e.key === 'ArrowLeft') show(cur - 1);
+    else if (e.key === '+' || e.key === '=') zoomAt(1.25, vp.clientWidth / 2, vp.clientHeight / 2); else if (e.key === '-') zoomAt(0.8, vp.clientWidth / 2, vp.clientHeight / 2);
+    else if (e.key === 'f' || e.key === 'F') fit(); else if (e.key === 'Escape') closePeek(); });
+
+  fit(); if (cur >= 0) show(cur);
+  window.addEventListener('resize', function(){ if (cur < 0) fit(); });
+})();
+</script>
+</body>
+</html>
