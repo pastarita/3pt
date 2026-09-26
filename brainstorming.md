@@ -88,6 +88,7 @@ note Yash restating the system to the mentor ("you can correct me"); the mentor 
 doc docs/12-decisions.md
 doc docs/16-strands-questions.md
 doc hub/site/index.html
+doc docs/17-term-2-lanes.md
 -->
 The planning stage does the build process and also plans for the evaluation and instrumentation. Once it starts building, we have a build-with-instrumentation loop.
 
@@ -305,6 +306,7 @@ doc docs/00-vision.md
 doc docs/12-decisions.md
 doc docs/10-architecture.md
 doc docs/pr-descriptions/PR_DESCRIPTION_CI_HERALDRY.md
+doc docs/17-term-2-lanes.md
 -->
 Predications: some of the predictions are that Yash and I are in a respective hackathon. There are several lanes, and we want to distribute workloads with respect to the utilization of our own coding agents on our shared repo:
 1. Setting up the repo
