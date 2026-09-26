@@ -124,6 +124,28 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 @media (max-width:900px){.grid3,.pieces,.gen{grid-template-columns:1fr}.dircard .meta{grid-template-columns:1fr 1fr}.pipe{grid-template-columns:1fr}.pipe .arr{transform:rotate(90deg)}}
 @media (max-width:640px){.grid2,.specs{grid-template-columns:1fr}.dircard .meta{grid-template-columns:1fr}}
 
+/* ---------- Guards against 3pt.css (the hub's dark-base sheet is linked for the lint; the doc chrome must not inherit it). ---------- */
+h1,h2,h3,h4{color:var(--d-ink)}h2{display:block}
+.lede{font-style:normal;font-family:var(--d-sans);font-weight:400;line-height:1.5}
+.eyebrow{margin:0}.bar{margin:12px 0 0}select{width:auto}
+/* ---------- Refs, register, figures ---------- */
+.ref{display:inline-block;font:500 10px/1.3 var(--d-mono);letter-spacing:.08em;border:1px solid var(--d-line);border-radius:3px;padding:1px 5px;margin-right:6px;cursor:pointer;color:var(--d-muted);vertical-align:middle;user-select:none;background:var(--d-surface)}
+.ref:hover{border-color:var(--d-ink);color:var(--d-ink)}
+.ref.flash{background:var(--d-ok-soft);border-color:var(--d-ok);color:var(--d-ok)}
+.inv .box{font-size:13.5px}.inv .box b{color:var(--d-ink)}
+.src{font-size:12px;color:var(--d-muted)}
+ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
+.reg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 18px;margin-top:10px;font-size:12px}
+.reg div{display:flex;gap:8px;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--d-line);min-width:0}
+.reg .k{font:500 9.5px/1.4 var(--d-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d-faint);flex:none;width:86px}
+.reg .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--d-muted)}
+.fig{margin:14px 0 0;background:var(--d-surface);border:1px solid var(--d-line);border-radius:8px;padding:12px 14px 10px;position:relative}
+.fig>.ref{position:absolute;top:8px;right:8px;margin:0}
+.fig svg{width:100%;height:auto;display:block;max-width:820px}
+.fig text{font-family:var(--d-mono);font-size:11px;fill:var(--d-ink)}
+.fig text.m{fill:var(--d-muted)}.fig text.b{font-weight:700}.fig text.s{font-size:9.5px;letter-spacing:.08em}
+.fig a{text-decoration:none}.fig a:hover text{text-decoration:underline}
+.fig figcaption{font-size:12px;color:var(--d-muted);margin-top:8px;max-width:76ch}
 /* ---------- Specimens: everything inside .sp reads ONLY --t-* tokens, set by script per direction and mode. ---------- */
 .sp{background:var(--t-canvas);color:var(--t-ink);font-family:var(--t-body);font-size:var(--t-base);line-height:var(--t-lh);border:1px solid var(--t-line);border-radius:var(--t-radius-lg);padding:var(--t-pad);display:flex;flex-direction:column;gap:var(--t-gap);min-width:0;position:relative;overflow:hidden}
 .sp *{box-sizing:border-box}
@@ -147,7 +169,13 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 .sp .pvb.c{color:var(--t-alert);border-color:var(--t-alert);background:var(--t-alert-soft)}
 .sp .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sp .stat{background:var(--t-surface);border:var(--t-border) solid var(--t-line);border-radius:var(--t-radius);padding:10px 12px;box-shadow:var(--t-shadow)}
-.sp .stat .n{font-family:var(--t-display);font-weight:var(--t-dw);font-size:calc(var(--t-base) * 1.6);line-height:1;font-variant-numeric:tabular-nums}
+.sp .stat .n{font-family:var(--t-display);font-weight:var(--t-dw);font-size:calc(var(--t-base) * 1.6);line-height:1;font-variant-numeric:tabular-nums;color:var(--t-ink)}
+/* guards: 3pt.css also defines .stats .stat .chip .btn .rulebox; every .sp component pins the --t-* value */
+.sp .stats{margin:0}
+.sp .stat .l{font-family:var(--t-body);font-weight:400;letter-spacing:0}
+.sp .chip{font-weight:500;line-height:1.2}
+.sp .btn{line-height:1.2;text-decoration:none;display:inline-block}
+.sp .rulebox{margin:0}
 .sp .stat .l{font-size:calc(var(--t-base) * .75);color:var(--t-muted);margin-top:5px}
 .sp .diff{background:var(--t-surface);border:var(--t-border) solid var(--t-line);border-radius:var(--t-radius);overflow:hidden;box-shadow:var(--t-shadow)}
 .sp .diff .r{display:grid;grid-template-columns:90px 1fr 1.2fr;gap:10px;padding:8px 12px;border-top:1px solid var(--t-line);font-size:calc(var(--t-base) * .82)}
@@ -224,10 +252,10 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 <header class="top">
   <p class="eyebrow">3PT · docs · 11 · design system · proposal · 2026-09-26</p>
   <h1 style="margin-top:10px">One design system for the monorepo: six pieces, three directions, one decision.</h1>
-  <p class="lede">This page holds everything Patrick and Yash need to choose the 3PT design system: the invariants that hold under any direction, six pieces with three candidates each, three canonical directions composed from those pieces, the bases for judging motifs against the ICP, and a promenade for deciding. The chosen composition is then compiled into tokens for the hub, the web app and PWA, and the Swift inspector.</p>
+  <p class="lede">Invariants, six pieces, three directions, bases against the ICP, a promenade for deciding. The pick compiles to tokens for hub, web, PWA and Swift.</p>
   <div class="status"><i></i> proposal · nothing decided · the decision record is at the bottom</div>
   <nav class="toc" aria-label="Sections">
-    <a href="#standing">Where we stand</a><a href="#invariants">Invariants</a><a href="#naming">Naming</a><a href="#modes">Dark and light</a><a href="#pieces">Pieces</a><a href="#directions">Three directions</a><a href="#contrast">Contrast</a><a href="#surfaces">Cross-surface</a><a href="#components">Components</a><a href="#icp">Motifs against the ICP</a><a href="#promenade">Promenade</a><a href="#decision">Decision record</a>
+    <a href="#register">Register</a><a href="#standing">Where we stand</a><a href="#invariants">Invariants</a><a href="#naming">Naming</a><a href="#modes">Dark and light</a><a href="#pieces">Pieces</a><a href="#directions">Directions</a><a href="#contrast-h">Contrast</a><a href="#surfaces">Cross-surface</a><a href="#components">Components</a><a href="#depth">Depth</a><a href="#icp">Motifs vs ICP</a><a href="#promenade">Promenade</a><a href="#decision">Decision</a>
   </nav>
 </header>
 
@@ -247,101 +275,153 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
   </div>
 </div>
 
+<h2 id="register"><small>register</small>Every citable element on this page</h2>
+<p><span class="pv d">DERIVED</span> From the DOM (<span id="register-count">0 ids</span>). A chip copies <code>design-system#id</code>; here it also scrolls.</p>
+<div id="register-table" class="reg"></div>
+
 <h2 id="standing"><small>0 · where we stand</small>Two systems already exist. This page ends that.</h2>
-<p>Nothing here starts from zero. The repo already wears two visual systems written on the same day, and neither knows the other. The design system has to absorb both or retire one, and it has to do so with tokens that a Swift app can read, not only a stylesheet.</p>
+<p>Two visual systems exist; one vocabulary, readable by Swift, absorbs both.</p>
 <div class="tbl"><table>
 <tr><th>Surface</th><th>Where</th><th>What it is</th><th>Debt</th></tr>
-<tr><td><b>Hub tokens</b></td><td><code>hub/site/3pt.css</code></td><td>Dark-only. Short unprefixed names (<code>--bg</code>, <code>--panel</code>, <code>--card</code>), colour-named accents (<code>--violet</code>, <code>--cyan</code>, <code>--amber</code>, <code>--slate</code>) for the four clusters, three point hues, one flag orange, status triple, provenance badge.</td><td>No light mode. Colour words at the semantic layer. Nothing a Swift target can consume.</td></tr>
-<tr><td><b>Nav shell</b></td><td><code>hub/site/nav.js</code></td><td>The sidebar and the glyph set. The glyphs are the project's only iconography so far: 24 grid, 1.7 stroke, round caps, hand-drawn.</td><td>Hex values hardcoded in the shell CSS (<code>#0b0e12</code>, <code>#ff6b4a</code>, <code>#6b7684</code>). The shell does not read the tokens it sits beside.</td></tr>
-<tr><td><b>Direction page</b></td><td><code>hub/site/direction.html</code></td><td>Light base with a dark set. Material names (<code>--ground</code>, <code>--sheet</code>, <code>--ink</code>, <code>--marker</code>), keep and cut hues, a film-strip motif, Familjen Grotesk and IBM Plex.</td><td>No alert hue, no point hues, no provenance badge. A second vocabulary for the same roles.</td></tr>
+<tr><td><b>Hub tokens</b></td><td><code>hub/site/3pt.css</code></td><td>Dark only. <code>--bg --panel --card</code>; cluster accents <code>--violet --cyan --amber --slate</code>; point hues, flag, status, badge.</td><td>No light mode; colour words at the semantic layer.</td></tr>
+<tr><td><b>Nav shell</b></td><td><code>hub/site/nav.js</code></td><td>Sidebar and glyphs: 24 grid, 1.7 stroke, round caps.</td><td>Hardcoded <code>#0b0e12 #ff6b4a #6b7684</code>.</td></tr>
+<tr><td><b>Direction page</b></td><td><code>hub/site/direction.html</code></td><td>Light plus dark. <code>--ground --sheet --ink --marker</code>, keep and cut hues, film strip, Familjen Grotesk, IBM Plex.</td><td>No alert, point or badge hues; a second vocabulary.</td></tr>
 </table></div>
-<div class="box rule"><b>Consequence.</b> The two existing systems become two of the three directions below (Site marking, Instrument panel), re-expressed on one token vocabulary, each completed with the mode it lacks. The third (Drafting sheet) is new. Whatever is chosen, the hub tokens and the nav shell get regenerated from the decision; nothing keeps its private hex values.</div>
+<div class="box rule"><b>Consequence.</b> They become D1 and D2, each completed with the mode it lacks; D3 is new. Tokens and shell regenerate; no private hex survives.</div>
 
 <h2 id="invariants"><small>1 · invariants</small>What holds under every direction</h2>
-<p>These are decided by this proposal unless someone objects in the promenade. They are the bases against which every motif and every piece is judged, and they do not change when the direction does.</p>
-<div class="grid2">
-  <div class="box"><h4 style="margin:0">I1 · Three tiers of tokens</h4><p style="font-size:13.5px">Primitive (a hue and a step, never used directly), semantic (a role: what the colour is for), component (which role a part of a component reads). A leaf or a view only ever names the semantic or component tier. Adding a colour means adding a role, not a hex.</p></div>
-  <div class="box"><h4 style="margin:0">I2 · Dark and light are peers</h4><p style="font-size:13.5px">Every semantic token has a value in both sets. A direction that cannot show both is not a candidate. The mode is never part of a token's name; the set is swapped, the names stay.</p></div>
-  <div class="box"><h4 style="margin:0">I3 · The three points keep their slots</h4><p style="font-size:13.5px">Plan, Build, Instrument appear in that order, each with its own hue slot (<code>point.plan</code>, <code>point.build</code>, <code>point.instrument</code>). Those hues never colour anything else. The triangle mark is the wordmark on every surface.</p></div>
-  <div class="box"><h4 style="margin:0">I4 · Status is not category</h4><p style="font-size:13.5px">ok, warn, alert colour provenance and outcomes only. Clusters, phases, trades, and directions never borrow them. Status never relies on hue alone: it pairs with a glyph or a word (the hub's ○ ◐ ● ladder already does this).</p></div>
-  <div class="box"><h4 style="margin:0">I5 · Every figure wears provenance</h4><p style="font-size:13.5px">DERIVED, AUTHORED, TO CONFIRM is a fixed triple aliased onto the status hues. It must be legible at 8.5px mono in every direction and mode; the contrast table below checks it.</p></div>
-  <div class="box"><h4 style="margin:0">I6 · Photos are neutral</h4><p style="font-size:13.5px">A thumbnail gets a one-pixel line frame and no tint, and it is never larger than the record beside it. The hero of any surface is never a photograph. This keeps the product on the right side of the image-analyzer ban and keeps the accent free.</p></div>
-  <div class="box"><h4 style="margin:0">I7 · One accent per screen</h4><p style="font-size:13.5px">One hue says "this is new, this is picked, this is where you are." Everything else is ink, muted, line, and surfaces. The direction chooses the hue; the rule stays.</p></div>
-  <div class="box"><h4 style="margin:0">I8 · One glyph set, three weights</h4><p style="font-size:13.5px">The nav.js glyph paths are the iconography on every surface. A direction changes only stroke weight and caps. In Swift the same paths ship as custom symbols so weight follows text.</p></div>
-  <div class="box"><h4 style="margin:0">I9 · Nothing web-only carries meaning</h4><p style="font-size:13.5px">No backdrop blur, no gradient text, no filter as a signal. Anything that means something must be drawable with a colour, a path, and text, because SwiftUI will have to draw it.</p></div>
-  <div class="box"><h4 style="margin:0">I10 · Tokens have one source</h4><p style="font-size:13.5px">A single tokens file in the repo generates the CSS for the hub and the web app, the asset catalog and Swift enum for the inspector, and the manifest colours for the PWA. Hand-edited hex in any of those is a lint failure.</p></div>
+<p>Decided here unless challenged in the promenade; independent of direction.</p>
+<figure class="fig" id="F-a"><span class="ref" data-ref="F-a">F-a</span>
+<svg viewBox="0 0 640 132" role="img" aria-labelledby="F-a-t"><title id="F-a-t">Three token tiers</title>
+<defs><marker id="arw" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4 0 8Z" fill="var(--d-muted)"/></marker></defs>
+<rect x="104" y="6" width="530" height="30" rx="4" fill="var(--d-soft)" stroke="var(--d-line)"/>
+<text x="116" y="25" class="b">component</text><text x="222" y="25" class="m">button.bg → accent.default · card.edge → line.default</text>
+<rect x="104" y="50" width="530" height="30" rx="4" fill="var(--d-soft)" stroke="var(--d-line)"/>
+<text x="116" y="69" class="b">semantic</text><text x="222" y="69" class="m">bg.canvas · fg.muted · accent.default · point.plan · status.warn</text>
+<rect x="104" y="94" width="530" height="30" rx="4" fill="none" stroke="var(--d-line)" stroke-dasharray="3 3"/>
+<text x="116" y="113" class="b">primitive</text><text x="222" y="113" class="m">gray.900 · orange.500 · hidden from leaves</text>
+<path d="M60 94V50" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
+<path d="M60 50V6" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
+<text x="8" y="72" class="s m">reads</text>
+</svg><figcaption>I1. A new colour is a new role, not a hex.</figcaption></figure>
+<div class="grid2 inv">
+  <div class="box" id="I1"><b><span class="ref" data-ref="I1">I1</span>Three tiers of tokens.</b> Primitive feeds semantic feeds component (F-a).</div>
+  <div class="box" id="I2"><b><span class="ref" data-ref="I2">I2</span>Dark and light are peers.</b> Both values for every token; mode never in the name.</div>
+  <div class="box" id="I3"><b><span class="ref" data-ref="I3">I3</span>The three points keep their slots.</b> <code>point.plan · build · instrument</code>, in order, colour nothing else; the triangle is the wordmark.</div>
+  <div class="box" id="I4"><b><span class="ref" data-ref="I4">I4</span>Status is not category.</b> ok, warn, alert mark provenance and outcomes only, always with a glyph or word.</div>
+  <div class="box" id="I5"><b><span class="ref" data-ref="I5">I5</span>Every figure wears provenance.</b> DERIVED, AUTHORED, TO CONFIRM alias the status hues; legible at 8.5px mono everywhere.</div>
+  <div class="box" id="I6"><b><span class="ref" data-ref="I6">I6</span>Photos are neutral.</b> 1px frame, no tint, never larger than the record beside it, never the hero (F-f).</div>
+  <div class="box" id="I7"><b><span class="ref" data-ref="I7">I7</span>One accent per screen.</b> One hue says new, picked, here; the rest is neutral.</div>
+  <div class="box" id="I8"><b><span class="ref" data-ref="I8">I8</span>One glyph set, three weights.</b> The nav.js paths everywhere; directions change stroke and caps only; Swift gets symbols.</div>
+  <div class="box" id="I9"><b><span class="ref" data-ref="I9">I9</span>Nothing web-only carries meaning.</b> No blur, gradient or filter as signal; SwiftUI must draw it with colour, path, text.</div>
+  <div class="box" id="I10"><b><span class="ref" data-ref="I10">I10</span>Tokens have one source.</b> One file generates CSS, xcassets, Swift and manifest (F-e); hand-edited hex fails lint.</div>
 </div>
 
 <h2 id="naming"><small>2 · naming convention</small>How the colour schema is named</h2>
-<p>Three options were on the table, two of them already in the repo. The recommendation is the third, because it is the only one that survives a change of direction and a change of platform without renaming anything.</p>
+<p>C survives a change of direction or platform without a rename.</p>
 <div class="tbl"><table>
-<tr><th>Option</th><th>Example</th><th>For</th><th>Against</th><th></th></tr>
-<tr><td><b>A · Material metaphor</b><br><span style="color:var(--d-muted)">direction.html (hub leaf)</span></td><td><code>--ground --sheet --ink --marker</code></td><td>Evocative; a designer reads it instantly.</td><td>The metaphor belongs to one direction. "Marker" means nothing on a drafting sheet; "sheet" means nothing in a console.</td><td><span class="tag">not recommended</span></td></tr>
-<tr><td><b>B · Short unprefixed</b><br><span style="color:var(--d-muted)">3pt.css</span></td><td><code>--bg --panel --card --violet</code></td><td>Fast to type in a hand-written leaf.</td><td>No layer signal; colour words (<code>--violet</code>) at the semantic tier force a rename when the hue changes; collides with any third-party CSS in the web app.</td><td><span class="tag">not recommended</span></td></tr>
-<tr><td><b>C · Layer, then role</b></td><td><code>bg.canvas · fg.muted · line.strong · accent.soft · point.plan · status.warn-soft</code></td><td>Direction-neutral, platform-neutral, self-documenting. The same path spells itself in CSS, JSON and Swift.</td><td>Longer to type. The hub's leaves get a one-time mechanical rename.</td><td><span class="tag" style="background:var(--d-ok-soft);color:var(--d-ok)">recommended</span></td></tr>
+<tr><th>Option</th><th>Example</th><th>Verdict</th></tr>
+<tr id="N-A"><td><span class="ref" data-ref="N-A">N-A</span><b>Material metaphor</b> <span class="src">direction.html</span></td><td><code>--ground --sheet --ink --marker</code></td><td>Evocative but tied to one direction: "marker" means nothing on a sheet. <span class="tag">no</span></td></tr>
+<tr id="N-B"><td><span class="ref" data-ref="N-B">N-B</span><b>Short unprefixed</b> <span class="src">3pt.css</span></td><td><code>--bg --panel --card --violet</code></td><td>Fast; no layer signal; colour words force renames; collides with third-party CSS. <span class="tag">no</span></td></tr>
+<tr id="N-C"><td><span class="ref" data-ref="N-C">N-C</span><b>Layer, then role</b></td><td><code>bg.canvas · fg.muted · line.strong · accent.soft · point.plan · status.warn-soft</code></td><td>Neutral to direction and platform; one path in CSS, JSON, Swift. Cost: one rename. <span class="tag" style="background:var(--d-ok-soft);color:var(--d-ok)">recommended</span></td></tr>
 </table></div>
-<h3>The semantic vocabulary (option C)</h3>
+<h3>The semantic layers (option C)</h3>
 <div class="tbl"><table>
 <tr><th>Layer</th><th>Roles</th><th>Meaning</th></tr>
-<tr><td><code>bg</code></td><td>canvas · surface · raised · deep</td><td>Page ground; a panel on it; a panel on a panel (in dark, each step is lighter); the one inverted block (film, console, title block).</td></tr>
-<tr><td><code>fg</code></td><td>default · muted · faint · on-accent · on-deep</td><td>Body ink; secondary; tertiary (labels, never body); text on the accent; text on the deep block.</td></tr>
-<tr><td><code>line</code></td><td>default · strong</td><td>Hairline dividers; borders that must read as a control edge (3:1 against surface).</td></tr>
-<tr><td><code>accent</code></td><td>default · soft</td><td>The one accent (I7) and its tint for chips and fills.</td></tr>
-<tr><td><code>point</code></td><td>plan · build · instrument</td><td>The three points (I3). Reserved.</td></tr>
-<tr><td><code>status</code></td><td>ok · ok-soft · warn · warn-soft · alert · alert-soft</td><td>Outcomes and provenance only (I4).</td></tr>
-<tr><td><code>prov</code></td><td>derived → status.ok · authored → status.warn · confirm → status.alert</td><td>Aliases, so the badge can move off the status hues later without touching a leaf.</td></tr>
-<tr><td><code>cluster</code></td><td>orient · decide · build · record</td><td>Hub-only phase hues. Aliases in the hub's token set; absent from the app sets.</td></tr>
+<tr id="L-bg"><td><span class="ref" data-ref="L-bg">L-bg</span><code>bg</code></td><td>canvas · surface · raised · deep</td><td>Ground; panel; panel on panel; inverted block.</td></tr>
+<tr id="L-fg"><td><span class="ref" data-ref="L-fg">L-fg</span><code>fg</code></td><td>default · muted · faint · on-accent · on-deep</td><td>Body; secondary; labels; on accent; on deep.</td></tr>
+<tr id="L-line"><td><span class="ref" data-ref="L-line">L-line</span><code>line</code></td><td>default · strong</td><td>Hairlines; control edges (3:1 on surface).</td></tr>
+<tr id="L-accent"><td><span class="ref" data-ref="L-accent">L-accent</span><code>accent</code></td><td>default · soft</td><td>The one accent (I7) and its tint.</td></tr>
+<tr id="L-point"><td><span class="ref" data-ref="L-point">L-point</span><code>point</code></td><td>plan · build · instrument</td><td>Reserved (I3).</td></tr>
+<tr id="L-status"><td><span class="ref" data-ref="L-status">L-status</span><code>status</code></td><td>ok · ok-soft · warn · warn-soft · alert · alert-soft</td><td>Outcomes and provenance only (I4).</td></tr>
+<tr id="L-prov"><td><span class="ref" data-ref="L-prov">L-prov</span><code>prov</code></td><td>derived → status.ok · authored → status.warn · confirm → status.alert</td><td>Aliases, so the badge can move later.</td></tr>
+<tr id="L-cluster"><td><span class="ref" data-ref="L-cluster">L-cluster</span><code>cluster</code></td><td>orient · decide · build · record</td><td>Hub-only; absent from app sets.</td></tr>
 </table></div>
 <div class="grid3">
-  <div class="box"><h4 style="margin:0">Spelling per surface</h4><ul style="font-size:13px"><li>JSON (source): <code>bg.canvas</code></li><li>CSS: <code>--bg-canvas</code></li><li>Swift: <code>TPT.bg.canvas</code> backed by asset <code>bg/canvas</code> with light and dark appearances</li><li>Tailwind, if the web app uses it: <code>bg-canvas</code> reading the CSS variable</li></ul></div>
-  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>Mode never in the name (no <code>--bg-dark</code>).</li><li>No colour words above the primitive tier.</li><li>Numbers only at the primitive tier (<code>gray.900</code>).</li><li>Components reference semantics, never primitives.</li><li>Type, space, radius, motion tokens follow the same shape: <code>type.display</code>, <code>space.4</code>, <code>radius.card</code>, <code>motion.fast</code>.</li></ul></div>
-  <div class="box"><h4 style="margin:0">Migration cost</h4><ul style="font-size:13px"><li><code>3pt.css</code>: 34 variables renamed once; leaves updated by search and replace.</li><li><code>nav.js</code>: five hardcoded hex values become <code>var()</code> reads.</li><li><code>direction.html</code>: stays as written (it is a dated proposal), or is re-expressed if it becomes the lander.</li></ul></div>
+  <div class="box"><h4 style="margin:0">Spelling</h4><ul style="font-size:13px"><li>JSON <code>bg.canvas</code></li><li>CSS <code>--bg-canvas</code></li><li>Swift <code>TPT.bg.canvas</code>, asset <code>bg/canvas</code></li><li>Tailwind <code>bg-canvas</code></li></ul></div>
+  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>Mode never in the name.</li><li>Colour words and numbers only in primitives (<code>gray.900</code>).</li><li>Components read semantics only.</li><li>Same shape: <code>type.display · space.4 · radius.card · motion.fast</code>.</li></ul></div>
+  <div class="box"><h4 style="margin:0">Migration</h4><ul style="font-size:13px"><li><code>3pt.css</code>: 34 variables renamed once.</li><li><code>nav.js</code>: five hex values to <code>var()</code>.</li><li><code>direction.html</code>: stays, dated.</li></ul></div>
 </div>
 
 <h2 id="modes"><small>3 · dark and light</small>Accessible patterns for both modes</h2>
-<div class="grid2">
-  <div class="box"><h4 style="margin:0">Mode selection</h4><p style="font-size:13.5px"><code>color-scheme</code> on the root. Default follows <code>prefers-color-scheme</code>; a <code>data-theme</code> attribute overrides it and is persisted (<code>tpt_theme</code> in the browser, the same preference key in the app). The PWA declares two <code>theme-color</code> metas, one per scheme. SwiftUI reads the same stored preference into <code>preferredColorScheme</code>. This page does exactly this; try the controls above.</p></div>
-  <div class="box"><h4 style="margin:0">Elevation</h4><p style="font-size:13.5px">In dark, a raised surface is lighter than the one below it, never darker, and shadows are optional. In light, a raised surface is separated by a line, with shadow allowed. <code>bg.canvas → surface → raised</code> encodes this; a component never invents a fourth step.</p></div>
-  <div class="box"><h4 style="margin:0">Accent in the dark set</h4><p style="font-size:13.5px">The dark accent is lighter and less saturated than the light accent, and it carries its own <code>fg.on-accent</code> (dark ink on a light accent). Reusing white from the light set is the most common failure in the two existing systems and the contrast table catches it.</p></div>
-  <div class="box"><h4 style="margin:0">Contrast targets</h4><p style="font-size:13.5px">WCAG 2.x ratios, computed live below: 4.5:1 for body ink, muted ink, accent-as-text and status-on-soft; 3:1 for faint labels, strong lines and the point hues as marks. APCA Lc 60 for body is the stricter check to add once the tokens file exists.</p></div>
-  <div class="box"><h4 style="margin:0">Focus, motion, forced colours</h4><p style="font-size:13.5px">Focus ring: 2px accent, 2px offset, both modes. <code>prefers-reduced-motion</code> zeroes every duration. <code>forced-colors: active</code> brings borders back on anything that relied on a fill. Hit targets 44pt on the PWA and iOS.</p></div>
-  <div class="box"><h4 style="margin:0">Never colour alone</h4><p style="font-size:13.5px">Every status has a glyph or a word beside the hue. Yes and no marks on tiles are text. Keep and cut are labelled. The version diff uses added and struck text, not green and red fills alone.</p></div>
-</div>
+<figure class="fig" id="F-b"><span class="ref" data-ref="F-b">F-b</span>
+<svg viewBox="0 0 640 150" role="img" aria-labelledby="F-b-t"><title id="F-b-t">Elevation ladder in light and dark</title>
+<g><rect x="4" y="4" width="308" height="142" rx="6" fill="#F2F3F5" stroke="#D6DAE0"/>
+<text x="16" y="22" class="s" style="fill:#555E6A">LIGHT</text><text x="60" y="22" style="fill:#555E6A">canvas #F2F3F5</text>
+<rect x="36" y="34" width="248" height="100" rx="5" fill="#FFFFFF" stroke="#D6DAE0"/>
+<text x="48" y="52" style="fill:#555E6A">surface #FFFFFF</text>
+<rect x="70" y="66" width="182" height="52" rx="4" fill="#000" opacity=".06" transform="translate(0 3)"/>
+<rect x="70" y="64" width="182" height="52" rx="4" fill="#FFFFFF" stroke="#D6DAE0"/>
+<text x="82" y="86" style="fill:#16191E">raised #FFFFFF</text><text x="82" y="104" style="fill:#555E6A">shadow allowed</text></g>
+<g><rect x="328" y="4" width="308" height="142" rx="6" fill="#111317" stroke="#2B3038"/>
+<text x="340" y="22" class="s" style="fill:#A4ACB7">DARK</text><text x="380" y="22" style="fill:#A4ACB7">canvas #111317</text>
+<rect x="360" y="34" width="248" height="100" rx="5" fill="#181B21" stroke="#2B3038"/>
+<text x="372" y="52" style="fill:#A4ACB7">surface #181B21</text>
+<rect x="394" y="64" width="182" height="52" rx="4" fill="#1F232A" stroke="#2B3038"/>
+<text x="406" y="86" style="fill:#E7E9EC">raised #1F232A</text><text x="406" y="104" style="fill:#A4ACB7">shadow optional</text></g>
+</svg><figcaption><code>bg.canvas → surface → raised</code>. Dark steps lighter; light separates by a line. No fourth step.</figcaption></figure>
+<div class="tbl"><table>
+<tr><th>Pattern</th><th>Rule</th></tr>
+<tr><td><b>Mode selection</b></td><td><code>color-scheme</code> on the root; <code>prefers-color-scheme</code> by default; <code>data-theme</code> overrides, persisted as <code>tpt_theme</code> (app too); two PWA <code>theme-color</code> metas; SwiftUI <code>preferredColorScheme</code>.</td></tr>
+<tr><td><b>Accent in dark</b></td><td>Lighter, less saturated, with its own dark <code>fg.on-accent</code>; reusing white is the common failure.</td></tr>
+<tr><td><b>Contrast targets</b></td><td>4.5:1 body, muted, accent as text, status on soft; 3:1 faint labels, strong lines, point marks; APCA Lc 60 for body once tokens.json exists.</td></tr>
+<tr><td><b>Focus, motion, forced colours</b></td><td>Focus ring 2px accent, 2px offset; <code>prefers-reduced-motion</code> zeroes durations; <code>forced-colors</code> restores borders; 44pt targets on PWA and iOS.</td></tr>
+<tr><td><b>Never colour alone</b></td><td>Every status carries a glyph or word; tile marks, keep and cut, and the diff are text.</td></tr>
+</table></div>
 
 <h2 id="pieces"><small>4 · pieces</small>Six pieces, three candidates each</h2>
-<p>A direction is a composition of six pieces. Each piece has three candidates, one per direction, and they can be recombined: the compiled specimen further down takes any mix. Pieces are the unit of decision in the promenade; directions are the shortcut for taking all six from one source.</p>
+<p>Pieces are the unit of decision and recombine in the compile row; a direction takes all six from one source.</p>
+<figure class="fig" id="F-c"><span class="ref" data-ref="F-c">F-c</span>
+<svg viewBox="0 0 640 96" role="img" aria-labelledby="F-c-t"><title id="F-c-t">The six pieces</title>
+<a href="#P-color"><g transform="translate(20 8)"><circle cx="24" cy="24" r="14" fill="#8b7cf6"/><circle cx="40" cy="30" r="14" fill="#e0a33a" opacity=".92"/><circle cx="56" cy="24" r="14" fill="#3fb886" opacity=".92"/><text x="40" y="70" text-anchor="middle">colour</text><text x="40" y="84" text-anchor="middle" class="s m">P-color</text></g></a>
+<a href="#P-type"><g transform="translate(122 8)"><text x="40" y="38" text-anchor="middle" style="font-family:var(--d-sans);font-size:30px;font-weight:800">Aa</text><text x="40" y="70" text-anchor="middle">type</text><text x="40" y="84" text-anchor="middle" class="s m">P-type</text></g></a>
+<a href="#P-shape"><g transform="translate(224 8)"><rect x="12" y="8" width="56" height="34" rx="9" fill="var(--d-soft)" stroke="var(--d-line-strong)"/><rect x="24" y="20" width="32" height="10" rx="5" fill="var(--d-surface)" stroke="var(--d-line-strong)"/><text x="40" y="70" text-anchor="middle">shape</text><text x="40" y="84" text-anchor="middle" class="s m">P-shape</text></g></a>
+<a href="#P-motif"><g transform="translate(326 8)"><rect x="8" y="10" width="64" height="30" fill="var(--d-mark)"/><g fill="var(--d-canvas)"><rect x="12" y="13" width="6" height="4"/><rect x="24" y="13" width="6" height="4"/><rect x="36" y="13" width="6" height="4"/><rect x="48" y="13" width="6" height="4"/><rect x="60" y="13" width="6" height="4"/><rect x="12" y="33" width="6" height="4"/><rect x="24" y="33" width="6" height="4"/><rect x="36" y="33" width="6" height="4"/><rect x="48" y="33" width="6" height="4"/><rect x="60" y="33" width="6" height="4"/></g><text x="40" y="70" text-anchor="middle">motif</text><text x="40" y="84" text-anchor="middle" class="s m">P-motif</text></g></a>
+<a href="#P-motion"><g transform="translate(428 8)"><path d="M10 40C24 40 30 10 44 10S64 40 70 40" fill="none" stroke="var(--d-ink)" stroke-width="1.6" marker-end="url(#arw)"/><text x="40" y="70" text-anchor="middle">motion</text><text x="40" y="84" text-anchor="middle" class="s m">P-motion</text></g></a>
+<a href="#P-icon"><g transform="translate(530 8)"><g fill="none" stroke="var(--d-ink)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" transform="translate(22 6) scale(1.5)"><path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="3.5" r="1.4"/><circle cx="20.5" cy="18.5" r="1.4"/><circle cx="3.5" cy="18.5" r="1.4"/></g><text x="40" y="70" text-anchor="middle">iconography</text><text x="40" y="84" text-anchor="middle" class="s m">P-icon</text></g></a>
+</svg><figcaption>Each piece below has candidates D1, D2, D3.</figcaption></figure>
 <div id="pieces-grid"></div>
 
 <h2 id="directions"><small>5 · three canonical directions</small>The major directives, composed</h2>
-<p>Each direction below is all six pieces from one source. The specimen is the same markup every time: only tokens change. Read them with the ICP lens in mind: the working synthesis in <code>docs/08-icp-directions.md</code> is to build the harness for the pipeline team and dress the lander for the interior studio, which pulls in two different visual directions at once.</p>
+<p>Identical specimen markup; only tokens change. <code>docs/08-icp-directions.md</code> builds for the pipeline team and dresses the lander for the studio: two pulls.</p>
 <div id="dir-cards"></div>
 
-<h2 id="contrast"><small>6 · contrast</small>Every pair, every direction, every mode</h2>
-<p><span class="pv d">DERIVED</span> Ratios computed at load from the token values above with the WCAG 2.x relative-luminance formula. A direction fails the mode gate if any pair is below its threshold. Thresholds: 4.5 for text, 3 for large text, UI edges and marks, 1.3 for hairlines (a visibility floor, not a WCAG rule).</p>
+<h2 id="contrast-h"><small>6 · contrast</small>Every pair, every direction, every mode</h2>
+<p><span class="pv d">DERIVED</span> WCAG 2.x, computed at load. Thresholds: 4.5 text; 3 large text, edges, marks; 1.3 hairlines (visibility floor). Any failure fails G1.</p>
 <div id="contrast"></div>
 
 <h2 id="surfaces"><small>7 · cross-surface</small>One source, three surfaces</h2>
-<p>The design system has to hold across the web app, the same code installed as a PWA on a superintendent's or a designer's phone, and the native Swift inspector on macOS and iOS. The rule is that tokens have one source in the repo and every surface is generated from it. The paths below are proposed, not yet built.</p>
-<div class="pipe">
-  <div class="node"><b>design/tokens.json</b>DTCG format. Primitive, semantic, component tiers; light and dark sets; type, space, radius, motion.<ul><li>The decision in this page, compiled</li><li>Linted: no hex outside this file</li></ul></div>
-  <div class="arr">→ design/build.mjs →</div>
-  <div class="node"><b>hub/site/3pt.css · apps/web/tokens.css</b>CSS custom properties, both sets, <code>color-scheme</code>, focus ring, reduced-motion.<ul><li>Hub leaves and the nav shell read only these</li><li>Web app and PWA share the file</li></ul></div>
-  <div class="arr">→</div>
-  <div class="node"><b>apps/3PT/Tokens.xcassets · Tokens.swift</b>Colour sets with light and dark appearances; a namespaced enum; glyph paths as custom symbols.<ul><li><code>Color("bg/canvas")</code> never a literal</li><li>Type mapped to Dynamic Type styles</li></ul></div>
-</div>
+<p>Web app, PWA and Swift inspector, generated from one file; paths proposed, not built.</p>
+<figure class="fig" id="F-e"><span class="ref" data-ref="F-e">F-e</span>
+<svg viewBox="0 0 640 136" role="img" aria-labelledby="F-e-t"><title id="F-e-t">Token pipeline</title>
+<rect x="4" y="40" width="150" height="56" rx="6" fill="var(--d-soft)" stroke="var(--d-line-strong)"/>
+<text x="14" y="60" class="b">design/tokens.json</text><text x="14" y="76" class="s m">DTCG · 3 tiers · 2 sets</text><text x="14" y="89" class="s m">no hex outside this file</text>
+<path d="M154 68H188" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
+<rect x="192" y="46" width="122" height="44" rx="6" fill="var(--d-surface)" stroke="var(--d-line-strong)"/>
+<text x="202" y="64" class="b">design/build.mjs</text><text x="202" y="80" class="s m">lint + generate</text>
+<path d="M314 68H334V22H350" fill="none" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
+<path d="M314 68H350" fill="none" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
+<path d="M314 68H334V114H350" fill="none" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
+<rect x="354" y="4" width="282" height="36" rx="6" fill="var(--d-surface)" stroke="var(--d-line)"/>
+<text x="366" y="19" class="b">3pt.css · apps/web/tokens.css</text><text x="366" y="33" class="s m">hub · web · PWA</text>
+<rect x="354" y="50" width="282" height="36" rx="6" fill="var(--d-surface)" stroke="var(--d-line)"/>
+<text x="366" y="65" class="b">Tokens.xcassets · Tokens.swift</text><text x="366" y="79" class="s m">Color("bg/canvas") · no literals</text>
+<rect x="354" y="96" width="282" height="36" rx="6" fill="var(--d-surface)" stroke="var(--d-line)"/>
+<text x="366" y="111" class="b">manifest.webmanifest</text><text x="366" y="125" class="s m">theme colours · maskable icon</text>
+</svg><figcaption>I10. This decision is the first commit of tokens.json.</figcaption></figure>
 <div class="tbl"><table>
-<tr><th>Concern</th><th>Web app (Next.js on Vercel)</th><th>PWA (same code, installed)</th><th>Swift inspector (macOS, iOS)</th></tr>
-<tr><td><b>Colour</b></td><td>CSS variables from the tokens file; <code>data-theme</code> override.</td><td>Same, plus two <code>theme-color</code> metas and a maskable icon cut from the triangle mark.</td><td>Generated asset catalog; every colour set has both appearances; <code>TPT.bg.canvas</code>.</td></tr>
-<tr><td><b>Type</b></td><td>Display and body fonts self-hosted as woff2 under <code>design/fonts/</code>, sizes in rem on a fixed scale.</td><td>Same files, <code>font-display: swap</code>, subset to Latin, metric-compatible fallbacks so offline first paint does not shift.</td><td>Display font bundled only if the direction demands it (Familjen Grotesk, Instrument Serif); body maps to SF Pro through Dynamic Type: display → largeTitle, h2 → title2, body → body, eyebrow → caption monospaced. No point sizes in Swift.</td></tr>
-<tr><td><b>Space</b></td><td>4px grid, <code>space.1 … space.8</code> = 4, 8, 12, 16, 24, 32, 48, 64.</td><td>Same, plus <code>env(safe-area-inset-*)</code> on the shell.</td><td>Same numbers as points; <code>TPT.space.4</code>.</td></tr>
-<tr><td><b>Radius</b></td><td><code>radius.control · card · pill</code>, values per direction.</td><td>Same.</td><td><code>RoundedRectangle(cornerRadius: TPT.radius.card, style: .continuous)</code>.</td></tr>
-<tr><td><b>Icons</b></td><td>The nav.js glyph paths, <code>currentColor</code>, stroke per direction.</td><td>Same.</td><td>Each glyph exported as a custom SF Symbol template so weight follows the text style; the direction sets stroke weight once.</td></tr>
-<tr><td><b>Motion</b></td><td><code>motion.fast</code> and <code>motion.ease</code>; reduced-motion zeroes them.</td><td>Same.</td><td><code>withAnimation(.easeOut(duration:))</code> from the same numbers; <code>accessibilityReduceMotion</code> respected.</td></tr>
-<tr><td><b>Density</b></td><td>Default density; the inspector's dense tables use <code>space.2</code>.</td><td>Compact rows below 560px; 44px hit targets always.</td><td>macOS default; iOS 44pt targets; tables use the same row heights as the web.</td></tr>
-<tr><td><b>Photos</b></td><td>Neutral one-pixel frame, no tint, never the hero (I6).</td><td>Same; lazy, sized by the record beside them.</td><td>Same rule in a <code>TPTTile</code> view.</td></tr>
+<tr><th>Concern</th><th>Web app (Next.js, Vercel)</th><th>PWA (installed)</th><th>Swift inspector (macOS, iOS)</th></tr>
+<tr><td><b>Colour</b></td><td>CSS variables; <code>data-theme</code> override.</td><td>Plus <code>theme-color</code> metas; maskable icon from the triangle.</td><td>Asset catalog, both appearances.</td></tr>
+<tr><td><b>Type</b></td><td>woff2 in <code>design/fonts/</code>; rem on a fixed scale.</td><td><code>font-display: swap</code>, Latin subset, metric fallbacks.</td><td>Display font bundled only if demanded; Dynamic Type: display → largeTitle, h2 → title2, body → body, eyebrow → caption mono.</td></tr>
+<tr><td><b>Space</b></td><td>4px grid; <code>space.1 … 8</code> = 4, 8, 12, 16, 24, 32, 48, 64.</td><td>Plus <code>env(safe-area-inset-*)</code>.</td><td>Same, in points; <code>TPT.space.4</code>.</td></tr>
+<tr><td><b>Radius</b></td><td><code>radius.control · card · pill</code>, per direction.</td><td>Same.</td><td><code>RoundedRectangle(cornerRadius: TPT.radius.card, style: .continuous)</code>.</td></tr>
+<tr><td><b>Icons</b></td><td>nav.js paths, <code>currentColor</code>, stroke per direction.</td><td>Same.</td><td>Custom SF Symbols; weight follows text.</td></tr>
+<tr><td><b>Motion</b></td><td><code>motion.fast · ease</code>; reduced motion zeroes them.</td><td>Same.</td><td><code>withAnimation(.easeOut(duration:))</code>; <code>accessibilityReduceMotion</code>.</td></tr>
+<tr><td><b>Density</b></td><td>Dense tables use <code>space.2</code>.</td><td>Compact below 560px; 44px targets.</td><td>iOS 44pt; web row heights.</td></tr>
+<tr><td><b>Photos</b></td><td>I6.</td><td>Lazy, sized by the record.</td><td><code>TPTTile</code>.</td></tr>
 </table></div>
 <h3>What the compiled selection generates</h3>
-<p><span class="pv d">DERIVED</span> Rendered from the compile row in the promenade. Change the row and these regenerate. The JSON is abbreviated to the semantic colour tier; the real file carries every tier.</p>
+<p><span class="pv d">DERIVED</span> From the compile row; JSON abbreviated to the semantic tier.</p>
 <div class="gen">
   <div><h4>tokens.css</h4><pre id="gen-css"></pre></div>
   <div><h4>tokens.json (DTCG, excerpt)</h4><pre id="gen-json"></pre></div>
@@ -349,65 +429,97 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 </div>
 
 <h2 id="components"><small>8 · component library</small>Our own components, and what they read</h2>
-<p>We build our own library rather than adopting one, because the inspector, the hub and the app share a small vocabulary that no third-party kit has: provenance badges, the version diff, the ladder, the stream switch, the proposal card. Twelve components cover everything the demo needs. Each is a record: anatomy, tokens consumed, states, and its Swift twin.</p>
+<p>Our own: no kit has badge, diff, ladder, switch, proposal. Twelve cover the demo; each records anatomy, tokens, states, Swift twin.</p>
 <div class="grid2">
-  <div class="box"><h4 style="margin:0">Naming</h4><ul style="font-size:13px"><li>CSS: <code>.tpt-button</code>, <code>.tpt-button.primary</code>; parts as <code>.tpt-card-title</code>. Flat, no BEM underscores.</li><li>Swift: <code>TPTButton</code>, <code>TPTCard</code>; variants as enums, <code>TPTButton(.primary)</code>.</li><li>Every component lives in <code>design/components/</code> as one HTML fragment plus one Swift file with the same name. The hub renders the fragments as its own component sheet.</li></ul></div>
-  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>A component reads component-tier tokens, which read semantics. It never names a hue.</li><li>Every component has a light and a dark screenshot in its record before it is used on a surface.</li><li>States are enumerated: default, hover, focus, active, disabled, and for provenance and status the three fixed values.</li><li>A new component needs a reason the twelve cannot cover, written in its record.</li></ul></div>
+  <div class="box"><h4 style="margin:0">Naming</h4><ul style="font-size:13px"><li>CSS <code>.tpt-button.primary</code>, parts <code>.tpt-card-title</code>; no BEM.</li><li>Swift <code>TPTButton(.primary)</code>, variants as enums.</li><li>One fragment plus one Swift file each in <code>design/components/</code>; the hub renders the fragments.</li></ul></div>
+  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>Reads component tokens, never a hue.</li><li>Light and dark screenshots before use.</li><li>States: default, hover, focus, active, disabled; plus the fixed triple.</li><li>A thirteenth needs a written reason.</li></ul></div>
 </div>
 <div class="tbl"><table>
-<tr><th>#</th><th>Component</th><th>Anatomy</th><th>Reads</th><th>Swift</th></tr>
-<tr><td class="n">1</td><td><b>Button</b> primary · secondary · quiet</td><td>label, optional glyph; 44pt target on touch</td><td>accent, fg.on-accent, line.strong, bg.surface</td><td><code>TPTButton</code></td></tr>
-<tr><td class="n">2</td><td><b>Chip</b></td><td>mono uppercase label; point and cluster variants</td><td>bg.raised, line, point.*</td><td><code>TPTChip</code></td></tr>
-<tr><td class="n">3</td><td><b>Provenance badge</b></td><td>DERIVED · AUTHORED · TO CONFIRM; 8.5px mono</td><td>prov.* (status aliases)</td><td><code>TPTProvenance</code></td></tr>
-<tr><td class="n">4</td><td><b>Card</b></td><td>glyph, title, one sentence, go-verb, optional id and temp</td><td>bg.surface, line, accent for the verb</td><td><code>TPTCard</code></td></tr>
-<tr><td class="n">5</td><td><b>Stat tile</b></td><td>number (display face, tabular), label, provenance</td><td>bg.surface, fg.muted</td><td><code>TPTStat</code></td></tr>
-<tr><td class="n">6</td><td><b>Version diff row</b></td><td>part name, v(n), v(n+1); added and struck text</td><td>status.ok, status.alert as text only</td><td><code>TPTDiffRow</code></td></tr>
-<tr><td class="n">7</td><td><b>Photo tile</b></td><td>square, one-pixel frame, yes or no mark as text</td><td>line, status.ok, status.alert</td><td><code>TPTTile</code></td></tr>
-<tr><td class="n">8</td><td><b>Stream switch</b></td><td>track, knob, name, one line</td><td>line.strong, status.ok</td><td><code>TPTSwitch</code> (native Toggle, tinted)</td></tr>
-<tr><td class="n">9</td><td><b>Ladder rung</b></td><td>numbered disc, verb, one line</td><td>fg.default on bg.canvas inverted</td><td><code>TPTRung</code></td></tr>
-<tr><td class="n">10</td><td><b>Proposal card</b></td><td>accent border, claim, reason, approve and decline buttons</td><td>accent, bg.surface</td><td><code>TPTProposal</code></td></tr>
-<tr><td class="n">11</td><td><b>Rulebox</b></td><td>warn edge, bold lead, muted body</td><td>status.warn, bg.surface</td><td><code>TPTCallout</code></td></tr>
-<tr><td class="n">12</td><td><b>Table</b></td><td>mono uppercase head, hairline rows, tabular numbers</td><td>bg.raised, line</td><td><code>TPTTable</code> (List with sections)</td></tr>
+<tr><th></th><th>Component</th><th>Anatomy</th><th>Reads</th><th>Swift</th></tr>
+<tr id="K1"><td class="n"><span class="ref" data-ref="K1">K1</span></td><td><b>Button</b> primary · secondary · quiet</td><td>label, glyph; 44pt on touch</td><td>accent, fg.on-accent, line.strong, bg.surface</td><td><code>TPTButton</code></td></tr>
+<tr id="K2"><td class="n"><span class="ref" data-ref="K2">K2</span></td><td><b>Chip</b></td><td>mono uppercase; point, cluster variants</td><td>bg.raised, line, point.*</td><td><code>TPTChip</code></td></tr>
+<tr id="K3"><td class="n"><span class="ref" data-ref="K3">K3</span></td><td><b>Provenance badge</b></td><td>DERIVED · AUTHORED · TO CONFIRM; 8.5px mono</td><td>prov.*</td><td><code>TPTProvenance</code></td></tr>
+<tr id="K4"><td class="n"><span class="ref" data-ref="K4">K4</span></td><td><b>Card</b></td><td>glyph, title, sentence, go-verb</td><td>bg.surface, line, accent (verb)</td><td><code>TPTCard</code></td></tr>
+<tr id="K5"><td class="n"><span class="ref" data-ref="K5">K5</span></td><td><b>Stat tile</b></td><td>tabular number, label, provenance</td><td>bg.surface, fg.muted</td><td><code>TPTStat</code></td></tr>
+<tr id="K6"><td class="n"><span class="ref" data-ref="K6">K6</span></td><td><b>Version diff row</b></td><td>part, v(n), v(n+1); added, struck</td><td>status.ok, status.alert as text</td><td><code>TPTDiffRow</code></td></tr>
+<tr id="K7"><td class="n"><span class="ref" data-ref="K7">K7</span></td><td><b>Photo tile</b></td><td>square, 1px frame, text mark</td><td>line, status.ok, status.alert</td><td><code>TPTTile</code></td></tr>
+<tr id="K8"><td class="n"><span class="ref" data-ref="K8">K8</span></td><td><b>Stream switch</b></td><td>track, knob, name, line</td><td>line.strong, status.ok</td><td><code>TPTSwitch</code> (Toggle)</td></tr>
+<tr id="K9"><td class="n"><span class="ref" data-ref="K9">K9</span></td><td><b>Ladder rung</b></td><td>numbered disc, verb, line</td><td>fg.default on bg.canvas inverted</td><td><code>TPTRung</code></td></tr>
+<tr id="K10"><td class="n"><span class="ref" data-ref="K10">K10</span></td><td><b>Proposal card</b></td><td>accent border, claim, approve, decline</td><td>accent, bg.surface</td><td><code>TPTProposal</code></td></tr>
+<tr id="K11"><td class="n"><span class="ref" data-ref="K11">K11</span></td><td><b>Rulebox</b></td><td>warn edge, bold lead, muted body</td><td>status.warn, bg.surface</td><td><code>TPTCallout</code></td></tr>
+<tr id="K12"><td class="n"><span class="ref" data-ref="K12">K12</span></td><td><b>Table</b></td><td>mono head, hairlines, tabular numbers</td><td>bg.raised, line</td><td><code>TPTTable</code></td></tr>
 </table></div>
 <h3>Compiled specimen</h3>
-<p>All twelve components on the composition currently in the compile row of the promenade. This is what the monorepo would look like if the ballot closed now.</p>
+<p>All twelve on the compile row.</p>
 <div id="compiled-spec" class="specs one"></div>
 
 <h2 id="depth"><small>8b · depth · experiment</small>A signed-distance field behind the surfaces</h2>
-<p>One fragment shader draws the triangle mark as a height field: plateau inside, falloff outside, a lit rim, faint contours, and each region tinted by the nearest point. It reads the compiled tokens, so it re-skins with the ballot. Homepage: low intensity, fixed behind the page. Components: the same field at small scale inside a tile.</p>
+<p>A fragment shader draws the triangle as a height field (plateau, falloff, lit rim, contours, tinted by nearest point) from the compiled tokens. Homepage: low intensity behind the page; components: the field inside a tile.</p>
 <div class="bar"><label>Intensity</label><input type="range" id="sdf-int" min="0" max="1" step="0.05" value="0.7" style="width:140px"><label>Scale</label><input type="range" id="sdf-scale" min="0.4" max="1.6" step="0.05" value="1" style="width:140px"><span style="font-size:12px;color:var(--d-muted)" id="sdf-note">WebGL; reduced motion renders one frame; no WebGL falls back to radial gradients.</span></div>
 <div id="depth-spec" class="specs"></div>
 
 <h2 id="icp"><small>9 · motifs against the ICP</small>What is acceptable, and on what basis</h2>
-<p>The ICP is still being dialled in (<code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>). Motifs speak to industries: marking paint reads as a jobsite, a title block reads as a studio, a rail of coloured points reads as an engineer's console. The bases below say what any motif must satisfy regardless of industry; the matrix says how each direction speaks to each ICP direction, so the design decision can follow the ICP decision instead of preceding it.</p>
+<p>The ICP is still open (<code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>). Paint says jobsite, title block says studio, rail says console. Bases bind every motif; the matrix lets design follow the ICP.</p>
+<figure class="fig" id="F-f"><span class="ref" data-ref="F-f">F-f</span>
+<svg viewBox="0 0 640 120" role="img" aria-labelledby="F-f-t"><title id="F-f-t">The hero is never a photo</title>
+<rect x="4" y="6" width="400" height="108" rx="6" fill="var(--d-surface)" stroke="var(--d-line-strong)"/>
+<text x="18" y="26" class="b">record</text>
+<rect x="18" y="36" width="250" height="7" rx="2" fill="var(--d-ink)" opacity=".85"/>
+<rect x="18" y="50" width="330" height="5" rx="2" fill="var(--d-line-strong)"/><rect x="18" y="61" width="290" height="5" rx="2" fill="var(--d-line-strong)"/><rect x="18" y="72" width="310" height="5" rx="2" fill="var(--d-line-strong)"/>
+<rect x="18" y="88" width="56" height="14" rx="2" fill="var(--d-ok-soft)" stroke="var(--d-ok)"/><text x="46" y="98" text-anchor="middle" class="s" style="fill:var(--d-ok);font-size:7.5px">DERIVED</text>
+<rect x="84" y="86" width="72" height="18" rx="4" fill="#e0a33a"/><text x="120" y="98" text-anchor="middle" class="s" style="fill:#16191E">APPROVE</text>
+<rect x="418" y="36" width="48" height="48" fill="var(--d-soft)" stroke="var(--d-line-strong)"/>
+<path d="M418 84l18-22 10 12 8-8 12 18" fill="none" stroke="var(--d-muted)" stroke-width="1.2"/><text x="442" y="100" text-anchor="middle" class="s m">photo</text>
+<text x="442" y="112" text-anchor="middle" class="s m">1px · no tint</text>
+<rect x="500" y="6" width="136" height="108" rx="6" fill="none" stroke="var(--d-alert)" stroke-dasharray="4 3"/>
+<path d="M500 6L636 114M636 6L500 114" stroke="var(--d-alert)" stroke-width="1" opacity=".6"/>
+<text x="568" y="64" text-anchor="middle" class="s" style="fill:var(--d-alert)">PHOTO HERO</text>
+</svg><figcaption>B1, I6. The eye lands on the harness.</figcaption></figure>
 <h3>Bases: every motif must pass all seven</h3>
 <div class="tbl"><table>
-<tr><th>#</th><th>Basis</th><th>Why</th></tr>
-<tr><td class="n">B1</td><td>The hero is never a photograph, and no photo is larger than the record beside it.</td><td>Image analyzers are banned. The eye must land on the harness, not the corpus.</td></tr>
-<tr><td class="n">B2</td><td>One accent per screen; status hues never colour categories; the three points keep their slots.</td><td>I3, I4, I7. A motif that needs a second accent is two motifs.</td></tr>
-<tr><td class="n">B3</td><td>Provenance badges legible in the motif's own colours, both modes.</td><td>Tallies are never typed. The badge is the credibility of every number.</td></tr>
-<tr><td class="n">B4</td><td>Same glyph paths on every surface; the motif may change stroke only.</td><td>I8. Swift gets the same symbols.</td></tr>
-<tr><td class="n">B5</td><td>Drawable with colour, path and text.</td><td>I9. The inspector is native.</td></tr>
-<tr><td class="n">B6</td><td>Buildable today: fonts available now and self-hostable; no custom illustration.</td><td>Due 5:00 PM. A motif that needs an illustrator is a roadmap item.</td></tr>
-<tr><td class="n">B7</td><td>Distinct from the partners in the room: no MongoDB green accent, no black-on-black Vercel base.</td><td>The judges see forty submissions on those two palettes.</td></tr>
+<tr><th></th><th>Basis</th><th>Why</th></tr>
+<tr id="B1"><td class="n"><span class="ref" data-ref="B1">B1</span></td><td>Hero never a photo; no photo larger than its record.</td><td>Image analyzers are banned.</td></tr>
+<tr id="B2"><td class="n"><span class="ref" data-ref="B2">B2</span></td><td>One accent; status never colours categories; points keep slots.</td><td>I3, I4, I7.</td></tr>
+<tr id="B3"><td class="n"><span class="ref" data-ref="B3">B3</span></td><td>Badges legible in the motif's colours, both modes.</td><td>Every number's credibility.</td></tr>
+<tr id="B4"><td class="n"><span class="ref" data-ref="B4">B4</span></td><td>Same glyph paths everywhere; stroke may change.</td><td>I8. Swift gets the same symbols.</td></tr>
+<tr id="B5"><td class="n"><span class="ref" data-ref="B5">B5</span></td><td>Drawable with colour, path and text.</td><td>I9. The inspector is native.</td></tr>
+<tr id="B6"><td class="n"><span class="ref" data-ref="B6">B6</span></td><td>Buildable today: self-hostable fonts, no custom illustration.</td><td>Due 5:00 PM.</td></tr>
+<tr id="B7"><td class="n"><span class="ref" data-ref="B7">B7</span></td><td>No MongoDB green accent, no black-on-black Vercel base.</td><td>Forty submissions wear those palettes.</td></tr>
 </table></div>
 <h3>Fit matrix</h3>
-<p><span class="pv a">AUTHORED</span> 0 to 5: how naturally the direction's motif speaks to that ICP direction's company type, as estimated by the agent on 2026-09-26 for the principals to correct. <span class="pv d">DERIVED</span> the weighted fit under the chosen lens.</p>
+<p><span class="pv a">AUTHORED</span> 0 to 5 per company type, agent estimate of 2026-09-26, for the principals to correct. <span class="pv d">DERIVED</span> weighted fit.</p>
 <div class="bar"><label>ICP lens</label><select id="lens"></select><span style="font-size:12.5px;color:var(--d-muted)" id="lens-note"></span></div>
 <div id="fit"></div>
 
 <h2 id="promenade"><small>10 · the promenade</small>How Patrick and Yash decide</h2>
-<p>A promenade, not a vote: walk the pieces in order, record a pick per piece, then compile. The ballot is stored in this browser under <code>tpt_ds_v1</code>; it does not sync. Export as text and paste it to the other person, or fill both columns together on one screen.</p>
+<p>Pick per piece, then compile. The ballot lives in this browser under <code>tpt_ds_v1</code>, no sync: export as text, or fill both columns on one screen.</p>
+<figure class="fig" id="F-d"><span class="ref" data-ref="F-d">F-d</span>
+<svg viewBox="0 0 640 100" role="img" aria-labelledby="F-d-t"><title id="F-d-t">The promenade rail</title>
+<path d="M40 30H600" stroke="var(--d-line-strong)" stroke-width="1.5"/>
+<circle cx="110" cy="30" r="15" fill="var(--d-ink)"/><text x="110" y="34" text-anchor="middle" class="b" style="fill:var(--d-canvas)">1</text>
+<text x="110" y="62" text-anchor="middle" class="b">10 min · apart</text><text x="110" y="78" text-anchor="middle" class="s m">pick · overall · sentence</text>
+<circle cx="290" cy="30" r="15" fill="var(--d-ink)"/><text x="290" y="34" text-anchor="middle" class="b" style="fill:var(--d-canvas)">2</text>
+<text x="290" y="62" text-anchor="middle" class="b">10 min · together</text><text x="290" y="78" text-anchor="middle" class="s m">lock · name the criterion</text>
+<circle cx="460" cy="30" r="15" fill="var(--d-ink)"/><text x="460" y="34" text-anchor="middle" class="b" style="fill:var(--d-canvas)">3</text>
+<text x="460" y="62" text-anchor="middle" class="b">5 min · compile</text><text x="460" y="78" text-anchor="middle" class="s m">read · export · commit</text>
+<rect x="560" y="16" width="60" height="28" rx="4" fill="var(--d-warn-soft)" stroke="var(--d-warn)"/><text x="590" y="34" text-anchor="middle" class="s" style="fill:var(--d-warn)">AFTER</text>
+<text x="590" y="62" text-anchor="middle" class="b">tokens.json</text><text x="590" y="78" text-anchor="middle" class="s m">css · xcassets</text>
+</svg><figcaption>Score, do not describe taste. Still split after Round 2: the lane owner decides (shape, motion, icons: Swift lane; colour, type, motif: ICP lane), itself a proposal. Round 3 pastes the export into the decision record; commit <code>docs: design system decision</code>, both names. After: <code>design/tokens.json</code>, regenerate <code>3pt.css</code> and the shell, start <code>Tokens.xcassets</code>, flip the status line.</figcaption></figure>
 <div class="grid2">
-  <div class="box"><h4 style="margin:0">Gates (must pass, in order)</h4><ol style="font-size:13.5px"><li>Both modes pass the contrast table.</li><li>All seven bases in section 9.</li><li>Every piece has a Swift translation in section 7 that costs less than an hour.</li><li>Fonts load from a CDN now and can be self-hosted before the PWA goes offline.</li></ol></div>
-  <div class="box"><h4 style="margin:0">Criteria (score 1 to 5, weighted)</h4><ol style="font-size:13.5px"><li>Fit to the ICP we choose (the matrix, ×3)</li><li>Reads as harness, not analyzer, not dashboard (×3)</li><li>Holds up dense: the inspector is tables and diffs (×2)</li><li>Warmth in a three-minute demo (×2)</li><li>Both modes hold without a redesign (×2)</li><li>Distinct from the partners in the room (×1)</li><li>Build cost before 5:00 PM (×1)</li></ol></div>
+  <div class="box"><h4 style="margin:0">Gates (must pass, in order)</h4><ol class="cl">
+    <li id="G1"><span class="ref" data-ref="G1">G1</span>Both modes pass the contrast table.</li>
+    <li id="G2"><span class="ref" data-ref="G2">G2</span>Bases B1 to B7.</li>
+    <li id="G3"><span class="ref" data-ref="G3">G3</span>Every piece translates to Swift (section 7) in under an hour.</li>
+    <li id="G4"><span class="ref" data-ref="G4">G4</span>Fonts load now; self-hosted before the PWA goes offline.</li></ol></div>
+  <div class="box"><h4 style="margin:0">Criteria (score 1 to 5, weighted)</h4><ol class="cl">
+    <li id="C1"><span class="ref" data-ref="C1">C1</span>Fit to the chosen ICP (the matrix) ×3</li>
+    <li id="C2"><span class="ref" data-ref="C2">C2</span>Reads as harness, not analyzer, not dashboard ×3</li>
+    <li id="C3"><span class="ref" data-ref="C3">C3</span>Holds up dense: tables and diffs ×2</li>
+    <li id="C4"><span class="ref" data-ref="C4">C4</span>Warmth in a three-minute demo ×2</li>
+    <li id="C5"><span class="ref" data-ref="C5">C5</span>Both modes hold without a redesign ×2</li>
+    <li id="C6"><span class="ref" data-ref="C6">C6</span>Distinct from the partners in the room ×1</li>
+    <li id="C7"><span class="ref" data-ref="C7">C7</span>Build cost before 5:00 PM ×1</li></ol></div>
 </div>
-<div class="box"><h4 style="margin:0">Procedure</h4><ol style="font-size:13.5px">
-<li><b>Round 1, ten minutes, apart.</b> Each principal fills their column: one pick per piece, an overall direction, one sentence of reasoning. Score, do not describe taste.</li>
-<li><b>Round 2, ten minutes, together.</b> Lock every piece where the columns agree. For each disagreement, each side names the criterion number that decides it. If still split, the lane owner decides: shape, motion and iconography go with the Swift and shell lane; colour, type and motif go with the ICP and lander lane. This tie-break is itself a proposal; strike it if it is wrong.</li>
-<li><b>Round 3, five minutes.</b> Set the compile row to the locked picks, read the compiled specimen once in each mode, export, and paste the export into the decision record at the bottom. Commit as <code>docs: design system decision</code> with both names.</li>
-<li><b>After.</b> Write <code>design/tokens.json</code> from the export, generate <code>hub/site/3pt.css</code> and move the nav shell onto tokens, start <code>Tokens.xcassets</code> for the Swift lane. Update this page's status line from proposal to decided.</li>
-</ol></div>
 <h3>Ballot</h3>
 <div class="tbl ballot"><table id="ballot"></table></div>
 <div class="grid2" id="notes"></div>
@@ -420,21 +532,21 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 <textarea id="export" hidden placeholder="Export appears here"></textarea>
 
 <h2 id="decision"><small>11 · decision record</small>To be filled at the end of the promenade</h2>
-<p><span class="pv c">TO CONFIRM</span> Nothing below is decided. When the promenade closes, replace the cells from the export, change the status line at the top of this page, and add a row to the changelog.</p>
+<p><span class="pv c">TO CONFIRM</span> At close: fill from the export, change the status line, add a changelog row.</p>
 <div class="tbl"><table>
 <tr><th>Piece</th><th>Decision</th><th>Source direction</th><th>Decided by</th><th>Date</th></tr>
-<tr><td>Colour</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Type</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Shape</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Motif</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Motion</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Iconography</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Naming convention</td><td>Option C, layer then role (proposed)</td><td>this page</td><td>—</td><td>—</td></tr>
-<tr><td>Invariants I1 to I10</td><td>as written (proposed)</td><td>this page</td><td>—</td><td>—</td></tr>
+<tr><td>Colour</td><td>TO CONFIRM</td><td></td><td></td><td></td></tr>
+<tr><td>Type</td><td>TO CONFIRM</td><td></td><td></td><td></td></tr>
+<tr><td>Shape</td><td>TO CONFIRM</td><td></td><td></td><td></td></tr>
+<tr><td>Motif</td><td>TO CONFIRM</td><td></td><td></td><td></td></tr>
+<tr><td>Motion</td><td>TO CONFIRM</td><td></td><td></td><td></td></tr>
+<tr><td>Iconography</td><td>TO CONFIRM</td><td></td><td></td><td></td></tr>
+<tr><td>Naming</td><td>N-C (proposed)</td><td>this page</td><td></td><td></td></tr>
+<tr><td>Invariants I1..I10</td><td>as written (proposed)</td><td>this page</td><td></td><td></td></tr>
 </table></div>
 
 <footer>
-  <p style="margin:0"><b>3PT</b> · design system proposal · <code>hub/site/design-system.html</code> · written 2026-09-26 for the promenade between Patrick and Yash. Sources: <code>hub/site/3pt.css</code>, <code>hub/site/nav.js</code>, <code>hub/site/direction.html</code>, <code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>. Direction fonts on this page load from Google Fonts for review only.</p>
+  <p style="margin:0"><b>3PT</b> · design system proposal · <code>hub/site/design-system.html</code> · 2026-09-26. Sources: <code>3pt.css</code>, <code>nav.js</code>, <code>direction.html</code>, <code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>. Fonts vendored.</p>
 </footer>
 </div>
 
@@ -739,6 +851,43 @@ function renderDepth(){
   });
 }
 ['sdf-int','sdf-scale'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('input', function(){ var i=parseFloat(document.getElementById('sdf-int').value), sc=parseFloat(document.getElementById('sdf-scale').value); DEPTH.forEach(function(h,k){ h.set({ intensity: k%4===0? i : Math.min(1,i+0.2), scale: k%4===0? sc : 0.55 }); }); }); });
+
+/* ---------- Refs + register (DERIVED from the DOM; nothing in the register is typed) ---------- */
+var KIND={I:'invariant',N:'naming',L:'layer',B:'basis',C:'criterion',G:'gate',P:'piece',D:'direction',F:'figure',K:'component'};
+function chip(id){ return '<span class="ref" data-ref="'+id+'">'+id+'</span>'; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function labelOf(host){
+  var tag=host.tagName.toLowerCase(), t;
+  if(tag==='figure'||tag==='svg'){ t=host.querySelector('title'); return t?t.textContent:''; }
+  var c=host.cloneNode(true); c.querySelectorAll('.ref,small,.tag,.src,.pv,.specs,.bar,.meta').forEach(function(x){ x.remove(); });
+  var s='';
+  if(tag==='tr'){ var tds=Array.prototype.slice.call(c.querySelectorAll('td')).map(function(d){ return d.textContent.trim(); }).filter(Boolean); s=tds[0]||''; if(s.length<12&&tds[1]) s+=' · '+tds[1]; }
+  else { var h=c.querySelector('h3,h4,b'); s=(h&&h.textContent.trim())||c.textContent; if(tag==='h3'&&h) s=c.textContent; }
+  s=s.replace(/\s+/g,' ').trim(); return s.length>88 ? s.slice(0,86)+'…' : s;
+}
+function buildRegister(){
+  var host=document.getElementById('register-table'); if(!host) return;
+  var rows=[], seen={};
+  document.querySelectorAll('h2[id]').forEach(function(h){ seen[h.id]=1; rows.push(['section',h.id,labelOf(h)]); });
+  document.querySelectorAll('.ref[data-ref]').forEach(function(ch){
+    if(ch.closest('#register-table')) return; var id=ch.getAttribute('data-ref'), el=document.getElementById(id);
+    if(!el||seen[id]) return; seen[id]=1; rows.push([KIND[id.charAt(0)]||'element',id,labelOf(el)]);
+  });
+  host.innerHTML=rows.map(function(r){ return '<div>'+chip(r[1])+'<span class="k">'+r[0]+'</span><span class="l" title="'+esc(r[2])+'">'+esc(r[2])+'</span></div>'; }).join('');
+  var n=document.getElementById('register-count'); if(n) n.textContent=rows.length+' ids';
+}
+document.addEventListener('click', function(e){
+  var ch=e.target.closest('.ref'); if(!ch) return;
+  var id=ch.getAttribute('data-ref'), ref='design-system#'+id;
+  function flash(){ ch.classList.add('flash'); setTimeout(function(){ ch.classList.remove('flash'); }, 700); }
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(ref).then(flash, flash); } else { flash(); }
+  if(ch.closest('#register-table')){ var el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }
+});
+/* Pieces and direction cards are rendered by script, so their ids and chips are stamped after each render. */
+var _renderPieces=renderPieces, _renderDirs=renderDirs;
+renderPieces=function(){ _renderPieces(); var g=document.getElementById('pieces-grid'), hs=g.querySelectorAll('h3');
+  PIECES.forEach(function(p,i){ var h=hs[i]; if(h){ h.id='P-'+p[0]; h.insertAdjacentHTML('afterbegin', chip('P-'+p[0])); } }); buildRegister(); };
+renderDirs=function(){ _renderDirs(); document.querySelectorAll('#dir-cards .dircard').forEach(function(c,i){ var d=KEYS[i]; c.id=d; var h=c.querySelector('h3'); if(h) h.insertAdjacentHTML('afterbegin', chip(d)); }); buildRegister(); };
 
 renderPieces(); renderDirs(); renderContrast(); renderFit(); renderBallot(); renderCompiled();
 })();
