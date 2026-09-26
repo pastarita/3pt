@@ -66,7 +66,7 @@ async function seed() {
 }
 /* persistence: a host (the node API with Atlas, or any Store) calls persistTo; without it, state lives in memory */
 let store: Store | null = null;
-export function persistTo(s: Store): void { store = s; }
+export function persistTo(s: Store | null): void { store = s; }   /* null: stop persisting (the Worker's fallback) */
 async function snapshot(why: string) {
   if (!store) return;
   try { await store.insert(COLLECTIONS.app_state, { ts: Date.now(), why, versions: S.versions, cur: S.cur, rejected: S.rejected, reviewed: S.reviewed, extra: S.extra, events: S.events.slice(-500) }); }

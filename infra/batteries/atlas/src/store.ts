@@ -5,9 +5,10 @@ import { atlasUri } from './index.js';
 
 export interface AtlasStore extends Store { close(): Promise<void>; dbName: string }
 
-export async function atlasStore(uri = atlasUri(), dbName = process.env.ATLAS_DB ?? '3pt'): Promise<AtlasStore> {
+/** `timeoutMs`: how long to look for the cluster before giving up. The Worker passes a short one so it can fall back. */
+export async function atlasStore(uri = atlasUri(), dbName = process.env.ATLAS_DB ?? '3pt', timeoutMs = 10_000): Promise<AtlasStore> {
   if (!uri || uri.includes('<')) throw new Error('no Atlas connection: set ATLAS_URI, or ATLAS_HOST + ATLAS_DBUSER + ATLAS_DBPASS (docs/17 §5)');
-  const client = new MongoClient(uri, { serverSelectionTimeoutMS: 10_000 });
+  const client = new MongoClient(uri, { serverSelectionTimeoutMS: timeoutMs });
   await client.connect();
   const db = client.db(dbName);
   const col = (c: CollectionName) => db.collection<Document>(c);

@@ -2,6 +2,7 @@
 import { COLLECTIONS, memoryStore, seedPolicy, type Store } from '@3pt/core';
 import { handleSim } from './sim.js';
 import { handleApp } from './app.js';
+export { persistTo } from './app.js';
 
 const store = memoryStore();
 await store.insert(COLLECTIONS.policies, seedPolicy());
