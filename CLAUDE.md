@@ -28,7 +28,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 |---|---|
 | What are we building and why | `docs/00-vision.md` |
 | Who is it for | `docs/01-icp.md` |
-| Who owns which lane | `docs/02-lanes.md` |
+| Who owns which lane, term 2 (from 14:15), the checkpoint criterion | `docs/17-term-2-lanes.md` (L1–L7 closed; `docs/02-lanes.md` kept for the record) |
 | How code moves, repo layout, install loop, pipeline skeleton | `docs/03-workflow.md` |
 | Which partner tools and credits exist, and which 3PT slot each fills | `docs/04-resources.md` |
 | Rules, judging weights, banned projects, deadlines | `docs/05-rules.md` |
@@ -137,3 +137,8 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   9,767 → 3,676 visible words, 27 → 74 figures (362 → 50 words per figure). Direction is a storyboard, the design
   system is specimens rendered from the compile row. Uncommitted; HEAD's Makefile already calls the (untracked)
   metric, so `main` is red until this lands.
+- 2026-09-26 14:15 ET: **term 2 opened.** L1–L7 closed; six lanes with a gate each (T1 loop on Atlas · T2 photos through
+  the loop · T3 the judges' surface · T4 the difficulty story · T5 demo, video, pitch · T6 green main and hygiene) plus a
+  steward, mapped to terminals and judging weights in `docs/17-term-2-lanes.md`. Lane board reads it. Facts at 14:15: no
+  `.env`, no Sandbox cluster, nothing writes to Atlas; Yash's two commits on `origin/main` (Acme Builders, 117 licensed
+  construction photos) settle the workload as construction; freeze at 16:45, submit 17:00.

@@ -28,7 +28,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 |---|---|
 | What are we building and why | `docs/00-vision.md` |
 | Who is it for | `docs/01-icp.md` |
-| Who owns which lane | `docs/02-lanes.md` |
+| Who owns which lane, term 2 (from 14:15), the checkpoint criterion | `docs/17-term-2-lanes.md` (L1–L7 closed; `docs/02-lanes.md` kept for the record) |
 | How code moves, repo layout, install loop, pipeline skeleton | `docs/03-workflow.md` |
 | Which partner tools and credits exist, and which 3PT slot each fills | `docs/04-resources.md` |
 | Rules, judging weights, banned projects, deadlines | `docs/05-rules.md` |

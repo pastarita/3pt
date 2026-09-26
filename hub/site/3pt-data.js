@@ -48,8 +48,8 @@
       epigram:'Theses and hypotheses from the transcript, the M-* metric system, and the R-* requirement set mapped to partner incentives.' },
     { id:'D1', slug:'icp',            name:'ICPs',                 verb:'Choosing',  cluster:'decide', temp:'warm', doc:'docs/01-icp.md',
       epigram:'Three profiles, re-ranked against the rules.' },
-    { id:'D2', slug:'lanes-doc',      name:'Lanes',                verb:'Dividing',  cluster:'build',  temp:'warm', doc:'docs/02-lanes.md',
-      epigram:'Five lanes plus the resources scan. Owners marked TBD until assigned.' },
+    { id:'D2', slug:'lanes-doc',      name:'Lanes',                verb:'Dividing',  cluster:'build',  temp:'warm', doc:'docs/17-term-2-lanes.md',
+      epigram:'Term 2: six lanes to 5 PM with a gate each, the checkpoint criterion, and what each principal needs. L1–L7 closed.' },
     { id:'D3', slug:'workflow',       name:'Workflow',             verb:'Shipping',  cluster:'build',  temp:'warm', doc:'docs/03-workflow.md',
       epigram:'Repo layout, the pipeline skeleton, DevX, and the install loop.' },
     { id:'DA', slug:'architecture-doc', name:'Architecture',        verb:'Structuring', cluster:'build', temp:'hot', doc:'docs/10-architecture.md',
@@ -76,8 +76,8 @@
       epigram:'The repo front door.' }
   ];
 
-  /* Lanes — AUTHORED defaults from docs/02-lanes.md. The lane board overlays owner, status and
-     next action from localStorage. status ladder: open → active → done | blocked */
+  /* Lanes — AUTHORED defaults from docs/17-term-2-lanes.md §5 (term 2, opened 14:15 ET). The lane board overlays
+     owner, status and next action from localStorage. status ladder: open → active → done | blocked */
   T.PEOPLE = ['TBD','Patrick','Yash','Both'];
   T.STATUS = {
     open:    { glyph:'○', label:'open',    weight:0,    cls:'s0' },
@@ -87,27 +87,24 @@
   };
   T.STATUS_ORDER = ['open','active','done','blocked'];
   T.LANES = [
-    { key:'repo',      n:1, name:'Repo setup',             owner:'Patrick', status:'active',
-      deliverable:'Public repo, agent context, docs of record, Atlas Sandbox project + cluster, .env.example',
-      next:'Flip repo to public. Create the Atlas Sandbox project. Add Yash as collaborator.' },
-    { key:'icp',       n:2, name:'ICP definition',         owner:'TBD',     status:'active',
-      deliverable:'One demo persona chosen; docs/01-icp.md and 07-icp-directions.md agreed',
-      next:'Walk the ICP explorer together; pick the direction that holds under every preset.' },
-    { key:'context',   n:3, name:'Agent contextualization',owner:'TBD',     status:'open',
-      deliverable:'Every agent loads the same definitions; MongoDB Agent Skills installed; MCP servers connected on both machines',
-      next:'Install MongoDB Agent Skills; connect MCP Server to the sandbox cluster.' },
-    { key:'workflow',  n:4, name:'Workflow & pipeline',    owner:'TBD',     status:'open',
-      deliverable:'Codebase conventions, DevX, Plan → Build → Instrument skeleton writing to Atlas, install loop design',
-      next:'Stand up the Atlas collections (policies, checkpoints, media_index, transcripts, measurements).' },
-    { key:'swift',     n:5, name:'Swift app basis',        owner:'TBD',     status:'open',
-      deliverable:'Minimal SwiftUI inspector wired to Atlas, install loop running between both machines',
-      next:'Deliberately not started until Lane 4 writes to Atlas.' },
-    { key:'resources', n:6, name:'Resources scan',         owner:'Both',    status:'done',
-      deliverable:'Partners, MCPs, credits, and the mapping onto 3PT slots',
-      next:'Redeem codes as they arrive by email / Discord (from 10:30 AM).' },
-    { key:'hub',       n:7, name:'Hub workspace',          owner:'Patrick', status:'active',
-      deliverable:'Gated Cloudflare Pages hub over the docs of record, lane board, ICP explorer, CI',
-      next:'Set ACCESS_PASS + GitHub secrets; add Yash to the gate allowlist.' }
+    { key:'t1-atlas',   n:1, name:'Loop on Atlas',           owner:'Patrick', status:'blocked',
+      deliverable:'3pt loop with ATLAS_URI writes cp/1 to checkpoints in the Sandbox cluster; rollback returns v0. Earns Technical Demo 35%. Slot 15:15',
+      next:'Create the Sandbox project and M0 cluster from the sandbox email link; put ATLAS_URI in .env; run the loop.' },
+    { key:'t2-photos',  n:2, name:'Photos through the loop', owner:'Yash',    status:'open',
+      deliverable:'media_index seeded from the 117 photos; one Instrument pass rewrites a context policy over them. Earns Impact 20%. Slot 15:45',
+      next:'Wait for T1 collections; seed from scripts/mock/export.mjs; run one Instrument pass and keep the diff.' },
+    { key:'t3-surface', n:3, name:'The judges\' surface',    owner:'Yash',    status:'open',
+      deliverable:'App prototype or Simulator reads harness versions from Atlas; approve and roll back work; demo link opens without login. Slot 16:00',
+      next:'Point the Simulator at Atlas instead of the mock; deploy an ungated preview for the demo link.' },
+    { key:'t4-story',   n:4, name:'The difficulty story',    owner:'Patrick', status:'active',
+      deliverable:'Strands journey answers the four questions with pointers and passes hub check; one-page Q&A crib. Earns Implementation Difficulty 30%. Slot 15:30',
+      next:'Finish the journey leaf under budget; write the Q&A crib: state machine, checkpointing, policy compiler, negotiation.' },
+    { key:'t5-pitch',   n:5, name:'Demo, video, pitch',      owner:'Both',    status:'open',
+      deliverable:'Demo script from the Direction shot list; 60-second video with audio; description text; Decided lines in docs/12; rehearsed twice. Slot 16:30',
+      next:'Write the script now; shoot after T1\'s gate; fill Decided: in docs/12-decisions.md §1, §2, §9.' },
+    { key:'t6-green',   n:6, name:'Green main, hygiene',     owner:'Patrick', status:'active',
+      deliverable:'Yash\'s commits pulled, skill drift resolved, dirty tree committed in segments, make check green, CI secrets set, checklist rows ticked, photo credits. Slot 16:15',
+      next:'Pull origin/main; reconcile the vendored skill; commit the tree by lane; fix the lockfile or keep strands excluded; set the two Cloudflare secrets.' }
   ];
 
   /* ICP directions — the option algebra. Scores are AUTHORED estimates (0–5) per criterion;
