@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Icons</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<script src="./phosphor.js"></script>
+<style>
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:14px}
+  .ic{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 13px;display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;cursor:pointer}
+  .ic:hover{border-color:var(--line-strong)}
+  .ic .box{width:44px;height:44px;border-radius:8px;background:var(--sand);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+  .ic b{display:block;font:600 12.5px/1.2 var(--mono);color:var(--ink)}
+  .ic span{display:block;font-size:12px;color:var(--soft);margin-top:3px;line-height:1.35}
+  .ic[data-stage=plan] .box{color:var(--plan)}.ic[data-stage=build] .box{color:var(--build)}.ic[data-stage=instrument] .box{color:var(--instrument)}
+  .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:12px;color:var(--soft)}
+  .row .w{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px}
+  .row .w small{font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .side{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .side .p{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+  .side svg{vertical-align:-3px}
+  pre{font:12px/1.5 var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto}
+  @media(max-width:700px){.side{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Decide · hot · utility icon set · candidate</p>
+    <h1>Icons: thirty Phosphor glyphs for the app surfaces</h1>
+    <p class="lede">The hand-drawn glyphs in <code>nav.js</code> are the identity set: one per leaf, and the design system keeps them (invariant I8). App surfaces need more than twenty icons for buttons, rows and states, so this is the utility set beside them: a thirty-icon subset of <a href="https://phosphoricons.com/">Phosphor</a> (MIT), regular weight, vendored in <code>phosphor.js</code> with no dependency. Click an icon to copy its markup.</p>
+  </header>
+
+  <div class="row">
+    <div class="w"><small>identity</small><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="3.5" r="1.4" fill="currentColor"/><circle cx="20.5" cy="18.5" r="1.4" fill="currentColor"/><circle cx="3.5" cy="18.5" r="1.4" fill="currentColor"/></svg><span>nav.js glyph · 24 grid · 1.7 stroke</span></div>
+    <div class="w"><small>utility</small><span id="w-sample"></span><span>Phosphor regular · 256 grid · filled · currentColor</span></div>
+    <div class="w"><small>tally</small><span id="tally">—</span></div>
+  </div>
+
+  <h2 data-cluster="decide">The thirty <span>each with the 3PT meaning it would carry</span></h2>
+  <div class="grid" id="grid"></div>
+
+  <h2 data-cluster="decide">Beside the components <span>where a utility icon sits on a surface</span></h2>
+  <div class="side">
+    <div class="p"><p class="eyebrow">proposal card</p><b id="s1"></b><p style="font-size:13px;color:var(--soft);margin:6px 0 10px">Units 201 to 205 each have one. Ask the field team for a photo today?</p><div class="bar"><button class="primary" id="b1"></button><button id="b2"></button></div></div>
+    <div class="p"><p class="eyebrow">version row</p><div id="s2" style="font-size:13px;line-height:2"></div></div>
+  </div>
+
+  <h2 data-cluster="decide">Use <span>one script, one call</span></h2>
+  <pre>&lt;script src="./phosphor.js"&gt;&lt;/script&gt;
+el.innerHTML = PH.svg('tag', 18)            // name, size in px; draws with currentColor
+PH.NAMES                                    // the thirty names · PH.ROLE[name] the 3PT meaning · PH.license</pre>
+  <div class="rulebox"><b>Rules.</b> Utility icons never appear on a hub card or in the sidebar; those stay hand-drawn. In Swift the same thirty map to SF Symbols by name (<code>tag</code> → <code>tag</code>, <code>gauge</code> → <code>gauge.medium</code>, <code>git-branch</code> → <code>arrow.triangle.branch</code>); the mapping table is the next step, not this leaf. Sizes: 16 in rows, 18 in buttons, 20 in headers, 24 in empty states. One colour per icon, taken from the text beside it.</div>
+
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Phosphor Icons · MIT · github.com/phosphor-icons/core · pulled 2026-09-26</p></footer>
+</div>
+<script>
+(function(){
+  var STAGE = { compass:'plan', hammer:'build', gauge:'instrument' };
+  var g = document.getElementById('grid');
+  g.innerHTML = PH.NAMES.map(function(n){ return '<div class="ic" data-n="'+n+'" data-stage="'+(STAGE[n]||'')+'" title="click to copy"><div class="box">'+PH.svg(n,26)+'</div><div><b>'+n+'</b><span>'+PH.ROLE[n]+'</span></div></div>'; }).join('');
+  g.addEventListener('click', function(e){ var c=e.target.closest('.ic'); if(!c) return; var m=PH.svg(c.getAttribute('data-n'),18); try{ navigator.clipboard.writeText(m); c.querySelector('span').textContent='copied'; }catch(x){} });
+  document.getElementById('w-sample').innerHTML = PH.svg('compass',22)+PH.svg('hammer',22)+PH.svg('gauge',22);
+  document.getElementById('tally').innerHTML = '<span class="pv d">DERIVED</span> '+PH.NAMES.length+' icons in phosphor.js';
+  document.getElementById('s1').innerHTML = PH.svg('bell',16)+' Drywall started in unit 206. No open-wall photo.';
+  document.getElementById('b1').innerHTML = PH.svg('thumbs-up',16)+' Send request';
+  document.getElementById('b2').innerHTML = PH.svg('thumbs-down',16)+' Not needed';
+  document.getElementById('s2').innerHTML = [['tag','cp/2 · adds wall_state · kept'],['tag','cp/3 · adds issue · proposed'],['arrow-counter-clockwise','cp/1 · rolled back: score dropped']].map(function(r){ return '<div>'+PH.svg(r[0],16)+' &nbsp;'+r[1]+'</div>'; }).join('');
+})();
+</script>
+</body>
+</html>
