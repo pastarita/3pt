@@ -244,8 +244,9 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
       if (k === 'look') S.reviewed[arg] = true;
       if (k === 'send') S.reviewed['pack' + body.project] = true;
       if (k === 'opp') S.reviewed['opp' + arg] = true;
-      await snapshot('act ' + body.do);
     }
+    /* every tap changes what plan() sees (hides, 👎 counts), so every tap is a snapshot; a Worker reloads from it */
+    await snapshot(e.action === 'act' ? 'act ' + body.do : 'tap ' + e.action);
     return { status: 200, body: { ok: true, proposal: plan(e.role) } };
   }
   if (path === '/app/approve' && method === 'POST') {
