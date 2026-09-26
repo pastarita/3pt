@@ -82,8 +82,8 @@
       epigram:'Install loop, backfeed, furnace, left and right sides of the triangle.' },
     { id:'D9', slug:'provenance',     name:'Provenance DSL',       verb:'Tracing',   cluster:'record', temp:'warm', doc:'docs/09-provenance.md',
       epigram:'Segment markers in the transcript, @cites everywhere else, one tool that refuses broken pointers.' },
-    { id:'DR', slug:'charter',        name:'README',               verb:'Entering',  cluster:'record', temp:'cold', doc:'README.md',
-      epigram:'The repo front door.' }
+    { id:'DR', slug:'charter',        name:'README',               verb:'Entering',  cluster:'orient', temp:'hot',  doc:'README.md',
+      epigram:'The front door: what 3PT is and is not, who it serves, sixty seconds for the judges, built · due · simulated, the loop, the lanes, the lineage. Four generated figures.' }
   ];
 
   /* Lanes — AUTHORED defaults from docs/17-term-2-lanes.md §5 (term 2, opened 14:15 ET). The lane board overlays

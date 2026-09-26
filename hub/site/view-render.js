@@ -42,6 +42,9 @@
         .replace(/`([^`]+)`/g, '<code>$1</code>')
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/(^|\W)\*([^*]+)\*/g, '$1<em>$2</em>')
+        .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, function(_, alt, src){
+          return '<img src="'+(/^https?:/.test(src) ? src : rel(base, src))+'" alt="'+alt+'" loading="lazy">';
+        })
         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(_, t, h){
           /* .html targets are leaves: resolve them against the document's directory too, so a doc in
              docs/ links a root leaf as ../leaf.html and the same file reads correctly on GitHub. */
@@ -57,7 +60,17 @@
     var lines = src.split('\n'), html = [], list = null, para = [], m;
     var flushPara = function(){ if (para.length) { html.push('<p>'+inline(para.join(' '))+'</p>'); para = []; } };
     var closeList = function(){ flushPara(); if (list) { html.push('</'+list+'>'); list = null; } };
-    var isBlock = function(L){ return /^(#{1,6})\s/.test(L) || /^\s*(---|\*\*\*|___)\s*$/.test(L) || /^>/.test(L) || /^\s*[-*+]\s/.test(L) || /^\s*\d+\.\s/.test(L) || L.trim().charAt(0)==='|'; };
+    /* A figure line as GitHub READMEs write it: <p align="center"><img src=… alt=… width=…></p>, or a bare <img>.
+       Only src and alt are read; the image resolves against the document's directory, like a link. */
+    var IMG_LINE = /^\s*(?:<p[^>]*>)?\s*<img\s+([^>]*)>\s*(?:<\/p>)?\s*$/i;
+    var figure = function(attrs){
+      var src = (attrs.match(/\bsrc="([^"]*)"/i) || [])[1] || '', alt = (attrs.match(/\balt="([^"]*)"/i) || [])[1] || '';
+      if (!src || /^[a-z]+:/i.test(src) && !/^https?:/i.test(src)) return '';
+      return '<figure class="image"><img src="'+(/^https?:/i.test(src) ? src : rel(base, src))+'" alt="'+esc(alt)+'" loading="lazy"></figure>';
+    };
+    /* <details> / <summary> / </details> pass through as blocks; everything else angle-bracketed stays escaped text. */
+    var DETAILS = /^\s*(<details>|<\/details>|<summary>(.*)<\/summary>)\s*$/i;
+    var isBlock = function(L){ return IMG_LINE.test(L) || DETAILS.test(L) || /^(#{1,6})\s/.test(L) || /^\s*(---|\*\*\*|___)\s*$/.test(L) || /^>/.test(L) || /^\s*[-*+]\s/.test(L) || /^\s*\d+\.\s/.test(L) || L.trim().charAt(0)==='|'; };
     for (var i = 0; i < lines.length; i++) {
       var L = lines[i];
       if (/^\s*$/.test(L)) { closeList(); continue; }
@@ -67,6 +80,8 @@
       }
       if (!isBlock(L)) { if (list) closeList(); para.push(L.trim()); continue; }
       flushPara();
+      if ((m = L.match(IMG_LINE))) { closeList(); html.push(figure(m[1])); continue; }
+      if ((m = L.match(DETAILS))) { closeList(); html.push(m[2] !== undefined ? '<summary>'+inline(m[2])+'</summary>' : m[1].toLowerCase()); continue; }
       if ((m = L.match(/^(#{1,6})\s+(.*)/))) { closeList(); html.push('<h'+m[1].length+' id="'+hid(m[2])+'">'+inline(m[2])+'</h'+m[1].length+'>'); continue; }
       if (/^\s*(---|\*\*\*|___)\s*$/.test(L)) { closeList(); html.push('<hr>'); continue; }
       if ((m = L.match(/^>\s?(.*)/))) { closeList(); html.push('<blockquote>'+inline(m[1])+'</blockquote>'); continue; }
