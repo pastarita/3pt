@@ -1,7 +1,7 @@
 # Judges' cut: the hub, ranked and sculpted for the room
 
 **Status** 2026-09-26 · first-round judging (17:15 to 18:45), Top 6 at 19:00. The video is posted:
-https://youtu.be/MxAMXWKRcvc ("3pt (Three Point Harness)", public). Hub leaf: `index.html` § Judges' cut. Registered as **DX**.
+https://youtu.be/MxAMXWKRcvc ("3pt (Three Point Harness)", public). Hub leaf: `index.html` § Judges' cut. Registered as **DY**.
 
 The room gives us three minutes and a screen. The hub had 51 cards over four clusters and six figures
 above them; finding the right door took a scroll. This document ranks every hub asset against what a
@@ -40,7 +40,7 @@ Qualifiers, each 1 to 5, AUTHORED: **E**vidence (how much of it is real: built >
 | 9 | **Strands, answered** `strands-journey.html` | A | derived · every claim a chip into docs, code, Strands | why not prompts | 12 | 40 | 4 | 3 | 3 | 4 | **14** |
 | 10 | **Simulator** `sim.html` | C | simulated · Acme Builders version by version, fixed seed | the app | 0 | ∞ | 2 | 4 | 4 | 3 | **13** |
 | 11 | **Direction** `direction.html` | D | authored · the storyboard, 17 figures | the video | 17 | 52 | 3 | 3 | 4 | 3 | **13** |
-| 12 | **Judges' cut + the tree** DX (this page) | C | derived · the treemap, the ranking | the corpus | 1 | — | 4 | 4 | 3 | 5 | **16** |
+| 12 | **Judges’ cut + the tree** DY (this page) | C | derived · the treemap, the ranking | the corpus | 1 | — | 4 | 4 | 3 | 5 | **16** |
 | 13 | Changelog `changelog.html` | P | authored · waves with shas | today only | 3 | 58 | 4 | 4 | 2 | 2 | 12 |
 | 14 | Open-source checklist `checklist.html` | P | derived · three ledgers, a command per row | admissibility | 5 | 46 | 4 | 4 | 2 | 2 | 12 |
 | 15 | Components `components.html` | D | built · the live component library | the app | 0 | ∞ | 4 | 4 | 2 | 2 | 12 |
@@ -66,7 +66,7 @@ registered and carded, folded under its cluster; the lint still walks every slug
 | **A · Architecture** | How it works | Results | Architecture |
 | **D · Design** | App, live | Design system | Components |
 | **P · Process** | Timeline | Changelog | Checklist |
-| **C · Corpus** | README | Product tour & demo (the video) | Judges' cut + the tree (DX) |
+| **C · Corpus** | README | Product tour & demo (the video) | Judges' cut + the tree (DY) |
 
 **Cut from above the fold** (still on the page, folded under *The day*): the who-drives figure, the
 day rail and clock, the decide band (its 3:45 PM call is past), the changelog meter, the stat tiles.
@@ -129,7 +129,7 @@ outside those outputs. The spec (`docs/19` § 7) already holds the naming.
 
 ## 7 · What changed on the hub for this
 
-- `hub/site/nav.js`: the Published strip is the outermost bar, fixed across the full width above the rail on every leaf; it carries the video link (`public · YouTube · 60 s`); DX registered and routed.
+- `hub/site/nav.js`: the Published strip is the outermost bar, fixed across the full width above the rail on every leaf; it carries the video link (`public · YouTube · 60 s`); DY registered and routed.
 - `hub/site/index.html`: the loop figure, then the Judges' cut (twelve doors in four beats), then the four clusters folded, then *The day* folded. Hero buttons: video, app.
 - `scripts/treemap.mjs` → `docs/assets/treemap.svg`, this page's figure.
 - `docs/15` C-02 ticked with the link.

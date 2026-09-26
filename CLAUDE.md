@@ -38,6 +38,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
 | Strands: what we build on, the capability ledger, the handles we speak, what is struck | `docs/12-strands-archaeology.md` |
 | Strands, drawn: ten Mermaid diagrams of its systems, for learning | `docs/13-strands-diagrams.md` |
+| The implemented architecture, drawn: sixteen figures from the tree, every collection, key, route and loop, the status ledger | `docs/20-system-map.md` (hub leaf `system-map`) |
+| The architecture disclosed rung by rung, three points to the tree, fixed ids and regions, red for what entered | `docs/21-system-ladder.md` (hub leaf `system-ladder`) |
 | Sandbox provisioning: the box (Colima + Ansible) and the Sandbox cluster (Atlas CLI), the provisioning MCP | `docs/16-sandbox-provisioning.md` |
 | Atlas console, screen by screen: ids, what goes in `.env`, CLI vs MCP doors, tiers and the scaling affordance | `docs/17-atlas-setup-dossier.md` |
 | Strands, answered: how to configure it, fine-tune it, why it is open to self-improvement, the media workflow; every claim pinned to docs, code, Strands | `docs/18-strands-questions.md` (hub leaf `strands-journey.html`) |
@@ -228,7 +230,7 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   inline comments in values; the unit now sources `.env` through bash. After the hackathon: rotate the db password and
   remove `0.0.0.0/0`.
 - 2026-09-26 17:50 ET: **sculpted for the room.** Video posted (https://youtu.be/MxAMXWKRcvc, public) and registered in the Published strip,
-  which is now the outermost bar on every leaf (fixed, full width, above the rail). `docs/20-judges-cut.md` (DX) ranks every hub asset on
+  which is now the outermost bar on every leaf (fixed, full width, above the rail). `docs/21-judges-cut.md` (DY) ranks every hub asset on
   evidence, legibility, narrative and uniqueness; the index shows the loop figure, then twelve doors in four beats (architecture, design,
   process, corpus), then the clusters and the day figures folded. `scripts/treemap.mjs` draws the tree (`docs/assets/treemap.svg`): hub 47%,
-  docs 15%, harness 3.4% of tracked lines. Dedupe ledger in docs/20 §6; first typed asset to build is `design/tokens.json` (T1).
+  docs 15%, harness 3.4% of tracked lines. Dedupe ledger in docs/21 §6; first typed asset to build is `design/tokens.json` (T1).

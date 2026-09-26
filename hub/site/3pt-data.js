@@ -66,6 +66,10 @@
       epigram:'Build on Strands, rebuild nothing: source register, capability ledger, strike list, and the handles we speak.' },
     { id:'DW', slug:'strands-diagrams', name:'Strands, drawn',    verb:'Learning',   cluster:'build', temp:'hot', doc:'docs/13-strands-diagrams.md',
       epigram:'Ten Mermaid diagrams of the Strands systems we build on: packages, layers, the loop and its hooks, stop reasons, routing, persistence, control, multi-agent, evals and the optimizer, the ten seams.' },
+    { id:'DE', slug:'system-map',     name:'System map',           verb:'Recapitulating', cluster:'build', temp:'hot', doc:'docs/20-system-map.md',
+      epigram:'The implemented architecture, drawn: sixteen Mermaid figures derived from the tree, every collection, key, route and loop, with a status ledger and where it differs from the design.' },
+    { id:'DF', slug:'system-ladder',  name:'System ladder',        verb:'Disclosing',  cluster:'build', temp:'hot', doc:'docs/21-system-ladder.md',
+      epigram:'From three points to the tree in nine rungs: each figure is the last plus what entered, with fixed ids, fixed regions and red for the new.' },
     { id:'DV', slug:'sandbox',        name:'Sandbox provisioning', verb:'Provisioning', cluster:'build', temp:'hot', doc:'docs/16-sandbox-provisioning.md',
       epigram:'The box (a Colima VM converged by Ansible) and the Sandbox cluster (Atlas CLI): one deterministic, re-runnable flow, and the MCP that could do it instead.' },
     { id:'DM', slug:'atlas-dossier',  name:'Atlas dossier',        verb:'Provisioning', cluster:'build', temp:'hot', doc:'docs/17-atlas-setup-dossier.md',
@@ -84,7 +88,7 @@
       epigram:'Segment markers in the transcript, @cites everywhere else, one tool that refuses broken pointers.' },
     { id:'DR', slug:'charter',        name:'README',               verb:'Entering',  cluster:'orient', temp:'hot',  doc:'README.md',
       epigram:'The front door: what 3PT is and is not, who it serves, sixty seconds for the judges, built · due · simulated, the loop, the lanes, the lineage. Four generated figures.' },
-    { id:'DX', slug:'judges-cut',     name:'Judges\u2019 cut',      verb:'Ranking',   cluster:'orient', temp:'hot',  doc:'docs/20-judges-cut.md',
+    { id:'DY', slug:'judges-cut',     name:'Judges\u2019 cut',      verb:'Ranking',   cluster:'orient', temp:'hot',  doc:'docs/21-judges-cut.md',
       epigram:'Every hub asset ranked for the room; twelve doors in four beats; the tree as one figure; the same fact carried twice, and its typed source.' },
   ];
 
