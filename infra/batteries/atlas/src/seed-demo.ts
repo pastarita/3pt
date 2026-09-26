@@ -1,18 +1,19 @@
 /** Seeds the Atlas Sandbox with the demo firm: data/mock/acme-builders/ → the demo_* collections and harness_versions.
- *  Idempotent: each run replaces the demo collections. Needs ATLAS_URI (read here, never printed). ATLAS_DB defaults to 3pt.
+ *  Idempotent: each run replaces the demo collections. Connection from atlasUri() (ATLAS_URI, or ATLAS_HOST + ATLAS_DBUSER + ATLAS_DBPASS), never printed.
  *    pnpm --filter @3pt/battery-atlas build && node --env-file=.env infra/batteries/atlas/dist/seed-demo.js */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { MongoClient } from 'mongodb';
 import { COLLECTIONS } from '@3pt/core';
+import { atlasUri } from './index.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
 const DATA = join(REPO, 'data', 'mock', 'acme-builders');
 const lines = (f: string) => existsSync(f) ? readFileSync(f, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)) : [];
 
-const uri = process.env.ATLAS_URI;
-if (!uri) { console.error('[seed-demo] ATLAS_URI is not set. Put it in .env and run with node --env-file=.env'); process.exit(1); }
+const uri = atlasUri();
+if (!uri) { console.error('[seed-demo] no Atlas connection: set ATLAS_URI, or ATLAS_HOST + ATLAS_DBUSER + ATLAS_DBPASS, in .env and run with node --env-file=.env'); process.exit(1); }
 const client = new MongoClient(uri, { appName: '3pt-seed-demo' });
 await client.connect();
 const db = client.db(process.env.ATLAS_DB ?? '3pt');
