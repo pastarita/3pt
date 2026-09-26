@@ -1,7 +1,7 @@
 import { h, svg } from '../lib/dom.js';
 /** Organism: the general navigation bar. One row, above the top bar, on every screen of /app/:
  *  the 3PT mark, the app's own sections (Projects, Harness), then the other public surfaces of the
- *  demo site (landing, studio, code). Active state follows the hash route; `refresh()` re-reads it.
+ *  demo site (landing, results, studio, code). Active state follows the hash route; `refresh()` re-reads it.
  *  The top bar below stays what it is: firm, breadcrumb, role, harness version. */
 const MARK = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="3.5" r="1.6" fill="currentColor"/><circle cx="20.5" cy="18.5" r="1.6" fill="currentColor"/><circle cx="3.5" cy="18.5" r="1.6" fill="currentColor"/></svg>';
 type Item = { label: string; href: string; on: (hash: string) => boolean; ext?: boolean };
@@ -11,6 +11,7 @@ const APP: Item[] = [
 ];
 const SITE: Item[] = [
   { label: 'Landing', href: '/', on: () => false },
+  { label: 'Results', href: '/results/', on: () => false },
   { label: 'Studio', href: '/studio/', on: () => false },
   { label: 'Code', href: 'https://github.com/pastarita/3pt', on: () => false, ext: true },
 ];
