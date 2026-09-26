@@ -16,6 +16,7 @@
     'vision':         g('<path d="M3 12s3.5-6.5 9-6.5 9 6.5 9 6.5-3.5 6.5-9 6.5S3 12 3 12Z"/><path d="M12 3v2.5M12 18.5V21"/><circle cx="12" cy="12" r="2.4"/>'),
     'goal':           g('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3.5v3M20.5 12h-3"/>'),
     'rules':          g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
+    'decisions':      g('<path d="M12 4v16"/><path d="M5 8l7-4 7 4"/><path d="M4 14h5l1.5 3h3L15 14h5"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/>'),
     'icp-explorer':   g('<path d="M4 20V10M9 20V5M14 20v-8M19 20V7"/><path d="M2.5 20h19"/><circle cx="9" cy="5" r="1.3" fill="currentColor"/>'),
     'icp-directions': g('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v4M12 16.5v4M3.5 12h4M16.5 12h4"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'),
     'icp':            g('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-4 3-6 6-6s5.5 2 6 6"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15 18.5c.3-2.5 1.4-4 3.5-4 1.2 0 2.1.5 2.7 1.3"/>'),
@@ -50,7 +51,7 @@
   var GROUPS = [
     ['',       [['index','Hub']]],
     ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5']]],
-    ['decide', [['direction','Direction'], ['design-system','Design system','DD'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
+    ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
     ['build',  [['lanes','Lane board'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
   ];
@@ -60,6 +61,7 @@
     'vision':         'view.html?f=docs/00-vision.md',
     'goal':           'view.html?f=docs/06-goal-and-use-case.md',
     'rules':          'view.html?f=docs/05-rules.md',
+    'decisions':      'view.html?f=docs/12-decisions.md',
     'icp-directions': 'view.html?f=docs/08-icp-directions.md',
     'assessment':     'view.html?f=docs/07-assessment-and-measurement.md',
     'brainstorming':  'view.html?f=brainstorming.md',
@@ -73,7 +75,7 @@
     'provenance':     'view.html?f=docs/09-provenance.md'
   };
   var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
-  var FRESH = { 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1 }; /* retire at next check-in */
+  var FRESH = { 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1 }; /* retire at next check-in */
 
   /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
   function href(s){

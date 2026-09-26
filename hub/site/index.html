@@ -14,6 +14,7 @@
   .clock b{font-size:13px}.clock .m{font:600 12px/1.3 var(--mono);color:var(--soft);flex:1;min-width:220px}
   .clock .big{font:800 22px/1 var(--mono);color:var(--flag)}
   .clock.past .big{color:var(--faint)}
+  .clock.decide{border-color:var(--flag);border-left:4px solid var(--flag)}
   .catch{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 16px;margin:8px 0 4px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
   .catch b{font-size:13px}.catch .m{font:600 11.5px/1.3 var(--mono);color:var(--soft);flex:1;min-width:200px}
   .grp-blurb{font:italic 13px/1.4 var(--serif);color:var(--soft);margin:-4px 0 12px}
@@ -35,6 +36,13 @@
     </div>
     <p class="lede" style="margin-top:14px">The working surface for two people and their agents building a self-improving harness for media-heavy workflows. The harness is the product. Images are the workload. This page holds navigation and live tallies only; the documents of record are in <code>docs/</code>.</p>
   </header>
+
+  <div class="clock decide" id="decide">
+    <b>Group decisions</b>
+    <span class="big" style="font-size:16px">9 domains</span>
+    <span class="m">walk the questions by voice, top to bottom, before the 3:45 PM cut · each domain becomes a Session 2 segment in the transcript</span>
+    <a class="btn primary" href="./view.html?f=docs/12-decisions.md">Open the walkthrough</a>
+  </div>
 
   <div class="clock" id="clock">
     <b>Submissions due 5:00 PM ET</b>
@@ -65,6 +73,7 @@
   <div class="cards" data-cluster="decide">
     <a class="card" href="./direction.html"><svg id="g-direction"></svg><b>Direction</b><span>Proposal: 3PT as a general media harness, shown on a construction firm's lifetime of site photos. Stress test, anti-project check, 60-second video plan.</span><em>review →</em><i class="temp">hot</i></a>
     <a class="card" href="./docs/11-design-system.html"><svg id="g-design-system"></svg><i class="id">DD</i><b>Design system</b><span>Proposal: token naming, dark and light patterns, six pieces with three candidates each, three canonical directions on one specimen, cross-surface mapping to the PWA and Swift, and the ballot for deciding.</span><em>decide →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/12-decisions.md"><svg id="g-decisions"></svg><i class="id">DQ</i><b>Group decisions</b><span>The walkthrough: nine domains of concern, the questions in each, a default if undecided, and a blank decision line. Read aloud, transcribe as Session 2.</span><em>decide →</em><i class="temp">hot</i></a>
     <a class="card" href="./icp-explorer.html"><svg id="g-icp-explorer"></svg><b>ICP explorer</b><span>Five directions scored against nine criteria. Pick a preset or move the dials; read which ordering holds under every preset, not the score.</span><em>weigh →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/08-icp-directions.md"><svg id="g-icp-directions"></svg><i class="id">D8</i><b>ICP directions</b><span>For each direction: focus, example use case, example company type, lander messaging, what a fully built app would do, and the rule risk.</span><em>read →</em><i class="temp">warm</i></a>
     <a class="card" href="./view.html?f=docs/07-assessment-and-measurement.md"><svg id="g-assessment"></svg><i class="id">D7</i><b>Assessment &amp; measurement</b><span>The transcript converged into theses and falsifiable hypotheses, the M-* metrics that score the recursive loop, and the R-* requirement set mapped onto partner incentives.</span><em>read →</em><i class="temp">warm</i></a>

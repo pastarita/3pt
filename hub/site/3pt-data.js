@@ -36,6 +36,8 @@
       epigram:'More valuable the longer it runs. The interior-design firm, and the screen as onboarding.' },
     { id:'D5', slug:'rules',          name:'Rules & judging',      verb:'Complying', cluster:'orient', temp:'hot',  doc:'docs/05-rules.md',
       epigram:'Banned: image analyzers, dashboards as the feature, basic RAG. Due 5:00 PM.' },
+    { id:'DQ', slug:'decisions',      name:'Group decisions',      verb:'Deciding',  cluster:'decide', temp:'hot',  doc:'docs/12-decisions.md',
+      epigram:'Nine domains, a few questions each, a default if time runs out, and a blank line for the answer.' },
     { id:'D8', slug:'icp-directions', name:'ICP directions',       verb:'Exploring', cluster:'decide', temp:'warm', doc:'docs/08-icp-directions.md',
       epigram:'Five directions, each with focus, use case, company type, and lander messaging.' },
     { id:'DD', slug:'design-system', name:'Design system',        verb:'Styling',   cluster:'decide', temp:'hot',  doc:'docs/11-design-system.html',
