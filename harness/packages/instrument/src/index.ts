@@ -35,33 +35,33 @@ export const PROJECT_CHECKS: ProjectCheck[] = [
   {
     check: 'search-miss', metric: 'M-P-search-miss', answeredBy: 'field.unit_level_trade', bar: 3,
     pick: (_o, a) => a.filter(r => r.action === 'search' && r.result === 'no').map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} photo searches found nothing; photos carry no unit, level or trade`,
+    note: n => `${n} photo searches by supers, PMs and PEs came back empty; tag every photo by unit, floor and trade at upload`,
   },
   {
     check: 'wall-evidence', metric: 'M-P-wall', answeredBy: 'tool.open_wall_gap', bar: 3,
     pick: o => o.filter(r => r.kind === 'wall_reopened' || r.kind === 'closed_without_open_wall_photo').map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} walls closed or reopened with no open-wall photo; remind before drywall`,
+    note: n => `${n} walls closed up with no in-wall photos, or opened again to find a line; remind the super to shoot MEP rough-in before board goes up`,
   },
   {
     check: 'water-late', metric: 'M-P-water-late', answeredBy: 'flag.issue_on_arrival', bar: 3,
     pick: o => o.filter(r => r.kind === 'water_stain' && r.found === 'at closeout').map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} water stains found only at closeout; flag issue photos the day they arrive`,
+    note: n => `${n} water stains first caught on the closeout walk; flag leak and stain photos to the super the day they come in`,
   },
   {
     check: 'manual-pack', metric: 'M-P-pack-hours', answeredBy: 'tool.owner_pack', bar: 3,
     pick: (_o, a) => a.filter(r => r.action === 'owner_pack_by_hand').map(r => ({ project: r.project, weight: (r.minutes ?? 0) / 60 })),
-    note: n => `${Math.round(n)} hours spent building owner packs by hand; automate the pack`,
+    note: n => `${Math.round(n)} PM hours building the weekly owner photo report by hand; build the OAC photo pack automatically`,
   },
   {
     check: 'wall-search', metric: 'M-P-wall-search', answeredBy: 'field.wall_state', bar: 3,
     pick: (_o, a) => a.filter(r => r.action === 'search' && r.result === 'no' && /before drywall/.test(r.query ?? '')).map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} "before drywall" searches found nothing; add an open or closed wall field and read older photos once`,
+    note: n => `${n} "plumbing before drywall" lookups came back empty; tag each photo open wall or closed wall, and re-read the older rough-in photos once`,
   },
   {
     // Runs only once the fields are granted: misses that remain after it ask for more context per question.
     check: 'slow-answers', metric: 'M-P-miss-after-fields', answeredBy: 'context.photos_per_question_20', bar: 3, needs: 'field.unit_level_trade',
     pick: (_o, a) => a.filter(r => r.action === 'search' && r.result === 'no').map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} searches still find nothing with fields in place; try 20 photos per question instead of 8`,
+    note: n => `${n} lookups still empty with unit, floor and trade tags; pull 20 photos per question instead of 8`,
   },
   {
     // A role that asks the same question again on the same project would use a screen made for it.
@@ -71,12 +71,12 @@ export const PROJECT_CHECKS: ProjectCheck[] = [
       return a.filter(r => r.action === 'search').filter(r => { const k = `${r.project}|${r.role}|${r.query}`; const again = seen.has(k); seen.add(k); return again; })
         .map(r => ({ project: r.project, weight: 1 / 20 }));     // weight: 20 repeats count as one event
     },
-    note: n => `${Math.round(n * 20)} repeated questions by the same role on the same project; learn a screen per role`,
+    note: n => `${Math.round(n * 20)} repeat lookups by the same super, PM or PE on one job; give each role its own screen`,
   },
   {
     check: 'closeout-by-hand', metric: 'M-P-closeout-search', answeredBy: 'tool.closeout_set', bar: 3,
     pick: (_o, a) => a.filter(r => r.action === 'search' && /closeout/.test(r.query ?? '')).map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} searches for closeout photos by unit, built by hand; automate the closeout set`,
+    note: n => `${n} searches for turnover photos by unit; build the per-unit closeout photo set for the turnover package automatically`,
   },
   {
     // Near duplicates: the same image file stored again on the same project in the window.
@@ -86,13 +86,13 @@ export const PROJECT_CHECKS: ProjectCheck[] = [
       return p.filter(r => { const k = `${r.project}|${r.file}`; const dup = seen.has(k); seen.add(k); return dup; })
         .map(r => ({ project: r.project, weight: 1 / 20 }));     // weight: 20 duplicates count as one event
     },
-    note: n => `${Math.round(n * 20)} duplicate photos stored on the same project; stop keeping duplicates after 24 hours`,
+    note: n => `${Math.round(n * 20)} duplicate shots stored on one job; keep one shot per burst after 24 hours`,
   },
   {
     // Safety: one hazard photo in the window is enough, so this check's bar is 1, not 3.
     check: 'hazard-photos', metric: 'M-P-hazard', answeredBy: 'flag.hazard', bar: 1,
     pick: (_o, _a, p) => p.filter(r => /open edge|no rail|toe board|ladder/.test(r.note ?? '')).map(r => ({ project: r.project, weight: 1 })),
-    note: n => `${n} hazard photos (open edge, missing rail, toe board, ladder) with no flag; add a hazard flag`,
+    note: n => `${n} fall-protection photos (unprotected edge, missing guardrail or toe board, unsecured ladder) with no flag; flag them to the safety manager the same day`,
   },
 ];
 
