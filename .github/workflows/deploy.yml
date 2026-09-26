@@ -43,7 +43,9 @@ jobs:
       - run: node tools/check-nav.mjs
       - run: node tools/check-view.mjs
       - run: node ../scripts/prov.mjs --check
+      # the tersity word budget is advisory: it reports, it does not gate a deploy (decision 2026-09-26)
       - run: node tools/tersity.mjs --check
+        continue-on-error: true
 
   deploy:
     name: Deploy

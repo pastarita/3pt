@@ -11,4 +11,4 @@ packages:
   - '!harness/packages/strands'
   - infra/batteries/*
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
