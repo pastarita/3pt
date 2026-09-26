@@ -18,11 +18,18 @@ on:
     paths: ['hub/**', 'docs/**', 'README.md', 'brainstorming.md', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
 
-concurrency: { group: pages-deploy-${{ github.ref }}, cancel-in-progress: true }
-permissions: { contents: read, deployments: write, pull-requests: write }
+concurrency:
+  group: pages-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
 
 defaults:
-  run: { working-directory: hub }
+  run:
+    working-directory: hub
 
 jobs:
   check:
@@ -35,6 +42,7 @@ jobs:
       - run: bash tools/stage.sh
       - run: node tools/check-nav.mjs
       - run: node tools/check-view.mjs
+      - run: node ../scripts/prov.mjs --check
 
   deploy:
     name: Deploy
