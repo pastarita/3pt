@@ -9,11 +9,20 @@
   var G = (typeof globalThis!=='undefined'?globalThis:window);
   if (G.SIM) return;
 
+  /* ---------- configuration: the hub Simulator edits these; everything below is built from them ---------- */
+  var DEFAULTS = { seed:20260926, projects:20, maxLive:4, cadence:19, learn:1, today:'2026-09-26', missBase:0.22 };
+  function loadConfig(){
+    var c={}; try{ c=JSON.parse(localStorage.getItem('tpt_sim_cfg_v1')||'{}')||{}; }catch(e){}
+    var o={}; for (var k in DEFAULTS) o[k]=(c[k]!=null&&c[k]!=='')?c[k]:DEFAULTS[k]; return o;
+  }
+
+  function build(CFG){
+
   function rng(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0; var t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-  var R = rng(20260926);
+  var R = rng(+CFG.seed||1);
   var DAY=864e5, WEEK=7*DAY;
   var T0 = Date.UTC(2019,0,7);                 /* Monday, first sim week */
-  var TODAY = Date.UTC(2026,8,26);             /* the demo's "today" */
+  var TODAY = Date.parse(CFG.today+'T00:00:00Z');   /* the demo's "today" */
   var NWEEKS = Math.ceil((Date.UTC(2027,0,4)-T0)/WEEK);
 
   /* ---------- the firm ---------- */
@@ -79,8 +88,10 @@
 
   /* the scheduler. The last 4 jobs are pinned so that on demo day (TODAY) the firm has 4 live jobs
      in 4 different phases. The first 16 start about every 4 months, but never while 4 jobs are live. */
-  var MAXLIVE=4, TODAY_W=Math.round((TODAY-T0)/WEEK);
-  var PIN = {17:0.86, 18:0.70, 19:0.53, 20:0.04};   /* share of the job done on demo day */
+  LIST = LIST.slice(0, Math.max(4, Math.min(LIST.length, +CFG.projects)));
+  var MAXLIVE=Math.max(1,Math.min(6,+CFG.maxLive)), TODAY_W=Math.round((TODAY-T0)/WEEK);
+  var PIN = {}, SHARE=[0.86,0.70,0.53,0.04], KPIN=Math.min(MAXLIVE,4);   /* share of the job done on demo day */
+  for (var q=0;q<KPIN;q++) PIN[LIST.length-KPIN+1+q]=SHARE[4-KPIN+q];
   function sizeOf(row){ var t=TYPES[row.type], levels=Math.max(t.levels[0],Math.min(row.stories, t.levels[1]));
     return {levels:levels, weeks:Math.round(between(t.weeks)*(0.85+0.3*(levels-t.levels[0])/Math.max(1,t.levels[1]-t.levels[0])))}; }
   function make(row,i,w0,sz){ var t=TYPES[row.type], acc=0;
@@ -98,7 +109,7 @@
     var w0=nextWant, n=sizes[i].weeks;
     for(;;){ var ok=true; for (var x=w0;x<w0+n+8;x++){ if(liveAt(x)>=MAXLIVE){ ok=false; break; } } if(ok) break; w0++; }
     placed.push(make(row,i,w0,sizes[i]));
-    nextWant = w0 + 15 + Math.floor(R()*8);
+    nextWant = w0 + Math.max(4,(+CFG.cadence)-4) + Math.floor(R()*8);
   });
   var projects=placed.sort(function(a,b){return a.n-b.n;});
 
@@ -109,16 +120,16 @@
      Each capability has a plain-words trigger on a firm-wide counter. The first week the counter
      crosses the threshold, a new harness version is saved. */
   var CAPS = [
-    {id:'fields',   when:function(c){return c.photos>=15000;},            v:{changes:['Added fields: unit, level, trade'], why:'15,000 photos filed with only a date and a description'}},
-    {id:'wall',     when:function(c){return c.failed>=300;},              v:{changes:['Added field: open or closed wall','Read older photos again, once'], why:'300 searches for "before drywall" came back wrong'}},
+    {id:'fields',   when:function(c){return c.photos>=15000*(+CFG.learn||1);},            v:{changes:['Added fields: unit, level, trade'], why:'15,000 photos filed with only a date and a description'}},
+    {id:'wall',     when:function(c){return c.failed>=300*(+CFG.learn||1);},              v:{changes:['Added field: open or closed wall','Read older photos again, once'], why:'300 searches for "before drywall" came back wrong'}},
     {id:'wide',     when:function(c){return c.caps.wall && c.w-c.caps.wall.w>=8;}, v:{changes:['Tried: send 20 photos to the model per question instead of 8'], why:'Answers were slow to improve'}, rollback:3},
-    {id:'remind',   when:function(c){return c.reopened>=6;},             v:{changes:['Wrote a tool: find units with no open-wall photo','Reminder before drywall starts in a unit'], why:'6 walls reopened to find a pipe'}},
-    {id:'pack',     when:function(c){return c.packMin>=200*60;},          v:{changes:['Automated the Friday owner photo pack'], why:'200 hours spent building owner packs by hand'}},
-    {id:'issue',    when:function(c){return c.lateWater>=8;},            v:{changes:['Added field: issue (water stain, crack, damage)','Flag water photos the day they arrive'], why:'8 water problems found only at closeout'}},
-    {id:'screens',  when:function(c){return c.liveWeeks>=700;},          v:{changes:['Learned a screen for 4 roles: superintendent, PM, owner, engineer'], why:'700 project-weeks of use, by role'}},
-    {id:'bursts',   when:function(c){return c.stored>=150000;},          v:{changes:['Stopped keeping duplicate burst photos after 24 hours'], why:'150,000 photos stored, 18% near duplicates'}},
+    {id:'remind',   when:function(c){return c.reopened>=Math.round(6*(+CFG.learn||1));},             v:{changes:['Wrote a tool: find units with no open-wall photo','Reminder before drywall starts in a unit'], why:'6 walls reopened to find a pipe'}},
+    {id:'pack',     when:function(c){return c.packMin>=200*60*(+CFG.learn||1);},          v:{changes:['Automated the Friday owner photo pack'], why:'200 hours spent building owner packs by hand'}},
+    {id:'issue',    when:function(c){return c.lateWater>=Math.round(8*(+CFG.learn||1));},            v:{changes:['Added field: issue (water stain, crack, damage)','Flag water photos the day they arrive'], why:'8 water problems found only at closeout'}},
+    {id:'screens',  when:function(c){return c.liveWeeks>=700*(+CFG.learn||1);},          v:{changes:['Learned a screen for 4 roles: superintendent, PM, owner, engineer'], why:'700 project-weeks of use, by role'}},
+    {id:'bursts',   when:function(c){return c.stored>=150000*(+CFG.learn||1);},          v:{changes:['Stopped keeping duplicate burst photos after 24 hours'], why:'150,000 photos stored, 18% near duplicates'}},
     {id:'hazard',   when:function(c){return c.w>=Math.round((Date.UTC(2025,5,2)-T0)/WEEK)+10;}, v:{changes:['Added flag: open edge, missing rail','Learned a screen for the safety manager'], why:'Safety manager joined in June 2025 and asked 30 hazard questions'}},
-    {id:'closeout', when:function(c){return c.closed>=12;},              v:{changes:['Automated the closeout photo set per unit'], why:'12 closeouts built by hand'}}
+    {id:'closeout', when:function(c){return c.closed>=Math.max(2,Math.round(12*(+CFG.learn||1)));},              v:{changes:['Automated the closeout photo set per unit'], why:'12 closeouts built by hand'}}
   ];
 
   var versions=[{v:0, w:0, date:weekDate(0), changes:['Generic start: describe each image, its date and its source'], why:'Install', cap:null}];
@@ -142,7 +153,7 @@
       live++; c.liveWeeks++;
       var ph=phaseAt(p,w), idx=w-p.startWeek;
       var n=Math.round(p.perWeek*(0.7+R()*0.6)*(ph.name==='Site work'||ph.name==='Closeout'?0.6:1));
-      var pMiss = has('remind')?0.02:(has('wall')?0.14:0.22);
+      var pMiss = has('remind')?0.02:(has('wall')?0.14:+CFG.missBase);
       var closing = ph.name==='Close-in' ? Math.max(1,Math.round(p.units/(ph.to-ph.from+1))) : 0;
       var missing=0; for (var k=0;k<closing;k++) if (R()<pMiss) missing++;
       var reopened=0; for (k=0;k<missing;k++) if (R()<0.25) reopened++;
@@ -211,8 +222,12 @@
     return Math.round(h);
   }
 
-  G.SIM = { T0:T0, WEEK:WEEK, TODAY:TODAY, TODAY_WEEK:weekOf(TODAY), NWEEKS:NWEEKS, ROLES:ROLES, TYPES:TYPES,
+  return { CFG:CFG, T0:T0, WEEK:WEEK, TODAY:TODAY, TODAY_WEEK:weekOf(TODAY), NWEEKS:NWEEKS, ROLES:ROLES, TYPES:TYPES,
             MAXLIVE:MAXLIVE, projects:projects, versions:versions, firm:firm, SAVINGS:SAVINGS,
             weekDate:weekDate, weekOf:weekOf, phaseAt:phaseAt, status:status, currentVersion:currentVersion,
             versionsUpTo:versionsUpTo, capsAt:capsAt, photosUpTo:photosUpTo, statsUpTo:statsUpTo, hoursSavedUpTo:hoursSavedUpTo };
+  }
+
+  G.SIM = build(loadConfig());
+  G.SIM.build = build; G.SIM.DEFAULTS = DEFAULTS; G.SIM.loadConfig = loadConfig;
 })();

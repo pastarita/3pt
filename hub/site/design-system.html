@@ -280,14 +280,7 @@ ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
 <div id="register-table" class="reg"></div>
 
 <h2 id="standing"><small>0 · where we stand</small>Two systems already exist. This page ends that.</h2>
-<p>Two visual systems exist; one vocabulary, readable by Swift, absorbs both.</p>
-<div class="tbl"><table>
-<tr><th>Surface</th><th>Where</th><th>What it is</th><th>Debt</th></tr>
-<tr><td><b>Hub tokens</b></td><td><code>hub/site/3pt.css</code></td><td>Dark only. <code>--bg --panel --card</code>; cluster accents <code>--violet --cyan --amber --slate</code>; point hues, flag, status, badge.</td><td>No light mode; colour words at the semantic layer.</td></tr>
-<tr><td><b>Nav shell</b></td><td><code>hub/site/nav.js</code></td><td>Sidebar and glyphs: 24 grid, 1.7 stroke, round caps.</td><td>Hardcoded <code>#0b0e12 #ff6b4a #6b7684</code>.</td></tr>
-<tr><td><b>Direction page</b></td><td><code>hub/site/direction.html</code></td><td>Light plus dark. <code>--ground --sheet --ink --marker</code>, keep and cut hues, film strip, Familjen Grotesk, IBM Plex.</td><td>No alert, point or badge hues; a second vocabulary.</td></tr>
-</table></div>
-<div class="box rule"><b>Consequence.</b> They become D1 and D2, each completed with the mode it lacks; D3 is new. Tokens and shell regenerate; no private hex survives.</div>
+<p>Two visual systems exist, the hub tokens and the direction page. One vocabulary absorbs both: <a href="./view.html?f=docs/19-design-system-spec.md">spec §0</a>.</p>
 
 <h2 id="invariants"><small>1 · invariants</small>What holds under every direction</h2>
 <p>Decided here unless challenged in the promenade; independent of direction.</p>
@@ -304,45 +297,10 @@ ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
 <path d="M60 50V6" stroke="var(--d-muted)" stroke-width="1.2" marker-end="url(#arw)"/>
 <text x="8" y="72" class="s m">reads</text>
 </svg><figcaption>I1. A new colour is a new role, not a hex.</figcaption></figure>
-<div class="grid2 inv">
-  <div class="box" id="I1"><b><span class="ref" data-ref="I1">I1</span>Three tiers of tokens.</b> Primitive feeds semantic feeds component (F-a).</div>
-  <div class="box" id="I2"><b><span class="ref" data-ref="I2">I2</span>Dark and light are peers.</b> Both values for every token; mode never in the name.</div>
-  <div class="box" id="I3"><b><span class="ref" data-ref="I3">I3</span>The three points keep their slots.</b> <code>point.plan · build · instrument</code>, in order, colour nothing else; the triangle is the wordmark.</div>
-  <div class="box" id="I4"><b><span class="ref" data-ref="I4">I4</span>Status is not category.</b> ok, warn, alert mark provenance and outcomes only, always with a glyph or word.</div>
-  <div class="box" id="I5"><b><span class="ref" data-ref="I5">I5</span>Every figure wears provenance.</b> DERIVED, AUTHORED, TO CONFIRM alias the status hues; legible at 8.5px mono everywhere.</div>
-  <div class="box" id="I6"><b><span class="ref" data-ref="I6">I6</span>Photos are neutral.</b> 1px frame, no tint, never larger than the record beside it, never the hero (F-f).</div>
-  <div class="box" id="I7"><b><span class="ref" data-ref="I7">I7</span>One accent per screen.</b> One hue says new, picked, here; the rest is neutral.</div>
-  <div class="box" id="I8"><b><span class="ref" data-ref="I8">I8</span>One glyph set, three weights.</b> The nav.js paths everywhere; directions change stroke and caps only; Swift gets symbols.</div>
-  <div class="box" id="I9"><b><span class="ref" data-ref="I9">I9</span>Nothing web-only carries meaning.</b> No blur, gradient or filter as signal; SwiftUI must draw it with colour, path, text.</div>
-  <div class="box" id="I10"><b><span class="ref" data-ref="I10">I10</span>Tokens have one source.</b> One file generates CSS, xcassets, Swift and manifest (F-e); hand-edited hex fails lint.</div>
-</div>
+<p>Ten invariants, I1 to I10: <a href="./view.html?f=docs/19-design-system-spec.md">spec §1</a>.</p>
 
 <h2 id="naming"><small>2 · naming convention</small>How the colour schema is named</h2>
-<p>C survives a change of direction or platform without a rename.</p>
-<div class="tbl"><table>
-<tr><th>Option</th><th>Example</th><th>Verdict</th></tr>
-<tr id="N-A"><td><span class="ref" data-ref="N-A">N-A</span><b>Material metaphor</b> <span class="src">direction.html</span></td><td><code>--ground --sheet --ink --marker</code></td><td>Evocative but tied to one direction: "marker" means nothing on a sheet. <span class="tag">no</span></td></tr>
-<tr id="N-B"><td><span class="ref" data-ref="N-B">N-B</span><b>Short unprefixed</b> <span class="src">3pt.css</span></td><td><code>--bg --panel --card --violet</code></td><td>Fast; no layer signal; colour words force renames; collides with third-party CSS. <span class="tag">no</span></td></tr>
-<tr id="N-C"><td><span class="ref" data-ref="N-C">N-C</span><b>Layer, then role</b></td><td><code>bg.canvas · fg.muted · line.strong · accent.soft · point.plan · status.warn-soft</code></td><td>Neutral to direction and platform; one path in CSS, JSON, Swift. Cost: one rename. <span class="tag" style="background:var(--d-ok-soft);color:var(--d-ok)">recommended</span></td></tr>
-</table></div>
-<h3>The semantic layers (option C)</h3>
-<div class="tbl"><table>
-<tr><th>Layer</th><th>Roles</th><th>Meaning</th></tr>
-<tr id="L-bg"><td><span class="ref" data-ref="L-bg">L-bg</span><code>bg</code></td><td>canvas · surface · raised · deep</td><td>Ground; panel; panel on panel; inverted block.</td></tr>
-<tr id="L-fg"><td><span class="ref" data-ref="L-fg">L-fg</span><code>fg</code></td><td>default · muted · faint · on-accent · on-deep</td><td>Body; secondary; labels; on accent; on deep.</td></tr>
-<tr id="L-line"><td><span class="ref" data-ref="L-line">L-line</span><code>line</code></td><td>default · strong</td><td>Hairlines; control edges (3:1 on surface).</td></tr>
-<tr id="L-accent"><td><span class="ref" data-ref="L-accent">L-accent</span><code>accent</code></td><td>default · soft</td><td>The one accent (I7) and its tint.</td></tr>
-<tr id="L-point"><td><span class="ref" data-ref="L-point">L-point</span><code>point</code></td><td>plan · build · instrument</td><td>Reserved (I3).</td></tr>
-<tr id="L-status"><td><span class="ref" data-ref="L-status">L-status</span><code>status</code></td><td>ok · ok-soft · warn · warn-soft · alert · alert-soft</td><td>Outcomes and provenance only (I4).</td></tr>
-<tr id="L-prov"><td><span class="ref" data-ref="L-prov">L-prov</span><code>prov</code></td><td>derived → status.ok · authored → status.warn · confirm → status.alert</td><td>Aliases, so the badge can move later.</td></tr>
-<tr id="L-cluster"><td><span class="ref" data-ref="L-cluster">L-cluster</span><code>cluster</code></td><td>orient · decide · build · record</td><td>Hub-only; absent from app sets.</td></tr>
-</table></div>
-<div class="grid3">
-  <div class="box"><h4 style="margin:0">Spelling</h4><ul style="font-size:13px"><li>JSON <code>bg.canvas</code></li><li>CSS <code>--bg-canvas</code></li><li>Swift <code>TPT.bg.canvas</code>, asset <code>bg/canvas</code></li><li>Tailwind <code>bg-canvas</code></li></ul></div>
-  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>Mode never in the name.</li><li>Colour words and numbers only in primitives (<code>gray.900</code>).</li><li>Components read semantics only.</li><li>Same shape: <code>type.display · space.4 · radius.card · motion.fast</code>.</li></ul></div>
-  <div class="box"><h4 style="margin:0">Migration</h4><ul style="font-size:13px"><li><code>3pt.css</code>: 34 variables renamed once.</li><li><code>nav.js</code>: five hex values to <code>var()</code>.</li><li><code>direction.html</code>: stays, dated.</li></ul></div>
-</div>
-
+<p>Recommended: <b>N-C, layer then role</b> (<code>bg.canvas · fg.muted · point.plan</code>). Options, layers and migration: <a href="./view.html?f=docs/19-design-system-spec.md">spec §2</a>.</p>
 <h2 id="modes"><small>3 · dark and light</small>Accessible patterns for both modes</h2>
 <figure class="fig" id="F-b"><span class="ref" data-ref="F-b">F-b</span>
 <svg viewBox="0 0 640 150" role="img" aria-labelledby="F-b-t"><title id="F-b-t">Elevation ladder in light and dark</title>
@@ -360,14 +318,7 @@ ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
 <rect x="394" y="64" width="182" height="52" rx="4" fill="#1F232A" stroke="#2B3038"/>
 <text x="406" y="86" style="fill:#E7E9EC">raised #1F232A</text><text x="406" y="104" style="fill:#A4ACB7">shadow optional</text></g>
 </svg><figcaption><code>bg.canvas → surface → raised</code>. Dark steps lighter; light separates by a line. No fourth step.</figcaption></figure>
-<div class="tbl"><table>
-<tr><th>Pattern</th><th>Rule</th></tr>
-<tr><td><b>Mode selection</b></td><td><code>color-scheme</code> on the root; <code>prefers-color-scheme</code> by default; <code>data-theme</code> overrides, persisted as <code>tpt_theme</code> (app too); two PWA <code>theme-color</code> metas; SwiftUI <code>preferredColorScheme</code>.</td></tr>
-<tr><td><b>Accent in dark</b></td><td>Lighter, less saturated, with its own dark <code>fg.on-accent</code>; reusing white is the common failure.</td></tr>
-<tr><td><b>Contrast targets</b></td><td>4.5:1 body, muted, accent as text, status on soft; 3:1 faint labels, strong lines, point marks; APCA Lc 60 for body once tokens.json exists.</td></tr>
-<tr><td><b>Focus, motion, forced colours</b></td><td>Focus ring 2px accent, 2px offset; <code>prefers-reduced-motion</code> zeroes durations; <code>forced-colors</code> restores borders; 44pt targets on PWA and iOS.</td></tr>
-<tr><td><b>Never colour alone</b></td><td>Every status carries a glyph or word; tile marks, keep and cut, and the diff are text.</td></tr>
-</table></div>
+<p>Mode selection, accent in dark, contrast targets, focus and motion: <a href="./view.html?f=docs/19-design-system-spec.md">spec §3</a>.</p>
 
 <h2 id="pieces"><small>4 · pieces</small>Six pieces, three candidates each</h2>
 <p>Pieces are the unit of decision and recombine in the compile row; a direction takes all six from one source.</p>
@@ -409,17 +360,7 @@ ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
 <rect x="354" y="96" width="282" height="36" rx="6" fill="var(--d-surface)" stroke="var(--d-line)"/>
 <text x="366" y="111" class="b">manifest.webmanifest</text><text x="366" y="125" class="s m">theme colours · maskable icon</text>
 </svg><figcaption>I10. This decision is the first commit of tokens.json.</figcaption></figure>
-<div class="tbl"><table>
-<tr><th>Concern</th><th>Web app (Next.js, Vercel)</th><th>PWA (installed)</th><th>Swift inspector (macOS, iOS)</th></tr>
-<tr><td><b>Colour</b></td><td>CSS variables; <code>data-theme</code> override.</td><td>Plus <code>theme-color</code> metas; maskable icon from the triangle.</td><td>Asset catalog, both appearances.</td></tr>
-<tr><td><b>Type</b></td><td>woff2 in <code>design/fonts/</code>; rem on a fixed scale.</td><td><code>font-display: swap</code>, Latin subset, metric fallbacks.</td><td>Display font bundled only if demanded; Dynamic Type: display → largeTitle, h2 → title2, body → body, eyebrow → caption mono.</td></tr>
-<tr><td><b>Space</b></td><td>4px grid; <code>space.1 … 8</code> = 4, 8, 12, 16, 24, 32, 48, 64.</td><td>Plus <code>env(safe-area-inset-*)</code>.</td><td>Same, in points; <code>TPT.space.4</code>.</td></tr>
-<tr><td><b>Radius</b></td><td><code>radius.control · card · pill</code>, per direction.</td><td>Same.</td><td><code>RoundedRectangle(cornerRadius: TPT.radius.card, style: .continuous)</code>.</td></tr>
-<tr><td><b>Icons</b></td><td>nav.js paths, <code>currentColor</code>, stroke per direction.</td><td>Same.</td><td>Custom SF Symbols; weight follows text.</td></tr>
-<tr><td><b>Motion</b></td><td><code>motion.fast · ease</code>; reduced motion zeroes them.</td><td>Same.</td><td><code>withAnimation(.easeOut(duration:))</code>; <code>accessibilityReduceMotion</code>.</td></tr>
-<tr><td><b>Density</b></td><td>Dense tables use <code>space.2</code>.</td><td>Compact below 560px; 44px targets.</td><td>iOS 44pt; web row heights.</td></tr>
-<tr><td><b>Photos</b></td><td>I6.</td><td>Lazy, sized by the record.</td><td><code>TPTTile</code>.</td></tr>
-</table></div>
+<p>Rules per surface for colour, type, space, radius, icons and motion: <a href="./view.html?f=docs/19-design-system-spec.md">spec §7</a>.</p>
 <h3>What the compiled selection generates</h3>
 <p><span class="pv d">DERIVED</span> From the compile row; JSON abbreviated to the semantic tier.</p>
 <div class="gen">
@@ -429,26 +370,7 @@ ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
 </div>
 
 <h2 id="components"><small>8 · component library</small>Our own components, and what they read</h2>
-<p>Our own: no kit has badge, diff, ladder, switch, proposal. Twelve cover the demo; each records anatomy, tokens, states, Swift twin.</p>
-<div class="grid2">
-  <div class="box"><h4 style="margin:0">Naming</h4><ul style="font-size:13px"><li>CSS <code>.tpt-button.primary</code>, parts <code>.tpt-card-title</code>; no BEM.</li><li>Swift <code>TPTButton(.primary)</code>, variants as enums.</li><li>One fragment plus one Swift file each in <code>design/components/</code>; the hub renders the fragments.</li></ul></div>
-  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>Reads component tokens, never a hue.</li><li>Light and dark screenshots before use.</li><li>States: default, hover, focus, active, disabled; plus the fixed triple.</li><li>A thirteenth needs a written reason.</li></ul></div>
-</div>
-<div class="tbl"><table>
-<tr><th></th><th>Component</th><th>Anatomy</th><th>Reads</th><th>Swift</th></tr>
-<tr id="K1"><td class="n"><span class="ref" data-ref="K1">K1</span></td><td><b>Button</b> primary · secondary · quiet</td><td>label, glyph; 44pt on touch</td><td>accent, fg.on-accent, line.strong, bg.surface</td><td><code>TPTButton</code></td></tr>
-<tr id="K2"><td class="n"><span class="ref" data-ref="K2">K2</span></td><td><b>Chip</b></td><td>mono uppercase; point, cluster variants</td><td>bg.raised, line, point.*</td><td><code>TPTChip</code></td></tr>
-<tr id="K3"><td class="n"><span class="ref" data-ref="K3">K3</span></td><td><b>Provenance badge</b></td><td>DERIVED · AUTHORED · TO CONFIRM; 8.5px mono</td><td>prov.*</td><td><code>TPTProvenance</code></td></tr>
-<tr id="K4"><td class="n"><span class="ref" data-ref="K4">K4</span></td><td><b>Card</b></td><td>glyph, title, sentence, go-verb</td><td>bg.surface, line, accent (verb)</td><td><code>TPTCard</code></td></tr>
-<tr id="K5"><td class="n"><span class="ref" data-ref="K5">K5</span></td><td><b>Stat tile</b></td><td>tabular number, label, provenance</td><td>bg.surface, fg.muted</td><td><code>TPTStat</code></td></tr>
-<tr id="K6"><td class="n"><span class="ref" data-ref="K6">K6</span></td><td><b>Version diff row</b></td><td>part, v(n), v(n+1); added, struck</td><td>status.ok, status.alert as text</td><td><code>TPTDiffRow</code></td></tr>
-<tr id="K7"><td class="n"><span class="ref" data-ref="K7">K7</span></td><td><b>Photo tile</b></td><td>square, 1px frame, text mark</td><td>line, status.ok, status.alert</td><td><code>TPTTile</code></td></tr>
-<tr id="K8"><td class="n"><span class="ref" data-ref="K8">K8</span></td><td><b>Stream switch</b></td><td>track, knob, name, line</td><td>line.strong, status.ok</td><td><code>TPTSwitch</code> (Toggle)</td></tr>
-<tr id="K9"><td class="n"><span class="ref" data-ref="K9">K9</span></td><td><b>Ladder rung</b></td><td>numbered disc, verb, line</td><td>fg.default on bg.canvas inverted</td><td><code>TPTRung</code></td></tr>
-<tr id="K10"><td class="n"><span class="ref" data-ref="K10">K10</span></td><td><b>Proposal card</b></td><td>accent border, claim, approve, decline</td><td>accent, bg.surface</td><td><code>TPTProposal</code></td></tr>
-<tr id="K11"><td class="n"><span class="ref" data-ref="K11">K11</span></td><td><b>Rulebox</b></td><td>warn edge, bold lead, muted body</td><td>status.warn, bg.surface</td><td><code>TPTCallout</code></td></tr>
-<tr id="K12"><td class="n"><span class="ref" data-ref="K12">K12</span></td><td><b>Table</b></td><td>mono head, hairlines, tabular numbers</td><td>bg.raised, line</td><td><code>TPTTable</code></td></tr>
-</table></div>
+<p>Twelve components, K1 to K12, with anatomy, tokens and Swift twin: <a href="./view.html?f=docs/19-design-system-spec.md">spec §8</a>. Live captures: <a href="./components.html">Components</a>.</p>
 <h3>Compiled specimen</h3>
 <p>All twelve on the compile row.</p>
 <div id="compiled-spec" class="specs one"></div>
@@ -475,17 +397,7 @@ ol.cl{font-size:13.5px;list-style:none;padding-left:0}ol.cl li{margin:5px 0}
 <path d="M500 6L636 114M636 6L500 114" stroke="var(--d-alert)" stroke-width="1" opacity=".6"/>
 <text x="568" y="64" text-anchor="middle" class="s" style="fill:var(--d-alert)">PHOTO HERO</text>
 </svg><figcaption>B1, I6. The eye lands on the harness.</figcaption></figure>
-<h3>Bases: every motif must pass all seven</h3>
-<div class="tbl"><table>
-<tr><th></th><th>Basis</th><th>Why</th></tr>
-<tr id="B1"><td class="n"><span class="ref" data-ref="B1">B1</span></td><td>Hero never a photo; no photo larger than its record.</td><td>Image analyzers are banned.</td></tr>
-<tr id="B2"><td class="n"><span class="ref" data-ref="B2">B2</span></td><td>One accent; status never colours categories; points keep slots.</td><td>I3, I4, I7.</td></tr>
-<tr id="B3"><td class="n"><span class="ref" data-ref="B3">B3</span></td><td>Badges legible in the motif's colours, both modes.</td><td>Every number's credibility.</td></tr>
-<tr id="B4"><td class="n"><span class="ref" data-ref="B4">B4</span></td><td>Same glyph paths everywhere; stroke may change.</td><td>I8. Swift gets the same symbols.</td></tr>
-<tr id="B5"><td class="n"><span class="ref" data-ref="B5">B5</span></td><td>Drawable with colour, path and text.</td><td>I9. The inspector is native.</td></tr>
-<tr id="B6"><td class="n"><span class="ref" data-ref="B6">B6</span></td><td>Buildable today: self-hostable fonts, no custom illustration.</td><td>Due 5:00 PM.</td></tr>
-<tr id="B7"><td class="n"><span class="ref" data-ref="B7">B7</span></td><td>No MongoDB green accent, no black-on-black Vercel base.</td><td>Forty submissions wear those palettes.</td></tr>
-</table></div>
+<p>Bases B1 to B7, which every motif must pass: <a href="./view.html?f=docs/19-design-system-spec.md">spec §9</a>.</p>
 <h3>Fit matrix</h3>
 <p><span class="pv a">AUTHORED</span> 0 to 5 per company type, agent estimate of 2026-09-26, for the principals to correct. <span class="pv d">DERIVED</span> weighted fit.</p>
 <div class="bar"><label>ICP lens</label><select id="lens"></select><span style="font-size:12.5px;color:var(--d-muted)" id="lens-note"></span></div>

@@ -52,7 +52,7 @@ Each hypothesis names the metrics (§3) that decide it and the thesis it defends
 
 | ID | Hypothesis | Decided by | Defends |
 |---|---|---|---|
-| **H-1** | Over N ≥ 5 iterations on a fixed image corpus, tokens and cost per iteration fall while the standards pass rate holds or rises, because Instrument rewrites context policies. | M-1, M-2, M-4 | T-1, T-6 |
+| **H-1** | Over N ≥ 5 iterations on a fixed image corpus, tokens and cost per iteration fall while the standards pass rate holds or rises, because the improver rewrites context policies from Instrument's findings. | M-1, M-2, M-4 | T-1, T-6 |
 | **H-2** | The builder ↔ instrumenter negotiation converges faster over iterations (fewer turns to pass), because the rewritten rules are baked into the builder's context. | M-3 | T-1, T-7 |
 | **H-3** | Image re-read rate falls and transcript reuse rate rises across iterations, without a rise in inconsistency events between transcript and re-read. | M-5, M-6, M-7 | T-3 |
 | **H-4** | Hot-tier hit rate rises and hot bytes fall (or hold) as the tiering policy is rewritten, i.e. the harness learns what to keep warm. | M-8, M-9, M-10 | T-4 |
@@ -172,7 +172,7 @@ hypotheses it helps decide, the candidate features (R-ids, consolidated in §5),
 
 | Product / incentive | Serves | Decides | Candidate feature | Decision |
 |---|---|---|---|---|
-| **Codex as a builder** | T-7 | H-7 | R-22 Third Build adapter. Codex reads `AGENTS.md`, which already exists; Instrument's policy writer targets `AGENTS.md` as one of its outputs | **Could** (after Kiro) |
+| **Codex as a builder** | T-7 | H-7 | R-22 Third Build adapter. Codex reads `AGENTS.md`, which already exists; the improver's policy writer targets `AGENTS.md` as one of its outputs | **Could** (after Kiro) |
 | **Credits** | — | — | Budget for the adapter test only | — |
 
 ### 4.5 AWS Kiro (50 credits/mo + 500 bonus; no card)
@@ -215,7 +215,7 @@ hypotheses it helps decide, the candidate features (R-ids, consolidated in §5),
 
 | Criterion (weight) | What to show live | Theses on stage |
 |---|---|---|
-| Technical Demo (35%) | One full iteration: Plan picks a sprint mode from `measurements`, Build negotiates to pass, Instrument rewrites `policies`, checkpoint lands in Atlas, then `3pt rollback` | T-1, T-5, T-6 |
+| Technical Demo (35%) | One full iteration: Plan picks a sprint mode from `measurements`, Build negotiates to pass, Instrument reports findings, the improver rewrites `policies`, checkpoint lands in Atlas, then `3pt rollback` | T-1, T-5, T-6 |
 | Implementation Difficulty (30%) | LangGraph state machine on Atlas, builder ↔ instrumenter negotiation, tier migration, policy diff viewer | T-4, T-7, T-11 |
 | Impact Potential (20%) | Read-once transcripts and hot/cold tiering as real pain for media-heavy pipelines | T-2, T-3, T-4, T-9 |
 | Creativity (15%) | Measurement as the fourth dimension; the harness narrating its own retrospective; two-sided triangle | T-6, T-11 |

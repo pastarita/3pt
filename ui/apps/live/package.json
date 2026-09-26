@@ -1,0 +1,6 @@
+{
+  "name": "@3pt/live", "version": "0.0.1", "private": true, "description": "The app on live harness data: every screen is composed by the harness over @3pt/api (/app/screen), every tap feeds the loop. Atomic components.", "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build", "typecheck": "tsc -p tsconfig.json --noEmit", "preview": "vite preview", "clean": "rm -rf dist" },
+  "dependencies": { "@3pt/design-system": "workspace:*", "@3pt/inspector-client": "workspace:*", "@3pt/core": "workspace:*" },
+  "devDependencies": { "vite": "^7.1.5", "typescript": "^5.9.2" }
+}

@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Product tour and demo</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<script src="./photos/photos.js"></script>
+<style>
+  /* Two players in one frame: the 64-second final demo, and the first-run product tour.
+     Hub chrome uses 3pt.css tokens. The phone screen is the app, so it uses the app theme:
+     the --a-* values below mirror app.light in ui/packages/design-system (appCssVars). */
+  .app{--a-bg:#f7f7f5;--a-surface:#fff;--a-sunk:#f0efec;--a-line:#e6e4df;--a-line-strong:#d4d1ca;--a-ink:#1d1d1f;--a-soft:#5f5e5a;--a-faint:#8e8c86;
+       --a-accent:#2f6fed;--a-accent-soft:#e8f0fe;--a-good:#1f8a5b;--a-good-soft:#e5f4ec;--a-warn:#b76e00;--a-warn-soft:#fdf1dc;--a-alert:#c93c2c;--a-alert-soft:#fbe9e6;
+       --a-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .modes{display:flex;gap:6px;margin:14px 0}
+  .modes button{font-size:13px;padding:9px 14px}
+  .modes button.on{background:var(--flag);border-color:var(--flag);color:#fff}
+  .stage{display:grid;grid-template-columns:392px minmax(0,1fr);gap:18px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  /* ---------- the phone ---------- */
+  .phone{width:372px;height:760px;border-radius:46px;background:#0a0a0b;padding:12px;box-shadow:0 0 0 1px var(--line-strong),var(--shadow);position:relative;justify-self:center}
+  .phone::before{content:"";position:absolute;left:50%;top:20px;width:96px;height:26px;border-radius:14px;background:#0a0a0b;transform:translateX(-50%);z-index:30}
+  .scr{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--a-bg);color:var(--a-ink);font:400 14px/1.45 var(--a-font)}
+  .scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+  .scroll::-webkit-scrollbar{display:none}
+  .inner{position:relative;padding:54px 14px 90px;min-height:100%}
+  .sbar{position:absolute;left:0;right:0;top:0;height:46px;display:flex;justify-content:space-between;align-items:center;padding:6px 28px 0;font:600 13px/1 var(--a-font);z-index:20;color:var(--a-ink)}
+  .app h3{margin:0;font-size:22px;line-height:1.15;letter-spacing:-.01em;color:var(--a-ink)}
+  .app h4{margin:0;font-size:16px;font-weight:650;color:var(--a-ink)}
+  .app p{margin:0}
+  .a-sub{color:var(--a-soft);font-size:13px}
+  .a-faint{color:var(--a-faint);font-size:12px}
+  .a-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .a-top .who{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--a-surface);border:1px solid var(--a-line);border-radius:99px;padding:4px 10px 4px 4px;font-size:12px;font-weight:600}
+  .av{width:24px;height:24px;border-radius:50%;background:var(--a-accent-soft);color:var(--a-accent);display:grid;place-items:center;font-weight:700;font-size:11px}
+  .acard{background:var(--a-surface);border:1px solid var(--a-line);border-radius:18px;padding:14px;margin:0 0 12px;display:flex;flex-direction:column;gap:10px}
+  .acard header{display:flex;align-items:center;gap:8px}
+  .acard header .ci{width:28px;height:28px;border-radius:8px;background:var(--a-sunk);display:grid;place-items:center;color:var(--a-soft)}
+  .acard.warn header .ci{background:var(--a-alert-soft);color:var(--a-alert)}
+  .acard.learn header .ci{background:var(--a-accent-soft);color:var(--a-accent)}
+  .acard.save header .ci{background:var(--a-good-soft);color:var(--a-good)}
+  .abtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:99px;padding:10px 16px;font:600 14px/1 var(--a-font);border:1px solid transparent;background:var(--a-ink);color:var(--a-bg);cursor:default}
+  .abtn.ghost{background:var(--a-surface);color:var(--a-ink);border-color:var(--a-line-strong)}
+  .abtn.go{background:var(--a-good);color:#fff}
+  .abtn.block{width:100%}
+  .abtn.tap{animation:tap .5s ease-out 1}
+  @keyframes tap{0%{transform:scale(1)}40%{transform:scale(.93);box-shadow:0 0 0 8px color-mix(in srgb,var(--a-accent) 25%,transparent)}100%{transform:scale(1)}}
+  .apill{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:3px 9px;font-size:11.5px;font-weight:600;background:var(--a-sunk);color:var(--a-soft)}
+  .apill.good{background:var(--a-good-soft);color:var(--a-good)}
+  .apill.bad{background:var(--a-alert-soft);color:var(--a-alert)}
+  .apill.blue{background:var(--a-accent-soft);color:var(--a-accent)}
+  .row2{display:flex;gap:8px}
+  .row2>*{flex:1}
+  .ic{width:18px;height:18px;flex:none}
+  /* photos */
+  .ph{position:relative;border-radius:12px;overflow:hidden;background:var(--a-sunk);aspect-ratio:4/3}
+  .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .ph .cap{position:absolute;left:6px;bottom:6px;right:6px;font:600 10.5px/1.25 var(--a-font);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  .ph .mk{position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff}
+  .ph .mk.ok{background:var(--a-good)}.ph .mk.no{background:var(--a-alert)}
+  .ph.dim img{filter:grayscale(1) brightness(.75)}
+  .ph.dim::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.35)}
+  .ph.pop{animation:popin .45s ease-out both}
+  @keyframes popin{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .pg.two{grid-template-columns:repeat(2,1fr)}
+  .pg.four{grid-template-columns:repeat(4,1fr);gap:4px}
+  .pg.four .ph{border-radius:7px}
+  .hero{aspect-ratio:16/10;border-radius:18px;margin-bottom:12px}
+  .hero .cap{font-size:15px;bottom:10px;left:12px}
+  .hero .cap small{display:block;font-size:12px;font-weight:500;opacity:.9}
+  /* chat */
+  .bub{max-width:86%;padding:10px 13px;border-radius:18px;font-size:14px;line-height:1.35}
+  .bub.me{margin-left:auto;background:var(--a-accent);color:#fff;border-bottom-right-radius:6px}
+  .bub.it{background:var(--a-surface);border:1px solid var(--a-line);border-bottom-left-radius:6px}
+  .typing::after{content:"▍";animation:blink 1s steps(1) infinite;color:var(--a-accent)}
+  @keyframes blink{50%{opacity:0}}
+  .ask{position:absolute;left:10px;right:10px;bottom:18px;z-index:15;display:flex;align-items:center;gap:8px;background:var(--a-surface);border:1px solid var(--a-line-strong);border-radius:99px;padding:6px 6px 6px 14px;box-shadow:0 6px 18px rgba(0,0,0,.08);font-size:13.5px;color:var(--a-faint)}
+  .ask span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ask span.on{color:var(--a-ink)}
+  .ask i{width:32px;height:32px;border-radius:50%;background:var(--a-ink);color:var(--a-bg);display:grid;place-items:center}
+  /* floor plan */
+  .plan{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .unit{border-radius:10px;border:2px solid var(--a-line);padding:8px 6px;text-align:center;font-weight:700;font-size:14px;background:var(--a-surface);transition:all .4s}
+  .unit small{display:block;font-size:10px;font-weight:600;color:var(--a-faint)}
+  .unit.ok{border-color:var(--a-good);background:var(--a-good-soft)}
+  .unit.miss{border-color:var(--a-alert);background:var(--a-alert-soft);color:var(--a-alert);animation:throb 1.4s ease-in-out infinite}
+  @keyframes throb{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--a-alert) 22%,transparent)}}
+  .bar{height:8px;border-radius:99px;background:var(--a-sunk);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--a-accent);border-radius:99px}
+  .notif{position:absolute;left:10px;right:10px;top:50px;z-index:25;background:rgba(250,250,248,.96);border:1px solid var(--a-line);border-radius:20px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.18);display:flex;gap:10px;animation:drop .5s ease-out both}
+  @keyframes drop{from{transform:translateY(-30px);opacity:0}to{transform:none;opacity:1}}
+  .notif .ai{width:36px;height:36px;border-radius:10px;background:var(--a-ink);color:var(--a-bg);display:grid;place-items:center;flex:none}
+  .notif b{font-size:13px}.notif p{font-size:13px;color:var(--a-soft)}
+  .big{font:750 30px/1 var(--a-font);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .ledger-a{display:flex;flex-direction:column;gap:0}
+  .ledger-a div{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--a-line);font-size:13px}
+  .ledger-a div:first-child{border-top:0}
+  .ledger-a div.rb{color:var(--a-faint)}
+  .ledger-a div.rb span{text-decoration:line-through}
+  .ledger-a b{font:700 12px/1.5 var(--a-font);color:var(--a-accent);min-width:22px}
+  /* ---------- the harness panel ---------- */
+  .hp{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .hp-head{display:flex;align-items:baseline;gap:10px}
+  .hp-head b{font:800 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .scene-t{font:800 24px/1.15 var(--sans);margin:0;letter-spacing:-.01em}
+  .loopwrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;align-items:center}
+  .loop svg{width:100%;height:auto;display:block}
+  .loop .nd circle{fill:var(--card);stroke:var(--line-strong);stroke-width:2;transition:all .3s}
+  .loop .nd text{fill:var(--soft);font:700 11px var(--sans);text-anchor:middle}
+  .loop .nd .v{font:800 12px var(--mono)}
+  .loop .nd.on circle{stroke-width:4}
+  .loop .nd.on text{fill:var(--ink)}
+  .loop .nd.p.on circle{stroke:var(--plan);fill:color-mix(in srgb,var(--plan) 22%,var(--card))}
+  .loop .nd.b.on circle{stroke:var(--build);fill:color-mix(in srgb,var(--build) 22%,var(--card))}
+  .loop .nd.i.on circle{stroke:var(--instrument);fill:color-mix(in srgb,var(--instrument) 22%,var(--card))}
+  .loop .edge{stroke:var(--line-strong);stroke-width:2;fill:none}
+  .loop .run{stroke:var(--flag);stroke-width:3;fill:none;stroke-dasharray:6 8;animation:run 1s linear infinite}
+  @keyframes run{to{stroke-dashoffset:-14}}
+  .loop .core text{fill:var(--ink);font:800 26px var(--mono);text-anchor:middle}
+  .loop .core .s{fill:var(--faint);font:700 9px var(--mono);letter-spacing:.1em}
+  .now{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent,var(--flag));border-radius:10px;padding:12px 14px;font-size:14px}
+  .now small{display:block;font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent,var(--flag));margin-bottom:6px}
+  .now[data-pt=plan]{--accent:var(--plan)}.now[data-pt=build]{--accent:var(--build)}.now[data-pt=instrument]{--accent:var(--instrument)}
+  .diff{font:12px/1.6 var(--mono);background:var(--pine);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px;white-space:pre-wrap}
+  .diff .a{color:var(--good)}.diff .d{color:var(--alert)}.diff .c{color:var(--faint)}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+  .box>b{display:block;font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .vers{display:flex;flex-direction:column;gap:6px}
+  .ver{display:grid;grid-template-columns:30px minmax(0,1fr) 38px;gap:8px;align-items:center;font-size:12.5px;animation:slide .4s ease-out both}
+  @keyframes slide{from{transform:translateX(-10px);opacity:0}to{transform:none;opacity:1}}
+  .ver .n{font:800 12px/1 var(--mono);color:var(--soft)}
+  .ver .s{font:700 12px/1 var(--mono);text-align:right;color:var(--soft)}
+  .ver.cur .n,.ver.cur .s{color:var(--flag)}
+  .ver.rb{opacity:.6}.ver.rb .t{text-decoration:line-through}
+  .ver .sc{grid-column:2/4;height:4px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-3px}
+  .ver .sc i{display:block;height:100%;background:var(--instrument)}
+  .ver.rb .sc i{background:var(--alert)}
+  .log{font:11.5px/1.55 var(--mono);color:var(--soft);display:flex;flex-direction:column;gap:3px;max-height:196px;overflow:hidden}
+  .log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:slide .35s ease-out both}
+  .log .col{color:var(--cyan)}
+  .log .fresh{color:var(--ink)}
+  .impact{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .imp{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .imp b{display:block;font:800 22px/1 var(--sans);font-variant-numeric:tabular-nums}
+  .imp s{color:var(--faint);font:600 12px var(--sans);margin-right:4px}
+  .imp small{display:block;color:var(--soft);font-size:11.5px;margin-top:5px;line-height:1.3}
+  .imp.lit{border-color:var(--good)}
+  /* ---------- transport ---------- */
+  .transport{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+  .vo{font:italic 400 17px/1.45 var(--serif);color:var(--ink);min-height:50px;max-width:none}
+  .vo b{font:700 10px/1 var(--mono);font-style:normal;letter-spacing:.12em;color:var(--faint);display:block;margin-bottom:6px;text-transform:uppercase}
+  .tbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .tbar button{font-size:13px;padding:8px 12px;min-width:40px}
+  .tbar .clock{font:700 12px/1 var(--mono);color:var(--soft);min-width:88px}
+  .track{flex:1;min-width:200px;height:26px;position:relative;cursor:pointer;display:flex;gap:3px}
+  .track .seg{position:relative;height:100%;background:var(--card);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .track .seg i{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--flag) 35%,transparent)}
+  .track .seg span{position:absolute;left:6px;top:50%;transform:translateY(-50%);font:700 10px/1 var(--sans);color:var(--soft);white-space:nowrap;overflow:hidden;right:4px}
+  .track .seg.cur{border-color:var(--flag)}
+  .track .seg.cur span{color:var(--ink)}
+  /* ---------- the tour overlay (inside the phone) ---------- */
+  .t-spot{position:absolute;border-radius:16px;box-shadow:0 0 0 2000px rgba(20,20,22,.55);transition:all .3s ease;pointer-events:none;z-index:40}
+  .t-pop{position:absolute;left:12px;right:12px;z-index:41;background:var(--a-surface);border-radius:18px;padding:14px;box-shadow:0 14px 34px rgba(0,0,0,.28);transition:top .3s ease;display:flex;flex-direction:column;gap:8px}
+  .t-pop .k{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:650;color:var(--a-accent)}
+  .t-pop h4{font-size:17px}
+  .t-pop p{color:var(--a-soft);font-size:14px}
+  .t-foot{display:flex;align-items:center;gap:8px}
+  .t-foot .dots{flex:1;display:flex;gap:4px}
+  .t-foot .dots i{width:6px;height:6px;border-radius:50%;background:var(--a-line-strong)}
+  .t-foot .dots i.on{background:var(--a-accent);width:16px;border-radius:99px}
+  .t-foot button{all:unset;cursor:pointer;border-radius:99px;padding:8px 14px;font:600 13px/1 var(--a-font)}
+  .t-foot .nx{background:var(--a-ink);color:var(--a-bg)}
+  .t-foot .bk{color:var(--a-soft)}
+  .welcome{position:absolute;inset:0;z-index:45;background:rgba(20,20,22,.55);display:flex;align-items:flex-end}
+  .welcome .sheet{background:var(--a-surface);border-radius:28px 28px 0 0;padding:22px 18px 30px;width:100%;display:flex;flex-direction:column;gap:12px;animation:up .4s ease-out both}
+  @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .welcome .roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .welcome .roles button{all:unset;cursor:pointer;border:1.5px solid var(--a-line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:2px;font:650 13.5px/1.2 var(--a-font);color:var(--a-ink)}
+  .welcome .roles button small{font-weight:500;color:var(--a-faint);font-size:11.5px}
+  .welcome .roles button.on{border-color:var(--a-accent);background:var(--a-accent-soft)}
+  .tourside{display:flex;flex-direction:column;gap:12px}
+  .tlist{display:flex;flex-direction:column;gap:8px}
+  .tl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .tl b{display:block;font-size:14px}
+  .tl small{color:var(--soft);font-size:12.5px}
+  .tl.on{border-color:var(--flag)}
+  .steps{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--soft)}
+  .steps li.on{color:var(--ink);font-weight:700}
+  .rules{margin:0;padding-left:18px;font-size:13.5px;color:var(--soft)}
+  .rules li{margin:3px 0}
+  .credit{font-size:11.5px;color:var(--faint)}
+  .credit a{color:var(--soft)}
+  @media(max-width:1100px){.stage{grid-template-columns:1fr}.loopwrap{grid-template-columns:180px minmax(0,1fr)}}
+  @media(max-width:620px){.phone{zoom:.84}.cols,.impact{grid-template-columns:1fr 1fr}.loopwrap{grid-template-columns:1fr}.stage{padding:10px}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <p class="eyebrow">Build · product tour and final demo</p>
+  <h1>One site team. One harness that rewrites itself.</h1>
+  <p class="lede">Left: what Maria, the superintendent, sees on her phone. Right: what the harness does about it. Play the demo, or run the tour a new user gets.</p>
+  <p class="credit"><span class="pv a">AUTHORED</span> People, projects, numbers and versions are example data, the same as the App prototype. Photos are real, free-licence photos, credited below.</p>
+
+  <div class="modes" role="tablist">
+    <button id="m-demo" class="on" role="tab">▶ Final demo · 64 s</button>
+    <button id="m-tour" role="tab">First-run tour</button>
+  </div>
+
+  <div class="stage">
+    <div class="phone"><div class="scr app" id="scr"></div></div>
+    <div class="hp" id="side"></div>
+    <div class="transport" id="transport"></div>
+  </div>
+
+  <h2 data-cluster="build">Run of show <span>the 60-second video, shot from this player</span></h2>
+  <div class="tbl-wrap"><table id="ros"></table></div>
+
+  <h2 data-cluster="build">Tour setup <span>what a new user gets, and when</span></h2>
+  <ul class="rules">
+    <li>The tour starts once, on the first visit. The Tips button starts it again.</li>
+    <li>One tip at a time. Each tip points at one thing on the screen.</li>
+    <li>A tip for a card that is not on screen is skipped. The tour only explains what the user can see.</li>
+    <li>Skip is one tap. Esc closes the tour. Arrow keys move between tips.</li>
+    <li>"How it learns" is for the presenter and the owner. A flag turns it on.</li>
+    <li>Each tip names a region with <code>data-region</code>. The web app, its tests and its screenshots use the same names (<code>ui/apps/web/src/tour.ts</code>).</li>
+  </ul>
+  <div class="tbl-wrap" style="margin-top:12px"><table id="tourtbl"></table></div>
+
+  <h2 data-cluster="record">Photo credits <span>free licences only: public domain, CC0, CC BY</span></h2>
+  <div class="tbl-wrap"><table id="credits"></table></div>
+</div>
+<script>
+(function(){
+  var T = window.T, PH = window.PHOTOS || {sets:{}, list:[]};
+
+  /* ---------- small helpers ---------- */
+  var I = {
+    camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13" r="3.5"/>',
+    drop:'<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z"/>',
+    alert:'<path d="M12 3 2 20h20Z"/><path d="M12 10v4M12 17v.5"/>',
+    send:'<path d="M3 11 21 3l-6 18-3-8Z"/>',
+    search:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
+    up:'<path d="M12 19V6M6 11l6-6 6 6"/>',
+    check:'<path d="m5 12 4 4 10-10"/>',
+    close:'<path d="M6 6l12 12M18 6 6 18"/>',
+    bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3Z"/>',
+    undo:'<path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-2"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    layers:'<path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
+    compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/>',
+    hardhat:'<path d="M3 17h18M5 17a7 7 0 0 1 14 0"/><path d="M10 10V6h4v4"/>',
+    image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/>',
+    flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'
+  };
+  function ic(n,c){ return '<svg class="ic'+(c?' '+c:'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(I[n]||'')+'</svg>'; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  /* a real photo of a kind. n picks which one; the set wraps. */
+  function src(kind,n){ var s=PH.sets[kind]||[]; if(!s.length) return ''; var p=PH.list[s[(n||0)%s.length]]; return './photos/'+p.file; }
+  function ph(kind,n,o){ o=o||{};
+    return '<div class="ph'+(o.dim?' dim':'')+(o.pop?' pop':'')+(o.cls?' '+o.cls:'')+'"'+(o.delay!=null?' style="animation-delay:'+o.delay+'ms"':'')+(o.region?' data-region="'+o.region+'"':'')+'>'+
+      '<img src="'+src(kind,n)+'" alt="'+esc(o.alt||kind+' photo')+'" loading="lazy">'+
+      (o.cap?'<span class="cap">'+o.cap+'</span>':'')+
+      (o.mk==='ok'?'<span class="mk ok">'+ic('check')+'</span>':o.mk==='no'?'<span class="mk no">'+ic('close')+'</span>':'')+'</div>'; }
+  function sbar(){ return '<div class="sbar"><span>7:12</span><span>●●● 5G ▮</span></div>'; }
+  function top(title,sub,who){ return '<div class="a-top" data-region="role"><div><h3>'+title+'</h3><p class="a-sub">'+sub+'</p></div><span class="who"><span class="av">'+who[0]+'</span>'+who+'</span></div>'; }
+  function askbar(text,on){ return '<div class="ask" data-region="composer"><span class="'+(on?'on':'')+'">'+(text||'Ask about your photos…')+'</span><i>'+ic('up')+'</i></div>'; }
+  function units(miss,fixed){ var h=''; [201,202,203,204,205,206,207,208].forEach(function(u){
+      var st = u===miss ? (fixed?'ok':'miss') : (u<=205?'ok':'');
+      h+='<div class="unit '+st+'">'+u+'<small>'+(u===miss&&!fixed?'no photo':st==='ok'?'photo ✓':'framing')+'</small></div>'; }); return '<div class="plan">'+h+'</div>'; }
+
+  /* ---------- the versions (AUTHORED, same as the App prototype) ---------- */
+  var VERS = [
+    {v:0, t:'Generic start: describe each photo, its date, its source', s:.41, by:'install'},
+    {v:1, t:'Added fields: unit, level, trade', s:.58, by:'Dev, PM'},
+    {v:2, t:'Added field: open or closed wall. Read old photos again, once', s:.64, by:"Maria's taps"},
+    {v:3, t:'Tried: send 20 photos per question, not 8', s:.52, by:'harness', rb:true},
+    {v:4, t:'New tools: Friday owner update, and find units with no open-wall photo', s:.74, by:'Dev said yes'},
+    {v:5, t:'Tower B starts with 5 lessons from Tower A and the clinic', s:.81, by:'harness'}
+  ];
+
+  /* ---------- the demo script ----------
+     Each scene has beats. A beat sets the phone screen, the loop point, the "now" note, the
+     versions shown, the current version, the MongoDB writes, and the impact tiles.
+     State is a pure function of time, so the scrubber can jump anywhere. */
+  var S = [
+    { id:'s1', title:'Day one, it knows nothing', dur:10000,
+      vo:'Day one. The harness knows nothing about construction. It reads sixteen thousand old photos once. The PM keeps typing unit numbers, so it learns units.',
+      beats:[
+        {at:0, pt:'instrument', vmax:0, cur:0,
+         now:'Reads every photo from Tower A and Riverside Clinic, once. v0 files each one by date and source only.',
+         atlas:['media_index.insertMany(16,204 photos)','transcripts.insertMany(16,204 · read once)'],
+         phone:function(){ var g=''; var k=['framing','plumbing','drywall','electrical','exterior','framing','drywall','plumbing','exterior','electrical','drywall','finished'];
+           k.forEach(function(x,i){ g+=ph(x,i,{pop:1,delay:i*260,cap:'Photo · '+['Mar','Apr','May','Jun'][i%4]+' 2024'}); });
+           return top('Acme Builders','Bringing in your old photos','Dev')+
+             '<div class="acard"><div style="display:flex;align-items:baseline;gap:8px"><span class="big" data-count="0,16204,9000">0</span><span class="a-sub">photos sorted</span></div><div class="bar"><i data-fill="0,100,9000"></i></div><p class="a-faint">Tower A · Riverside Clinic · 2024 to 2025</p></div>'+
+             '<div class="pg">'+g+'</div>'; }},
+        {at:5200, pt:'plan', vmax:1, cur:1,
+         now:'Dev typed a unit number into 41 searches. The harness adds unit, level and trade to every photo.',
+         diff:'<span class="c">policy v0 → v1</span>\n<span class="a">+ field  unit   "204"</span>\n<span class="a">+ field  level  "2"</span>\n<span class="a">+ field  trade  "plumbing"</span>',
+         atlas:['measurements.insertOne({signal:"typed_unit", n:41})','policies.insertOne({v:1, fields:+3})','checkpoints.insertOne({v:1, score:.58})'],
+         phone:function(){ var g=''; var k=['framing','plumbing','drywall','electrical','exterior','framing','drywall','plumbing','exterior','electrical','drywall','finished'];
+           var t=['Framing','Plumbing','Drywall','Electrical','Outside','Framing','Drywall','Plumbing','Outside','Electrical','Drywall','Finished'];
+           k.forEach(function(x,i){ g+=ph(x,i,{cap:(x==='exterior'?'':'Unit '+(201+i%8)+' · ')+t[i]}); });
+           return top('Acme Builders','16,204 photos, sorted by unit','Dev')+
+             '<div class="acard learn"><header><span class="ci">'+ic('bulb')+'</span><h4>I learned something</h4></header><p>Photos now show the unit, floor and trade. You typed unit numbers 41 times, so I added them.</p></div>'+
+             '<div class="pg">'+g+'</div>'; }}
+      ]},
+    { id:'s2', title:'Maria asks a real question', dur:11000,
+      vo:'Maria asks what every super asks after a leak. Three of the eight photos help. She taps "not this" on the other five.',
+      beats:[
+        {at:0, pt:'instrument', vmax:1, cur:1, now:'Waits. Every question is a test the harness can score.',
+         atlas:[],
+         phone:function(){ return top('Tower A','Level 2 · finished 2024','Maria')+
+             '<div style="display:flex;flex-direction:column;gap:10px;margin-top:30px"><div class="bub me typing" data-type="Show me unit 204 plumbing before the drywall went up,3000"></div></div>'+askbar(''); }},
+        {at:3600, pt:'instrument', vmax:1, cur:1, now:'v1 knows unit and trade. It cannot tell an open wall from a closed one. Answer: 8 photos.',
+         atlas:['transcripts.find({unit:204, trade:"plumbing"}) → 8'],
+         phone:function(){ return s2answer(false); }},
+        {at:7200, pt:'instrument', vmax:1, cur:1, now:'Five "not this" taps. Each one is saved as a signal, with the photo and the question.',
+         atlas:['measurements.insertMany(5 × {signal:"not_this", q:"before drywall"})'],
+         phone:function(){ return s2answer(true); }}
+      ]},
+    { id:'s3', title:'It notices, and changes itself', dur:13000,
+      vo:'Those taps are the signal. The harness proposes a new field, open or closed wall. It reads every photo again, once, and checks itself on fifty labelled photos.',
+      beats:[
+        {at:0, pt:'instrument', vmax:1, cur:1, now:'38 "not this" taps this month. All on one kind of question: what was behind a wall before it closed.',
+         atlas:['measurements.aggregate(signal:"not_this" by question) → 38 · "before drywall"'],
+         phone:function(){ return top('Tower A','Level 2 · finished 2024','Maria')+s2grid(true)+askbar(''); }},
+        {at:2600, pt:'plan', vmax:1, cur:1, now:'Proposes one change to its own rules. A person can see it and undo it.',
+         diff:'<span class="c">policy v1 → v2</span>\n<span class="a">+ field  wall   "open" | "closed"</span>\n<span class="a">+ job    read 16,204 photos again, once</span>\n<span class="c">  check  50 labelled photos, keep only if better</span>',
+         atlas:['plans.insertOne({propose:"field wall", why:"38 not_this"})'],
+         phone:function(){ return top('Tower A','Level 2 · finished 2024','Maria')+s2grid(true)+askbar('')+
+             '<div class="notif"><span class="ai">'+ic('bulb')+'</span><div><b>Your assistant wants to learn</b><p>Sort photos by open wall or closed wall? You said "not this" to finished walls 38 times.</p></div></div>'; }},
+        {at:6000, pt:'build', vmax:1, cur:1, now:'Applies the change. Reads the old photos again, one time only, and adds the new field.',
+         diff:'<span class="c">policy v1 → v2</span>\n<span class="a">+ field  wall   "open" | "closed"</span>\n<span class="a">+ job    read 16,204 photos again, once</span>\n<span class="c">  check  50 labelled photos, keep only if better</span>',
+         atlas:['policies.insertOne({v:2, fields:+wall})','jobs.insertMany(16,204 × {kind:"transcribe", reread:true})','transcripts.updateMany({$set:{wall}})'],
+         phone:function(){ return top('Tower A','Updating your photos','Maria')+
+             '<div class="acard learn"><header><span class="ci">'+ic('layers')+'</span><h4>Sorting old photos again</h4></header><div style="display:flex;align-items:baseline;gap:8px"><span class="big" data-count="0,16204,3200">0</span><span class="a-sub">of 16,204</span></div><div class="bar"><i data-fill="0,100,3200"></i></div><p class="a-faint">One time only. New photos get it from now on.</p></div>'+
+             '<div class="pg two">'+ph('plumbing',0,{cap:'Open wall'})+ph('drywall',0,{cap:'Closed wall'})+ph('electrical',1,{cap:'Open wall'})+ph('finished',0,{cap:'Closed wall'})+'</div>'; }},
+        {at:9600, pt:'instrument', vmax:2, cur:2, now:'Checks itself on 50 photos a person labelled. Score 0.58 → 0.64. Better, so v2 stays.',
+         atlas:['checkpoints.insertOne({v:2, score:.64, eval:50})'],
+         phone:function(){ return top('Tower A','Level 2 · finished 2024','Maria')+
+             '<div class="acard learn"><header><span class="ci">'+ic('bulb')+'</span><h4>I learned something</h4></header><p>Photos now show if the wall was open or closed. I checked it on 50 photos your team labelled.</p><span class="apill good">'+ic('check')+' Better answers</span></div>'+
+             '<div class="pg two">'+ph('plumbing',0,{cap:'Open wall'})+ph('drywall',0,{cap:'Closed wall'})+'</div>'; }}
+      ]},
+    { id:'s4', title:'Same question, better answer', dur:10000,
+      vo:'Same question. Seven of eight. Then it tries a bigger change. Answers get worse, so it undoes that one by itself.',
+      beats:[
+        {at:0, pt:'instrument', vmax:2, cur:2, now:'Same question as before. v2 filters to open walls. 7 of 8 photos help, not 3.',
+         atlas:['transcripts.find({unit:204, trade:"plumbing", wall:"open"}) → 8'],
+         phone:function(){ return s4answer(); }},
+        {at:4800, pt:'build', vmax:3, cur:2, now:'Tried v3: send 20 photos to the model per question, not 8. Score fell to 0.52. Rolled back to v2 by itself.',
+         diff:'<span class="c">policy v2 → v3</span>\n<span class="d">- context  8 photos per question</span>\n<span class="a">+ context  20 photos per question</span>\n<span class="c">  check    .64 → .52  ✗  rolled back to v2</span>',
+         atlas:['policies.insertOne({v:3, context:20})','checkpoints.insertOne({v:3, score:.52, rolled_back:true})','policies.updateOne({current:2})'],
+         phone:function(){ return top('What I changed','Every change, in plain words','Maria')+
+             '<div class="acard" data-region="card-learned"><div class="ledger-a">'+
+               '<div><b>v1</b><span>Sort photos by unit, floor and trade</span></div>'+
+               '<div><b>v2</b><span>Sort photos by open or closed wall</span></div>'+
+               '<div class="rb"><b>v3</b><span>Look at more photos per question</span></div>'+
+             '</div></div>'+
+             '<div class="acard warn"><header><span class="ci">'+ic('undo')+'</span><h4>I undid a change</h4></header><p>Looking at more photos made answers worse. I went back to how it was. You did not need to do anything.</p></div>'; }}
+      ]},
+    { id:'s5', title:'Repeat work becomes part of the harness', dur:9000,
+      vo:'It sees the work people repeat. The Friday owner update took Dev twenty-eight hours a job. One tap, and that tool becomes part of the harness.',
+      beats:[
+        {at:0, pt:'plan', vmax:3, cur:2, now:'Found a repeat: Dev built the same owner photo update by hand 38 times. Offers to do it.',
+         atlas:['measurements.aggregate(repeats by person) → "owner update" × 38'],
+         phone:function(){ return s5(false); }},
+        {at:4400, pt:'build', vmax:4, cur:4, now:'Dev said yes. The owner update and the open-wall finder are now tools the harness owns. Score 0.74.',
+         diff:'<span class="c">policy v2 → v4</span>\n<span class="a">+ tool   owner_update   every Friday 4 pm</span>\n<span class="a">+ tool   find_units_missing_open_wall</span>\n<span class="a">+ rule   remind before drywall starts</span>',
+         atlas:['policies.insertOne({v:4, tools:+2, rules:+1})','checkpoints.insertOne({v:4, score:.74})'],
+         phone:function(){ return s5(true); }}
+      ]},
+    { id:'s6', title:'Tower B starts where Tower A ended', dur:11000,
+      vo:'Tower B starts with every lesson from the last two jobs. Before a wall closes, it asks for the pipe photo. Every version lives in MongoDB Atlas.',
+      beats:[
+        {at:0, pt:'plan', vmax:5, cur:5, now:'Tower B starts on v5: five lessons from two finished jobs, and a screen built for each role.',
+         atlas:['plans.insertOne({project:"Tower B", playbook:5 lessons})','checkpoints.insertOne({v:5, score:.81})'],
+         phone:function(){ return s6(false); }},
+        {at:5600, pt:'instrument', vmax:5, cur:5, now:'Unit 206: pipe photo taken the day before drywall. No wall gets opened later to find a pipe.',
+         atlas:['media_index.insertOne({unit:206, trade:"plumbing", wall:"open"})','measurements.insertOne({signal:"reminder_done", unit:206})'],
+         impact:true,
+         phone:function(){ return s6(true); }}
+      ]}
+  ];
+
+  function s2grid(marked){
+    var k=[['plumbing',0,1],['drywall',1,0],['plumbing',1,1],['finished',0,0],['drywall',2,0],['plumbing',2,1],['finished',1,0],['drywall',3,0]], g='';
+    k.forEach(function(x,i){ g+=ph(x[0],x[1],{cap:x[2]?'Open wall':'Wall closed',dim:marked&&!x[2],mk:marked?(x[2]?'':'no'):''}); });
+    return '<div class="pg four">'+g+'</div>';
+  }
+  function s2answer(marked){
+    return top('Tower A','Level 2 · finished 2024','Maria')+
+      '<div style="display:flex;flex-direction:column;gap:10px"><div class="bub me">Show me unit 204 plumbing before the drywall went up</div>'+
+      '<div class="bub it">I found 8 photos of unit 204 plumbing.</div>'+s2grid(marked)+
+      (marked?'<div class="row2"><span class="apill bad">5 × not this</span><span class="apill good">3 helped</span></div>':'<p class="a-faint">Tap a photo to say "not this".</p>')+'</div>'+askbar('');
+  }
+  function s4answer(){
+    var k=[['plumbing',0],['plumbing',1],['plumbing',2],['electrical',0],['plumbing',3],['electrical',1],['plumbing',4],['drywall',1]], g='';
+    k.forEach(function(x,i){ g+=ph(x[0],x[1],{cap:i===7?'Wall closed':'Open wall',mk:i===7?'':'ok',pop:1,delay:i*120}); });
+    return top('Tower A','Level 2 · finished 2024','Maria')+
+      '<div style="display:flex;flex-direction:column;gap:10px"><div class="bub me">Show me unit 204 plumbing before the drywall went up</div>'+
+      '<div class="bub it">Here is unit 204 with the <b>wall open</b>, from March 2024.</div><div><span class="apill blue">'+ic('layers')+' Open wall</span></div>'+
+      '<div class="pg four">'+g+'</div>'+
+      '<div class="acard"><div class="row2" style="text-align:center"><div><span class="a-faint">Before</span><div class="big" style="color:var(--a-faint)">3 of 8</div></div><div><span class="a-faint">Now</span><div class="big" style="color:var(--a-good)">7 of 8</div></div></div></div></div>'+askbar('');
+  }
+  function s5(yes){
+    return top('Tower A','Week 32 · Friday','Dev')+
+      '<div class="acard save" data-region="card-savers"><header><span class="ci">'+ic('clock')+'</span><h4>Save time</h4><span class="apill good" style="margin-left:auto">28 hours a job</span></header>'+
+        ph('exterior',0,{cap:'Friday owner update'})+
+        '<p><b>Make the Friday owner update for me?</b></p><p class="a-sub">You built it by hand 38 times on Tower A. Same photos, same order, every week.</p>'+
+        (yes?'<div class="apill good" style="padding:10px;justify-content:center">'+ic('check')+' On. Next one goes Friday at 4 pm.</div>'
+            :'<div class="row2"><span class="abtn ghost">Not now</span><span class="abtn go tap" style="animation-delay:3.6s">Yes, do it</span></div>')+
+      '</div>'+
+      (yes?'<div class="acard"><header><span class="ci">'+ic('send')+'</span><h4>To Grace, owner</h4></header><div class="pg">'+ph('exterior',1)+ph('drywall',2)+ph('finished',2)+'</div><p class="a-sub">Week 32: level 2 walls closed, 24 photos, 3 notes. Made by your assistant.</p></div>':'');
+  }
+  function s6(done){
+    return (done?'':'<div class="notif"><span class="ai">'+ic('camera')+'</span><div><b>Drywall starts in unit 206 tomorrow</b><p>No one took the pipe photo yet. Take it before the wall closes.</p></div></div>')+
+      '<div class="ph hero">'+'<img src="'+src('exterior',2)+'" alt="Tower B under construction"><span class="cap">Tower B<small>Week 14 of 40 · 14 Harbor St</small></span></div>'+
+      '<div class="acard learn"><header><span class="ci">'+ic('bulb')+'</span><h4>Started with 5 lessons</h4><span class="apill blue" style="margin-left:auto">from 2 jobs</span></header><p class="a-sub">Photo before drywall · Friday owner update · Water near windows · Duplicate photos · Closeout set</p></div>'+
+      '<div class="acard'+(done?'':' warn')+'" data-region="card-plan"><header><span class="ci">'+ic(done?'check':'camera')+'</span><h4>'+(done?'Unit 206 is done':'Unit 206 needs a photo')+'</h4></header>'+units(206,done)+
+      (done?'<div class="pg two">'+ph('plumbing',5,{cap:'Unit 206 · open wall · today',mk:'ok',pop:1})+ph('electrical',2,{cap:'Unit 206 · electrical'})+'</div>':'<span class="abtn block tap" style="animation-delay:4.2s">'+ic('camera')+' Take photo</span>')+'</div>';
+  }
+
+  /* ---------- timeline ---------- */
+  var TOTAL=0; S.forEach(function(s){ s.t0=TOTAL; TOTAL+=s.dur; });
+  function locate(t){ t=Math.max(0,Math.min(TOTAL-1,t)); for (var i=0;i<S.length;i++){ var s=S[i]; if (t<s.t0+s.dur){ var b=0; s.beats.forEach(function(x,j){ if(t-s.t0>=x.at) b=j; }); return {si:i,bi:b,local:t-s.t0-s.beats[b].at}; } } }
+  /* every write up to now, oldest first, for the log */
+  function writesUpTo(si,bi){ var out=[]; S.forEach(function(s,i){ s.beats.forEach(function(b,j){ if(i<si||(i===si&&j<=bi)) (b.atlas||[]).forEach(function(a){ out.push({a:a,fresh:i===si&&j===bi}); }); }); }); return out; }
+
+  var st = { mode:'demo', t:0, playing:false, key:'', last:0 };
+  var scr=document.getElementById('scr'), side=document.getElementById('side'), tr=document.getElementById('transport');
+
+  function loopSvg(pt,v){
+    function nd(cls,x,y,label,sub){ return '<g class="nd '+cls+(pt===({p:'plan',b:'build',i:'instrument'})[cls]?' on':'')+'"><circle cx="'+x+'" cy="'+y+'" r="30"/><text x="'+x+'" y="'+(y-1)+'">'+label+'</text><text x="'+x+'" y="'+(y+13)+'" style="font-weight:500;font-size:9.5px">'+sub+'</text></g>'; }
+    var P=[115,38], B=[196,178], N=[34,178];
+    var run = pt==='instrument'?'M'+N+' L'+P : pt==='plan'?'M'+P+' L'+B : 'M'+B+' L'+N;
+    return '<div class="loop"><svg viewBox="0 0 230 214" role="img" aria-label="The loop: Instrument notices, Plan proposes, Build changes. Current step: '+pt+'">'+
+      '<path class="edge" d="M'+P+' L'+B+' L'+N+' Z"/><path class="run" d="'+run+'"/>'+
+      '<g class="core"><text x="115" y="140">v'+v+'</text><text class="s" x="115" y="156">HARNESS</text></g>'+
+      nd('p',P[0],P[1],'Plan','proposes')+nd('b',B[0],B[1],'Build','changes')+nd('i',N[0],N[1],'Instrument','notices')+'</svg></div>';
+  }
+
+  function renderDemo(force){
+    var L=locate(st.t), s=S[L.si], b=s.beats[L.bi], key=L.si+'.'+L.bi;
+    if (key!==st.key || force){
+      st.key=key;
+      scr.innerHTML = sbar()+'<div class="scroll"><div class="inner">'+b.phone()+'</div></div>';
+      pinAsk();
+      var vs=''; VERS.slice(0,b.vmax+1).slice().reverse().forEach(function(x){
+        vs+='<div class="ver'+(x.v===b.cur?' cur':'')+(x.rb&&b.vmax>=3?' rb':'')+'"><span class="n">v'+x.v+'</span><span class="t">'+esc(x.t)+'</span><span class="s">'+x.s.toFixed(2)+'</span><span class="sc"><i style="width:'+Math.round(x.s*100)+'%"></i></span></div>'; });
+      var w=writesUpTo(L.si,L.bi).slice(-9).reverse(), lg='';
+      w.forEach(function(x){ var m=x.a.match(/^(\w+)\.(.*)$/); lg+='<div class="'+(x.fresh?'fresh':'')+'"><span class="col">'+m[1]+'</span>.'+esc(m[2])+'</div>'; });
+      var imp = b.impact ? [
+          ['Walls reopened','3','0','to find a pipe, per job'],
+          ['Searches that miss','35%','6%','of photo questions'],
+          ['Owner update','28 h','0 h','of hand work, per job'],
+          ['Harness score','0.41','0.81','on 50 labelled photos']] : null;
+      side.innerHTML =
+        '<div class="hp-head"><b>Scene '+(L.si+1)+' of '+S.length+'</b></div><h3 class="scene-t">'+s.title+'</h3>'+
+        '<div class="loopwrap">'+loopSvg(b.pt,b.cur)+'<div class="now" data-pt="'+b.pt+'"><small>'+b.pt+'</small>'+b.now+(b.diff?'<div class="diff">'+b.diff+'</div>':'')+'</div></div>'+
+        (imp?'<div class="impact">'+imp.map(function(x){ return '<div class="imp lit"><b><s>'+x[1]+'</s>'+x[2]+'</b><small>'+x[0]+', '+x[3]+'</small></div>'; }).join('')+'</div>':'')+
+        '<div class="cols"><div class="box"><b>Harness versions</b><div class="vers">'+vs+'</div></div>'+
+        '<div class="box"><b>Writes to MongoDB Atlas</b><div class="log">'+(lg||'<div>nothing yet</div>')+'</div></div></div>';
+      var vo=document.getElementById('vo'); if (vo) vo.innerHTML='<b>Voice-over · '+fmt(s.t0)+'</b>'+esc(s.vo);
+    }
+    tick(L.local);
+    drawTrack();
+  }
+  /* time-driven details inside a beat: counters, fills, typing */
+  function tick(local){
+    scr.querySelectorAll('[data-count]').forEach(function(el){ var a=el.dataset.count.split(',').map(Number), k=Math.min(1,local/a[2]); el.textContent=Math.round(a[0]+(a[1]-a[0])*(1-Math.pow(1-k,2))).toLocaleString('en-US'); });
+    scr.querySelectorAll('[data-fill]').forEach(function(el){ var a=el.dataset.fill.split(',').map(Number), k=Math.min(1,local/a[2]); el.style.width=(a[0]+(a[1]-a[0])*k)+'%'; });
+    scr.querySelectorAll('[data-type]').forEach(function(el){ var d=el.dataset.type, i=d.lastIndexOf(','), txt=d.slice(0,i), ms=+d.slice(i+1), n=Math.round(txt.length*Math.min(1,local/ms)); el.textContent=txt.slice(0,n); el.classList.toggle('typing', n<txt.length); });
+  }
+  /* the ask bar sits on the screen, not on the page: move it out of the scrolling content */
+  function pinAsk(){ var a=scr.querySelector('.inner .ask'); if (a) scr.appendChild(a); }
+  function fmt(ms){ var s=Math.floor(ms/1000); return Math.floor(s/60)+':'+('0'+s%60).slice(-2); }
+
+  function transport(){
+    if (st.mode!=='demo'){ tr.innerHTML=''; return; }
+    tr.innerHTML='<div class="vo" id="vo"></div><div class="tbar"><button id="pp" class="primary" aria-label="Play or pause">▶</button><button id="pv" aria-label="Previous scene">◀◀</button><button id="nx" aria-label="Next scene">▶▶</button><span class="clock" id="clock"></span><div class="track" id="track">'+
+      S.map(function(s,i){ return '<div class="seg" style="flex:'+s.dur+'" data-i="'+i+'"><i></i><span>'+(i+1)+' · '+s.title+'</span></div>'; }).join('')+'</div></div>';
+    document.getElementById('pp').onclick=toggle;
+    document.getElementById('pv').onclick=function(){ jump(-1); };
+    document.getElementById('nx').onclick=function(){ jump(1); };
+    document.getElementById('track').onclick=function(e){ var seg=e.target.closest('.seg'); if(!seg) return; var s=S[+seg.dataset.i], r=seg.getBoundingClientRect(); st.t=s.t0+s.dur*Math.max(0,Math.min(.999,(e.clientX-r.left)/r.width)); st.key=''; renderDemo(); };
+  }
+  function drawTrack(){
+    var c=document.getElementById('clock'); if(!c) return;
+    c.textContent=fmt(st.t)+' / '+fmt(TOTAL);
+    document.getElementById('pp').textContent = st.playing?'❚❚':'▶';
+    document.querySelectorAll('#track .seg').forEach(function(el,i){ var s=S[i], k=Math.max(0,Math.min(1,(st.t-s.t0)/s.dur)); el.firstChild.style.width=(k*100)+'%'; el.classList.toggle('cur', st.t>=s.t0&&st.t<s.t0+s.dur); });
+  }
+  function jump(d){ var L=locate(st.t), i=Math.max(0,Math.min(S.length-1,L.si+d)); st.t=S[i].t0; st.key=''; renderDemo(); }
+  function toggle(){ if (st.t>=TOTAL-1) st.t=0; st.playing=!st.playing; st.last=performance.now(); if (st.playing) requestAnimationFrame(frame); drawTrack(); }
+  function frame(now){ if(!st.playing||st.mode!=='demo') return; st.t+=now-st.last; st.last=now; if(st.t>=TOTAL){ st.t=TOTAL-1; st.playing=false; } renderDemo(); if(st.playing) requestAnimationFrame(frame); }
+
+  /* ---------- the first-run tour ----------
+     Copy follows ui/apps/web/src/tour.ts, so the hub and the app say the same thing. */
+  var TOURS = [
+    {id:'welcome', name:'Welcome', when:'First open, before any tip', who:'Everyone', steps:[]},
+    {id:'basics', name:'The basics', when:'First visit to a project', who:'Everyone', steps:[
+      ['role','Your job','Change this to see the app the way a coworker sees it.'],
+      ['card-needs','Needs you','Only the things you can fix today. Each one has a photo and one button.'],
+      ['card-plan','Floor at a glance','Each square is a unit. Red means a photo is missing before the wall closes.'],
+      ['card-week','This week','The newest photos. Tap one to see it big.'],
+      ['composer','Ask your assistant','Type a question the way you would text a coworker. It looks through your photos for you.']]},
+    {id:'learns', name:'How it learns', when:'Presenter flag, or the owner role', who:'Presenter, owner', steps:[
+      ['card-savers','It spots repeat work','It watches what people do by hand, again and again, and offers to do it. You say yes or no.'],
+      ['card-learned','It changes itself','Every yes, no and "not this" tap teaches it. Each change is written here in plain words.'],
+      ['undo','You stay in charge','Any change can be undone. Change 3 made answers worse, so it went back by itself.']]}
+  ];
+  var tour = { id:null, i:0, role:'super', welcome:true };
+  var ROLES = [['super','Site lead','Superintendent'],['pm','Project manager','Office'],['trade','Trade foreman','Plumbing, electrical'],['owner','Owner','Checks in weekly']];
+
+  function tourScreen(){
+    var wk=''; ['framing','plumbing','electrical','drywall','plumbing','exterior'].forEach(function(k,i){ wk+=ph(k,i+2,{cap:['Unit 207','Unit 208','Unit 203','Unit 205','Unit 204','Outside'][i]}); });
+    return top('Tower B','Week 14 · Level 2 fit-out','Maria')+
+      '<div class="acard warn" data-region="card-needs"><header><span class="ci">'+ic('alert')+'</span><h4>Needs you</h4><span class="apill bad" style="margin-left:auto">2</span></header>'+
+        '<div style="display:grid;grid-template-columns:84px 1fr;gap:10px;align-items:center">'+ph('plumbing',1)+'<div><b>Unit 206 needs a photo</b><p class="a-sub">Drywall starts tomorrow.</p></div></div>'+
+        '<div style="display:grid;grid-template-columns:84px 1fr;gap:10px;align-items:center">'+ph('water',0)+'<div><b>Ceiling cut open in 203</b><p class="a-sub">Someone looked for a leak. Log it?</p></div></div>'+
+        '<span class="abtn block">'+ic('camera')+' Take the 206 photo</span></div>'+
+      '<div class="acard" data-region="card-plan"><header><span class="ci">'+ic('layers')+'</span><h4>Floor at a glance</h4></header>'+units(206,false)+'</div>'+
+      '<div class="acard" data-region="card-week"><header><span class="ci">'+ic('image')+'</span><h4>This week</h4><span class="a-faint" style="margin-left:auto">412 photos</span></header><div class="pg">'+wk+'</div></div>'+
+      '<div class="acard save" data-region="card-savers"><header><span class="ci">'+ic('clock')+'</span><h4>Save time</h4><span class="apill good" style="margin-left:auto">12 h a job</span></header><p><b>Remind me before a wall closes</b></p><p class="a-sub">3 walls on Tower A were opened again to find a pipe.</p><div class="row2"><span class="abtn ghost">Not now</span><span class="abtn go">Yes</span></div></div>'+
+      '<div class="acard learn" data-region="card-learned"><header><span class="ci">'+ic('bulb')+'</span><h4>What I learned</h4></header><div class="ledger-a">'+
+        '<div><b>v5</b><span>Started Tower B with 5 lessons</span></div><div><b>v4</b><span>Friday owner update, made for you</span></div><div class="rb"><b>v3</b><span>Look at more photos per question</span></div><div><b>v2</b><span>Sort photos by open or closed wall</span></div></div>'+
+        '<span class="abtn ghost" data-region="undo">'+ic('undo')+' Undo a change</span></div>'+
+      askbar('');
+  }
+  function renderTour(){
+    scr.innerHTML = sbar()+'<div class="scroll" id="tscroll"><div class="inner" id="tinner">'+tourScreen()+'</div></div>';
+    pinAsk();
+    var inner=document.getElementById('tinner'), sc=document.getElementById('tscroll');
+    if (tour.welcome){
+      scr.insertAdjacentHTML('beforeend','<div class="welcome"><div class="sheet"><span class="av" style="width:44px;height:44px;font-size:18px">'+ic('hardhat')+'</span>'+
+        '<h3>Hi Maria. I am your site assistant.</h3><p class="a-sub">I sort your site photos, find the one you need, and learn how your team works. What is your job?</p>'+
+        '<div class="roles">'+ROLES.map(function(r){ return '<button data-role="'+r[0]+'" class="'+(tour.role===r[0]?'on':'')+'">'+r[1]+'<small>'+r[2]+'</small></button>'; }).join('')+'</div>'+
+        '<div class="t-foot"><span class="dots"></span><button class="bk" data-t="skip">Skip</button><button class="nx" data-t="start">Show me around</button></div></div></div>');
+    } else if (tour.id){
+      var tt=TOURS.filter(function(x){return x.id===tour.id;})[0], step=tt.steps[tour.i];
+      var el=scr.querySelector('[data-region="'+step[0]+'"]');
+      if (el){
+        var top0=el.offsetTop, h=el.offsetHeight; for (var a=el.offsetParent; a && a!==inner; a=a.offsetParent) top0+=a.offsetTop;
+        var left0=el.offsetLeft; for (a=el.offsetParent; a && a!==inner; a=a.offsetParent) left0+=a.offsetLeft;
+        var fixed = step[0]==='composer';
+        var H=sc.clientHeight;
+        /* tip below the part if it fits in the content, else above it */
+        var above = !fixed && h<=330 && top0+h+14+200 > inner.scrollHeight;
+        var spotTop = fixed ? H-18-el.offsetHeight : top0, spotLeft = fixed?10:left0;
+        var host = fixed ? scr : inner;
+        host.insertAdjacentHTML('beforeend','<div class="t-spot" style="top:'+(spotTop-5)+'px;left:'+(spotLeft-5)+'px;width:'+(el.offsetWidth+10)+'px;height:'+(el.offsetHeight+10)+'px"></div>');
+        var popTop = fixed ? spotTop-200 : above ? top0-196 : (h>330 ? top0+60 : top0+h+14);
+        host.insertAdjacentHTML('beforeend','<div class="t-pop" role="dialog" aria-label="'+esc(step[1])+'" style="top:'+popTop+'px"><span class="k">'+ic('compass')+' '+tt.name+' · tip '+(tour.i+1)+' of '+tt.steps.length+'</span><h4>'+step[1]+'</h4><p>'+step[2]+'</p>'+
+          '<div class="t-foot"><span class="dots">'+tt.steps.map(function(_,j){return '<i class="'+(j===tour.i?'on':'')+'"></i>';}).join('')+'</span>'+
+          (tour.i>0?'<button class="bk" data-t="back">Back</button>':'<button class="bk" data-t="skip">Skip</button>')+'<button class="nx" data-t="next">'+(tour.i===tt.steps.length-1?'Done':'Next')+'</button></div></div>');
+        /* scroll last: the tip itself can make the content taller */
+        if (!fixed) sc.scrollTop=Math.max(0, above ? top0+h-H+110 : Math.min(top0-20, Math.max(top0-110, popTop+220-H)));
+      }
+    }
+    side.innerHTML = '<div class="hp-head"><b>First-run tour</b></div><h3 class="scene-t">What a new user sees on day one</h3>'+
+      '<div class="tourside"><div class="tlist">'+TOURS.map(function(t){ var on=(t.id==='welcome'&&tour.welcome)||t.id===tour.id;
+        return '<div class="tl'+(on?' on':'')+'"><div><b>'+t.name+'</b><small>'+t.when+' · '+t.who+'</small>'+
+          (t.steps.length?'<ol class="steps">'+t.steps.map(function(s,j){ return '<li class="'+(on&&j===tour.i?'on':'')+'">'+s[1]+'</li>'; }).join('')+'</ol>':'<ol class="steps"><li class="'+(on?'on':'')+'">Pick your job, then start the tips</li></ol>')+
+          '</div><button data-run="'+t.id+'">'+(on?'Restart':'Run')+'</button></div>'; }).join('')+'</div>'+
+      '<p class="credit">Click inside the phone, or use ← → and Esc.</p></div>';
+  }
+  function tourAct(a){
+    if (a==='start'){ tour.welcome=false; tour.id='basics'; tour.i=0; }
+    else if (a==='skip'){ tour.welcome=false; tour.id=null; }
+    else if (a==='next'){ var tt=TOURS.filter(function(x){return x.id===tour.id;})[0]; if (tour.i<tt.steps.length-1) tour.i++; else { tour.id = tour.id==='basics'?'learns':null; tour.i=0; } }
+    else if (a==='back'){ tour.i=Math.max(0,tour.i-1); }
+    renderTour();
+  }
+  scr.addEventListener('click',function(e){
+    if (st.mode!=='tour') return;
+    var r=e.target.closest('[data-role]'); if (r){ tour.role=r.dataset.role; renderTour(); return; }
+    var t=e.target.closest('[data-t]'); if (t) tourAct(t.dataset.t);
+  });
+  side.addEventListener('click',function(e){
+    var b=e.target.closest('[data-run]'); if(!b) return;
+    tour.welcome = b.dataset.run==='welcome'; tour.id = tour.welcome?null:b.dataset.run; tour.i=0; renderTour();
+  });
+  document.addEventListener('keydown',function(e){
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (st.mode==='demo'){
+      if (e.key===' '){ e.preventDefault(); toggle(); } else if (e.key==='ArrowRight') jump(1); else if (e.key==='ArrowLeft') jump(-1);
+    } else {
+      if (e.key==='Escape') tourAct('skip'); else if (e.key==='ArrowRight') tourAct(tour.welcome?'start':'next'); else if (e.key==='ArrowLeft') tourAct('back');
+    }
+  });
+
+  function setMode(m){
+    st.mode=m; st.playing=false; st.key='';
+    document.getElementById('m-demo').classList.toggle('on',m==='demo');
+    document.getElementById('m-tour').classList.toggle('on',m==='tour');
+    transport();
+    if (m==='demo') renderDemo(true); else { tour={id:null,i:0,role:'super',welcome:true}; renderTour(); }
+  }
+  document.getElementById('m-demo').onclick=function(){ setMode('demo'); };
+  document.getElementById('m-tour').onclick=function(){ setMode('tour'); };
+
+  /* ---------- tables below the player ---------- */
+  document.getElementById('ros').innerHTML='<tr><th>Time</th><th>Scene</th><th>Loop point</th><th>Voice-over</th><th>Collections written</th></tr>'+
+    S.map(function(s){ var cols={}; s.beats.forEach(function(b){ (b.atlas||[]).forEach(function(a){ cols[a.split('.')[0]]=1; }); });
+      return '<tr><td><code>'+fmt(s.t0)+'</code></td><td><b>'+s.title+'</b></td><td>'+s.beats.map(function(b){return b.pt;}).filter(function(x,i,a){return a.indexOf(x)===i;}).join(' → ')+'</td><td>'+esc(s.vo)+'</td><td>'+Object.keys(cols).map(function(c){return '<code>'+c+'</code>';}).join(' ')+'</td></tr>'; }).join('');
+  document.getElementById('tourtbl').innerHTML='<tr><th>Tour</th><th>Starts</th><th>Who</th><th>Tips</th><th>Regions</th></tr>'+
+    TOURS.map(function(t){ return '<tr><td><b>'+t.name+'</b></td><td>'+t.when+'</td><td>'+t.who+'</td><td>'+(t.steps.length||'role pick')+'</td><td>'+(t.steps.map(function(s){return '<code>'+s[0]+'</code>';}).join(' ')||'—')+'</td></tr>'; }).join('');
+  document.getElementById('credits').innerHTML='<tr><th>Photo</th><th>Used as</th><th>Author</th><th>Licence</th></tr>'+
+    (PH.list||[]).map(function(p){ return '<tr><td><a href="'+p.page+'">'+esc(p.title)+'</a></td><td>'+p.kind+'</td><td>'+esc(p.author)+'</td><td>'+esc(p.licence)+'</td></tr>'; }).join('');
+
+  setMode('demo');
+})();
+</script>
+</body>
+</html>

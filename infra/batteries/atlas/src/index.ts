@@ -9,6 +9,7 @@ export const INDEXES: IndexSpec[] = [
   { collection: COLLECTIONS.checkpoints,  keys: { tag: 1 }, unique: true },
   { collection: COLLECTIONS.plans,        keys: { iteration: -1 } },
   { collection: COLLECTIONS.measurements, keys: { iteration: -1, metric: 1 } },
+  { collection: COLLECTIONS.findings,     keys: { iteration: -1, check: 1 } },
   { collection: COLLECTIONS.media_index,  keys: { assetId: 1 }, unique: true },
   { collection: COLLECTIONS.media_index,  keys: { tier: 1, lastRead: -1 } },
   { collection: COLLECTIONS.transcripts,  keys: { assetId: 1 }, unique: true },

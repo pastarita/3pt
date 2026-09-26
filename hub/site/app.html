@@ -176,6 +176,7 @@
 <div class="page">
   <p class="eyebrow">Build · prototype · state persists in this browser under <code>tpt_app_v2</code></p>
   <p class="proto"><span class="pv a">AUTHORED</span> Every project, photo, person and hour on this page is example data. The layout rules and the learning loop run for real in this browser. Nothing talks to MongoDB yet. Photos: openly licensed, <a href="https://github.com/pastarita/3pt/blob/main/data/mock/media-pool/CREDITS.md">credits</a>.</p>
+  <div id="when"></div>
   <div class="appbar" id="appbar"></div>
   <div id="learned"></div>
   <main id="view"></main>
@@ -184,11 +185,14 @@
 <script>
 (function(){
   var T = window.T;
-  var KEY = 'app_v2';
+  var KEY = 'app_v2';   /* one saved state per firm config and week, see below */
 
   /* ---------- data: the Acme Builders model in sim-data.js, seen on demo day ---------- */
   var SIM = window.SIM, MEDIA = window.MEDIA || {};
-  var TW = SIM.TODAY_WEEK, DEMO = 'p18';
+  /* the week on screen: demo day, or the week the Simulator sent with "Open in app" */
+  var TW = Math.max(0, Math.min(SIM.NWEEKS-1, T.load('app_week', SIM.TODAY_WEEK)));
+  var liveNow = SIM.projects.filter(function(p){return SIM.status(p,TW)==='live';});
+  var DEMO = (liveNow.filter(function(p){return SIM.phaseAt(p,TW).name==='Close-in';})[0] || liveNow[0] || SIM.projects[0]).id;
   var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function mon(w){ var d=new Date(SIM.weekDate(w)); return MON[d.getUTCMonth()]+' '+d.getUTCFullYear(); }
   function day(w){ var d=new Date(SIM.weekDate(w)); return d.getUTCDate()+' '+MON[d.getUTCMonth()]+' '+d.getUTCFullYear(); }
@@ -277,6 +281,7 @@
     return { role:'super', roles:clone(ROLES_SEED), projects:clone(PROJECTS_SEED), photos:seedPhotos(), opps:clone(OPPS_SEED),
              versions:clone(KEY_VERSIONS), cur:KEY_VERSIONS.filter(function(v){return !v.rolledBack;}).slice(-1)[0].v, events:[], hidden:{}, rejected:{}, reviewed:{}, toast:null };
   }
+  KEY = 'app_v2_'+JSON.stringify(SIM.CFG).replace(/[^0-9a-z]/gi,'').slice(0,60)+'_w'+TW;
   var S = T.load(KEY, null) || fresh();
   if(!S.role) S.role='super';
   function save(){ T.save(KEY, S); }
@@ -515,9 +520,10 @@
   }
   function pcard(p){ return '<a class="pcard" href="#/p/'+p.id+'"><div class="cover k-'+p.cover+'" style="'+bgs({file:p.coverFile})+'"><span class="tag '+(p.status==='live'?'live':'closed')+'">'+(p.status==='live'?'live · wk '+p.week:p.status==='planned'?'next':p.year)+'</span><span class="ov"><b>'+esc(p.name)+'</b><span>'+esc(roleLine(p))+'</span></span></div></a>'; }
   function viewHome(){
-    var live=S.projects.filter(function(p){return p.status!=='closed';}), past=S.projects.filter(function(p){return p.status==='closed';});
-    return '<h1 class="big">Live and next <span style="font-size:15px;color:var(--faint)">'+live.filter(function(p){return p.status==="live";}).length+' of 4 slots in use</span></h1><div class="pcards">'+live.map(pcard).join('')+'</div>'+
-      '<h2>Past projects <span>'+past.length+' closed · each one left lessons for the next</span></h2><div class="pcards small">'+past.map(pcard).join('')+
+    var planned=S.projects.filter(function(p){return p.status==='planned';}).slice(0,1);
+    var live=S.projects.filter(function(p){return p.status==='live';}).concat(planned), past=S.projects.filter(function(p){return p.status==='closed';});
+    return '<h1 class="big">Live and next <span style="font-size:15px;color:var(--faint)">'+live.filter(function(p){return p.status==="live";}).length+' of '+SIM.MAXLIVE+' slots in use</span></h1><div class="pcards">'+live.map(pcard).join('')+'</div>'+
+      (past.length?'':'<p class="empty">No closed projects yet at this date.</p>')+'<h2>Past projects <span>'+past.length+' closed · each one left lessons for the next</span></h2><div class="pcards small">'+past.map(pcard).join('')+
       '<button class="pcard new" data-do="newproject"><div class="cover">+<span class="ov"><b>New project</b><span>starts with '+lessonsCount()+' lessons</span></span></div></button></div>';
   }
 
@@ -596,8 +602,14 @@
     doAction(a, inBlock && a.indexOf('hide:')!==0 ? inBlock.dataset.block : null);
   });
 
+  function renderWhen(){
+    var el=document.getElementById('when'); if(!el) return;
+    var today=TW===SIM.TODAY_WEEK;
+    el.innerHTML='<div class="learned" style="border-left-color:var(--cyan)"><span class="lbl">Date</span><span class="txt"><b>Week of '+day(TW)+'</b>'+(today?' · demo day':' · sent from the Simulator')+'<small>'+SIM.projects.length+' projects · max '+SIM.MAXLIVE+' live · seed '+SIM.CFG.seed+'</small></span><span class="acts"><a class="btn" href="./sim.html">Simulator</a>'+(today?'':'<button id="backtoday">Back to demo day</button>')+'</span></div>';
+    var b=document.getElementById('backtoday'); if(b) b.onclick=function(){ T.save('app_week', SIM.TODAY_WEEK); location.hash='#/'; location.reload(); };
+  }
   function render(){
-    var r=route(); renderBar(r); renderLearned(r);
+    var r=route(); renderWhen(); renderBar(r); renderLearned(r);
     var v=document.getElementById('view');
     if(r.name==='p'){ CP=r.id; v.innerHTML=viewProject(r.id); }
     else if(r.name==='harness') v.innerHTML=viewHarness();

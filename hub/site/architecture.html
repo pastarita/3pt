@@ -141,7 +141,7 @@
       <!-- triangle points -->
       <g><rect x="40" y="300" width="250" height="64" rx="8" class="box plan"/><text x="165" y="324" text-anchor="middle" class="t">Plan</text><text x="165" y="340" text-anchor="middle" class="s">latest(checkpoints) · find(measurements)</text><text x="165" y="353" text-anchor="middle" class="s">selectMode → insert(plans)</text></g>
       <g><rect x="400" y="30" width="200" height="64" rx="8" class="box build"/><text x="500" y="54" text-anchor="middle" class="t">Build</text><text x="500" y="70" text-anchor="middle" class="s">adapter: claude-code · kiro · codex</text><text x="500" y="83" text-anchor="middle" class="s">buildTurn ↔ reviewTurn until 0 fixes</text></g>
-      <g><rect x="710" y="300" width="250" height="64" rx="8" class="box inst"/><text x="835" y="324" text-anchor="middle" class="t">Instrument</text><text x="835" y="340" text-anchor="middle" class="s">tracing.read → measurements</text><text x="835" y="353" text-anchor="middle" class="s">rewritePolicy · repo.tag · checkpoint</text></g>
+      <g><rect x="710" y="300" width="250" height="64" rx="8" class="box inst"/><text x="835" y="324" text-anchor="middle" class="t">Instrument</text><text x="835" y="340" text-anchor="middle" class="s">tracing.read → measurements</text><text x="835" y="353" text-anchor="middle" class="s">findings → improver (outside the run)</text></g>
       <!-- flow edges -->
       <path d="M200 300 L 440 94" class="e"/><text x="318" y="172" class="s" text-anchor="end">1 · spec + evaluation plan</text>
       <path d="M560 94 L 800 300" class="e"/><text x="608" y="150" class="s" text-anchor="end">2 · built + reviewed</text>
@@ -177,7 +177,7 @@
       <g><rect x="30" y="252" width="180" height="32" rx="6" class="box battery"/><text x="120" y="272" text-anchor="middle" class="t">artifacts</text></g>
       <g><rect x="380" y="44" width="330" height="48" rx="6" class="box plan"/><text x="545" y="64" text-anchor="middle" class="t">plan</text><text x="545" y="80" text-anchor="middle" class="s">atlas.find · atlas.latest</text></g>
       <g><rect x="380" y="132" width="330" height="48" rx="6" class="box build"/><text x="545" y="152" text-anchor="middle" class="t">build</text><text x="545" y="168" text-anchor="middle" class="s">atlas.find · atlas.insert · blob.get · repo.worktree</text></g>
-      <g><rect x="380" y="220" width="330" height="48" rx="6" class="box inst"/><text x="545" y="240" text-anchor="middle" class="t">instrument</text><text x="545" y="256" text-anchor="middle" class="s">atlas.* · repo.tag · tracing.read · policy.write</text></g>
+      <g><rect x="380" y="220" width="330" height="48" rx="6" class="box inst"/><text x="545" y="240" text-anchor="middle" class="t">instrument</text><text x="545" y="256" text-anchor="middle" class="s">atlas.find · atlas.insert · tracing.read</text></g>
       <g><rect x="800" y="44" width="170" height="48" rx="6" class="box plan"/><text x="885" y="72" text-anchor="middle" class="t">@3pt/plan</text></g>
       <g><rect x="800" y="132" width="170" height="48" rx="6" class="box build"/><text x="885" y="160" text-anchor="middle" class="t">@3pt/build</text></g>
       <g><rect x="800" y="220" width="170" height="48" rx="6" class="box inst"/><text x="885" y="248" text-anchor="middle" class="t">@3pt/instrument</text></g>
@@ -188,7 +188,7 @@
       <path d="M210 268 L 380 256" class="e d"/>
       <path d="M710 68 L 800 68" class="e"/><path d="M710 156 L 800 156" class="e"/><path d="M710 244 L 800 244" class="e"/>
       <path d="M885 268 C 885 340, 545 340, 545 268" class="e b"/>
-      <text x="715" y="336" text-anchor="middle" class="s" fill="#ff6b4a">rewritePolicy: Instrument edits the grants</text>
+      <text x="715" y="336" text-anchor="middle" class="s" fill="#ff6b4a">rewritePolicy: the improver edits the grants</text>
       <text x="30" y="318" class="s">harness/policies/v&lt;n&gt;.json mirrors the middle column</text>
     </svg>
     <p class="cap"><span class="pv a">AUTHORED</span> grants from <code>seedPolicy()</code> and <code>harness/policies/v0.json</code>; descriptors in <code>infra/batteries/*/src/index.ts</code>. Mermaid twin §4.3.</p>
@@ -214,7 +214,7 @@
       <g><rect x="524" y="86" width="192" height="30" rx="6" class="box surface"/><text x="620" y="105" text-anchor="middle" class="t">Pages · web inspector</text></g>
       <g><rect x="524" y="126" width="192" height="30" rx="6" class="box data"/><text x="620" y="145" text-anchor="middle" class="t">Pages · hub (gated)</text></g>
       <g><rect x="524" y="166" width="192" height="30" rx="6" class="box battery"/><text x="620" y="185" text-anchor="middle" class="t">R2 · optional blob</text></g>
-      <g><ellipse cx="875" cy="90" rx="100" ry="34" class="box atlas"/><text x="875" y="86" text-anchor="middle" class="t">3pt db</text><text x="875" y="100" text-anchor="middle" class="s">7 collections · indexes</text></g>
+      <g><ellipse cx="875" cy="90" rx="100" ry="34" class="box atlas"/><text x="875" y="86" text-anchor="middle" class="t">3pt db</text><text x="875" y="100" text-anchor="middle" class="s">8 collections · indexes</text></g>
       <g><ellipse cx="875" cy="180" rx="100" ry="30" class="box atlas"/><text x="875" y="177" text-anchor="middle" class="t">GridFS · media bytes</text><text x="875" y="191" text-anchor="middle" class="s">default blob backend</text></g>
       <g><rect x="770" y="240" width="212" height="30" rx="6" class="box atlas"/><text x="876" y="259" text-anchor="middle" class="t" style="font-size:11px">Vector Search · transcripts_vec</text></g>
       <g><rect x="775" y="290" width="200" height="30" rx="6" class="box battery"/><text x="875" y="309" text-anchor="middle" class="t">MCP server · Agent Skills</text></g>
@@ -242,7 +242,7 @@
       <thead><tr><th>To add</th><th>Moves</th><th>Figure</th></tr></thead>
       <tbody>
         <tr><td><b>A surface</b></td><td><code>ui/apps/&lt;name&gt;</code> on design-system + inspector-client. Nothing else. A missing verb is an API change, made first.</td><td>1</td></tr>
-        <tr><td><b>A build harness</b></td><td>One <code>HarnessAdapter</code> in <code>@3pt/build</code>; its key in <code>HarnessKind</code>; <code>THREEPT_HARNESS=&lt;kind&gt;</code>.</td><td>2</td></tr>
+        <tr><td><b>A build harness</b></td><td>Struck: the harness is Strands. <code>@3pt/build</code> is a dry run until <code>@3pt/strands</code> compiles.</td><td>2</td></tr>
         <tr><td><b>A battery</b></td><td><code>infra/batteries/&lt;name&gt;</code> with the four files; name its grants. Nothing in <code>harness/</code> changes until a policy grants them.</td><td>3</td></tr>
         <tr><td><b>A measurement</b></td><td>Id in <code>METRICS</code> (tracing battery) and docs/07. Instrument writes it; Plan may read it.</td><td>2</td></tr>
         <tr><td><b>A collection</b></td><td><code>COLLECTIONS</code> in core; its indexes in the atlas battery; a record type if stages touch it.</td><td>4</td></tr>

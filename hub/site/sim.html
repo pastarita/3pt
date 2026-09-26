@@ -20,6 +20,12 @@
   .btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
   .btns button{font-size:15px;padding:8px 11px}
   .btns select{width:auto}
+  .cfg{margin-bottom:12px}.cfg summary{cursor:pointer;display:flex;gap:10px;align-items:center;font-size:14px}
+  .cfg summary span{font:600 11.5px/1.3 var(--mono);color:var(--faint)}
+  .cfgf{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:12px;align-items:end}
+  .cfgf label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--soft)}
+  .cfgf input,.cfgf select{width:100%}
+  .cfgf .bar{grid-column:1/-1;margin:0}
   .main{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
   .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
   .pc{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:2px solid var(--line);padding:0;cursor:pointer;text-align:left;background:var(--card)}
@@ -101,6 +107,19 @@
 <div class="page">
   <p class="eyebrow">Build · demo simulator · replays <code>sim-data.js</code></p>
   <p style="margin:0 0 10px;font-size:12px;color:var(--faint)"><span class="pv a">AUTHORED</span> Acme Builders is an example firm. The 20 projects, the photos and the hours are generated from a fixed seed. The learning rules are real: each harness version appears the week its trigger fires. Buildings: NYC Open Data filings. Photos: openly licensed, <a href="https://github.com/pastarita/3pt/blob/main/data/mock/media-pool/CREDITS.md">credits</a>.</p>
+  <details class="cfg card2" id="cfgbox">
+    <summary><b>Configure the firm</b> <span id="cfgsum"></span></summary>
+    <form id="cfg" class="cfgf">
+      <label>Projects <input type="number" id="c-projects" min="4" max="20" step="1"></label>
+      <label>Max live at once <input type="number" id="c-maxLive" min="1" max="6" step="1"></label>
+      <label>New job every (weeks) <input type="number" id="c-cadence" min="8" max="40" step="1"></label>
+      <label>Harness learns <select id="c-learn"><option value="0.5">fast</option><option value="1">normal</option><option value="2">slow</option></select></label>
+      <label>Missed photos before it learns <select id="c-missBase"><option value="0.1">10%</option><option value="0.22">22%</option><option value="0.35">35%</option></select></label>
+      <label>Demo day <input type="date" id="c-today" min="2020-01-01" max="2026-12-31"></label>
+      <label>Seed <input type="number" id="c-seed" step="1"></label>
+      <div class="bar"><button class="primary" type="submit">Run simulation</button><button type="button" id="cfgreset">Defaults</button></div>
+    </form>
+  </details>
   <div class="ctrl">
     <div class="date"><b id="d">—</b><small id="dw">—</small></div>
     <div class="scrub"><input type="range" id="scrub" min="0" max="0" value="0" aria-label="Simulation week"><div class="ticks" id="ticks"></div></div>
@@ -111,6 +130,7 @@
       <button id="bfwd" title="One week forward" aria-label="One week forward">▶︎|</button>
       <select id="speed" aria-label="Speed"><option value="1">1 wk/s</option><option value="4" selected>4 wk/s</option><option value="12">12 wk/s</option></select>
       <button id="btoday">Today</button>
+      <button id="bapp" class="primary" title="Open the app at this week">Open in app</button>
     </div>
   </div>
   <div class="main">
@@ -245,6 +265,20 @@
     document.getElementById('mbg').onclick=function(ev){ if(ev.target.id==='mbg') m.innerHTML=''; };
   });
 
+  /* configuration: saved per browser; the app reads the same keys, so both show the same firm */
+  var C=S.CFG, keys=Object.keys(S.DEFAULTS);
+  keys.forEach(function(k){ var el=document.getElementById('c-'+k); if(el) el.value=C[k]; });
+  document.getElementById('cfgsum').textContent = S.projects.length+' projects · max '+S.MAXLIVE+' live · learns '+({0.5:'fast',1:'normal',2:'slow'}[C.learn]||C.learn)+' · demo day '+C.today+' · seed '+C.seed;
+  document.getElementById('cfg').addEventListener('submit',function(e){
+    e.preventDefault(); var o={};
+    keys.forEach(function(k){ var el=document.getElementById('c-'+k); if(el) o[k]= el.type==='date'? el.value : +el.value; });
+    try{ localStorage.setItem('tpt_sim_cfg_v1', JSON.stringify(o)); localStorage.removeItem('tpt_sim_week'); localStorage.removeItem('tpt_app_week'); }catch(err){}
+    location.reload();
+  });
+  document.getElementById('cfgreset').onclick=function(){ try{ localStorage.removeItem('tpt_sim_cfg_v1'); localStorage.removeItem('tpt_sim_week'); localStorage.removeItem('tpt_app_week'); }catch(err){} location.reload(); };
+  document.getElementById('bapp').onclick=function(){ play(false); T.save('app_week', w); location.href='./app.html#/'; };
+
+  if (w>=S.NWEEKS) w=S.TODAY_WEEK;
   render();
 })();
 </script>

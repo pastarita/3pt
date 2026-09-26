@@ -68,7 +68,7 @@ The video and the room say only what a judge can open. Three grades: **built** (
 
 | # | Claim as spoken | Grade | Evidence to open |
 |---|---|---|---|
-| K1 | The harness's rules are data, versioned, and a stage rewrites them | built | `Policy` in `harness/packages/core`; `rewritePolicy` in `harness/packages/instrument` |
+| K1 | The harness's rules are data, versioned, and the loop rewrites them after each run | built | `Policy` in `harness/packages/core`; `rewritePolicy` in `harness/packages/improver`; stages get a frozen policy (`freezePolicy`, `stageStore`) |
 | K2 | Every iteration ends in a checkpoint: git sha, policy version, metrics, retrospective | built | `Checkpoint` type; `3pt loop` prints `cp/1` |
 | K3 | Checkpoints and policies persist in MongoDB Atlas, in the Sandbox cluster | due · T1 | `atlasStore()` in the atlas battery; the `checkpoints` collection in the Atlas UI |
 | K4 | Rollback restores a prior policy version from its checkpoint | due · T1 | `3pt rollback <tag>` today prints the plan; make it read the checkpoint |

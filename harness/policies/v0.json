@@ -10,7 +10,7 @@
   "toolGrants": {
     "plan": ["atlas.find", "atlas.latest"],
     "build": ["atlas.find", "atlas.insert", "blob.get", "repo.worktree"],
-    "instrument": ["atlas.*", "repo.tag", "tracing.read", "policy.write"]
+    "instrument": ["atlas.find", "atlas.insert", "tracing.read"]
   },
   "provenance": { "reason": "seed" }
 }

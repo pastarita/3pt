@@ -1,0 +1,17 @@
+{
+  "name": "@3pt/improver",
+  "version": "0.0.1",
+  "private": true,
+  "description": "The self-improving loop, separate from the stage run: reads findings and checkpoints, rewrites the policy (the backfeed), writes the checkpoint. Stages never import it and cannot write what it owns.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": { "@3pt/core": "workspace:*" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}
