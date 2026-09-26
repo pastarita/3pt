@@ -20,7 +20,9 @@
 | **Read-once transcript** | Extract context from an image once, store as source of truth, re-read only deliberately. Repeated re-reading is a hallucination vector. |
 | **Hot / cold tier** | Media that must be instantly accessible vs. media that can sleep. Tier metadata lives in Atlas. |
 | **Install loop** | Merge → download → build → install, run fast between team machines. `scripts/install-loop.sh` when code lands. |
-| **Lane** | One of five parallel work streams (`docs/02-lanes.md`). |
+| **Lane** | One of five parallel work streams (`docs/02-lanes.md`). Also: one of the three top-level directories `ui/`, `harness/`, `infra/` (`docs/10-architecture.md`). |
+| **Battery** | An instantiable artifact under `infra/batteries/`: a package that stands up one thing the pipeline runs on (Atlas, blob, artifacts, repo, tracing), idempotently, with its agent skill and MCP wiring. Stages never import batteries; they receive what a battery provides (a Store, a tool grant). |
+| **Tool grant** | A string like `atlas.find` in `policy.toolGrants`, per stage. Data in Atlas, mirrored in `harness/policies/`. Instrument rewrites it. |
 | **ICP** | Ideal customer profile (`docs/01-icp.md`). |
 | **Statement 1 / Statement 2** | Hackathon problem statements: Recursive Harnessing / Long Horizon Engineering. |
 | **Segment** | One thought's worth of transcript, marked `<!-- sN.NN who -->` in `brainstorming.md`. The unit of provenance (`docs/09-provenance.md`). |

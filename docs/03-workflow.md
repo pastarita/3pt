@@ -1,7 +1,8 @@
 # Workflow: Codebase Setup, DevX, Initialized Pipeline, Install Loop
 
-*Source of record. Design only; no code lives in the repo yet by decision (2026-09-26).
-When Lane 4 and Lane 5 start, they implement this document.*
+*Source of record. Written as design on 2026-09-26 AM; the monorepo skeleton landed the same
+afternoon and this file now describes what exists. The architecture (three lanes, Turborepo,
+batteries) is `docs/10-architecture.md`.*
 
 ## Principles
 
@@ -11,24 +12,34 @@ When Lane 4 and Lane 5 start, they implement this document.*
 4. **Harness first, UI second.** The Swift app is an inspector over Atlas state, never the feature.
 5. **Every iteration leaves a checkpoint.** Git tag + Atlas checkpoint document, so rollback is one command.
 
-## Proposed repository layout (when code lands)
+## Repository layout (implemented 2026-09-26)
+
+Three top-level lanes, Turborepo `apps/` + `packages/` inside each. Full tree and the reasoning in
+`docs/10-architecture.md`.
 
 ```
 3pt/
-  CLAUDE.md / AGENTS.md       agent context (already present)
-  docs/                       source of record (already present)
-  harness/
-    plan/                     Plan gateway: prompts, sprint-mode selector, retrospective reader
-    build/                    Meta-harness adapters: claude-code/, kiro/, codex/ ; build-with-instrumentation loop
-    instrument/               Standards, checks, backfeed writer, LangSmith wiring
-    policies/                 The harness's own rules & context policies AS DATA (versioned, mirrored to Atlas)
-    checkpoints/              Retrospectives per checkpoint (mirrored to Atlas)
-  media/                      Left-side: indexers, transcribers (read-once), tiering jobs, migrations
-  apps/3pt-macos/             SwiftUI inspector (xcodegen project.yml, no committed .xcodeproj)
+  CLAUDE.md / AGENTS.md       agent context
+  docs/                       source of record
+  hub/                        gated Pages site over docs/ (cordoned; not a lane)
+  package.json  pnpm-workspace.yaml  turbo.json  tsconfig.base.json  Makefile  .env.example
   scripts/
-    bootstrap.sh              one-time machine setup
-    install-loop.sh           merge → download → build → install → launch
-  .env.example                ATLAS_URI, VOYAGE_API_KEY, OPENROUTER_API_KEY, LANGSMITH_API_KEY
+    bootstrap.sh              one-time machine setup (node 22, pnpm, xcodegen, .env)
+    install-loop.sh           merge → download → build → install (+ --watch)
+  ui/
+    apps/pwa, apps/web        Vite + TypeScript inspectors (installable / deployable)
+    apps/macos                SwiftUI inspector: xcodegen project.yml, no committed .xcodeproj
+    packages/design-system, packages/inspector-client
+  harness/
+    packages/core             stage contract, runner, record types, COLLECTIONS, seed policy
+    packages/plan|build|instrument|media
+    apps/cli                  3pt plan|build|instrument|loop|rollback <tag>
+    apps/api                  HTTP for the surfaces
+    apps/worker               job drainer (node locally, Cloudflare Worker deployed)
+    policies/                 the harness's own rules AS DATA (v<n>.json, mirrored to Atlas)
+    checkpoints/              retrospectives per checkpoint (mirrored to Atlas)
+  infra/
+    batteries/atlas|blob|artifacts|repo|tracing   provisioners: package + descriptor + provision + SKILL (+ mcp.json)
 ```
 
 ## The initialized pipeline (Plan → Build → Instrument skeleton)
@@ -58,7 +69,8 @@ token spend per iteration.
 - Conventional commit prefixes (`plan:`, `build:`, `instrument:`, `media:`, `app:`, `docs:`).
 - Secrets only in `.env`, never committed. `.env.example` documents every key.
 - Formatters and linters run in the instrumenter, not as pre-commit hooks, so the builder stays fast.
-- One `Makefile` at root: `make install`, `make loop`, `make plan`, `make build`, `make instrument`, `make rollback`.
+- One `Makefile` at root: `make install`, `make loop`, `make plan`, `make build`, `make instrument`, `make rollback CP=cp/<n>`, `make provision`, `make check`. The hub keeps its own under `hub/`.
+- Turborepo runs every workspace, Swift included, through `pnpm turbo run build`; the Swift wrapper skips itself where Xcode is absent.
 
 ## The install loop
 <!-- @s1.16 -->
@@ -66,16 +78,17 @@ token spend per iteration.
 Colloquial name for **merge → download → build → install**, run between both machines fast.
 
 ```
-install-loop.sh
-  1. git fetch origin && git merge --ff-only origin/main      # merge
-  2. (implicit in fetch)                                       # download
-  3. xcodegen generate && xcodebuild -scheme 3pt -configuration Release build   # build
-  4. ditto build/Release/3pt.app /Applications/3pt.app && open /Applications/3pt.app   # install
+scripts/install-loop.sh            (--watch polls origin/main every 20s)
+  1. git fetch origin && git merge --ff-only origin/main                    # merge (download implicit)
+  2. pnpm install --frozen-lockfile && pnpm turbo run build --filter='!@3pt/macos'   # build: workspaces
+  3. cd ui/apps/macos && xcodegen generate && xcodebuild -scheme 3PT -configuration Release build   # build: app
+  4. ditto …/Release/3PT.app /Applications/3PT.app && open /Applications/3PT.app                    # install + launch
 ```
 
-- `make loop` polls `origin/main` and re-runs the four steps on change.
+- `make loop` polls `origin/main` and re-runs the four steps on change; `make once` is one pass; `make install` is the first-time path (bootstrap + install + build).
 - Toolchain on Patrick's machine (verified today): Xcode 16.2, Swift 6.0.3, xcodegen via Homebrew, macOS 14.5.
-- Yash's machine: run `scripts/bootstrap.sh` once (installs xcodegen, verifies Xcode CLT).
+- Yash's machine: `make install` once (runs `scripts/bootstrap.sh`: Node 22, pnpm, xcodegen, `.env` from the example).
+- Verified 2026-09-26 PM on Patrick's machine: 17 workspace builds green, `3pt loop` writes policy v1 + cp/1 against the memory store, `3PT.app` builds ad hoc.
 - No signing or notarization for the hackathon; ad-hoc local builds only.
 - If the Swift target slips, the same loop applies to a CLI harness binary: replace step 3 with `swift build -c release` and step 4 with a copy into `~/.local/bin`.
 
