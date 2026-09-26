@@ -658,7 +658,8 @@ Every model call goes through OpenRouter with one key. The `docs/12` ledger rows
 
 *The second loop, live on the Worker. Every screen is composed by the harness; every tap is evidence; the
 harness ships its own change and undoes it when use says it was worse.* <!-- @s1.29 -->
-Derived from `harness/apps/api/src/app.ts`, `ui/apps/live/src/main.ts`, `ui/packages/inspector-client/src/index.ts`.
+Derived from `harness/apps/api/src/app.ts`, `ui/apps/web/src/{main,live,bulb}.ts`, `ui/packages/inspector-client/src/index.ts`.
+The app at `/app/` is `ui/apps/web` since 2026-09-26 evening; `ui/apps/live` spoke the same endpoints and is no longer served.
 `MIN_SIGNALS 4` · `DROP 20`. Status: wired; state in `app_state` and `app_events` when the Worker has Atlas.
 
 ```mermaid
@@ -666,7 +667,7 @@ Derived from `harness/apps/api/src/app.ts`, `ui/apps/live/src/main.ts`, `ui/pack
 sequenceDiagram
   autonumber
   actor U as super, PM, PE, owner
-  participant L as live app
+  participant L as app · ui/apps/web
   participant W as Worker · app.ts
   participant A as Atlas
   L->>W: GET /app/screen?project&role
@@ -676,7 +677,7 @@ sequenceDiagram
   else none
     W->>W: seed() from sim-data.js versions · snapshot('seed')
   end
-  W-->>L: Screen { layout for role, blocks filled from the firm, harness { version, learned } }
+  W-->>L: firm, photos, blocks per role (needs, timesavers, beforeclose), harness { versions }
   U->>L: tap: use · hide · open · fb_up · fb_down · act
   L->>W: POST /app/events { role, action, block or q or photo }
   W->>A: insert(app_events)
@@ -803,7 +804,7 @@ flowchart LR
   subgraph CF["Cloudflare"]
     direction TB
     HUB["Pages 3pt · 3pt.pages.dev · gated\nAccess app + one-time PIN · Basic auth beside it\nfunctions/_middleware.js fails closed\nfrom hub/_site = site + docs + README + brainstorming"]:::surface
-    WEBP["Pages 3pt-web · 3pt-web.pages.dev · ungated\n/ landing · /app/ live · /studio/ web · /media-pool/\nbuilt by scripts/build-web-site.sh, deployed by hand"]:::surface
+    WEBP["Pages 3pt-web · 3pt-web.pages.dev · ungated\n/ landing · /app/ web · /results/ · /studio/ → /app/ · /media-pool/\nbuilt by scripts/build-web-site.sh, deployed by hand"]:::surface
     WRK["Worker 3pt-harness\nedge.ts → @3pt/api handle()\nvars PAGES_ORIGIN, ATLAS_DB · secret ATLAS_URI\nper-request Store, 3 s timeout, 5 min memory fallback"]:::build
   end
   ATL[("Atlas Sandbox · Cluster0 · M10 · AWS us-west-1\ndb 3pt · access list 0.0.0.0/0 for the Worker")]:::atlas
@@ -926,8 +927,8 @@ two exist for cp/1 and cp/2 and the third does not; `3pt rollback` still works f
 | API app loop | wired | live at the Worker, state in Atlas |
 | API `/policies/latest`, `/checkpoints` | written | served from a memory store seeded with v0, not Atlas |
 | API key page | wired | node only, loopback only |
-| `live` app | wired | `3pt-web.pages.dev/app/` |
-| `web` app and capture suite | wired | `/studio/`; Playwright captures |
+| `live` app | written | builds; no longer served (the web app took `/app/`) |
+| `web` app and capture suite | wired | `3pt-web.pages.dev/app/` (bulb, How it learns); Playwright captures |
 | `pwa` | planned | builds; no deploy |
 | `macos` | written | builds and installs; reads the local API |
 | Hub, gate, Viewer, diagram reader | wired | `3pt.pages.dev` |

@@ -329,7 +329,7 @@ From `harness/apps/api/src/{handler,app}.ts`, `harness/apps/worker/src/edge.ts`,
 `ui/packages/{inspector-client,design-system}`.
 
 New: region `SURF` with `API` `APPL` `WRK` `LIVE` `WEB` `PWA` `MAC` `IC` `DS`; `AS` in `STATE`. Status: wired;
-`pwa` planned, `macos` local.
+`pwa` planned, `macos` local, `live` written but no longer served (`web` is the app at `/app/`).
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#0f1216","primaryColor":"#1a2029","primaryTextColor":"#e6e9ee","primaryBorderColor":"#3a4552","lineColor":"#a3adbb","fontFamily":"ui-monospace, Menlo, monospace","fontSize":"12px"}}}%%
@@ -379,8 +379,8 @@ flowchart LR
     WRK["Worker edge.ts\nper-request Store · ATLAS_URI secret"]:::flag
     IC["inspector-client"]:::flag
     DS["design-system"]:::flag
-    LIVE["live · the app"]:::flag
-    WEB["web · studio, capture suite"]:::flag
+    LIVE["live · not served"]:::flag
+    WEB["web · the app at /app/\nbulb · How it learns · capture suite"]:::flag
     PWA["pwa · planned"]:::flag
     MAC["macos · Swift"]:::flag
   end
@@ -485,8 +485,8 @@ flowchart LR
     WRK["Worker edge.ts"]:::build
     IC["inspector-client"]:::surface
     DS["design-system"]:::surface
-    LIVE["live"]:::surface
-    WEB["web"]:::surface
+    LIVE["live · not served"]:::surface
+    WEB["web · /app/"]:::surface
     PWA["pwa"]:::surface
     MAC["macos"]:::surface
   end
@@ -602,8 +602,8 @@ flowchart LR
     WRK["Worker edge.ts"]:::build
     IC["inspector-client"]:::surface
     DS["design-system"]:::surface
-    LIVE["live"]:::surface
-    WEB["web"]:::surface
+    LIVE["live · not served"]:::surface
+    WEB["web · /app/"]:::surface
     PWA["pwa"]:::surface
     MAC["macos"]:::surface
   end
@@ -620,7 +620,7 @@ flowchart LR
     BT["battery-tracing · stub"]:::flag
     BF["battery-artifacts · stub"]:::flag
     BX["battery-box\nColima + Ansible · stopped"]:::flag
-    CF["Cloudflare\nPages 3pt-web: / /app/ /studio/ /media-pool/\nWorker 3pt-harness"]:::flag
+    CF["Cloudflare\nPages 3pt-web: / /app/ /results/ /media-pool/\n/studio/ → /app/\nWorker 3pt-harness"]:::flag
     HUB["Pages 3pt · the hub · gated\nAccess + PIN · site + docs"]:::flag
     CI["GitHub Actions\nci.yml · herald.yml · deploy.yml"]:::flag
   end
@@ -632,7 +632,7 @@ flowchart LR
   BA -.->|"provision"| STATE
   BR --> GIT
   BX -.-> TICK
-  CF --> WRK & LIVE & WEB
+  CF --> WRK & WEB
   HUB -.-> CI
   CI -.-> HUB
   MI -.-> TICK --> JF --> JB
