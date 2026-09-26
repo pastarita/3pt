@@ -40,6 +40,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `docs/11-design-system.html` (hub leaf "Design system") |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
+| Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
 
 ## Working rules for agents in this repo
 
@@ -61,6 +62,9 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
   Never edit the spoken text in `brainstorming.md`; add or enrich the `<!-- sN.NN -->` markers instead.
   Then run `node scripts/prov.mjs --bake && node scripts/prov.mjs` and commit the regenerated index.
   `node scripts/prov.mjs --check` runs in CI and fails on any broken pointer.
+- **Worktrees.** Verify a committed tree in a throwaway worktree, never in the main checkout:
+  `scripts/worktree.sh verify HEAD -- <cmd>`. Lane work goes in `scripts/worktree.sh new lane <slug>`.
+  Run `scripts/worktree.sh gc` at every checkpoint. Naming and rules: `docs/11-worktrees.md`.
 
 ## The hub workspace (`hub/`)
 

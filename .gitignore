@@ -37,3 +37,6 @@ _site/
 node_modules/
 __pycache__/
 .venv/
+
+# Worktrees (docs/11-worktrees.md) — Claude Code's and ours
+.claude/worktrees/

@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git worktree *)"
+      "Bash(git worktree *)",
+      "Bash(bash scripts/worktree.sh *)",
+      "Bash(scripts/worktree.sh *)"
     ]
+  },
+  "worktree": {
+    "baseRef": "head",
+    "symlinkDirectories": ["node_modules"]
   }
 }
