@@ -16,6 +16,7 @@ doc docs/00-vision.md#one-paragraph-pitch
 doc README.md
 term Three Point Harness
 note the 2-minute spiel, given to a mentor at the table
+doc hub/site/vision.html
 -->
 cv mongodb hack
 
@@ -45,6 +46,8 @@ term backfeed
 note "test in a production session, with some backport" was the mentor's prompt for the quality loop
 doc docs/18-strands-questions.md
 doc hub/site/index.html
+doc hub/site/vision.html
+doc docs/20-system-map.md
 -->
 Why not also give some instructions here to maintain quality? We can test in a production session. There will be some backport. That's a great idea.
 
@@ -67,6 +70,7 @@ term retrospective
 term measurement
 doc docs/12-decisions.md
 doc docs/18-strands-questions.md
+doc hub/site/vision.html
 -->
 If we have the planning and instrumentation system, not only dispatch to build but also dispatch to instrument, we could also have a mechanism that considers it a little more heuristically. Provided that the build plan is going as desired, we will do a hypothetical retrospective on what this plan is over time. At every checkpoint, we just reflect on the last few things we don't only have to meet in those dimensions. That retrospective goes into the new dimension of the evolution of the harness, which is measurement. Great, so that the building of the harness
 
@@ -89,6 +93,9 @@ doc docs/12-decisions.md
 doc docs/18-strands-questions.md
 doc hub/site/index.html
 doc docs/17-term-2-lanes.md
+doc docs/18-submission.md
+doc hub/site/submission.html
+doc hub/site/vision.html
 -->
 The planning stage does the build process and also plans for the evaluation and instrumentation. Once it starts building, we have a build-with-instrumentation loop.
 
@@ -118,6 +125,7 @@ lane 2
 doc docs/00-vision.md#hackathon-framing
 doc docs/07-assessment-and-measurement.md#T-2
 doc docs/18-strands-questions.md
+doc hub/site/vision.html
 -->
 Help someone run a business. I think I have a good problem statement here: we should focus on media-heavy harnesses. I feel like a lot of people don't work on media-heavy workloads, and I think long-term memory can be helpful for them over time. If we build a media-heavy harness that is self-replicating and self-improving, I think we will have some issues with storage, so we'll have to maintain and manage that. We can make a UI for media-heavy workloads and probably get some sort of feedback or information online from that.
 
@@ -137,6 +145,8 @@ term furnace
 term left side / right side of the triangle
 doc docs/12-decisions.md
 doc docs/18-strands-questions.md
+doc hub/site/vision.html
+doc docs/20-system-map.md
 -->
 I think the new dimension you're opening up for media-heavy harnesses is that we have terse indexes of large media assets, blobs, non-SQL stores, and other respective stores that need to be embedded in the codebase. The context and specificity of that content need to be managed over time. There are also codified pipelines that run as code and live inside the running repository.
 
@@ -152,6 +162,7 @@ pivot media-heavy-workload :: images only for now; no video, no sound; large con
 from s1.07
 doc docs/00-vision.md#scope-for-the-hackathon
 doc docs/07-assessment-and-measurement.md#T-2
+doc hub/site/vision.html
 -->
  media context or media plus context, and then code plus infra, or maybe code plus harness. We can go really deep on the media-heavy harness because we could invoke a lot of specificity, given that this is a 3.100 and that it's for heavy media. We can also abstract a little bit, but I think we should focus on the heavy media.
 
@@ -166,6 +177,7 @@ from s1.08
 doc docs/00-vision.md#the-supervisory-ui
 doc docs/07-assessment-and-measurement.md#T-10
 doc docs/12-decisions.md
+doc hub/site/vision.html
 -->
 In images, what kind of problem do we want to solve with the harness specifically? Do we want to keep it generic, so that it can handle whatever long-running image-related task may be there, or do we want to make it super specific to a use case that we want to build for now? I think we should contemplate a plurality of use cases.
 
@@ -185,6 +197,7 @@ from s1.09
 lane 2
 doc docs/01-icp.md#explicitly-deprioritized
 doc docs/00-vision.md#scope-for-the-hackathon
+doc hub/site/vision.html
 -->
 Media generation over time and media consistency. I'm trying to think from a user perspective: what would a user want to do with such a harness?
 
@@ -224,6 +237,7 @@ doc docs/07-assessment-and-measurement.md#Sprint-mode selection rule
 doc docs/glossary.md#Sprint modes
 term sprint modes
 doc docs/12-decisions.md
+doc hub/site/vision.html
 -->
 What are some of the use cases there for the analysis and production, and in what way would you want to differentiate across analysis versus production? I think maybe we could use something a tech company usually does: when do you launch a feature, and when do you improve your feature? How do you focus on that, or how do you allocate your resources?
 
@@ -252,6 +266,8 @@ term hot / cold tier
 doc docs/08-icp-directions.md
 doc docs/12-decisions.md
 doc docs/18-strands-questions.md
+doc hub/site/vision.html
+doc docs/20-system-map.md
 -->
 Yash is going to introduce some of the background and statement of need for the media-heavy workflows we're addressing, along with the problems we're addressing in them for our ICPs.
 - How do you manage storage for this? How do you manage what needs to be hot storage and what needs to be cold storage in media? Which media is relevant right now, and which media needs to be accessible right away?
@@ -273,6 +289,10 @@ doc docs/07-assessment-and-measurement.md#R-1
 doc docs/01-icp.md#explicitly-deprioritized
 doc docs/12-decisions.md
 doc docs/10-architecture.md
+doc docs/16-sandbox-provisioning.md
+doc docs/17-atlas-setup-dossier.md
+doc hub/site/vision.html
+doc docs/20-system-map.md
 -->
 To lean into the hackathon in this way, we can use a list-based system and a NoSQL database like MongoDB to manage that remotely. We can also engineer role-based access systems or a permissioning layer for that type of content. The harness might be able to manage the keys or access to that respective content, which could be an additionality. It might be out of scope right now, but maybe there's something. I think a raw data system would be out of scope because, if it's a personal harness right now, we don't want to add collaboration because that could mess up a lot of things. If it's a self-healing or self-creating harness, it might do weird things with raw data access, and we don't want the harness to actually control roles. We just want it to be managed by the human because the human wants to decide who to give access to, not the AI. Let's keep that out of scope for now. Maybe you'll build that later. 
 
@@ -307,6 +327,8 @@ doc docs/12-decisions.md
 doc docs/10-architecture.md
 doc docs/pr-descriptions/PR_DESCRIPTION_CI_HERALDRY.md
 doc docs/17-term-2-lanes.md
+doc docs/16-sandbox-provisioning.md
+doc hub/site/vision.html
 -->
 Predications: some of the predictions are that Yash and I are in a respective hackathon. There are several lanes, and we want to distribute workloads with respect to the utilization of our own coding agents on our shared repo:
 1. Setting up the repo
@@ -362,6 +384,7 @@ idea value-from-reuse-over-time :: the harness makes duplicative and extended us
 idea opportunity-finding :: from self-improving to finding opportunities in the business
 from s1.18
 doc docs/06-goal-and-use-case.md#goal
+doc hub/site/goal.html
 -->
 The question is whether, for these types of companies that are using images for compliance, that data does not have extensible utilization and the value proposition is narrow. It could be that our harness makes the duplicative and extended usage of that data corpus more valuable over time, and it could be institutional learning, optimization, or scenario planning. Maybe I like data, so the hardness figures are what the value in the data is over time. Yeah exactly. I don't like that because 
 
@@ -376,6 +399,8 @@ from s1.19
 doc docs/00-vision.md#hackathon-framing
 doc docs/06-goal-and-use-case.md#goal
 doc docs/18-strands-questions.md
+doc hub/site/goal.html
+doc hub/site/vision.html
 -->
  We're still considering whether we're going to go for the self-improving harness (which I think we have a good scaffold for) or the long-term domain harness. Even in the long-term domain harness, the more important input would be what is valuable in the industry rather than what is valuable in the context we are storing. That way, what we are building wouldn't create value because the value would actually come from outside sources and from using the context we have from our images.
 
@@ -393,6 +418,9 @@ doc docs/00-vision.md#scope-for-the-hackathon
 doc docs/06-goal-and-use-case.md#recap
 doc docs/07-assessment-and-measurement.md#transcript-claims-that-did-not-converge
 doc docs/18-strands-questions.md
+doc hub/site/goal.html
+doc hub/site/use-case.html
+doc hub/site/vision.html
 -->
 In what scenarios or workflow     or business cases to we want media over time:
 
@@ -416,6 +444,10 @@ grow proactive-harness :: the harness slowly becomes proactive about what media 
 from s1.21 s1.09
 doc docs/00-vision.md#hackathon-framing
 doc docs/12-decisions.md
+doc docs/18-submission.md
+doc hub/site/checklist.html
+doc hub/site/submission.html
+doc hub/site/vision.html
 -->
 — Hackathon Overview
   For just the hackathon we could build out one specific use case with a harness that it's recursively improving (itself) We have a lot of incoming media, and it's managing context over time. The harness is understanding what kind of media we want to capture or gather, trying to organize it, and slowly becoming proactive. Yes, the harness's purpose is to  the harness’s purpose is to be proactive over time that we have a lot of media coming in from the internet, from a free data source. Over time, based on what we are searching for, it will figure out what we want, use that, and build a storyline on top of that for a journal. 
@@ -427,6 +459,7 @@ grow measurement-dimension :: increasing voracity and measurability of feedback 
 from s1.22
 doc docs/06-goal-and-use-case.md#goal
 doc docs/07-assessment-and-measurement.md#T-9
+doc hub/site/goal.html
 -->
 —   We'll call this the business case thesis: media companies are producing polyglot, media-heavy feeds that are specific to a particular institution and are undiscovered and unmaintained by existing providers of image classifier systems. The most logical scenario is to build a custom harness that understands the business.
 
@@ -438,6 +471,7 @@ This process, along with the technical aptitude needed to build a custom harness
 idea goal-statement :: a purpose-built image and knowledge management pipeline across a unique workflow for a media-heavy business case
 from s1.23
 doc docs/06-goal-and-use-case.md#goal
+doc hub/site/goal.html
 -->
 What is the goal of the harness for it to be more valuable overtime
 
@@ -451,6 +485,7 @@ To build a purpose-built technological image and knowledge management pipeline a
 grow goal-statement :: any kind of media; organize new media models well; dial down the context of everything generated over time; the business gets insight into its media-heavy work
 from s1.24
 doc docs/06-goal-and-use-case.md#goal
+doc hub/site/goal.html
 -->
 The 3PT-Harness can handle any kind of media for a company, and help that company learn.
 
@@ -467,6 +502,7 @@ doc docs/06-goal-and-use-case.md#use-case
 doc docs/08-icp-directions.md#direction-a
 doc docs/07-assessment-and-measurement.md#T-9
 doc docs/12-decisions.md
+doc hub/site/use-case.html
 -->
 Use Case:
 
@@ -483,6 +519,8 @@ idea automations-become-harness :: an automation the harness discovers becomes p
 from s1.26
 doc docs/06-goal-and-use-case.md#value-props
 doc docs/07-assessment-and-measurement.md#T-9
+doc hub/site/goal.html
+doc hub/site/use-case.html
 -->
 Value Props    
 How we get a lot of data from a media pipeline and give you feedback.
@@ -507,6 +545,7 @@ from s1.27
 doc docs/06-goal-and-use-case.md#onboarding-side-effect
 doc docs/07-assessment-and-measurement.md#T-8
 doc docs/07-assessment-and-measurement.md#R-25
+doc hub/site/use-case.html
 -->
  One side effect is that we might be able to use the XFCE screenshotter or something like it to produce images from regular use of a respective computer in some type of technical workflow (say, in CAD design review). It actually learns from a respective institution's process and allows that to be fed back into a model on a custom harness. That allows them to specify and steer the type of feedback being incurred from that system.
 
@@ -532,6 +571,12 @@ doc docs/00-vision.md#the-supervisory-ui
 doc docs/07-assessment-and-measurement.md#T-10
 doc docs/12-decisions.md
 doc docs/18-strands-questions.md
+doc docs/17-ui-capture.md
+doc docs/18-role-ui-case-study.md
+doc hub/site/goal.html
+doc hub/site/use-case.html
+doc hub/site/vision.html
+doc docs/20-system-map.md
 -->
  To recap there, we have this 3-point harness system. It's self-improving because there is an instrumentable flow of media that's incoming and being processed, and the processor for that is the harness. The harness is going to grow over time.
 
@@ -727,6 +772,8 @@ push this
 note prompt 2b1638fe-26e6-47ad-88be-64f148676eee claude 195bf2ed
 note commits in window 7ba6603
 note 1 pasted block(s) unwrapped
+doc docs/16-sandbox-provisioning.md
+doc docs/17-atlas-setup-dossier.md
 -->
 
 Let's discuss CI. We want to look up MongoDB Atlas and contemplate a bunch of respective directions we can go in, against our typical respective framework patterning for our CI. Given that we're going to be deploying multiple respective apps and we are going to also have the hub invocation within our CI.yaml running on GitHub, we want to automate that accordingly and have invocable resolvers for where our respective compute services are run. We want to utilize as much of the MongoDB Atlas system as possible.
@@ -740,3 +787,518 @@ Right now, with the test invocation for ensuring that the first thing that is ha
 - a six-section formatic template for our PR description system
 - a filing system for our actual PR descriptions, which will be Markdown with first-class representations using diagrammatic representations that are highly reviewable
 We will make one, which is first an example standard of an exemplary specification of the completeness and the completeness degree tracker for our respective PR descriptions for PR reviewability. Given this is a hackathon, we want to stay pretty terse and not put too many tokens into the PR reviewability, but we do want that respective structure with respect to the providence of the code and the codebase, especially with respect to this being a harness in and of itself, indicatively. We want to have a pretty solid structure again, with this focus on utilizing those resources accordingly.
+
+## Session 6 (2026-09-26) · claude:d566ee7f · Brainstorming.md indexing DSL
+
+*Prompts typed into Claude Code session d566ee7f-a22d-45a5-a400-6a0be671fde4 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s6.01 P 13:11
+note prompt a54de1ac-1ca3-4cb9-a428-acf1544db224 claude d566ee7f
+note commits in window 0fd66df fa89a9d 792e061 46f5dfe 3e1d9d5 7aae328
+-->
+
+commit up meaningfully well segmented and descriptively and push
+
+## Session 7 (2026-09-26) · claude:7373e94d · Text simplification and diagram expansion
+
+*Prompts typed into Claude Code session 7373e94d-b70b-44b6-a377-b53269694c48 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s7.01 P 13:23
+note prompt 8a4307cc-a539-4218-9852-5ce950cbb71a claude 7373e94d
+-->
+
+/clear
+
+<!-- s7.02 P 13:24
+note prompt 895ccb4a-73c5-4170-987f-8f6fdcb37f87 claude 7373e94d
+-->
+
+All of the respective content, about 80% of the respective artifacts, is just using too many words, and we need more diagrams and more presentations. Let's just dispatch a plurality of agents that will simplify the text across all of the respective areas of agent for each of the respective top-level domains that organize, orient, decide, and build. Except for the ones which are just plainly text, with our Polyglot rendering mechanism, we want to just simplify those which are first-class articles. We want to get to more representative artifacts of the design system, which we will incorporate, start to extend, and start to add design-only elements to as we start to build out the UI.
+
+We're not really getting inspired yet by the UI, so we want to go for a basis of more readability and more tersity. We want to have a tersity metric and then just implement aggressively with respect to the reduction of the text and getting to the point with each other's respective artifacts.
+
+<!-- s7.03 P 13:35
+note prompt c5d3e0f3-8b6c-4186-8413-11073649e66b claude 7373e94d
+note commits in window f0b00fa
+-->
+
+<task-notification>
+<task-id>ab4d62f2b8db798f4</task-id>
+<tool-use-id>toolu_018C67ja3EBwPAiWDGqZjxMj</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-Patmac-Documents-Code-3pt-dev-3pt/d566ee7f-a22d-45a5-a400-6a0be671fde4/tasks/ab4d62f2b8db798f4.output</output-file>
+<status>completed</status>
+<summary>Agent "Terse hub and record leaves" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>This agent's report was delivered to you as a message from "ab4d62f2b8db798f4" (its SubagentHandback call). Read it there; it is not repeated here.
+</result>
+<usage><subagent_tokens>135054</subagent_tokens><tool_uses>20</tool_uses><duration_ms>538751</duration_ms></usage>
+</task-notification>
+
+<!-- s7.04 P 13:42
+note prompt 11d6363e-4893-497f-b866-360094c8c9ed claude 7373e94d
+note commits in window 1ba47e5 b8df6bc 41e1fb9 d9f2a61 613b349 0818eb4 7aa0e8f ea5c5a8 b51c346 a83a3a8 419ef83 131ba4a 81138a1 5a1edb3 11212da 5dceeea e1d0873 0086a93 b168fa2 e69cb01 1b6063e ca5051a 1df231e 253f528 76ea18e a51d5ec 41f384c 000a85c
+-->
+
+<task-notification>
+<task-id>a732809f4ed46bfc5</task-id>
+<tool-use-id>toolu_01Gf9NHeZX6k8RjNhnhDPMi8</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-Patmac-Documents-Code-3pt-dev-3pt/d566ee7f-a22d-45a5-a400-6a0be671fde4/tasks/a732809f4ed46bfc5.output</output-file>
+<status>completed</status>
+<summary>Agent "Terse direction leaf" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>This agent's report was delivered to you as a message from "a732809f4ed46bfc5" (its SubagentHandback call). Read it there; it is not repeated here.
+</result>
+<usage><subagent_tokens>161835</subagent_tokens><tool_uses>18</tool_uses><duration_ms>902569</duration_ms></usage>
+</task-notification>
+
+<!-- s7.05 P 14:19
+note prompt 36eb257e-c98e-4711-af04-bb0c74b82ab1 claude 7373e94d
+note 1 pasted block(s) unwrapped
+-->
+
+Okay, how did this go? If we can close this session, then yes. Just give me a really terse output:
+- Is this complete?
+- Is it a good organization?
+- We have a kind of loop watcher agent on the CI, just doing our CI for us right now, which is just redeploying on a 10-minute cadence.
+- Did this meet our respective metrics?
+- Do we come up with a number of qualifiers that are factual and useful?
+- Can we close this context?
+
+
+ yes or no?  Is there some type of reorganization for this concern space for which you've been tasked, that you would make additional improvements to the context of the codebase or some type of feature set there?
+
+<!-- s7.06 P 14:19
+note prompt 4e31f8f5-1f16-4861-9226-e88fca51f23b claude 7373e94d
+note commits in window 8085d63 a42068d e121ee4 68bcb2c 1d4cef7
+-->
+
+commit the hub work and close it out
+
+## Session 8 (2026-09-26) · claude:195bf2ed · Design-system.html proposals
+
+*Prompts typed into Claude Code session 195bf2ed-3599-45dd-910d-e618f8fa66ca by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s8.01 P 13:35
+note prompt b133b128-3e1b-4251-b2c8-9320bbaba69a claude 195bf2ed
+note commits in window 41f384c 000a85c f0b00fa
+note 1 pasted block(s) unwrapped
+-->
+
+I want to iterate on the FirstClass representation of the infra batteries. Let's lean into the example providers for this:
+- Vercel Gateway
+- OpenRouter
+- MongoDB
+- AWS
+Those are some systems that we want to have as options in the setup cascade for the respective batteries and configuration that a non-technical person can use to get all the SaaS product backend compute model service providers and storage systems that are needed.
+Right now, in the respective three batteries tools coolbrand stages, that is what we want to inculcate in the way in which the setup of this self-improving harness system is made really easy from a UX perspective and having that be a major selling point. Utilizing some of these new motifs around the SDF shader-based perspective design system language for the FirstClass representations of this improvement of the model-based view of the respective diagrammatic representations, and then moving towards creating actual onboarding workflows that utilize the FirstClass perspective signup links and other perspectives' inherently would-be scripted implementation configurations for getting this infrastructure.
+In Forgetup, for the batteries included part, that gets that central core of the architectural tetrahedron instantiated.
+
+<!-- s8.02 P 13:53
+note prompt b87c4744-dd95-444e-bb61-dd1e0c47ef01 claude 195bf2ed
+note commits in window 131ba4a 81138a1 5a1edb3 11212da 5dceeea e1d0873 0086a93 b168fa2 e69cb01 1b6063e ca5051a 1df231e 253f528 76ea18e a51d5ec
+-->
+
+merge
+
+## Session 9 (2026-09-26) · claude:0da8447f · VM provisioning system for MongoDB Atlas sandbox
+
+*Prompts typed into Claude Code session 0da8447f-de93-4e7f-a676-a7414e1c305c by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s9.01 P 13:45
+note prompt 01550f9f-97e5-4b35-bc3a-ce71fcc10256 claude 0da8447f
+note commits in window 68bcb2c 1d4cef7 1ba47e5 b8df6bc 41e1fb9 d9f2a61 613b349 0818eb4 7aa0e8f ea5c5a8 b51c346 a83a3a8 419ef83 131ba4a 81138a1 5a1edb3 11212da 5dceeea e1d0873 0086a93 b168fa2 e69cb01 1b6063e ca5051a 1df231e 253f528 76ea18e a51d5ec 41f384c
+-->
+
+Okay, we need to get a simple VM provisioning system going for the sandbox that's compliant with the respective MongoDB Atlas system. If this is viable, we're going to use CoLiMa boxes, probably, or some type of Docker container convention system with the Ansible playbook that will set up the respective provisioned environment. That is also for our respective focused version of this respective harness system with the recursive improvement loop.
+
+Assuming, by the way, that the matter and the patterns indicative of these media-heavy workflows are that we will be setting up VMs. We want to make it so that there is an improvable MCP that is maybe its own effective refa, or maybe just a set of skills accordingly, or probably a deterministic setup flow. We just instantiate that, which allows us to use the respective infra to set up a box that can do the respective workflow to get our first workflow running. Then we will go and find a dataset to run that on and use the available infrastructure.
+
+We might use AWS, but let's see to what extent we can push the MongoDB Atlas system, what we can learn from the interface thereof, and then set up a system to provision the respective sandbox in the way that we need it and kind of defer to the Atlas conventions where there are affordances that are there.
+
+<!-- s9.02 P 14:20
+note prompt cae93f7d-6e3a-46de-bd9a-cff5a27aff98 claude 0da8447f
+note commits in window 8085d63 a42068d e121ee4
+-->
+
+We get credits for this accordingly as part of the hackathon.
+
+<!-- s9.03 P 14:26
+note prompt 5a08c23e-c981-4c35-8eb0-6d5dd1849dfa claude 0da8447f
+note commits in window e3ddd8f bdd22f0 48239bc be9b30d a2ae978 c321206 2235f10 7cb33bc 4180db3 df353e0 280a39c 0abe6e3 fae7a45
+note 1 pasted block(s) unwrapped
+-->
+
+check the sandbox email for an activation code...got this emaiL: 
+
+
+Welcome to MongoDB!
+
+Whether you’re building an application that’s agentic or more traditional, you need a reliable place to store and access your data as your product evolves. MongoDB Atlas gives you that foundation.
+
+Manage your cluster where you work best
+
+Atlas UI: Create and manage clusters directly in Atlas.
+Atlas CLI: Provision and manage Atlas from the terminal.
+MCP Server: Install the official MongoDB plugin for Claude Code, Codex, Cursor, Gemini CLI, or VS Code to build with MongoDB guidance and connect to Atlas.
+ 
+
+WHAT'S NEXT
+
+
+ 
+Choose a cluster type
+
+Start with M0 for a sandbox, Flex for testing and prototypes, or Dedicated for larger or production workloads.
+
+
+ 
+Copy and save your database user credentials
+
+Be sure to save the password for your database user, as you will need to add it to your connection string.
+
+
+ 
+Get your connection string
+
+Use the connection string to connect to your application from an official MongoDB Driver. You can also connect to a supported tool like our GUI Compass to visually explore your data.
+
+Get Started
+ 
+ 
+ 
+ 
+Continue building with Atlas
+
+Model evolving application data: Use MongoDB’s flexible document model for application data that changes as your product, users, and AI workflows evolve.
+Give your application persistent memory: Store conversation history, user context, tool outputs, and long-term application state in MongoDB to create a memory layer for your application. .
+Retrieve the right context: Explore MongoDB Search and Vector Search for native retrieval directly on your operational data, powering AI experiences from a unified platform.
+MCP Server: Use the MCP Server to give your agent access to interact with your database.
+Agent Skills: Give AI coding agents MongoDB context and best practices as you build.
+Keep learning: Explore Skill Badges (like "Building an App with Code Agents" and "AI Data Strategy"), Docs, or visit our YouTube channel for developers.
+
+<!-- s9.04 P 14:33
+note prompt f6ecdfd5-9f38-4ee0-b7ba-1e7bf630fb9d claude 0da8447f
+note commits in window 2ccaacb ae70d82 f01ba50 757c937 c564c14 b2e7c8e d728ae5 c92b7f8 084b5eb 6e07647 58d9d8f
+-->
+
+Once that's ready to go, I'm also going to give keys for SSH to Yash. The security mechanism we're going to use is just the local sync on a new respective Apple note that I could share with him. Just put it in a file or a TXT file and save it to the desktop so that he can get it running, no keys, and get history. Make sure it's up so he can access this VM. Get deployer harness all there and get that going.
+
+<!-- s9.05 P 14:42
+note prompt 967d292b-e2c2-4f71-be68-10b0cf89b06c claude 0da8447f
+-->
+
+where are the env ars
+
+<!-- s9.06 P 14:42
+note prompt f3d37cfd-0d3b-4e56-9ee9-6718bbd01df9 claude 0da8447f
+note commits in window f7bde17
+-->
+
+where are the env vars... I can run deploy, correct?
+
+<!-- s9.07 P 14:44
+note prompt c403799f-81f9-45b8-a10c-0974bd4a1e5e claude 0da8447f
+note commits in window 30c1c2a b9d18e0 d7be4fe c123d26 72009f9
+-->
+
+push it
+
+<!-- s9.08 P 14:50
+note prompt 60d6a77b-48a2-431f-b36d-0c5c0c426c4e claude 0da8447f
+-->
+
+<bash-input> git push origin main</bash-input>
+
+<!-- s9.09 P 14:50
+note prompt 60d6a77b-48a2-431f-b36d-0c5c0c426c4e claude 0da8447f
+note commits in window b8090ff e23eb5e
+-->
+
+<bash-stdout></bash-stdout><bash-stderr>To https://github.com/pastarita/3pt.git
+ ! [rejected]        main -&gt; main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/pastarita/3pt.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+</bash-stderr>
+
+<!-- s9.10 P 14:56
+note prompt 85fb137a-17f0-4124-95a8-a2eeec4862b0 claude 0da8447f
+-->
+
+<bash-input> git push origin main</bash-input>
+
+<!-- s9.11 P 14:56
+note prompt 85fb137a-17f0-4124-95a8-a2eeec4862b0 claude 0da8447f
+-->
+
+<bash-stdout>To https://github.com/pastarita/3pt.git
+   30c1c2a..b8090ff  main -&gt; main</bash-stdout><bash-stderr></bash-stderr>
+
+## Session 10 (2026-09-26) · claude:67bf82d3 · Strand system substantiation journey
+
+*Prompts typed into Claude Code session 67bf82d3-8537-437f-a98a-985ac7ec7847 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s10.01 P 13:51
+note prompt 3e2c6652-f08b-45bc-997f-e6a1b5b008e2 claude 67bf82d3
+-->
+
+/clear
+
+<!-- s10.02 P 13:52
+note prompt 454af3f8-e5d1-49b0-b806-ea02f4ddc777 claude 67bf82d3
+note commits in window 8085d63 a42068d e121ee4 68bcb2c 1d4cef7 1ba47e5 b8df6bc 41e1fb9 d9f2a61 613b349 0818eb4 7aa0e8f ea5c5a8 b51c346 a83a3a8 419ef83 131ba4a 81138a1 5a1edb3 11212da 5dceeea e1d0873 0086a93 b168fa2 e69cb01 1b6063e ca5051a 1df231e 253f528 76ea18e a51d5ec
+note 1 pasted block(s) unwrapped
+-->
+
+My overview was set up. We are working on the strand system. We have built the respective mockup images and the respective diagrammatic representations.
+
+Now we need to conclusively and in a first-class way answer, with pointers, where the current substantiations for these respective questions do exist within the corpus as well as within the codebase corpus, and make those indicatively answered. We will make a respective journey page for going through, answering, and having the pointers to these and their substantiations, with first-class links to those respective examples, as well as where we might be extending those.
+
+We want to answer these questions, and we want to continue understanding the harness that we are extending to then build their three-point system. We want to substantiate fully that we are building this as an index of how we answer these questions with respect to the codebase, infrastructural, and harness fundamentals 
+
+
+
+
+how can we configure strands?
+how can we fine tune strands?
+how is strands open to self improve?
+how does the 3pt workflow look like? (for the media heavy content)
+
+<!-- s10.03 P 14:26
+note prompt 7e02ca46-a5bf-49bf-a9d3-7815bac6fe70 claude 67bf82d3
+note commits in window 48239bc be9b30d a2ae978 c321206 2235f10 7cb33bc 4180db3 df353e0 280a39c 0abe6e3 fae7a45
+-->
+
+go ahead
+
+## Session 11 (2026-09-26) · claude:59a860ae · Lane system deprecation and context indexing
+
+*Prompts typed into Claude Code session 59a860ae-6981-49a6-a334-a423ff660f0c by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s11.01 P 14:13
+note prompt 9e9a3184-71fa-4ed7-9b2d-e272f4d8c265 claude 59a860ae
+note commits in window d9f2a61
+-->
+
+/clear
+
+<!-- s11.02 P 14:14
+note prompt cf1ec3d7-4e5b-4a28-88b4-9d37b0e28ed8 claude 59a860ae
+-->
+
+Okay, we're at a point where most of our lanes are met with respect to our initial buildout, and we should just build a criterion of a checkpoint. At this point, we're at 213, and we're started on pitch, demo, video, and submission.
+Let's basically depreciate this lane system and move towards evaluating what open context we currently have running. We're not using tmux, so sessions are not really helping, but we can evaluate maybe code instances in the project data for this respective area. We can then tersely index the respective index to see what lanes are running currently and where we're at, and also look at the git history and just index.
+We will come up with a number of respective lanes to ensure that, in this term 2 window that we have for the respective 6 different terminals with code running, we are well aligned with:
+- perspective on what each one is doing
+- that it's getting us towards our goal
+- that both Yash and I are provisioned with respect to the continuing development accordingly
+
+<!-- s11.03 P 14:14
+note prompt d6e045b3-65a3-4e3a-ade5-727c0be68509 claude 59a860ae
+note commits in window 4180db3 df353e0 280a39c 0abe6e3 fae7a45 8085d63 a42068d e121ee4 68bcb2c 1d4cef7 1ba47e5 b8df6bc 41e1fb9
+note 1 pasted block(s) unwrapped
+-->
+
+Okay, we're at a point where most of our lanes are met with respect to our initial buildout, and we should just build a criterion of a checkpoint. At this point, we're at 213, and we're started on pitch, demo, video, and submission.
+Let's basically depreciate this lane system and move towards evaluating what open context we currently have running. We're not using tmux, so sessions are not really helping, but we can evaluate maybe code instances in the project data for this respective area. We can then tersely index the respective index to see what lanes are running currently and where we're at, and also look at the git history and just index.
+We will come up with a number of respective lanes to ensure that, in this term 2 window that we have for the respective 6 different terminals with code running, we are well aligned with:
+- perspective on what each one is doing
+- that it's getting us towards our goal
+- that both Yash and I are provisioned with respect to the continuing development accordingly
+
+
+
+
+3PT lanes · 2026-09-26 18:12
+● L1 Repo setup — Patrick — Flip repo to public. Create the Atlas Sandbox project. Add Yash as collaborator.
+● L2 ICP definition — TBD — Walk the ICP explorer together; pick the direction that holds under every preset.
+— L3 Agent contextualization — TBD — Get the "Batteries system' Built
+◐ L4 Workflow & pipeline — TBD — Stand up the Atlas collections (policies, checkpoints, media_index, transcripts, measurements).
+◐ L5 Swift app basis — TBD — Deliberately not started until Lane 4 writes to Atlas.
+● L6 Resources scan — Both — Redeem codes as they arrive by email / Discord (from 10:30 AM).
+● L7 Hub workspace — Patrick — Set ACCESS_PASS + GitHub secrets; add Yash to the gate allowlist.
+
+<!-- s11.04 P 14:27
+note prompt 4d08f244-a48d-4e11-a436-f3a303b3f3a8 claude 59a860ae
+note commits in window 30c1c2a b9d18e0 d7be4fe c123d26 72009f9 f7bde17 2ccaacb ae70d82 f01ba50 757c937 c564c14 b2e7c8e d728ae5 c92b7f8 084b5eb 6e07647 58d9d8f e3ddd8f bdd22f0 48239bc be9b30d a2ae978 c321206 2235f10 7cb33bc
+note 1 pasted block(s) unwrapped
+-->
+
+All right, let's go ahead and also now, with this new lane system and the new provisioning that they're on a decisioning basis for this, we need to focus on the details of the submission again and review the respective  https://cerebralvalley.ai/e/mongodb-nyc-hackathon/details And what we need to do in order to prepare our respective sites: there are new happenings: Yash ust pushed 
+
+
+And we should work in that state and the context thereof, and we should be orienting our tour on:
+- the respective tool that we use to film the respective demo
+- the criteria on what we need to actually produce as artifacts in preparation for the respective submission
+- the claims that we're going to substantiate
+- the comprehensive prioritization with respect to the directions that we need to pursue to get the system fully realized
+
+
+ in time
+
+<!-- s11.05 P 14:49
+note prompt 30129c6b-71fa-4625-b437-3feee852f089 claude 59a860ae
+note commits in window b8090ff e23eb5e
+-->
+
+Go ahead and push that up. We'll do a review now. We'll report back accordingly. Make sure the hub is deployed.
+
+<!-- s11.06 P 14:57
+note prompt 21c1d9c5-df0a-4424-ae67-adffe74292f0 claude 59a860ae
+note commits in window f41106b 43ec551 d3cad6e 5d74fc7
+note 1 pasted block(s) unwrapped
+-->
+
+Okay, great. I want a top bar in the hub now that is just like the state of the available links for what is published in this app, so that it's more first-class.
+We're going to move towards refactoring and redesigning the respective orientation of the hub using the now-inspired respective design system indicative of the SVG in the README for the banner. The respective representative aspects of that are to be refactored in the first couple of hub pages:
+- vision
+- goal
+- use case
+- rules in judging
+- open source check
+- the submission basis
+so that they are more first-class and, when we do share this, are representative of the design system as well.
+
+<!-- s11.07 P 15:05
+note prompt 996f6843-7342-4414-a119-2ebe51ee33ec claude 59a860ae
+-->
+
+<task-notification>
+<task-id>add3758640f9ff05e</task-id>
+<tool-use-id>toolu_01LPD5fR5krHNu2pYGcfWgSs</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-Patmac-Documents-Code-3pt-dev-3pt/195bf2ed-3599-45dd-910d-e618f8fa66ca/tasks/add3758640f9ff05e.output</output-file>
+<status>completed</status>
+<summary>Agent "Write rules.html orient leaf" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: build `hub/site/rules.html` as an orient leaf. Done.
+
+Wrote `hub/site/rules.html` in the lane-hub-orient worktree, following the vision.html skeleton (head with 3pt.css, orient.css, 3pt-data.js, mark.js; `nav.js` first in body; hero with eyebrow linking `./view.html?f=docs/05-rules.md`, headline "Judges score what runs. **Show the loop, not a deck.**", sub naming the event, The Malin Chelsea and 5:00 PM ET; controls to submission.html and checklist.html; stage chips; mark mounted with `focus:'core'`).
+
+Five figures plus the gate row:
+1. SVG timeline rail: 10:30 hacking, coral "≈15:00 · you are here" tick, 17:00 submissions, 17:15–18:45 round 1 bar, 19:00 top 6, Sept 30 .local vote and top 3.
+2. SVG horizontal bar chart of weights 35/30/20/15 with the 3PT meaning under each bar.
+3. Hard requirements table with `pv` status badges (Atlas Sandbox PENDING, repo DONE, new work SHOW, not a presentation SHOW, rights DONE, members/link/audio PENDING) and evidence column.
+4. Banned list as chips, the three that matter highlighted in the alert hue, three "so instead" panes.
+5. Prizes table.
+Gate row: "Finalists must have built inside the Atlas Sandbox cluster from the email link; any other cluster does not count."
+
+Tersity line:
+```
+rules.html                396     5     79    25     0
+total                    6337    92     69   budget: words&lt;=900 w/fig&lt;=120 p&lt;=55 lede&lt;=30
+```
+396 words, 5 figures, 79 words per figure, longest paragraph 25, lede 0 (the sub is 24 words). No `@s1.xx` cites, since `docs/05-rules.md` carries none. No other files touched, nothing committed.</result>
+<usage><subagent_tokens>255786</subagent_tokens><tool_uses>2</tool_uses><duration_ms>66475</duration_ms></usage>
+</task-notification>
+
+<!-- s11.08 P 15:05
+note prompt 306a5cb2-d4bd-42be-bf1c-a17a8132f742 claude 59a860ae
+-->
+
+<task-notification>
+<task-id>af88858419d109346</task-id>
+<tool-use-id>toolu_01MPdLD8wDGQBxgagKePRPVw</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-Patmac-Documents-Code-3pt-dev-3pt/195bf2ed-3599-45dd-910d-e618f8fa66ca/tasks/af88858419d109346.output</output-file>
+<status>completed</status>
+<summary>Agent "Write use-case.html orient leaf" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: build `hub/site/use-case.html` on the Vision exemplar. Done.
+
+Written `hub/site/use-case.html` in the `lane-hub-orient` worktree, not committed. Tersity line:
+
+```
+use-case.html             544     5    109    28     0
+```
+
+544 words, 5 figures, 109 words per figure, longest paragraph 28, lede 0 (the sub is inside the hero, as in Vision). All within budget.
+
+Structure, matching Vision's head, hero, figure and footer conventions: eyebrow links to the D6 doc; headline with the coral clause "The harness learns what repeats."; mark mounted with `focus:'plan'`; controls point at the tour and the simulator. Figures in order:
+
+1. The four-step ladder as an SVG, the blocks carried in step 4.
+2. Two panes, interiors studio vs construction GC, each with media, what repeats, and the lesson learned.
+3. The two output streams as a table, with an interiors and a construction column.
+4. Screen-capture onboarding as an SVG timeline, ending in tool access rewritten and the institution owning it.
+5. Acme Builders v0 to v3 as a table, DERIVED from the first four rows of `expected/harness-versions.json`.
+
+Cites kept at the matching sections: @s1.26, @s1.27, @s1.28, and @s1.21 @s1.29 on the closing gate row. No other files touched.</result>
+<usage><subagent_tokens>252453</subagent_tokens><tool_uses>2</tool_uses><duration_ms>77119</duration_ms></usage>
+</task-notification>
+
+## Session 12 (2026-09-26) · claude:1e70daf2 · README setup for open source
+
+*Prompts typed into Claude Code session 1e70daf2-fd28-41e1-aa44-9e58f110348f by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s12.01 P 14:34
+note prompt 3203395f-3ccb-4f55-9704-291be7ee86b3 claude 1e70daf2
+-->
+
+Was this pushed up?
+
+<!-- s12.02 P 14:35
+note prompt 298c34e2-9168-4ace-bd1c-2fc7a279bcdc claude 1e70daf2
+note commits in window 2ccaacb ae70d82 f01ba50 757c937 c564c14 b2e7c8e d728ae5 c92b7f8 084b5eb 6e07647 58d9d8f
+-->
+
+do it
+
+<!-- s12.03 P 14:41
+note prompt 5ff12daf-28ec-43d9-8b1a-8cceb514f5aa claude 1e70daf2
+note commits in window e23eb5e 30c1c2a b9d18e0 d7be4fe c123d26 72009f9 f7bde17
+-->
+
+What's going on? We actually want a 3D tetrahedron, so we're going to apply a couple of transforms to the triangle and then get the respective way in which the Atlas VM container management box system is presenting it. A little bit more styling indicative of that SDF thing, built into that respective kind of rotated-down-to-the-left, maybe a 30° skew. Don't take it directly, but put a few round-trip loops of screenshots to make sure it's cogent, nicely shaded, and has good material effects and glows and whatnot as the FirstClass SVG. Just to polish up that banner a little bit more and get that tetrahedral thing going to inculcate that specificity in the way that the harness 3-loop goes around the respective cores and infra running  Also want to insinuate that there's a plurality of surfaces in the UI management of this repo that we are offering as well.
+
+<!-- s12.04 P 14:53
+note prompt cadc82ae-dbbe-4daf-aff1-b37a37db89e6 claude 1e70daf2
+note commits in window f41106b 43ec551 d3cad6e 5d74fc7 b8090ff
+note 1 pasted block(s) unwrapped
+-->
+
+- Spread those surfaces out a little bit more and make them unique for each of them. I don't want them stacked like that. They should be kind of behind and in front of the tetrahedron a little bit.
+- The tetrahedron should be a little bit more opaque or translucent, I would say.
+- The arrows need to represent the way in which there are plans at the top, so it needs to be rotated a little bit too.
+- The node for the core for the batteries should be different, respectively, and it's not going to be as high.
+
+<!-- s12.05 P 15:00
+note prompt 60f217e0-8e65-4013-a2d4-0cf4092f14b6 claude 1e70daf2
+-->
+
+Let's do just a content overhaul and section overhaul that is indicative of the codebase again, seeing tiers, but now targeted to be more complete with respect to what this codebase is, the value provided, and who it's for, accordingly. That's digestible, has a degree of progressive disclosure, and is well predicated with respect to initial review in a hackathon,  Conditionally well-poised. These are our evaluation criteria, and we need to now push that up with respect to the content and that which we are presenting. Accordingly, we should use tables and multiple respective ones now, definitively, given that we have this repetitive design system for the banners, SVG diagrams that are illustrative, and infographics that explain what this app does and the architecture that they're of.
+
+## Session 13 (2026-09-26) · claude:01aaed4b · EBPF instrumentation system
+
+*Prompts typed into Claude Code session 01aaed4b-3785-4911-aba6-20f5192c48b4 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `lane/strands-journey`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s13.01 P 14:44
+note prompt 67579809-e855-4c74-b8bb-b0c64a08b6e5 claude 01aaed4b
+note commits in window b9d18e0 d7be4fe c123d26
+-->
+
+/clear
+
+<!-- s13.02 P 14:46
+note prompt bc8af7d4-464e-4113-b26e-a0498fba09e7 claude 01aaed4b
+note commits in window f41106b 43ec551 d3cad6e 5d74fc7 b8090ff e23eb5e 30c1c2a
+-->
+
+Okay, for our instrumentation system and the outer evaluation loop that is really the driver of many of the mechanisms for which we build the first-class data sources and streams. Those are then being uploaded to the various NoSQL databases, as well as relational databases and vector stores, appropriately with respect to the importances of the respective binders to the infra layer that we've built accordingly for the batteries.
+
+We do need to now build some of the provisioning for the infrastructure of the tooling that gets inculcated in a way whereby the instrumentation is afforded to the exposed layers in the kernel via EVPF. Provided we're running CoLiMa, we can just do that on their respective box, which is deployed now for the Atlas box, which we have. We should be able to do that on that box directly or in drain signals from the production app.
+
+With respect to the tool instrumentation as well as the EBPF signals, we can then build that tooling and plugin clustering, and then the menu of that respective capabilities. We can then have implementation kits and recipes, and then we'll implement one of those recipes. Let's go and do a contemplation on that, and then implement that accordingly.
+
+We'll evaluate that box and the CoLiMa box that's on there accordingly, which should be up and running. We should just build a little Celium-inspired EBPF tooling system that will just instrument that system, get the feedback loop over time, and do a persistent logging store with some type of durable object that gives us parsability. In that connection between the durable object for the respective logs that we're doing the signaling for, we'll do some type of probably sampling, normalization, redactions, and other respective log criterion stripping from the actual kernel-level instrumentation that we're building before it gets offloaded to the cloud. We have the ability to, in that respective pipeline, have the dynamic ability to push new code into that pipeline. That could be decisioning engines, inference engines, or other respective logic that intermediates that respective code from the upstream deterministic layer, which should be instanciable from the methodologies that we're using that are codified and well accepted with respect to observability transforms.
+
+## Session 14 (2026-09-26) · claude:8e84cbec · Hub system timeline eval and design system refactor
+
+*Prompts typed into Claude Code session 8e84cbec-df82-44fb-9eda-b4d9b4e2dad9 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 15:05. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s14.01 P 15:03
+note prompt c2abf72a-f393-4af6-9df2-45d3f1cde2e3 claude 8e84cbec
+-->
+
+We have the respective timeline, and it goes up to about 12:00. It's basically 1:00, and we have new sessions, so we need to run the eval again. This timeline is in the hub system, and we want that to be representative of the kind of work that we did and what we've done along the respective pathway. We have that as a first-class entity set accordingly.
+
+We also refactored a little bit to use more of the design system with the kind of inspired three colors with the SDF, but personally, always using the respective SVG form. The system design system has a little bit of that characterization and the artistic background of the art parts, so it takes in that form.

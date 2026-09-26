@@ -28,7 +28,7 @@ const OPS = new Set(['idea', 'grow', 'pivot', 'drop']);
 const SEG = /^s(\d+)\.(\d{2})$/;
 const BLOCK_OPEN = /^<!--\s*(s\d+\.\d{2})(?:\s+([PYX?]+))?(?:\s+(\d{1,2}:\d{2}))?\s*(-->)?\s*$/;
 const CITE = /@(s\d+\.\d{2})(?::([a-z0-9][a-z0-9-]*))?/g;
-const SESSION = /^##\s+Session\s+(\d+)\s*\((\d{4}-\d{2}-\d{2})\)/;
+const SESSION = /^##\s+Session\s+(\d+)\s*\((\d{4}-\d{2}-\d{2})\)(?:\s*·\s*claude:([0-9a-f]{8}))?(?:\s*·\s*(.+?))?\s*$/;   // spoken: `## Session 1 (date)`; imported: `· claude:<id8> · <title>` (scripts/prompts.mjs)
 const SKIP_DIRS = new Set(['.git', 'node_modules', '_site', '.wrangler', 'build', 'DerivedData', '.build', 'dist', '.install-loop']);
 const TEXT_EXT = new Set(['.md', '.js', '.mjs', '.ts', '.swift', '.py', '.sh', '.html', '.css', '.yml', '.yaml', '.json', '.jsonc', '.txt', '.toml', '']);
 
@@ -63,7 +63,7 @@ for (let i = 0; i < lines.length; i++) {
   const sm = L.match(SESSION);
   if (sm) {
     if (cur) { finishBody(cur, i); cur = null; }
-    session = { n: +sm[1], date: sm[2], line: i + 1 };
+    session = { n: +sm[1], date: sm[2], line: i + 1, claude: sm[3] || null, title: sm[4] ? sm[4].trim() : null };
     sessions.push(session);
     continue;
   }
@@ -230,6 +230,25 @@ if (BAKE && !errs.length) {
   console.log('nothing to bake');
 }
 
+// ---------- structured notes: `note prompt <id> claude <id8>` and `note commits in window <h> …` (scripts/prompts.mjs) ----------
+// Commits resolve to their subject and prefix through one `git log`; the prefix is the stage the commit
+// belongs to (plan: build: instrument: …), which is what the Timeline's day figure colours by. Fail-soft:
+// a hash git cannot see (a shallow checkout) keeps its hash and no subject.
+const STAGE = { plan: 'plan', docs: 'plan', build: 'build', app: 'build', media: 'build', infra: 'build', hub: 'build', harness: 'build', api: 'build', init: 'build', instrument: 'instrument', ci: 'instrument' };
+const subjects = new Map();
+const hhmm = (d) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+try { for (const l of execFileSync('git', ['log', '--all', '--format=%h\t%ct\t%s'], { cwd: REPO, maxBuffer: 1 << 26 }).toString('utf8').split('\n')) { const [h, ct, ...rest] = l.split('\t'); if (h && ct) subjects.set(h, { subject: rest.join('\t'), time: hhmm(new Date(+ct * 1000)) }); } } catch {}
+const resolveCommit = (h) => { let hit = subjects.get(h) || null; if (!hit) for (const [k, v] of subjects) if (k.startsWith(h) || h.startsWith(k)) { hit = v; break; }
+  const subject = hit ? hit.subject : null, m = subject && subject.match(/^([a-z]+):/); const prefix = m ? m[1] : (subject && /^merge\b/i.test(subject) ? 'merge' : null);
+  return { h, subject, time: hit ? hit.time : null, prefix, stage: (prefix && STAGE[prefix]) || 'other' }; };
+for (const s of segments) {
+  s.prompt = null; s.commits = [];
+  s.notes = s.notes.filter(n => {
+    let m = n.match(/^prompt\s+(\S+)\s+claude\s+([0-9a-f]{8})\s*$/); if (m) { s.prompt = { id: m[1], claude: m[2] }; return false; }
+    m = n.match(/^commits in window\s+(.+)$/); if (m) { s.commits.push(...m[1].split(/\s+/).filter(Boolean).map(resolveCommit)); return false; }
+    return true; });
+}
+
 // ---------- report ----------
 for (const w of warns) console.log('warn:', w);
 if (errs.length) { for (const e of errs) console.error('FAIL:', e); process.exit(1); }
@@ -238,12 +257,15 @@ if (errs.length) { for (const e of errs) console.error('FAIL:', e); process.exit
 const model = {
   generated: (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`)(new Date()),
   transcript: TRANSCRIPT,
-  sessions: sessions.map(s => ({ n: s.n, date: s.date, segments: segments.filter(x => x.session === s.n).length, ideas: [...ideas.values()].filter(i => byId.get(i.born).session === s.n).length })),
+  sessions: sessions.map(s => ({ n: s.n, date: s.date, claude: s.claude, title: s.title, segments: segments.filter(x => x.session === s.n).length, ideas: [...ideas.values()].filter(i => byId.get(i.born).session === s.n).length,
+    prompts: segments.filter(x => x.session === s.n && x.prompt).length, commits: segments.filter(x => x.session === s.n).reduce((a, x) => a + x.commits.length, 0),
+    first: (segments.find(x => x.session === s.n && x.time) || {}).time || null, last: [...segments].reverse().find(x => x.session === s.n && x.time)?.time || null })),
   segments: segments.map(s => ({ id: s.id, session: s.session, date: (sessions.find(x => x.n === s.session) || {}).date || null, time: s.time, who: s.who, line: s.line,
     bodyLines: [s.bodyStart + 1, s.bodyEnd], words: s.words, excerpt: s.excerpt, body: s.body,
     ops: s.ops.map(o => ({ op: o.op, slug: o.slug, gloss: o.gloss, docs: o.docs.map(t => t.path + (t.anchor ? '#' + t.anchor : '')), code: o.code.map(t => t.path) })),
     from: s.from, to: segments.filter(x => x.from.includes(s.id)).map(x => x.id), lanes: s.lanes,
     docs: s.docs.map(t => t.path + (t.anchor ? '#' + t.anchor : '')), code: s.code.map(t => t.path), terms: s.terms, qs: s.qs.map(q => ({ q: q.q, a: q.a })), notes: s.notes,
+    prompt: s.prompt, commits: s.commits,
     citedBy: [...(backward.get(s.id) || [])].sort() })),
   ideas: [...ideas.values()].map(i => ({ slug: i.slug, born: i.born, who: i.who, gloss: i.gloss, status: i.status, history: i.history,
     docs: [...new Set([...i.docs, ...i.history.flatMap(h => [])])].sort(), code: [...i.code].sort(),
@@ -276,8 +298,9 @@ const cell = (s) => String(s == null ? '' : s).replace(/\|/g, '\\|').replace(/\n
 const md = [];
 md.push(`<!-- GENERATED by scripts/prov.mjs from ${TRANSCRIPT} on ${model.generated}. Do not edit; edit the segment blocks in ${TRANSCRIPT} or the @cites in the docs, then run: node scripts/prov.mjs -->`);
 md.push('', '# Provenance index', '', `*Derived from \`${TRANSCRIPT}\` on ${model.generated} by \`scripts/prov.mjs\`. Every row traces back to a segment marker in the transcript (grammar: \`docs/09-provenance.md\`). Regenerate after editing; never edit here.*`, '');
-md.push('## Sessions', '', '| Session | Date | Segments | Ideas born |', '|---|---|---|---|');
-for (const s of model.sessions) md.push(`| ${s.n} | ${s.date} | ${s.segments} | ${s.ideas} |`);
+md.push('## Sessions', '', 'Spoken sessions are the room; `claude:` sessions are the prompts typed into Claude Code, imported by `scripts/prompts.mjs`. Commits are those that landed inside a prompt\'s window, resolved to their `prefix:` (the stage).', '',
+  '| Session | Date | Source | Clock | Segments | Ideas born | Commits |', '|---|---|---|---|---|---|---|');
+for (const s of model.sessions) md.push(`| ${s.n} | ${s.date} | ${s.claude ? `\`claude:${s.claude}\` · ${cell(s.title || '')}` : 'spoken'} | ${s.first ? `${s.first}–${s.last}` : ''} | ${s.segments} | ${s.ideas} | ${s.commits} |`);
 md.push('', '## Chronology', '', 'One row per segment, in the order spoken. Who: P Patrick, Y Yash, X guest or mentor, ? uncertain. Ops: ● born, ＋ grown, ↻ pivoted, ✕ dropped.', '',
   '| Seg | Who | Ideas | From | Lanes | Landed in | Says |', '|---|---|---|---|---|---|---|');
 for (const s of model.segments) {

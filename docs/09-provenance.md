@@ -141,6 +141,13 @@ node scripts/prompts.mjs --who Y    # on Yash's machine
   pasted-content wrappers are unwrapped, slash commands are rendered as their name, and strings that
   look like keys or connection strings are replaced with `[redacted]` (off with `--no-redact`).
 - Only typed prompts: tool results, subagent sidechains, and meta records are not prompts.
+- The index resolves each `commits in window` hash through `git log` to its subject, its minute, and
+  its prefix, and files the prefix under a stage: `plan:` and `docs:` are plan; `build:`, `app:`,
+  `media:`, `infra:`, `hub:` are build; `instrument:` and `ci:` are instrument; merges and the rest
+  are other. The mapping is authored (it lives in `scripts/prov.mjs`, `STAGE`); the counts are
+  derived. A hash the checkout cannot see keeps its hash and nothing else.
+- A Claude Code session that is still open when the importer runs comes back as a new transcript
+  session on the next run, with only the prompts typed since. Same `claude:` id, new number.
 - Each machine imports its own sessions; Yash's prompts arrive when Yash runs it. Sessions from
   worktrees of the repo are found by directory prefix.
 
@@ -191,6 +198,14 @@ ICP direction to build for today). The chronology runs from the two-minute spiel
 and interior-design candidates (`s1.18`, `s1.26`), the screen-capture onboarding idea (`s1.28`),
 and the ICP exploration that is still running (`s1.30`). The theses in
 `docs/07-assessment-and-measurement.md` now cite their segments by id instead of by quoted phrase.
+
+## Sessions 2 to 14, as imported
+
+Everything after the room is typed. Thirteen Claude Code sessions ran between noon and three, most
+of them concurrently, and their prompts are in the transcript verbatim with the commits that landed in
+each prompt's window. The Timeline leaf draws the day from this: one row per session on the clock,
+a dot per prompt, the band in the hue of the stage most of its commits carry, and every commit once
+underneath. Tallies live in `docs/provenance-index.md`, never here.
 
 ## Design notes
 

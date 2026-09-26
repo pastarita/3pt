@@ -46,7 +46,18 @@
   figcaption .pv{font-style:normal;margin-right:6px}
   .legend{display:flex;gap:12px;flex-wrap:wrap;font:600 11px/1.6 var(--sans);color:var(--faint);margin:8px 0 0}
   .legend i{display:inline-flex;width:16px;height:16px;border-radius:50%;border:2px solid var(--line-strong);margin-right:4px;vertical-align:middle;font:800 8px/12px var(--mono);align-items:center;justify-content:center;font-style:normal;color:var(--ink)}
-  @media(max-width:760px){.ideas .row{grid-template-columns:1fr;gap:4px}.rail{padding-left:44px}.seg .who{left:-44px;width:36px}.seg .who i{width:22px;height:22px;font-size:10px}.rail::before{left:17px}}
+  /* the day figure: sessions on the clock, drawn the way the SDF shades — a plateau band lit at its rim, a glow under every point */
+  .stats{grid-template-columns:repeat(5,1fr)}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 12px 6px;overflow:hidden}
+  .day svg{width:100%;height:auto;display:block;overflow:visible}
+  .day .lab{font:600 10.5px var(--sans);fill:var(--soft)} .day .k{font:700 9.5px var(--mono);letter-spacing:.08em;fill:var(--faint)}
+  .day .tick{font:600 10px var(--mono);fill:var(--faint)} .day a{cursor:pointer} .day a:hover .lab{fill:var(--ink)}
+  .cms{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin:6px 0 0}
+  .cms b{font:700 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-right:3px}
+  .cm{font:700 10px/1 var(--mono);padding:3px 6px;border-radius:5px;border:1px solid var(--line);color:var(--slate);background:var(--sand);cursor:default}
+  .cm.plan{color:var(--plan);border-color:color-mix(in srgb,var(--plan) 45%,transparent)} .cm.build{color:var(--build);border-color:color-mix(in srgb,var(--build) 45%,transparent)} .cm.instrument{color:var(--instrument);border-color:color-mix(in srgb,var(--instrument) 45%,transparent)}
+  h2 span code{font-size:11px;padding:0 5px}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.ideas .row{grid-template-columns:1fr;gap:4px}.rail{padding-left:44px}.seg .who{left:-44px;width:36px}.seg .who i{width:22px;height:22px;font-size:10px}.rail::before{left:17px}}
   @media print{.bar,.seg .hd button{display:none!important}.words{display:block!important}}
 </style>
 </head>
@@ -54,14 +65,19 @@
 <script src="./nav.js"></script>
 <div class="page">
   <header class="top">
-    <p class="eyebrow">Record · derived · from <code>brainstorming.md</code> via <code>scripts/prov.mjs</code></p>
+    <p class="eyebrow">Record · derived · from <code>brainstorming.md</code> via <code>scripts/prov.mjs</code> · prompts imported by <code>scripts/prompts.mjs</code></p>
     <h1>Timeline</h1>
-    <p class="lede">The brainstorm as it happened: who spoke, what was born, where it landed, what is still open. Structure from the <a href="./view.html?f=docs/09-provenance.md">Provenance DSL</a>; words from the transcript.</p>
+    <p class="lede">The day as it happened: what was said in the room, what was typed into the agents, what landed. Structure from the <a href="./view.html?f=docs/09-provenance.md">Provenance DSL</a>; words from the transcript.</p>
   </header>
 
   <figure class="stats-fig">
     <div class="stats" id="stats"></div>
     <figcaption><span class="pv d">DERIVED</span>from <code>prov-data.js</code>, which <code>node scripts/prov.mjs</code> regenerates from the transcript. Generated <span id="gen"></span>.</figcaption>
+  </figure>
+
+  <figure class="day-fig">
+    <div class="day" id="day"></div>
+    <figcaption><span class="pv d">DERIVED</span>The day on the clock. One row per Claude Code session, a dot per typed prompt, the band from its first prompt to its last, in the hue of the stage most of its commits belong to. Below, every commit once, at its minute, on any branch. <span class="pv a">AUTHORED</span> the stage a commit prefix belongs to: plan (plan, docs) · build (build, app, media, infra, hub) · instrument (instrument, ci); merges and the rest are other.</figcaption>
   </figure>
 
   <div class="bar" id="bar">
@@ -74,10 +90,14 @@
     <button data-who="Y">Yash</button>
     <button data-who="X">Guest</button>
     <span style="width:10px"></span>
+    <button data-src="" class="on">Spoken + typed</button>
+    <button data-src="spoken">Spoken</button>
+    <button data-src="typed">Typed</button>
+    <span style="width:10px"></span>
     <button id="words">Show the words</button>
   </div>
   <figure class="rail-fig" id="rail">
-    <figcaption class="legend"><i>P</i>Patrick <i style="border-style:double">Y</i>Yash <i style="border-style:dashed">X</i>guest or mentor <i style="color:var(--faint)">?</i>uncertain &nbsp;·&nbsp; <span class="op idea" style="padding:2px 7px"><b>●</b>born</span> <span class="op" style="padding:2px 7px"><b>＋</b>grown</span> <span class="op pivot" style="padding:2px 7px"><b>↻</b>pivoted</span> <span class="op drop" style="padding:2px 7px"><b>✕</b>dropped</span></figcaption>
+    <figcaption class="legend"><i>P</i>Patrick <i style="border-style:double">Y</i>Yash <i style="border-style:dashed">X</i>guest or mentor <i style="color:var(--faint)">?</i>uncertain &nbsp;·&nbsp; <span class="op idea" style="padding:2px 7px"><b>●</b>born</span> <span class="op" style="padding:2px 7px"><b>＋</b>grown</span> <span class="op pivot" style="padding:2px 7px"><b>↻</b>pivoted</span> <span class="op drop" style="padding:2px 7px"><b>✕</b>dropped</span> &nbsp;·&nbsp; <span class="cm plan">plan</span> <span class="cm build">build</span> <span class="cm instrument">instrument</span> commits in the prompt's window</figcaption>
     <div id="out"></div>
   </figure>
 
@@ -86,33 +106,90 @@
 <script>
 (function(){
   var T = window.T, P = window.PROV, esc = T.esc;
-  var state = T.load('timeline_v1', { view:'rail', who:'', words:false });
+  var state = T.load('timeline_v2', { view:'rail', who:'', src:'', words:false });
   var GL = { idea:'●', grow:'＋', pivot:'↻', drop:'✕' };
   var lanes = {}; T.LANES.forEach(function(l){ lanes[l.n] = l.name; });
   var segById = {}; P.segments.forEach(function(s){ segById[s.id] = s; });
   document.getElementById('gen').textContent = P.generated;
 
+  /* commits: each once, keyed by hash (concurrent sessions share a window) */
+  var COMMITS = {}; P.segments.forEach(function(s){ (s.commits||[]).forEach(function(c){ if (!COMMITS[c.h]) COMMITS[c.h] = c; }); });
+  var commitList = Object.keys(COMMITS).map(function(h){ return COMMITS[h]; });
+  var typed = P.sessions.filter(function(s){ return s.claude; }), spoken = P.sessions.filter(function(s){ return !s.claude; });
+  var prompts = P.segments.filter(function(s){ return s.prompt; }).length;
+
   /* DERIVED tiles */
   var openQ = P.questions.filter(function(q){ return q.open; }).length;
   var docs = P.docs.filter(function(d){ return d.landed.length; }).length;
   document.getElementById('stats').innerHTML = [
-    [P.segments.length, 'segments across ' + P.sessions.length + ' session' + (P.sessions.length===1?'':'s')],
+    [P.segments.length, 'segments · ' + spoken.length + ' spoken session' + (spoken.length===1?'':'s') + ' · ' + typed.length + ' typed'],
+    [prompts, 'prompts typed · ' + commitList.length + ' commits in their windows'],
     [P.ideas.length, 'ideas born · ' + P.ideas.filter(function(i){ return i.status==='dropped'; }).length + ' dropped'],
     [openQ + ' / ' + P.questions.length, 'questions still open'],
     [docs, 'documents the ideas landed in']
   ].map(function(t){ return '<div class="stat"><div class="n">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>'; }).join('');
 
+  /* the day figure: SVG, tokens from 3pt.css, shaded the way sdf-depth.js shades (plateau, rim, glow) */
+  var STAGE = { plan:'var(--plan)', build:'var(--build)', instrument:'var(--instrument)', other:'var(--slate)' };
+  var mins = function(t){ var p = t.split(':'); return +p[0]*60 + +p[1]; };
+  var hh = function(m){ return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'); };
+  var f = function(n){ return Math.round(n*10)/10; };
+  function day(){
+    var timed = P.sessions.filter(function(s){ return s.first; });
+    var dated = commitList.filter(function(c){ return c.time; });
+    var gen = P.generated.slice(11, 16);
+    var all = timed.map(function(s){ return mins(s.first); }).concat(timed.map(function(s){ return mins(s.last); }), dated.map(function(c){ return mins(c.time); }), /^\d\d:\d\d$/.test(gen) ? [mins(gen)] : []);
+    if (!all.length) return '<p style="color:var(--faint);margin:0">No timed segment yet.</p>';
+    var t0 = Math.floor(Math.min.apply(null, all)/60)*60, t1 = Math.ceil((Math.max.apply(null, all)+1)/60)*60;
+    var W = 1000, L = 236, R = 14, rowH = 24, top = 24, laneH = 10, stages = ['plan','build','instrument','other'];
+    var rows = spoken.length + timed.length, lanesTop = top + rows*rowH + 18, lanesEnd = lanesTop + stages.length*laneH, H = lanesEnd + 34;
+    var x = function(m){ return f(L + (m-t0)/(t1-t0)*(W-L-R)); };
+    var o = ['<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="The day on the clock: sessions, prompts and commits">'];
+    o.push('<defs><filter id="dglow" x="-20%" y="-80%" width="140%" height="260%"><feGaussianBlur stdDeviation="4"/></filter><filter id="dsoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2"/></filter>');
+    stages.forEach(function(k){ o.push('<linearGradient id="dg-'+k+'" x1="0" x2="1"><stop offset="0" stop-color="'+STAGE[k]+'" stop-opacity=".36"/><stop offset=".5" stop-color="'+STAGE[k]+'" stop-opacity=".12"/><stop offset="1" stop-color="'+STAGE[k]+'" stop-opacity=".36"/></linearGradient>'); });
+    o.push('</defs>');
+    for (var m = t0; m <= t1; m += 30) { var X = x(m), hour = m%60===0;
+      o.push('<line x1="'+X+'" y1="'+top+'" x2="'+X+'" y2="'+lanesEnd+'" stroke="var(--line)" stroke-opacity="'+(hour?1:.55)+'"'+(hour?'':' stroke-dasharray="2 4"')+'/>');
+      if (hour) o.push('<text class="tick" x="'+X+'" y="'+(top-9)+'" text-anchor="middle">'+hh(m)+'</text>'); }
+    var y = top;
+    spoken.forEach(function(s){
+      o.push('<g><a href="#session-'+s.n+'"><title>Session '+s.n+' · spoken in the room · '+s.segments+' segments · no clock in the transcript</title><text class="lab" x="0" y="'+(y+15)+'">S'+s.n+' <tspan class="k">SPOKEN · '+s.segments+' SEG · UNTIMED</tspan></text><rect x="'+L+'" y="'+(y+6)+'" width="'+(W-L-R)+'" height="12" rx="6" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 5"/></a></g>'); y += rowH; });
+    timed.forEach(function(s){
+      var a = x(mins(s.first)), b = Math.max(x(mins(s.last)), a+8);
+      var segs = P.segments.filter(function(g){ return g.session===s.n && g.time; });
+      var st = {}; segs.forEach(function(g){ (g.commits||[]).forEach(function(c){ st[c.stage] = (st[c.stage]||0)+1; }); });
+      var dom = ['plan','build','instrument'].sort(function(p,q){ return (st[q]||0)-(st[p]||0); })[0]; if (!st[dom]) dom = 'other';
+      var hue = STAGE[dom], label = (s.title||'').length > 32 ? (s.title||'').slice(0, 31) + '…' : (s.title||'');
+      o.push('<g><a href="#session-'+s.n+'"><title>'+esc('Session '+s.n+' · '+(s.title||'')+' · claude:'+s.claude+' · '+s.first+'–'+s.last+' · '+s.prompts+' prompts · '+s.commits+' commits in window · mostly '+dom)+'</title>');
+      o.push('<text class="lab" x="0" y="'+(y+15)+'">S'+s.n+' <tspan class="k">'+esc(label)+'</tspan></text>');
+      o.push('<rect x="'+(a-7)+'" y="'+(y+3)+'" width="'+(b-a+14)+'" height="18" rx="9" fill="'+hue+'" fill-opacity=".38" filter="url(#dglow)"/>');
+      o.push('<rect x="'+(a-7)+'" y="'+(y+5)+'" width="'+(b-a+14)+'" height="14" rx="7" fill="url(#dg-'+dom+')" stroke="'+hue+'" stroke-opacity=".75"/>');
+      segs.forEach(function(g){ var X = x(mins(g.time)); o.push('<circle cx="'+X+'" cy="'+(y+12)+'" r="6" fill="'+hue+'" fill-opacity=".55" filter="url(#dsoft)"/><circle cx="'+X+'" cy="'+(y+12)+'" r="3.2" fill="'+hue+'"/><circle cx="'+X+'" cy="'+(y+12)+'" r="1.2" fill="#fff" fill-opacity=".85"/>'); });
+      o.push('</a></g>'); y += rowH; });
+    o.push('<text class="k" x="0" y="'+(lanesTop-5)+'">COMMITS · '+dated.length+' · ONCE EACH · ANY BRANCH</text>');
+    stages.forEach(function(k, i){ var Y = lanesTop + i*laneH;
+      o.push('<text class="k" x="'+(L-8)+'" y="'+(Y+8.5)+'" text-anchor="end" style="fill:'+STAGE[k]+'">'+k.toUpperCase()+'</text>');
+      dated.filter(function(c){ return c.stage===k; }).forEach(function(c){ var X = x(mins(c.time)); o.push('<line x1="'+X+'" y1="'+(Y+1.5)+'" x2="'+X+'" y2="'+(Y+laneH-1.5)+'" stroke="'+STAGE[k]+'" stroke-width="2" stroke-opacity=".9"><title>'+esc(c.h+' · '+c.time+' · '+(c.subject||'subject not in this checkout'))+'</title></line>'); }); });
+    if (/^\d\d:\d\d$/.test(gen)) { var G = x(mins(gen)); o.push('<line x1="'+G+'" y1="'+(top-2)+'" x2="'+G+'" y2="'+lanesEnd+'" stroke="var(--flag)" stroke-width="1.2" stroke-dasharray="3 3"/><text class="tick" x="'+(G-4)+'" y="'+(lanesEnd+12)+'" text-anchor="end" style="fill:var(--flag)">generated '+gen+'</text>'); }
+    var ly = H-8;
+    o.push('<g><circle cx="6" cy="'+(ly-4)+'" r="3.2" fill="var(--soft)"/><text class="k" x="14" y="'+ly+'">PROMPT</text><rect x="70" y="'+(ly-9)+'" width="30" height="10" rx="5" fill="url(#dg-build)" stroke="var(--build)" stroke-opacity=".75"/><text class="k" x="106" y="'+ly+'">SESSION, FIRST → LAST PROMPT, HUE = ITS MAIN STAGE</text><line x1="560" y1="'+(ly-9)+'" x2="560" y2="'+(ly+1)+'" stroke="var(--instrument)" stroke-width="2"/><text class="k" x="566" y="'+ly+'">COMMIT AT ITS MINUTE</text></g>');
+    o.push('</svg>');
+    return o.join('');
+  }
+  document.getElementById('day').innerHTML = day();
+
   var segLink = function(id){ return '<a class="sg" href="#'+id+'">'+id+'</a>'; };
   var docLink = function(p){ var path = p.split('#')[0]; var href = /\.html$/.test(path) ? './'+path.replace(/^hub\/site\//,'') : './view.html?f='+path; return '<a href="'+href+'" title="'+esc(p)+'">'+esc(path.replace(/^docs\//,'').replace(/^hub\/site\//,'hub/'))+'</a>'; };
   var whoDots = function(who){ return who.split('').map(function(c){ return '<i class="'+(c==='?'?'q':c)+'">'+c+'</i>'; }).join(''); };
-  var visible = function(s){ return !state.who || s.who.indexOf(state.who) >= 0; };
+  var visible = function(s){ return (!state.who || s.who.indexOf(state.who) >= 0) && (!state.src || (state.src==='typed') === !!s.prompt); };
 
   function rail(){
     var bySession = {};
     P.segments.filter(visible).forEach(function(s){ (bySession[s.session] = bySession[s.session] || []).push(s); });
     return P.sessions.map(function(ss){
       var segs = bySession[ss.n] || [];
-      return '<h2>Session '+ss.n+' <span>'+ss.date+' · '+segs.length+(state.who?' of '+ss.segments:'')+' segments</span></h2><div class="rail">'
+      if (!segs.length && (state.src || state.who)) return '';
+      return '<h2 id="session-'+ss.n+'">Session '+ss.n+' <span>'+ss.date+(ss.claude?' · <code>claude:'+ss.claude+'</code> · '+esc(ss.title||''):' · spoken')+(ss.first?' · '+ss.first+'–'+ss.last:'')+' · '+segs.length+(segs.length!==ss.segments?' of '+ss.segments:'')+' segments'+(ss.commits?' · '+ss.commits+' commits in window':'')+'</span></h2><div class="rail">'
         + segs.map(function(s){
           var landed = []; var add = function(p){ p = p.split('#')[0]; if (landed.indexOf(p)<0) landed.push(p); };
           s.docs.concat(s.code).forEach(add); s.ops.forEach(function(o){ o.docs.concat(o.code).forEach(add); });
@@ -122,6 +199,7 @@
             + '<a href="./view.html?f=brainstorming.md#'+s.id+'">open in Viewer ↗</a><button data-toggle="'+s.id+'">'+(state.words?'hide':'read')+'</button></div>'
             + '<p class="say">'+esc(s.excerpt)+'</p>'
             + (s.ops.length?'<div class="ops">'+s.ops.map(function(o){ return '<span class="op '+o.op+'" title="'+esc(o.gloss||'')+'"><b>'+GL[o.op]+'</b>'+esc(o.slug)+'</span>'; }).join('')+'</div>':'')
+            + (s.commits && s.commits.length?'<div class="cms"><b>landed in window</b>'+s.commits.map(function(c){ return '<span class="cm '+c.stage+'" title="'+esc((c.time?c.time+' · ':'')+(c.subject||c.h))+'">'+esc(c.h)+'</span>'; }).join('')+'</div>':'')
             + '<div class="meta">'
             + (s.from.length?'<span><b>from</b>'+s.from.map(segLink).join(' ')+'</span>':'')
             + (s.to.length?'<span><b>to</b>'+s.to.map(segLink).join(' ')+'</span>':'')
@@ -163,6 +241,7 @@
     document.getElementById('out').innerHTML = state.view==='ideas' ? ideas() : state.view==='questions' ? questions() : rail();
     document.querySelectorAll('#bar [data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===state.view); });
     document.querySelectorAll('#bar [data-who]').forEach(function(b){ b.classList.toggle('on', b.dataset.who===state.who); });
+    document.querySelectorAll('#bar [data-src]').forEach(function(b){ b.classList.toggle('on', b.dataset.src===state.src); });
     document.getElementById('words').textContent = state.words ? 'Hide the words' : 'Show the words';
     T.save('timeline_v1', state);
     if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ block:'start' }); }
@@ -171,6 +250,7 @@
     var b = e.target.closest('button'); if (!b) return;
     if (b.dataset.view !== undefined) state.view = b.dataset.view;
     else if (b.dataset.who !== undefined) state.who = b.dataset.who;
+    else if (b.dataset.src !== undefined) state.src = b.dataset.src;
     else if (b.id === 'words') state.words = !state.words;
     draw();
   });
