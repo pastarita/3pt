@@ -24,6 +24,8 @@
   .side svg{vertical-align:-3px}
   pre{font:12px/1.5 var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto}
   @media(max-width:700px){.side{grid-template-columns:1fr}}
+  figure.fig0{margin:0}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}@media(max-width:560px){.duo{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -32,7 +34,7 @@
   <header class="top">
     <p class="eyebrow">Decide · hot · utility icon set · candidate</p>
     <h1>Icons: thirty Phosphor glyphs for the app surfaces</h1>
-    <p class="lede">The hand-drawn glyphs in <code>nav.js</code> are the identity set: one per leaf, and the design system keeps them (invariant I8). App surfaces need more than twenty icons for buttons, rows and states, so this is the utility set beside them: a thirty-icon subset of <a href="https://phosphoricons.com/">Phosphor</a> (MIT), regular weight, vendored in <code>phosphor.js</code> with no dependency. Click an icon to copy its markup.</p>
+    <p class="lede">The utility set for buttons, rows and states: thirty <a href="https://phosphoricons.com/">Phosphor</a> icons (MIT), vendored in <code>phosphor.js</code>. Leaf glyphs stay hand-drawn (invariant I8). Click to copy.</p>
   </header>
 
   <div class="row">
@@ -42,7 +44,7 @@
   </div>
 
   <h2 data-cluster="decide">The thirty <span>each with the 3PT meaning it would carry</span></h2>
-  <div class="grid" id="grid"></div>
+  <figure class="fig0"><div class="grid" id="grid"></div></figure>
 
   <h2 data-cluster="decide">Beside the components <span>where a utility icon sits on a surface</span></h2>
   <div class="side">
@@ -54,7 +56,19 @@
   <pre>&lt;script src="./phosphor.js"&gt;&lt;/script&gt;
 el.innerHTML = PH.svg('tag', 18)            // name, size in px; draws with currentColor
 PH.NAMES                                    // the thirty names · PH.ROLE[name] the 3PT meaning · PH.license</pre>
-  <div class="rulebox"><b>Rules.</b> Utility icons never appear on a hub card or in the sidebar; those stay hand-drawn. In Swift the same thirty map to SF Symbols by name (<code>tag</code> → <code>tag</code>, <code>gauge</code> → <code>gauge.medium</code>, <code>git-branch</code> → <code>arrow.triangle.branch</code>); the mapping table is the next step, not this leaf. Sizes: 16 in rows, 18 in buttons, 20 in headers, 24 in empty states. One colour per icon, taken from the text beside it.</div>
+  <div class="rulebox"><b>Rules.</b> Never on a hub card or in the sidebar. One colour per icon, taken from the text beside it.</div>
+  <div class="duo">
+    <div class="tbl-wrap"><table>
+      <tr><th>Where</th><th>Size</th></tr>
+      <tr><td>Rows</td><td>16 px</td></tr><tr><td>Buttons</td><td>18 px</td></tr>
+      <tr><td>Headers</td><td>20 px</td></tr><tr><td>Empty states</td><td>24 px</td></tr>
+    </table></div>
+    <div class="tbl-wrap"><table>
+      <tr><th>Phosphor</th><th>SF Symbol, in Swift</th></tr>
+      <tr><td><code>tag</code></td><td><code>tag</code></td></tr><tr><td><code>gauge</code></td><td><code>gauge.medium</code></td></tr>
+      <tr><td><code>git-branch</code></td><td><code>arrow.triangle.branch</code></td></tr><tr><td colspan="2">Full table: next step</td></tr>
+    </table></div>
+  </div>
 
   <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Phosphor Icons · MIT · github.com/phosphor-icons/core · pulled 2026-09-26</p></footer>
 </div>

@@ -46,6 +46,8 @@
       epigram:'Five directions, each with focus, use case, company type, and lander messaging.' },
     { id:'DD', slug:'design-system', name:'Design system',        verb:'Styling',   cluster:'decide', temp:'hot',  doc:'design-system.html',
       epigram:'Six pieces, three canonical directions, the invariants, and the promenade by which the design system for the whole monorepo gets decided.' },
+    { id:'DK', slug:'design-spec',   name:'Design system spec',   verb:'Styling',   cluster:'decide', temp:'hot',  doc:'docs/19-design-system-spec.md',
+      epigram:'The reference tables behind the design system leaf: invariants, naming, modes, surfaces, components, bases.' },
     { id:'D7', slug:'assessment',     name:'Assessment & measurement', verb:'Measuring', cluster:'decide', temp:'warm', doc:'docs/07-assessment-and-measurement.md',
       epigram:'Theses and hypotheses from the transcript, the M-* metric system, and the R-* requirement set mapped to partner incentives.' },
     { id:'D1', slug:'icp',            name:'ICPs',                 verb:'Choosing',  cluster:'decide', temp:'warm', doc:'docs/01-icp.md',
