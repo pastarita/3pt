@@ -13,7 +13,9 @@
  *    GET  /app/harness                            versions, fields, layouts by role, loop status
  *    POST /app/reset                              back to the seeded state
  *
- *  State lives in a Store (memory now; the Atlas battery supplies the same interface). */
+ *  State: in memory, and after every change a snapshot in app_state plus each tap in app_events when a host
+ *  calls persistTo(store). The node API does that with the Atlas battery when a connection is configured. */
+import { COLLECTIONS, type Store } from '@3pt/core';
 import { firm, iso } from './sim.js';
 
 type Json = Record<string, any>;
@@ -61,7 +63,25 @@ async function seed() {
   });
   S = { versions, cur: versions.filter(v => !v.rolledBack).slice(-1)[0].v, events: [], rejected: {}, reviewed: {}, extra: [] };
 }
-async function state() { if (!S) await seed(); return S; }
+/* persistence: a host (the node API with Atlas, or any Store) calls persistTo; without it, state lives in memory */
+let store: Store | null = null;
+export function persistTo(s: Store): void { store = s; }
+async function snapshot(why: string) {
+  if (!store) return;
+  try { await store.insert(COLLECTIONS.app_state, { ts: Date.now(), why, versions: S.versions, cur: S.cur, rejected: S.rejected, reviewed: S.reviewed, extra: S.extra, events: S.events.slice(-500) }); }
+  catch (e) { console.error('[app] snapshot not saved:', (e as Error).message); }
+}
+async function record(e: Ev) { if (store) try { await store.insert(COLLECTIONS.app_events, { ...e }); } catch { /* the snapshot still carries it */ } }
+async function state() {
+  if (S) return S;
+  if (store) {
+    try {
+      const last = await store.latest<any>(COLLECTIONS.app_state, 'ts');
+      if (last?.versions?.length) { S = { versions: last.versions, cur: last.cur, events: last.events ?? [], rejected: last.rejected ?? {}, reviewed: last.reviewed ?? {}, extra: last.extra ?? [] }; return S; }
+    } catch (e) { console.error('[app] could not read the last snapshot:', (e as Error).message); }
+  }
+  await seed(); await snapshot('seed'); return S;
+}
 const ver = () => S.versions.find(v => v.v === S.cur)!;
 const layoutFor = (role: string) => (ver().layout[role] ?? BASE).slice();
 
@@ -214,13 +234,14 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}): Prom
   if (path === '/app/ask' && method === 'GET') return { status: 200, body: await ask(q.get('project') ?? '', q.get('q') ?? 'week') };
   if (path === '/app/events' && method === 'POST') {
     const e: Ev = { t: Date.now(), v: S.cur, role: String(body.role ?? 'super'), action: String(body.action ?? 'use'), block: body.block, q: body.q, photo: body.photo };
-    S.events.push(e);
+    S.events.push(e); void record(e);
     if (e.action === 'act' && body.do) {
       const [k, arg] = String(body.do).split(':');
       if (k === 'take') S.extra.push({ project: body.project, id: `take-${S.extra.length}`, unit: +arg, level: Math.floor(+arg / 100), trade: 'plumbing', wall: 'open', week: (await firm(new URLSearchParams())).TODAY_WEEK, focus: true, file: pool('plumbing', +arg) });
       if (k === 'look') S.reviewed[arg] = true;
       if (k === 'send') S.reviewed['pack' + body.project] = true;
       if (k === 'opp') S.reviewed['opp' + arg] = true;
+      await snapshot('act ' + body.do);
     }
     return { status: 200, body: { ok: true, proposal: plan(e.role) } };
   }
@@ -228,18 +249,19 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}): Prom
     const p = plan(String(body.role ?? 'super'));
     if (!p || p.key !== body.key) return { status: 409, body: { error: 'that proposal is no longer current' } };
     const nv = build(p, String(body.role ?? 'person'));
+    await snapshot(`approve v${nv.v}`);
     return { status: 200, body: { version: nv.v, changes: nv.changes } };
   }
-  if (path === '/app/reject' && method === 'POST') { S.rejected[String(body.key)] = true; return { status: 200, body: { ok: true } }; }
+  if (path === '/app/reject' && method === 'POST') { S.rejected[String(body.key)] = true; await snapshot('reject'); return { status: 200, body: { ok: true } }; }
   if (path === '/app/rollback' && method === 'POST') {
     const to = Number(body.v), cur = ver();
     if (!S.versions.some(v => v.v === to && !v.rolledBack)) return { status: 400, body: { error: 'cannot roll back to that version' } };
-    cur.rolledBack = true; S.cur = to; return { status: 200, body: { version: to, rolled_back: cur.v } };
+    cur.rolledBack = true; S.cur = to; await snapshot(`rollback to v${to}`); return { status: 200, body: { version: to, rolled_back: cur.v } };
   }
   if (path === '/app/harness' && method === 'GET') {
     const v = ver();
     return { status: 200, body: { current: v.v, fields: v.fields, layouts: v.layout, versions: S.versions.slice().reverse().map(x => ({ ...x, score: score(x.v) })), events: S.events.length } };
   }
-  if (path === '/app/reset' && method === 'POST') { await seed(); return { status: 200, body: { ok: true } }; }
+  if (path === '/app/reset' && method === 'POST') { await seed(); await snapshot('reset'); return { status: 200, body: { ok: true } }; }
   return { status: 404, body: { error: 'not found' } };
 }

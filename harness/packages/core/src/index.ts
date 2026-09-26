@@ -23,6 +23,8 @@ export const COLLECTIONS = {
   demo_activity: 'demo_activity',        // searches, taps, owner packs built by hand
   demo_outcomes: 'demo_outcomes',        // walls reopened, water stains, missing photos
   harness_versions: 'harness_versions',  // every harness version: changes, why, layouts by role, fields
+  app_state: 'app_state',                // snapshot of the app loop after each change (versions, current, choices)
+  app_events: 'app_events',              // every tap the app reported: the loop's evidence
 } as const;
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
 

@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { join, normalize } from 'node:path';
 import { COLLECTIONS, memoryStore, seedPolicy } from '@3pt/core';
 import { handleSim, REPO } from './sim.js';
-import { handleApp } from './app.js';
+import { handleApp, persistTo } from './app.js';
 
 const store = memoryStore();
 await store.insert(COLLECTIONS.policies, seedPolicy());
@@ -28,6 +28,13 @@ async function media(path: string): Promise<Buffer | null> {
 
 if (process.argv[1]?.endsWith('index.js')) {
   const port = Number(process.env.PORT ?? 8787);
+  /* Atlas when configured. The module name is a variable so Worker bundles never pull in the driver. */
+  const battery = '@3pt/battery-atlas';
+  try {
+    const { atlasUri, atlasStore } = await import(battery);
+    if (atlasUri()) { persistTo(await atlasStore()); console.log('[api] app state persists to Atlas (app_state, app_events)'); }
+    else console.log('[api] no Atlas connection configured: app state stays in memory');
+  } catch (e) { console.error('[api] Atlas unavailable, app state stays in memory:', (e as Error).message); }
   const cors = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' };
   createServer(async (req, res) => {
     const url = new URL(req.url ?? '/', 'http://x');

@@ -69,7 +69,7 @@ export async function loadLive(): Promise<boolean> {
   current = harness.current;
 
   /* the pre-drywall widget speaks about the level the harness is watching, not the sample level */
-  const units = (await api.block('beforeclose', demo, 'super')) as { level?: number; units?: { unit: number; missing: boolean; photo: ApiPhoto | null }[] };
+  const units = (await api.block('beforeclose', demo, 'super')) as { level?: number; units?: { unit: number; missing: boolean; closed?: boolean; photo: ApiPhoto | null }[] };
   if (units.level && units.units?.length) {
     const miss = units.units.filter(u => u.missing);
     WIDGETS.predrywall.title = `Level ${units.level} · before walls close`;
@@ -79,6 +79,21 @@ export async function loadLive(): Promise<boolean> {
     WIDGETS.predrywall.insight.basis = `Checked ${units.units.length} units on level ${units.level} against their photos`;
     WIDGETS.predrywall.insight.photos = miss.map(u => u.photo?.id).filter((x): x is string => !!x);
   }
+
+  /* the familiar widgets: their insight line now counts the demo job's own photos and units */
+  const mine = PHOTOS.filter(p => p.project === demo), week = mine.filter(p => p.week === TW);
+  const trades = new Set(week.map(p => p.kind)).size, lvl = units.level ?? 0, us = units.units ?? [];
+  const closed = us.filter(u => u.closed).length;
+  const missing = us.filter(u => u.missing).map(u => u.unit), open = us.length - closed;
+  const hz = week.find(p => p.flag === 'hazard'), wet = week.filter(p => p.flag === 'water');
+  const say = (id: keyof typeof WIDGETS, text: string, basis: string, photos: string[]) => { const w = WIDGETS[id]; if (w?.insight) { w.insight.text = text; w.insight.basis = basis; w.insight.photos = photos.slice(0, 3); } };
+  const ids = (list: typeof week) => list.map(p => p.id);
+  say('dailylog', `Draft ready from this week's ${week.length} photos: ${trades} trades on site${missing.length ? `, and unit ${missing.join(', ')} still needs its pipe photo` : ''}.`, `Read ${week.length} photos filed this week`, ids(week));
+  say('ownerreport', `Drafted from ${week.length} photos: ${closed} of ${us.length} units on level ${lvl} are closed${wet.length ? `, ${wet.length} walls need a look for water` : ''}.`, `Picked from ${mine.length} photos of ${screen.project.name}`, ids(week.filter(p => p.kind === 'exterior').concat(week)));
+  WIDGETS.ownerreport.title = `Owner report · week ${screen.project.week}`;
+  say('weekly', `Level ${lvl} walls closed in ${closed} of ${us.length} units. ${week.length} new photos this week.`, `Counted units on level ${lvl} against their photos`, ids(week));
+  say('observations', hz ? `One photo this week shows ${hz.id.endsWith('H1') ? 'an open edge with no rail' : 'a possible hazard'} in unit ${hz.unit}.` : 'No hazard seen in this week\'s photos.', `Looked at ${week.length} photos from this week`, hz ? [hz.id] : []);
+  say('roughin', `${open} units on level ${lvl} still have open walls.${missing.length ? ` Unit ${missing.join(', ')} closed without a pipe photo.` : ''}`, `Checked ${us.length} units on level ${lvl}`, missing.length ? us.filter(u => u.missing).map(u => u.photo?.id ?? '').filter(Boolean) : ids(week.filter(p => p.kind === 'plumbing')));
 
   LIVE.source = 'api'; LIVE.demo = demo;
   void TW;
