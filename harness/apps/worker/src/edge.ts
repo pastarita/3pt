@@ -10,6 +10,7 @@
  */
 import '../../../../data/mock/media-pool/media-pool.js';
 import '../../../../hub/site/sim-data.js';
+import '../../../../hub/site/replay-data.js';   /* the app seeds its versions from `3pt replay` (see @3pt/api app.ts) */
 import { handle, persistTo } from '@3pt/api/handler';
 import { atlasStore, type AtlasStore } from '@3pt/battery-atlas';
 

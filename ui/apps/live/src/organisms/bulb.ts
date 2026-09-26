@@ -4,6 +4,10 @@ import { icon } from '../atoms/icon.js';
 /** Organism: the bulb. A small glowing blob, top right, that lights up when the harness ships a new version.
  *  Nobody asks for these changes, so this is where people find out about them. "Seen" is the last version
  *  this browser opened; anything newer counts as new. `refresh(true)` also rings the blob once. */
+/** Who acts on a change: a person the app asks, or the app itself. */
+export function kindLabel(kind: string, to?: string): string {
+  return kind === 'suggest' ? `Suggestion${to ? ' to ' + to : ''}` : kind === 'automate' ? 'Automation in the app' : 'Improvement in the app';
+}
 export interface Bulb { el: HTMLElement; refresh(ping?: boolean): Promise<void> }
 const KEY = '3pt_bulb_seen';
 const load = () => { try { const v = localStorage.getItem(KEY); return v == null ? null : +v; } catch { return null; } };
@@ -36,6 +40,7 @@ export function bulb(fetchNews: (since: number) => Promise<News>): Bulb {
     btn.setAttribute('aria-label', fresh ? `${fresh} new improvements from the harness` : 'What the harness improved');
     list.replaceChildren(...(news.items.length ? [] : [h('li', { class: 'bulb__item' }, h('span', {}, 'Nothing shipped yet. The harness learns from use.'))]), ...news.items.slice(0, 8).map((i, n) => h('li', { class: `bulb__item${i.v > seen! ? ' bulb__item--new' : ''}`, style: `--i:${n}` },
       h('small', {}, `v${i.v} · ${i.when}${i.v > seen! ? ' · new' : ''}`),
+      i.kind ? h('em', { class: `kind kind--${i.kind}` }, kindLabel(i.kind, i.to)) : null,
       h('b', {}, i.changes.join('. ')),
       h('span', {}, `Why: ${i.why}`))));
   }

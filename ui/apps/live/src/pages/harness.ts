@@ -17,5 +17,5 @@ export function harnessPage(s: HarnessState, onRollback: (v: number) => void, ti
     h('h2', { class: 'sec' }, 'What it reads from each photo'),
     h('div', { class: 'chips' }, s.fields.map(f => h('span', { class: 'chip' }, f))),
     h('h2', { class: 'sec' }, 'Versions ', h('small', {}, 'newest first · snapshots, never edited')),
-    h('ol', { class: 'vers' }, s.versions.map(v => versionRow({ v: v.v, when: v.when, by: v.by, changes: v.changes, why: v.why, current: v.v === s.current, rolledBack: !!v.rolledBack, score: v.score, onRollback: () => onRollback(v.v) }))));
+    h('ol', { class: 'vers' }, s.versions.map(v => versionRow({ v: v.v, when: v.when, by: v.by, changes: v.changes, why: v.why, current: v.v === s.current, rolledBack: !!v.rolledBack, score: v.score, kind: v.kind, to: v.to, onRollback: () => onRollback(v.v) }))));
 }

@@ -20,7 +20,10 @@ import { COLLECTIONS, type Store } from '@3pt/core';
 import { firm, iso } from './sim.js';
 
 type Json = Record<string, any>;
-interface Version { v: number; when: string; by: string; changes: string[]; why: string; layout: Record<string, string[]>; fields: string[]; rolledBack?: boolean; parent?: number; key?: string }
+/* kind: who acts on a change. suggest = the app tells a person (`to`) to do something; automate = the app does a task
+   people did by hand; improve = the app answers better and nobody's task changes. Versions from `3pt replay` carry it. */
+type Kind = 'suggest' | 'automate' | 'improve';
+interface Version { v: number; when: string; by: string; changes: string[]; why: string; layout: Record<string, string[]>; fields: string[]; rolledBack?: boolean; parent?: number; key?: string; kind?: Kind; to?: string }
 interface Ev { t: number; role: string; v: number; action: string; block?: string; q?: string; photo?: string }
 
 const LAYOUT_LEARNED: Record<string, string[]> = {
@@ -47,7 +50,59 @@ const QUERIES: Record<string, { label: string; field?: string }> = {
 
 /* ---------------- state ---------------- */
 let S: { versions: Version[]; cur: number; events: Ev[]; rejected: Record<string, boolean>; reviewed: Record<string, boolean>; extra: Json[] };
+
+/* The replay's grants as app versions. hub/site/replay-data.js (globalThis.REPLAY, written by scripts/replay-data.mjs
+   from `3pt replay`) holds every grant and revoke of the 92 replayed months. Each grant becomes one version; a revoke
+   marks the version that made it rolled back. CAP is the same grant → capability map as harness/apps/cli/src/replay.ts;
+   KIND is AUTHORED from each check's note in PROJECT_CHECKS (harness/packages/instrument/src/index.ts). */
+const CAP: Record<string, string> = {
+  'field.unit_level_trade': 'fields', 'tool.open_wall_gap': 'remind', 'flag.issue_on_arrival': 'issue', 'tool.owner_pack': 'pack',
+  'field.wall_state': 'wall', 'context.photos_per_question_20': 'wide', 'screen.by_role': 'screens', 'tool.closeout_set': 'closeout',
+  'tool.drop_bursts': 'bursts', 'flag.hazard': 'hazard',
+};
+const KIND: Record<string, [Kind, string?]> = {
+  fields: ['automate'], remind: ['suggest', 'the super'], issue: ['suggest', 'the super'], pack: ['automate'], wall: ['automate'],
+  wide: ['improve'], screens: ['improve'], closeout: ['automate'], bursts: ['automate'], hazard: ['suggest', 'the safety manager'],
+};
+async function replayData(): Promise<any> {
+  const g = globalThis as any;
+  if (!g.REPLAY) { try { const { repo } = await import('./sim.js'); await import(repo() + 'hub/site/replay-data.js'); } catch { /* not on disk: the simulator's history */ } }
+  return g.REPLAY ?? null;
+}
+function fromReplay(R: any): Version[] {
+  const caps = new Set<string>(), live = new Map<string, Version>();
+  const snap = () => {
+    const fields = ['description', 'date', 'source'].concat(caps.has('fields') ? ['unit', 'level', 'trade'] : [], caps.has('wall') ? ['wall'] : [], caps.has('issue') ? ['issue'] : []);
+    let layout: Record<string, string[]> = caps.has('screens') ? JSON.parse(JSON.stringify(LAYOUT_LEARNED)) : {};
+    if (caps.has('hazard')) layout = { ...layout, safety: ['hazards', 'needs', 'photos_week'] };
+    return { fields, layout };
+  };
+  const versions: Version[] = [{ v: 0, when: R.first + '-01', by: 'install', changes: ['Generic start: describe each image, its date and its source'], why: 'Install', ...snap() }];
+  for (const m of R.months) for (const e of m.events) {
+    const cap = CAP[e.grant];
+    if (e.k === '+' && cap) {
+      const [problem, fix = problem] = String(e.note).split('; ');
+      const said = fix.replace(/^flag them\b/i, 'Flag these photos');   /* the hazard note says "flag them"; a notice stands alone */
+      caps.add(cap);
+      const [kind, to] = KIND[cap] ?? ['improve'];
+      const nv: Version = { v: versions.length, when: m.month + '-01', by: 'harness', changes: [said[0].toUpperCase() + said.slice(1)], why: problem, kind, ...(to ? { to } : {}), ...snap() };
+      versions.push(nv); live.set(e.grant, nv);
+    }
+    if (e.k === '-' && cap && live.has(e.grant)) {
+      const old = live.get(e.grant)!; old.rolledBack = true; old.changes = old.changes.concat(`Undone ${m.month}: ${e.note}`);
+      live.delete(e.grant); caps.delete(cap);
+    }
+  }
+  return versions;
+}
+
 async function seed() {
+  const R = await replayData();
+  if (R?.months?.length) {
+    const versions = fromReplay(R);
+    S = { versions, cur: versions.filter(v => !v.rolledBack).slice(-1)[0].v, events: [], rejected: {}, reviewed: {}, extra: [] };
+    return;
+  }
   const F = await firm(new URLSearchParams());
   const TW = F.TODAY_WEEK;
   let layout: Record<string, string[]> = {}, fields = ['description', 'date', 'source'];
@@ -288,7 +343,7 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
   if (path === '/app/news' && method === 'GET') {
     const since = Number(q.get('since') ?? -1);
     const items = S.versions.filter(v => v.v > 0 && v.v > since && !v.rolledBack).reverse().slice(0, 12)
-      .map(v => ({ v: v.v, when: v.when, by: v.by, changes: v.changes, why: v.why }));
+      .map(v => ({ v: v.v, when: v.when, by: v.by, changes: v.changes, why: v.why, kind: v.kind, to: v.to }));
     return { status: 200, body: { current: S.cur, items } };
   }
   if (path === '/app/reset' && method === 'POST') { await seed(); await snapshot('reset'); return { status: 200, body: { ok: true } }; }

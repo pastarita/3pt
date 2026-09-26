@@ -12,11 +12,13 @@ export interface Screen {
   more: { id: string; title: string }[];
   blocks: Record<string, { title: string } & Record<string, any>>;
 }
-export interface HarnessVersion { v: number; when: string; by: string; changes: string[]; why: string; fields: string[]; layout: Record<string, string[]>; rolledBack?: boolean; score: number | null }
+/** kind: suggest = the app asks a person (`to`); automate = the app does a task people did by hand; improve = better answers */
+export type ChangeKind = 'suggest' | 'automate' | 'improve';
+export interface HarnessVersion { v: number; when: string; by: string; changes: string[]; why: string; fields: string[]; layout: Record<string, string[]>; rolledBack?: boolean; score: number | null; kind?: ChangeKind; to?: string }
 export interface HarnessState { current: number; fields: string[]; layouts: Record<string, string[]>; versions: HarnessVersion[]; events: number }
 export interface FirmProject { id: string; name: string; type: string; neighborhood: string; status: 'live' | 'closed' | 'planned'; phase: string | null; start: string; end: string; photos: number; cover: Photo | null; retro: { facts: [number, string][]; lessons: string[] } | null }
 export interface FirmState { week: number; date: string; max_live: number; harness: { version: number; changes: string[]; why: string }; hours_saved: number; projects: FirmProject[] }
-export interface NewsItem { v: number; when: string; by: string; changes: string[]; why: string }
+export interface NewsItem { v: number; when: string; by: string; changes: string[]; why: string; kind?: ChangeKind; to?: string }
 export interface News { current: number; items: NewsItem[] }
 export interface AppEvent { role: string; action: 'use' | 'hide' | 'open' | 'fb_up' | 'fb_down' | 'act'; block?: string; q?: string; photo?: string; project?: string; do?: string }
 
