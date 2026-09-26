@@ -7,10 +7,10 @@
 <meta name="description" content="Proposal: six design pieces, three canonical directions, and the promenade by which Patrick and Yash decide the design system for the whole 3PT monorepo.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3F5">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111317">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Direction fonts are loaded from a CDN for this proposal only. Production self-hosts (see Cross-surface). -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<!-- Direction fonts are vendored (latin subsets) by hub/tools/vendor-fonts.sh — leaves fetch nothing external. -->
+<link rel="stylesheet" href="./fonts/directions.css">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
 <style>
 /* ---------- The document's own chrome: deliberately neutral so it does not vote. ---------- */
 :root{
@@ -217,6 +217,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 </style>
 </head>
 <body>
+<script src="./nav.js"></script>
 <div class="wrap">
 
 <header class="top">
@@ -427,7 +428,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 </table></div>
 
 <footer>
-  <p style="margin:0"><b>3PT</b> · design system proposal · <code>docs/11-design-system.html</code> · written 2026-09-26 for the promenade between Patrick and Yash. Sources: <code>hub/site/3pt.css</code>, <code>hub/site/nav.js</code>, <code>hub/site/direction.html</code>, <code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>. Direction fonts on this page load from Google Fonts for review only.</p>
+  <p style="margin:0"><b>3PT</b> · design system proposal · <code>hub/site/design-system.html</code> · written 2026-09-26 for the promenade between Patrick and Yash. Sources: <code>hub/site/3pt.css</code>, <code>hub/site/nav.js</code>, <code>hub/site/direction.html</code>, <code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>. Direction fonts on this page load from Google Fonts for review only.</p>
 </footer>
 </div>
 

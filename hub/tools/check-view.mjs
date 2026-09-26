@@ -55,5 +55,23 @@ for (const d of docs) {
   ok(!/<p><\/p>/.test(html), `${d}: empty paragraph`);
   n++;
 }
+// every relative markdown link must resolve inside the artifact. The Viewer resolves a link
+// against the DOCUMENT'S OWN DIRECTORY (see the unit check above), so a link is checked from
+// dirname(doc): `../brainstorming.md` from docs/ is right, `brainstorming.md` from docs/ is not,
+// and a repo path like hub/site/x.html is never right because hub/site/ is the artifact root.
+let links = 0;
+for (const d of docs) {
+  if (!/\.md$/.test(d)) continue;
+  const text = readFileSync(join(ROOT, d), 'utf8');
+  for (const m of text.matchAll(/\[[^\]]*\]\(([^)\s]+)\)/g)) {
+    const h = m[1];
+    if (/^(https?:|mailto:|#)/.test(h)) continue;
+    links++;
+    const bare = h.split('#')[0].split('?')[0];
+    const target = bare.startsWith('/') ? join(ROOT, bare) : join(ROOT, dirname(d), bare);   // '/x' is root-anchored in the Viewer
+    if (!existsSync(target)) errs.push(`${d}: link target not in artifact (resolved from the document's directory): ${h}`);
+  }
+}
+
 if (errs.length) { errs.forEach(e => console.error('FAIL:', e)); process.exit(1); }
-console.log(`OK — 14 unit checks, ${n} workspace documents rendered clean`);
+console.log(`OK — 14 unit checks, ${n} workspace documents rendered clean, ${links} markdown links resolve`);

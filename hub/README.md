@@ -43,6 +43,17 @@ make verify    # anon 401 · valid 200 · wrong-domain 401   (needs ACCESS_PASS 
 Documents are not leaves. Card them as `view.html?f=docs/<file>.md` and route them in `nav.js` `ROUTE`.
 Then `make check`.
 
+Two rules the lints now enforce, learned 2026-09-26:
+
+- **No HTML under `docs/`.** An HTML proposal saved there is a leaf that escaped the site root: the
+  Shell cannot mark it current, the sweep skips it, and its relative links break. It goes in
+  `site/` with `nav.js` + `3pt.css`, like the design-system leaf now does.
+- **Every relative markdown link must resolve from the document's own directory** inside the
+  artifact. From `docs/`, the transcript is `../brainstorming.md` and a root leaf is
+  `../lanes.html`. Generators that emit links (`scripts/prov.mjs`) emit them that way.
+- **No external fetches from a leaf.** Fonts a leaf needs are vendored: `tools/vendor-fonts.sh`
+  writes `site/fonts/directions.css` and the woff2 files beside it.
+
 ## State
 
 Hot-leaf state is per browser, in `localStorage` under the `tpt_` prefix:

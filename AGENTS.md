@@ -36,8 +36,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Theses, hypotheses, the measurement system, partner-incentive mapping, requirement set | `docs/07-assessment-and-measurement.md` |
 | Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `hub/site/direction.html` (hub leaf "Direction") |
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
-| Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `docs/11-design-system.html` (hub leaf "Design system") |
-| Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `docs/11-design-system.html` (hub leaf "Design system") |
+| Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
@@ -91,6 +90,10 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   No password or token ever appears in the repo; local copies live in `~/.config/3pt/`.
 - **Provenance:** every figure on a leaf wears DERIVED, AUTHORED, or TO CONFIRM. Tallies are never typed.
 - **Harness code never goes in `hub/`.** The hub renders the repo; it is not the repo.
+- **No HTML under `docs/`.** Documents are markdown, rendered by the Viewer. Anything HTML is a leaf
+  and lives in `hub/site/` with the Shell and tokens. Relative links in a doc resolve from that
+  doc's directory (`../brainstorming.md` from `docs/`). Leaves fetch nothing external; vendor fonts
+  with `hub/tools/vendor-fonts.sh`. `make -C hub check` fails on all three.
 
 ## Current state (update as it changes)
 

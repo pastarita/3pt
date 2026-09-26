@@ -36,7 +36,9 @@
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/(^|\W)\*([^*]+)\*/g, '$1<em>$2</em>')
         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(_, t, h){
-          var href = /^https?:|^#|^mailto:/.test(h) ? h : (/\.html(\?|#|$)/.test(h) ? h : 'view.html?f=' + rel(base, h));
+          /* .html targets are leaves: resolve them against the document's directory too, so a doc in
+             docs/ links a root leaf as ../leaf.html and the same file reads correctly on GitHub. */
+          var href = /^https?:|^#|^mailto:/.test(h) ? h : (/\.html(\?|#|$)/.test(h) ? rel(base, h) : 'view.html?f=' + rel(base, h));
           return '<a href="'+href+'">'+t+'</a>';
         });
     };

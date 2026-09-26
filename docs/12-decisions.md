@@ -195,6 +195,6 @@ at 4:45.
 
 - Record the decision on every `Decided:` line above, cite its segment, bake, regenerate, push.
 - Update `docs/01-icp.md` (domain 1), `docs/10-architecture.md` §6 (domain 4),
-  `docs/11-design-system.html` status line (domain 6), the lane board (domain 8), and tick the hard
+  `hub/site/design-system.html` status line (domain 6), the lane board (domain 8), and tick the hard
   requirements in `docs/05-rules.md` (domain 3).
 - Run `scripts/worktree.sh gc`, then rehearse.

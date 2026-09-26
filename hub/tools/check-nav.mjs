@@ -66,6 +66,17 @@ for (const d of T.DOCS) {
 for (const k of Object.keys(N.FRESH)) if (!slugs.has(k)) bad(`FRESH marks unknown slug ${k}`);
 if (!existsSync(join(ROOT, 'view.html'))) bad('view.html missing — every document card dead-ends');
 
+// 8 — documents are markdown; HTML under docs/ is a leaf that escaped the site root (no shell
+//     highlight, no lint sweep, relative links break). Leaves live in site/.
+(function walkDocs(dir) {
+  if (!existsSync(dir)) return;
+  for (const e of readdirSync(dir)) {
+    const p = join(dir, e);
+    if (statSync(p).isDirectory()) walkDocs(p);
+    else if (e.endsWith('.html')) bad(`${relative(ROOT, p)}: HTML under docs/ — move it to site/ as a leaf and register it`);
+  }
+})(join(ROOT, 'docs'));
+
 // 5, 7 — sweep the staged tree
 const leaves = [];
 (function walk(dir) {

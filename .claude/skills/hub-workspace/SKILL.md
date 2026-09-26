@@ -378,7 +378,11 @@ everyone with access · leaving a collaborator's only recourse a message to the 
 putting close-strategy or
 pricing docs in the deployed tree · a `.dev.vars` or any secret file inside a root-as-site
 tree (the upload ignores `.gitignore`; it ships) · linking a `.md`/`.csv` from the hub with no Viewer (a
-download is not a destination) · a one-way hub (leaves that link the tokens file but never
+download is not a destination) · an HTML proposal saved under `docs/` (a leaf that escaped the site root: no shell
+highlight, no lint sweep, broken relative links — it belongs in `site/`) · a markdown link that
+resolves from the site root when the Viewer resolves from the document's directory (lint every
+relative link from `dirname(doc)`, and make generators emit them that way) · a leaf that loads
+web fonts from a CDN (vendor the latin subsets; 3PT hub's `tools/vendor-fonts.sh`) · a one-way hub (leaves that link the tokens file but never
 link back) · a DERIVED badge on a number nobody recomputed · shipping a correction pass
 unverified · a workspace with no `git init` — with several agents writing, an unattributable
 file is a permanent mystery · a changelog with no "what did not move" section · a dated

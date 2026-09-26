@@ -12,6 +12,7 @@ rsync -a --exclude '.DS_Store' "$HUB/site/"  "$OUT/"
 rsync -a --exclude '.DS_Store' "$REPO/docs/" "$OUT/docs/"
 cp "$REPO/README.md"        "$OUT/README.md"
 cp "$REPO/brainstorming.md" "$OUT/brainstorming.md"
+cp "$REPO/3Pt_MOTTO.md"     "$OUT/3Pt_MOTTO.md"      # cited by the provenance index
 # no secret file may exist in the artifact — the upload ignores .gitignore
 if find "$OUT" \( -name '.dev.vars' -o -name '*.env' -o -name '.env*' \) | grep -q .; then
   echo "FAIL: secret-looking file inside hub/_site/" >&2; exit 1
