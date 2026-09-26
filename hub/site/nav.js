@@ -17,7 +17,8 @@
   function g(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';}
   /* one unique hand-drawn glyph per leaf — this IS the project's iconography */
   var GLYPH = {
-    'index':          g('<path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="3.5" r="1.4" fill="currentColor"/><circle cx="20.5" cy="18.5" r="1.4" fill="currentColor"/><circle cx="3.5" cy="18.5" r="1.4" fill="currentColor"/>'),
+    /* the mark: a three-point harness — two shoulder straps and a lap strap, one buckle, three anchor points */
+    'index':          g('<path d="M12 4.5l7.5 13h-15Z"/><path d="M12 4.5v10.2"/><rect x="9.6" y="15" width="4.8" height="4.6" rx="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="4.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="19.5" cy="17.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="4.5" cy="17.5" r="1.5" fill="currentColor" stroke="none"/>'),
     'vision':         g('<path d="M3 12s3.5-6.5 9-6.5 9 6.5 9 6.5-3.5 6.5-9 6.5S3 12 3 12Z"/><path d="M12 3v2.5M12 18.5V21"/><circle cx="12" cy="12" r="2.4"/>'),
     'goal':           g('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3.5v3M20.5 12h-3"/>'),
     'rules':          g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
@@ -169,7 +170,7 @@
     "#tptnav{position:fixed;left:0;top:34px;bottom:0;width:206px;transition:width .15s;background:#0b0e12;border-right:1px solid #1e252e;z-index:100000;display:flex;flex-direction:column;font:600 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;overflow:hidden}"
    +"body{margin-left:206px!important;padding-top:34px!important;transition:margin-left .15s}"
    +"html.navmin #tptnav{width:52px}html.navmin body{margin-left:52px!important}"
-   +"html.navmin #tptnav .nv-b,html.navmin #tptnav .nv-sub,html.navmin #tptnav .nv-g,html.navmin #tptnav .nv-links a span,html.navmin #tptnav .nv-ft{display:none}"
+   +"html.navmin #tptnav .nv-b span,html.navmin #tptnav .nv-sub,html.navmin #tptnav .nv-g,html.navmin #tptnav .nv-links a span,html.navmin #tptnav .nv-ft{display:none}"
    +"html.navmin #tptnav .nv-links a{justify-content:center;padding:11px 0}"
    /* the scroll region: the one part of the rail that moves. Pinned brand above, pinned footer below. */
    +"#tptnav .nv-scroll{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column}"
@@ -192,7 +193,8 @@
    +"html.navmin #tptnav .nv-fold summary{justify-content:center;padding:11px 0}html.navmin #tptnav .nv-fold summary span,html.navmin #tptnav .nv-fold summary .nv-chev{display:none}"
    +"html.navmin #tptnav .nv-fold .nv-links{margin-left:0;border-left:0}"
    +"html.navmin #tptnav .nv-wrap{scrollbar-width:none}html.navmin #tptnav .nv-wrap::-webkit-scrollbar{width:0}"
-   +"#tptnav .nv-b{color:#ff6b4a;font-weight:800;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:16px 16px 3px;white-space:nowrap}"
+   +"#tptnav .nv-b{color:#ff6b4a;font-weight:800;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:16px 16px 3px;white-space:nowrap;display:flex;align-items:center;gap:7px}"
+   +"#tptnav .nv-b svg{width:16px;height:16px;flex:none;color:#a3adbb}html.navmin #tptnav .nv-b{display:flex;justify-content:center;padding:14px 0 3px}html.navmin #tptnav .nv-b svg{display:block}"
    +"#tptnav .nv-sub{color:#6b7684;font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:0 16px 13px;border-bottom:1px solid #1e252e;margin-bottom:4px;white-space:nowrap}"
    +"#tptnav .nv-g{font-weight:800;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:14px 16px 5px;white-space:nowrap;opacity:.95}"
    +"#tptnav .nv-links{display:flex;flex-direction:column}"
@@ -252,7 +254,7 @@
           +'<div class="nv-links">'+folded+'</div></details>';
       }
     });
-    nav.innerHTML='<div class="nv-b">3PT</div><div class="nv-sub">Three Point Harness</div>'
+    nav.innerHTML='<div class="nv-b">'+GLYPH.index+'<span>3PT</span></div><div class="nv-sub">Three Point Harness</div>'
       +'<span class="nv-cur">'+(TITLE[cur]||cur)+'</span>'
       +'<button class="nv-burger" aria-label="Menu" aria-expanded="false">☰</button>'
       +'<div class="nv-scroll"><div class="nv-wrap">'+links+'</div></div><div class="nv-sp"></div>'

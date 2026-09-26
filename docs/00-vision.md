@@ -12,6 +12,20 @@ three-stage loop — **Plan, Build, Instrument** — and separates *what gets bu
 an instrumentation agent then refactors toward our standards, and those standards are
 baked back into the harness code so the next iteration starts from a healthier base.
 
+## The name
+
+![Why three point: the racing harness and the construction harness](assets/harness.svg)
+
+Two harnesses share the name, and 3PT means both.
+
+| | Three points | In 3PT |
+|---|---|---|
+| **The racing harness** | Two shoulder straps and a lap strap, anchored at three points, loading into one buckle. | The points are Plan, Build and Instrument. The buckle is the policy: every strap loads into it, and releasing it lets the whole harness go. Rollback opens the buckle, restores an earlier setting, re-latches. |
+| **The construction harness** | Fall protection is taught as A, B, C: an **anchorage** the structure provides, a **body harness** worn by the one doing the work, a **connector** that arrests the fall. | The anchorage is MongoDB Atlas, the fixed point every version ties to. The body harness is the policy the run wears. The connector is the loop: checkpoint, backfeed, rollback. |
+| **Three points of contact** | On a ladder you move one limb at a time, never two. | One sprint mode per iteration: feature, improvement or fix, never in parallel. |
+
+The workload is construction photos, so the second reading is the one a superintendent hears first.
+
 ## The three points
 <!-- @s1.01 @s1.04 -->
 

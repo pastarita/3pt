@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 460" role="img" aria-labelledby="t d" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">
+  <title id="t">Why "three point": the racing harness and the construction harness</title>
+  <desc id="d">Left: a three-point racing harness drawn as a triangle of straps, two shoulder straps and a lap strap meeting at one buckle; the three anchor points are Plan, Build and Instrument, the buckle is the policy. Right: a construction worker in a full-body fall-protection harness tied off to a beam; the three parts of fall protection, anchorage, body harness and connector, map to Atlas, the policy and the loop.</desc>
+  <rect width="1120" height="460" fill="#0f1216"/>
+  <!-- ══ left · the racing harness ══ -->
+  <text x="40" y="38" font-size="12" font-weight="700" fill="#6b7684" letter-spacing=".16em">THE RACING HARNESS · THREE ANCHOR POINTS</text>
+  <g stroke="#a3adbb" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M290 100 L460 340 H120 Z"/>
+    <path d="M290 100 V290"/>
+  </g>
+  <g stroke="#e6e9ee" stroke-width="2" stroke-linecap="round" fill="none" opacity=".35">
+    <path d="M290 114 L444 332 M290 114 L136 332 M140 340 H440 M290 116 V274"/>
+  </g>
+  <!-- buckle -->
+  <rect x="256" y="300" width="68" height="60" rx="10" fill="#ff6b4a"/>
+  <rect x="272" y="316" width="36" height="28" rx="5" fill="#0f1216" fill-opacity=".55"/>
+  <path d="M276 330 h28" stroke="#0f1216" stroke-width="3" stroke-linecap="round"/>
+  <!-- the three points -->
+  <circle cx="290" cy="100" r="18" fill="#8b7cf6"/><text x="290" y="106" text-anchor="middle" font-size="16" font-weight="800" fill="#0f1216">P</text>
+  <circle cx="460" cy="340" r="18" fill="#e0a33a"/><text x="460" y="346" text-anchor="middle" font-size="16" font-weight="800" fill="#0f1216">B</text>
+  <circle cx="120" cy="340" r="18" fill="#3fb886"/><text x="120" y="346" text-anchor="middle" font-size="16" font-weight="800" fill="#0f1216">I</text>
+  <text x="322" y="92" font-size="17" font-weight="700" fill="#8b7cf6">Plan</text>
+  <text x="460" y="384" text-anchor="middle" font-size="15" font-weight="700" fill="#e0a33a">Build</text>
+  <text x="120" y="384" text-anchor="middle" font-size="15" font-weight="700" fill="#3fb886">Instrument</text>
+  <text x="290" y="384" text-anchor="middle" font-size="12" font-weight="700" fill="#ff6b4a" letter-spacing=".1em">THE BUCKLE · THE POLICY</text>
+  <text x="290" y="410" text-anchor="middle" font-size="12" fill="#a3adbb">every strap loads into one point</text>
+  <text x="290" y="428" text-anchor="middle" font-size="12" fill="#a3adbb">release it and the harness lets go</text>
+  <text x="290" y="446" text-anchor="middle" font-size="12" fill="#6b7684">rollback: open, restore, re-latch</text>
+  <!-- divider -->
+  <path d="M560 40 V440" stroke="#2a323d" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <!-- ══ right · the construction harness ══ -->
+  <text x="600" y="38" font-size="12" font-weight="700" fill="#6b7684" letter-spacing=".16em">THE CONSTRUCTION HARNESS · A · B · C</text>
+  <!-- anchorage: an I-beam -->
+  <g fill="#3aa6d9" fill-opacity=".18" stroke="#3aa6d9" stroke-width="2.5">
+    <rect x="610" y="56" width="220" height="10" rx="2"/><rect x="712" y="66" width="16" height="22"/><rect x="610" y="88" width="220" height="10" rx="2"/>
+  </g>
+  <circle cx="720" cy="108" r="8" fill="none" stroke="#3aa6d9" stroke-width="3"/>
+  <!-- connector: the lanyard -->
+  <path d="M720 116 C720 150 732 160 732 178" fill="none" stroke="#ff6b4a" stroke-width="5" stroke-linecap="round"/>
+  <!-- the worker -->
+  <g stroke="#a3adbb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M720 222 L706 300 M720 222 L734 300 M706 300 L700 336 M734 300 L740 336"/>
+    <path d="M696 184 L680 240 M744 184 L760 240"/>
+  </g>
+  <path d="M694 178 h52 l-8 62 h-36 Z" fill="#1a2029" stroke="#a3adbb" stroke-width="3"/>
+  <circle cx="720" cy="150" r="20" fill="#1a2029" stroke="#a3adbb" stroke-width="3"/>
+  <path d="M698 148 a22 22 0 0 1 44 0 h-44 Z" fill="#e0a33a"/>
+  <!-- body harness: shoulder straps, chest strap, dorsal D-ring, leg loops -->
+  <g stroke="#e0a33a" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M702 184 L732 232 M738 184 L708 232"/>
+    <path d="M698 206 H742"/>
+    <path d="M704 246 c-8 6 -8 16 0 22 M736 246 c8 6 8 16 0 22"/>
+  </g>
+  <rect x="712" y="200" width="16" height="12" rx="3" fill="#0f1216" stroke="#e0a33a" stroke-width="3"/>
+  <circle cx="732" cy="180" r="9" fill="#0f1216" stroke="#ff6b4a" stroke-width="4"/>
+  <!-- ground -->
+  <path d="M610 340 H830" stroke="#2a323d" stroke-width="2" stroke-dasharray="6 6"/>
+  <!-- the ABC, named -->
+  <g font-size="12">
+    <text x="856" y="76" font-size="14" font-weight="800" fill="#3aa6d9">A · anchorage</text>
+    <text x="856" y="94" fill="#a3adbb">the fixed point everything ties to</text>
+    <text x="856" y="110" fill="#6b7684">→ MongoDB Atlas, every checkpoint</text>
+    <text x="856" y="160" font-size="14" font-weight="800" fill="#ff6b4a">C · connector</text>
+    <text x="856" y="178" fill="#a3adbb">the lanyard that arrests a fall</text>
+    <text x="856" y="194" fill="#6b7684">→ the loop: checkpoint, backfeed</text>
+    <text x="856" y="244" font-size="14" font-weight="800" fill="#e0a33a">B · body harness</text>
+    <text x="856" y="262" fill="#a3adbb">worn by the one doing the work</text>
+    <text x="856" y="278" fill="#6b7684">→ the policy the run wears</text>
+  </g>
+  <text x="840" y="384" text-anchor="middle" font-size="12" font-weight="700" fill="#e6e9ee" letter-spacing=".1em">THREE POINTS OF CONTACT</text>
+  <text x="840" y="410" text-anchor="middle" font-size="12" fill="#a3adbb">on a ladder you move one limb at a time</text>
+  <text x="840" y="428" text-anchor="middle" font-size="12" fill="#a3adbb">one sprint mode per iteration</text>
+  <text x="840" y="446" text-anchor="middle" font-size="12" fill="#6b7684">feature, improvement or fix, never in parallel</text>
+</svg>

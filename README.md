@@ -17,6 +17,7 @@ September 2026. MIT licensed.
 | **What it is** | A meta-harness: it wraps a coding agent (Claude Code, Kiro, Codex, or a Strands harness compiled from a policy) and evolves the environment the agent runs in. |
 | **Who it serves** | A construction firm's superintendents, project managers, owners, safety leads and trades. Secondary: any media-heavy team (interior design, creative ops, visual trend analysis). |
 | **Why Atlas** | Every stateful thing lives in one Sandbox cluster: policies, checkpoints, plans, findings, measurements, the media index, transcripts and jobs. Long-term memory is the database, not the context window. |
+| **The name** | A three-point harness twice over: the racing harness (three anchor points, one buckle: Plan, Build, Instrument around the policy) and the construction harness (anchorage, body, connector: Atlas, the policy, the loop). [`docs/00-vision.md` § The name](docs/00-vision.md#the-name). |
 | **Why it gets better** | The run cannot change the rules. The improver can, and only from findings. Each version is scored on hard metrics against the previous one, so improvement is caused, not drifted. |
 
 ## Gist

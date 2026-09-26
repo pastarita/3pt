@@ -3,7 +3,7 @@
 
 | Term | Meaning |
 |---|---|
-| **3PT / Three Point Harness** | The Plan → Build → Instrument meta-harness. |
+| **3PT / Three Point Harness** | The Plan → Build → Instrument meta-harness. Named for the three-point racing harness (three anchor points, one buckle) and for the construction harness (anchorage, body harness, connector; three points of contact). `docs/00-vision.md` § The name. |
 | **Plan** | Polyglot gateway stage. Reads harness health, checkpoints, measurements, and media-context state; picks a sprint mode; emits a spec and an evaluation plan. |
 | **Build** | Meta-harness over any existing coding-agent harness (Claude Code, Kiro, Codex). Runs the build-with-instrumentation loop. |
 | **Instrument** | Stage that owns observability, DevX, CI/CD, deployment, and memory standards. Checks them on the codebase and reports **findings**. It does not write the policy. |
