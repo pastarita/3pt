@@ -5,5 +5,6 @@
   "main": "src/edge.ts",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
-  "vars": { "PAGES_ORIGIN": "https://3pt-web.pages.dev" }
+  "vars": { "PAGES_ORIGIN": "https://3pt-web.pages.dev", "ATLAS_DB": "3pt" }
+  // Secret, never in this file: npx wrangler secret put ATLAS_URI
 }

@@ -25,6 +25,7 @@ export const INDEXES: IndexSpec[] = [
   { collection: COLLECTIONS.media_index,  keys: { tier: 1, lastRead: -1 } },
   { collection: COLLECTIONS.transcripts,  keys: { assetId: 1 }, unique: true },
   { collection: COLLECTIONS.jobs,         keys: { status: 1, createdAt: 1 } },
+  { collection: COLLECTIONS.app_state,    keys: { ts: -1 } },
 ];
 /** Atlas Vector Search definition over transcripts (Voyage voyage-3, 1024 dims). Created by provision(). */
 export const VECTOR_INDEX = { name: 'transcripts_vec', collection: COLLECTIONS.transcripts, field: 'embedding', dims: 1024, similarity: 'cosine' } as const;

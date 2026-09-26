@@ -204,8 +204,11 @@ async function ask(pid: string, q: string) {
 }
 
 /* ---------------- routes ---------------- */
-export async function handleApp(url: URL, method = 'GET', body: Json = {}): Promise<{ status: number; body: unknown } | null> {
+export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: Store): Promise<{ status: number; body: unknown } | null> {
   if (!url.pathname.startsWith('/app/')) return null;
+  /* A Worker passes a fresh store per request: drop the cached state so the newest snapshot wins
+     and every Worker instance shows the same harness version. */
+  if (db) { store = db; S = undefined as unknown as typeof S; }
   await state();
   const q = url.searchParams, path = url.pathname;
   if (path === '/app/screen' && method === 'GET') {
@@ -234,7 +237,7 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}): Prom
   if (path === '/app/ask' && method === 'GET') return { status: 200, body: await ask(q.get('project') ?? '', q.get('q') ?? 'week') };
   if (path === '/app/events' && method === 'POST') {
     const e: Ev = { t: Date.now(), v: S.cur, role: String(body.role ?? 'super'), action: String(body.action ?? 'use'), block: body.block, q: body.q, photo: body.photo };
-    S.events.push(e); void record(e);
+    S.events.push(e); await record(e);
     if (e.action === 'act' && body.do) {
       const [k, arg] = String(body.do).split(':');
       if (k === 'take') S.extra.push({ project: body.project, id: `take-${S.extra.length}`, unit: +arg, level: Math.floor(+arg / 100), trade: 'plumbing', wall: 'open', week: (await firm(new URLSearchParams())).TODAY_WEEK, focus: true, file: pool('plumbing', +arg) });
