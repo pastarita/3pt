@@ -29,6 +29,7 @@ export interface InspectorClient {
   screen(project: string | null, role: string): Promise<Screen>;
   block(id: string, project: string, role: string): Promise<{ title: string } & Record<string, any>>;
   ask(project: string, q: string): Promise<{ note: string; photos: Photo[] }>;
+  photos(project: string): Promise<{ photos: (Photo & { focus?: boolean })[] }>;
   event(e: AppEvent): Promise<{ ok: boolean; proposal: Proposal | null }>;
   approve(key: string, role: string): Promise<{ version: number; changes: string[] }>;
   reject(key: string): Promise<{ ok: boolean }>;
@@ -52,6 +53,7 @@ export function createClient(baseUrl: string, f: typeof fetch = fetch): Inspecto
     screen: (project, role) => get('/app/screen' + qs({ project, role })),
     block: (id, project, role) => get('/app/block' + qs({ id, project, role })),
     ask: (project, q) => get('/app/ask' + qs({ project, q })),
+    photos: (project) => get('/app/photos' + qs({ project })),
     event: (e) => post('/app/events', e),
     approve: (key, role) => post('/app/approve', { key, role }),
     reject: (key) => post('/app/reject', { key }),

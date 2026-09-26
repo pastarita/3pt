@@ -5,6 +5,7 @@
  *
  *    GET  /app/screen?project=p18&role=super     layout + filled blocks + "what I learned" + proposal
  *    GET  /app/ask?project=p18&q=plumb           photo search, answered with the current version's fields
+ *    GET  /app/photos?project=p18                every photo the app may show for one project
  *    POST /app/events        {role, action, block?, q?, photo?}    use | hide | open | fb_up | fb_down | act
  *    POST /app/approve       {key, role}          saves the proposal as a new harness version
  *    POST /app/reject        {key}
@@ -209,6 +210,7 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}): Prom
     if (!BLOCKS[b]) return { status: 404, body: { error: 'no such block' } };
     return { status: 200, body: { id: b, title: BLOCKS[b].title, ...(await fill(b, pid, role)) } };
   }
+  if (path === '/app/photos' && method === 'GET') return { status: 200, body: { photos: await photosOf(q.get('project') ?? '') } };
   if (path === '/app/ask' && method === 'GET') return { status: 200, body: await ask(q.get('project') ?? '', q.get('q') ?? 'week') };
   if (path === '/app/events' && method === 'POST') {
     const e: Ev = { t: Date.now(), v: S.cur, role: String(body.role ?? 'super'), action: String(body.action ?? 'use'), block: body.block, q: body.q, photo: body.photo };

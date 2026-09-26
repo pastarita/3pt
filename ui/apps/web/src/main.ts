@@ -23,6 +23,7 @@ import { icon, photoArt } from './art';
 import { flags, on, resetFlags, setFlag, DEFAULTS, type Flag } from './flags';
 import { autostart, endTour, resetTours, startTour, tourActive, tourStep, TOURS } from './tour';
 import { reply, type Msg } from './agent';
+import { loadLive, send } from './live';
 
 const vars = document.createElement('style');
 vars.textContent = appCssVars();
@@ -47,7 +48,7 @@ let S: State = (() => { try { return { ...fresh(), ...JSON.parse(localStorage.ge
 S.sheet = false;
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* private mode */ } };
 
-/** Event log for the Instrument stage: what people tap, per role. Stays local until the API takes it. */
+/** Event log for the Instrument stage: what people tap, per role. Kept locally, and sent to the loop when the API answers (live.ts). */
 function log(action: string, detail?: string) {
   try {
     const k = 'tpt_web_events';
@@ -55,6 +56,7 @@ function log(action: string, detail?: string) {
     a.push({ t: Date.now(), role: S.role, action, detail });
     localStorage.setItem(k, JSON.stringify(a.slice(-500)));
   } catch { /* ignore */ }
+  send(action, detail, S.role);
 }
 
 /* ---------- routing ---------- */
@@ -427,3 +429,5 @@ window.addEventListener('hashchange', () => {
 if (route().screen === 'project') { S.visits++; save(); }
 last = location.hash;
 render();
+/* swap the sample data for the harness's own when the API answers; the first paint never waits for it */
+if (on('live.api')) void loadLive().then(ok => { if (ok) render(); }).catch(() => undefined);

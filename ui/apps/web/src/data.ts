@@ -21,7 +21,12 @@ export interface Project {
   id: string; name: string; kind: string; status: Status; cover: PhotoKind; where: string;
   when: string; team: RoleId[]; photos: number; percent: number; next: string;
 }
-export interface Photo { id: string; project: string; unit: number | null; kind: PhotoKind; week: number; flag?: 'water' | 'hazard' }
+export interface Photo { id: string; project: string; unit: number | null; kind: PhotoKind; week: number; flag?: 'water' | 'hazard'; file?: string | null; focus?: boolean }
+
+/** Where the data comes from. live.ts switches this to 'api' and fills the lists below from @3pt/api. */
+export const LIVE = { source: 'sample' as 'sample' | 'api', demo: 'towerb' };
+/** Photo id → image URL for photos the API served. art.ts uses it before the bundled sample photos. */
+export const FILES_BY_ID: Record<string, string> = {};
 export interface Todo { id: string; title: string; detail: string; action: string; photo: string; icon: string; roles: RoleId[] }
 export interface Saver { id: string; title: string; why: string; hours: number; from: string; roles: RoleId[] }
 export interface Lesson { v: number; when: string; plain: string; by: string; undone?: boolean }
@@ -287,8 +292,8 @@ export const cardsFor = (r: RoleId, p: Project) => {
 
 /** Unit status on level 2: has a closed-wall photo but no pipe photo means "missing". */
 export function unitStatus() {
-  const live = PHOTOS.filter(p => p.project === 'towerb');
-  return UNITS.map(u => {
+  const live = PHOTOS.filter(p => p.project === LIVE.demo && (LIVE.source === 'sample' || p.focus));
+  return (LIVE.source === 'api' ? [...new Set(live.map(p => p.unit).filter((u): u is number => u != null))].sort() : UNITS).map(u => {
     const mine = live.filter(p => p.unit === u);
     const closed = mine.some(p => p.kind === 'drywall');
     const pipes = mine.some(p => p.kind === 'plumbing');

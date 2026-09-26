@@ -3,7 +3,7 @@
  * Photos are drawn SVG stand-ins for real site photos. They are content, not chrome, so their
  * colors are exempt from the token check (the capture suite skips anything inside [data-photo]).
  */
-import type { Photo, PhotoKind } from './data';
+import { FILES_BY_ID, type Photo, type PhotoKind } from './data';
 
 const P: Record<string, string> = {
   camera: '<path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13" r="3.5"/>',
@@ -89,6 +89,8 @@ const PHOTO_BASE = `${import.meta.env.BASE_URL}photos/`;
 
 /** A site photo. `label` is the plain caption a screen reader hears. Falls back to drawn art. */
 export function photoArt(p: Pick<Photo, 'id' | 'kind' | 'flag'>, label: string): string {
+  const live = FILES_BY_ID[p.id];
+  if (live) return `<img class="art" src="${live}" alt="${label}" loading="lazy" decoding="async" data-photo="${p.id}">`;
   const list = FILES[p.flag ?? p.kind] ?? FILES[p.kind];
   if (list?.length) {
     const f = list[Math.floor(rng(p.id)() * list.length)];

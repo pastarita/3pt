@@ -13,6 +13,7 @@ export const DEFAULTS = {
   'agent.history': true,   // earlier chats in the sidebar
   'cards.savers': true,    // time-saver suggestions on a project
   'cards.learned': true,   // "what your assistant learned" (the harness, explained)
+  'live.api': true,        // read projects, photos, to-dos and history from @3pt/api when it answers
 } as const;
 
 export type Flag = keyof typeof DEFAULTS;
