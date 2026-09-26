@@ -36,6 +36,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Theses, hypotheses, the measurement system, partner-incentive mapping, requirement set | `docs/07-assessment-and-measurement.md` |
 | Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `hub/site/direction.html` (hub leaf "Direction") |
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
+| Strands: what we build on, the capability ledger, the handles we speak, what is struck | `docs/12-strands-archaeology.md` |
+| Strands, drawn: ten Mermaid diagrams of its systems, for learning | `docs/13-strands-diagrams.md` |
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
 | How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -122,3 +124,8 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   workspaces build, `3pt loop` runs one iteration against the memory store (policy v0 → v1, cp/1),
   `3PT.app` builds ad hoc via xcodegen. `docs/10-architecture.md` + hub leaf `architecture.html`.
   Still open: Atlas driver in the atlas battery, Sandbox cluster, worker deploy, web inspector host.
+- 2026-09-26 13:15 ET: **the harness is built on AWS Strands** (`createHarness`, `ModelRouter`, `Storage`,
+  steering, evals, optimizer). 3PT = a Policy → harness compiler (`harness/packages/strands`, written,
+  not yet compiled: disk full, package excluded in `pnpm-workspace.yaml`). Archaeology with 21 cited
+  sources and a graded ledger: `docs/12-strands-archaeology.md`; handles in `harness/packages/strands/topology.json`.
+  Struck: own loop, own router, own sessions, `HarnessAdapter` as the harness.

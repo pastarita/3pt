@@ -7,6 +7,8 @@ packages:
   - ui/packages/*
   - harness/apps/*
   - harness/packages/*
+  # @3pt/strands is written but excluded until the machine has disk for its deps (docs/12 §6).
+  - '!harness/packages/strands'
   - infra/batteries/*
 allowBuilds:
   esbuild: set this to true or false

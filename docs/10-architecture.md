@@ -427,7 +427,7 @@ Each recipe is a fixed number of moves. If a change needs more, the architecture
 | To add… | Moves | Diagram |
 |---|---|---|
 | **A surface** (a new UI) | 1. `ui/apps/<name>` depending on `@3pt/design-system` + `@3pt/inspector-client`. 2. Nothing else. If it needs a verb the API lacks, that is an API change, made first. | 4.1, 4.4 |
-| **A build harness** (Kiro, Codex, Strands) | 1. One `HarnessAdapter` in `harness/packages/build`. 2. Add its key to `HarnessKind` in core. 3. `THREEPT_HARNESS=<kind>`. | 4.2 |
+| **A build harness** | Struck 2026-09-26 13:00: the harness is Strands (`docs/12-strands-archaeology.md`). A new *model* is one route candidate; a new *tool* (Claude Code, Kiro as shell-outs) is one `tool({...})`. `HarnessAdapter` stays only until `@3pt/strands` compiles. | 4.2 |
 | **A battery** (a new data source, store, or service) | 1. `infra/batteries/<name>` with the four files (package, descriptor, provision, SKILL). 2. Name its grants in the descriptor. 3. Nothing in `harness/` changes until a policy grants them. | 4.3 |
 | **A measurement** (a new M-*) | 1. Add the id to `METRICS` in the tracing battery and define it in docs/07. 2. Instrument writes it; Plan may read it. | 4.2, 4.6 |
 | **A collection** | 1. `COLLECTIONS` in core. 2. Its indexes in the atlas battery. 3. A record type in core if stages touch it. | 4.5 |
@@ -448,3 +448,4 @@ store (Atlas). Those are the product.
 | Web inspector host | **Open:** a second Pages project, or v0 if the afternoon runs short. Never inside `hub/`. |
 | Atlas driver in the atlas battery | **Open (lane 4):** `provision.ts` prints its plan until `mongodb` is added and `ATLAS_URI` exists. |
 | Mermaid in the hub Viewer | **Decided:** no. Leaves are self-contained (no CDN). The hub carries the SVG leaf instead. |
+| Harness runtime | **Decided 13:00:** built on AWS Strands (`createHarness`, `ModelRouter`, `Storage`, steering, evals, optimizer). 3PT compiles a Policy into harness options. See `docs/12-strands-archaeology.md`. `@3pt/strands` excluded from the workspace until the disk is freed. |

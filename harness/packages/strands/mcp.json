@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "strands": { "command": "uvx", "args": ["strands-agents-mcp-server"], "env": { "FASTMCP_LOG_LEVEL": "INFO" } }
+  }
+}

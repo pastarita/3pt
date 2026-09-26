@@ -1,0 +1,33 @@
+{
+  "$schema": "./topology.schema.json",
+  "generated": "2026-09-26",
+  "source": "docs/12-strands-archaeology.md",
+  "packages": {
+    "@strands-agents/harness": "0.1.1", "@strands-agents/sdk": "1.19.0", "@strands-agents/cli": "0.1.4",
+    "strands-harness": "0.1.2", "strands-agents": "1.57.1", "strands-harness-optimizer": "0.0.1",
+    "strands-evals": "0.0.1", "strands-agents-sops": "1.1.3", "strands-agents-mcp-server": "0.3.0"
+  },
+  "handles": [
+    { "handle": "harness",    "strands": "createHarness(options) -> Agent",                                  "lives": "harness/packages/strands harnessOptions()", "stage": "all",        "ledger": "L1",  "grade": "DISPATCHABLE" },
+    { "handle": "policy",     "strands": null,                                                              "lives": "@3pt/core Policy; harness/policies/v<n>.json; Atlas policies", "stage": "all", "ledger": "-", "grade": "OURS" },
+    { "handle": "route",      "strands": "ModelRouter, RoutingCandidate, FallbackStrategy, ClassifierStrategy", "lives": "policy.routes[stage] -> routerSpec()", "stage": "per-stage", "ledger": "L2",  "grade": "DISPATCHABLE" },
+    { "handle": "effort",     "strands": "effort: auto|off|minimal|low|medium|high|xhigh|max",              "lives": "policy.routes[stage].effort",              "stage": "per-stage", "ledger": "L2",  "grade": "DISPATCHABLE" },
+    { "handle": "grant",      "strands": "builtinTools + interventions",                                     "lives": "policy.toolGrants[stage] -> grants()",     "stage": "per-stage", "ledger": "L4",  "grade": "DISPATCHABLE" },
+    { "handle": "gate",       "strands": "interventions: 'ask'|'smart'|text|.cedar|handler",                 "lives": "harness/policies/gates/<stage>.cedar",     "stage": "build,instrument", "ledger": "L4", "grade": "DISPATCHABLE" },
+    { "handle": "steer",      "strands": "steer_before_tool / steer_after_model -> Proceed|Guide",           "lives": "harness/packages/instrument",              "stage": "build",      "ledger": "L13", "grade": "DISPATCHABLE" },
+    { "handle": "hook",       "strands": "Plugin.initAgent + agent.addHook(Event, cb)",                      "lives": "measurementPlugin()",                      "stage": "instrument", "ledger": "L9",  "grade": "COMPOSABLE" },
+    { "handle": "session",    "strands": "session:{id,dir}; SessionManager; Storage",                        "lives": "AtlasStorage",                             "stage": "all",        "ledger": "L7",  "grade": "COMPOSABLE" },
+    { "handle": "memory",     "strands": "memory:{stores}; MemoryStore; search_memory",                      "lives": "AtlasMemoryStore (to build)",              "stage": "plan",       "ledger": "L8",  "grade": "COMPOSABLE" },
+    { "handle": "skill",      "strands": "skills:[dirs] with SKILL.md",                                      "lives": "infra/batteries/*/SKILL.md",               "stage": "all",        "ledger": "L20", "grade": "DISPATCHABLE" },
+    { "handle": "sop",        "strands": "Agent SOP markdown (RFC 2119)",                                    "lives": "harness/policies/sops/<mode>.sop.md",      "stage": "plan",       "ledger": "L16", "grade": "PATTERN" },
+    { "handle": "subagent",   "strands": "subagent tool; makeSubagent; Preset; Inherit; Fixed",              "lives": "builder/instrumenter presets",             "stage": "build",      "ledger": "L12", "grade": "DISPATCHABLE" },
+    { "handle": "graph",      "strands": "Graph (DAG)",                                                      "lives": "plan -> build -> instrument",              "stage": "loop",       "ledger": "L19", "grade": "DISPATCHABLE" },
+    { "handle": "checkpoint", "strands": "checkpointing:true; snapshot ids; stop_reason checkpoint",         "lives": "Atlas checkpoints = (snapshot, git tag, policy version)", "stage": "instrument", "ledger": "L11", "grade": "COMPOSABLE" },
+    { "handle": "stop",       "strands": "StopReason",                                                       "lives": "measurements",                             "stage": "instrument", "ledger": "L10", "grade": "DISPATCHABLE" },
+    { "handle": "eval",       "strands": "strands_evals Case/Experiment/evaluators",                         "lives": "harness/evals (python)",                   "stage": "instrument", "ledger": "L15", "grade": "DISPATCHABLE-PY" },
+    { "handle": "optimize",   "strands": "Trainer.fit() over Formula",                                       "lives": "PolicyFormula (python, to build)",         "stage": "instrument", "ledger": "L14", "grade": "TO-BUILD" },
+    { "handle": "mcp",        "strands": "mcpServers; <server>_<tool>",                                      "lives": "infra/batteries/atlas/mcp.json + strands docs server", "stage": "build,instrument", "ledger": "L18", "grade": "ASSET" },
+    { "handle": "trace",      "strands": "OTEL_TRACES_EXPORTER=otlp",                                        "lives": "LangSmith via OTLP (seed)",                "stage": "instrument", "ledger": "L9",  "grade": "SEED" }
+  ],
+  "struck": ["own agent loop", "own model router", "own session manager", "HarnessAdapter as the harness", "own tool-permission checker", "own tracing"]
+}
