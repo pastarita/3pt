@@ -148,3 +148,7 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   until Atlas), writes `harness/policies/v<n>.json` + `harness/checkpoints/cp-<i>.md`; `--git` commits those two files
   and tags `cp/<i>`; `3pt rollback cp/<i>` restores that policy as a new version. Instrument still has no findings,
   so each version only bumps lineage. Next: measurements and checks. `docs/10-architecture.md` §4.7.
+- 2026-09-26 14:55 ET: **the loop and the run are separate.** `@3pt/improver` owns the policy rewrite and
+  the checkpoint; Instrument only writes `findings`. Stages get `freezePolicy()` and `stageStore()`, which
+  refuses writes to `policies` and `checkpoints`. `3pt improve` runs the improver alone. `@3pt/build` is a
+  dry run (no `HarnessAdapter`) until `@3pt/strands` compiles.

@@ -13,6 +13,7 @@ export const COLLECTIONS = {
   checkpoints: 'checkpoints',    // git sha + policy version + metrics + retrospective
   plans: 'plans',                // Plan stage output per iteration
   measurements: 'measurements',  // hard metric signals per iteration (M-* in docs/07)
+  findings: 'findings',          // Instrument's standards-check results; the improver's input
   media_index: 'media_index',    // asset id, tier, location, transcript ref
   transcripts: 'transcripts',    // read-once extraction + embedding
   jobs: 'jobs',                  // worker queue: index | transcribe | tier | migrate
@@ -30,7 +31,7 @@ export type StageName = 'plan' | 'build' | 'instrument';
 export type HarnessKind = 'claude-code' | 'kiro' | 'codex';
 export type Tier = 'hot' | 'cold';
 
-/** The harness's own rules AS DATA. Instrument rewrites this; that rewrite is the Recursive Harnessing proof. */
+/** The harness's own rules AS DATA. The improver rewrites this; that rewrite is the Recursive Harnessing proof. */
 export interface Policy {
   _id?: string;
   version: number;
@@ -53,6 +54,16 @@ export interface Measurement {
   value: number;
   unit: string;
   source: 'langsmith' | 'atlas' | 'git' | 'harness';
+}
+
+/** One result of a standards check. Instrument writes it; only the improver turns it into policy. */
+export interface Finding {
+  _id?: string;
+  iteration: number;
+  at: string;
+  check: string;                   // which standard, e.g. 'hot-tier budget'
+  passed: boolean;
+  note: string;                    // what the improver may learn from it
 }
 
 export interface Plan {
@@ -102,10 +113,21 @@ export interface Store {
   find<T extends object>(c: CollectionName, filter: Partial<T>): Promise<T[]>;
 }
 
+/**
+ * The loop and the run are separate. The improver (outer loop, @3pt/improver) owns the Policy and
+ * the checkpoint lineage. A stage (inner run) sees only a frozen copy of the policy and a Store that
+ * refuses writes to what the loop owns. A stage can report findings; it cannot rewrite the harness.
+ */
+type DeepReadonly<T> = T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
+export type FrozenPolicy = DeepReadonly<Policy>;
+
+/** Collections only the improver may write. Stages read them; a write from a stage throws. */
+export const LOOP_OWNED: readonly CollectionName[] = [COLLECTIONS.policies, COLLECTIONS.checkpoints];
+
 export interface StageContext {
   iteration: number;
-  policy: Policy;
-  store: Store;
+  policy: FrozenPolicy;
+  store: Store;                    // guarded: see stageStore()
   harness: HarnessKind;
   log: (line: string) => void;
 }
@@ -115,13 +137,39 @@ export interface Stage<Out = unknown> {
   run(ctx: StageContext): Promise<Out>;
 }
 
-/** One iteration = Plan → Build → Instrument, in order, never in parallel. */
-export async function runIteration(stages: [Stage, Stage, Stage], ctx: StageContext): Promise<void> {
+function deepFreeze<T>(o: T): T {
+  if (o && typeof o === 'object' && !Object.isFrozen(o)) {
+    Object.freeze(o);
+    for (const v of Object.values(o)) deepFreeze(v);
+  }
+  return o;
+}
+
+/** A copy of the policy that a stage can read but not change, at compile time or at run time. */
+export function freezePolicy(p: Policy): FrozenPolicy {
+  return deepFreeze(structuredClone(p));
+}
+
+/** Wrap a Store so a stage cannot write policies or checkpoints. */
+export function stageStore(store: Store): Store {
+  return {
+    ...store,
+    async insert(c, doc) {
+      if (LOOP_OWNED.includes(c)) throw new Error(`stage may not write ${c}; only the improver writes it`);
+      return store.insert(c, doc);
+    },
+  };
+}
+
+/** One iteration = Plan → Build → Instrument, in order, never in parallel. Returns each stage's output. */
+export async function runIteration(stages: [Stage, Stage, Stage], ctx: StageContext): Promise<unknown[]> {
+  const out: unknown[] = [];
   for (const s of stages) {
     ctx.log(`[${s.name}] start iteration ${ctx.iteration}`);
-    await s.run(ctx);
+    out.push(await s.run(ctx));
     ctx.log(`[${s.name}] done`);
   }
+  return out;
 }
 
 /** The policy the loop starts from before Instrument has ever rewritten anything. */
@@ -138,7 +186,7 @@ export function seedPolicy(): Policy {
     toolGrants: {
       plan: ['atlas.find', 'atlas.latest'],
       build: ['atlas.find', 'atlas.insert', 'blob.get', 'repo.worktree'],
-      instrument: ['atlas.*', 'repo.tag', 'tracing.read', 'policy.write'],
+      instrument: ['atlas.find', 'atlas.insert', 'tracing.read'],
     },
     provenance: { reason: 'seed' },
   };

@@ -11,7 +11,7 @@ Diagrams are Mermaid (GitHub renders them; the hub Viewer shows them as code by 
 |---|---|
 | Hub CI (`.github/workflows/deploy.yml`) | Live. Push to `main` deploys `hub/_site` to Cloudflare Pages; PRs get `https://<branch>.3pt.pages.dev` and a sticky comment. Lints: nav, view, provenance. Deploy no-ops with a notice until the two Cloudflare secrets exist. |
 | Monorepo build in CI | None until this PR. The skeleton (`package.json`, `turbo.json`, `ui/ harness/ infra/`) was committed in `0fd66df` while this was written; `ci.yml` still gates the workspace build on `package.json` being present so it degrades to a notice, never a red, if the tree is ever reshaped. |
-| Monorepo installability | **Green since 2026-09-26 14:25 ET.** The root `.gitignore` rule `build/` hid `harness/packages/build`, so the package never reached origin. A negation (`!harness/packages/build/`) now lets it in. `@3pt/build` holds dry adapters for claude-code, kiro and codex. The lockfile is regenerated. |
+| Monorepo installability | **Green since 2026-09-26 14:25 ET.** The root `.gitignore` rule `build/` hid `harness/packages/build`, so the package never reached origin. The rule is now `ui/apps/macos/build/`. `@3pt/build` is a dry-run stage until `@3pt/strands` compiles. The lockfile is regenerated. |
 | Branching | No protection on `main`; commits land directly. Worktree policy (`docs/11-worktrees.md`) already assumes `lane/<slug>` branches. |
 | Deploy of `api`, `worker`, `web`, `pwa` | Nothing deployed. `docs/10-architecture.md` names Cloudflare for the worker and "a second Pages project" for web; both are open. |
 | Atlas | Sandbox project not yet created. The atlas battery prints its plan until `ATLAS_URI` exists. |
@@ -182,7 +182,7 @@ is one `gh api` call, listed under next steps and not made by this PR.
 ## 7. Next steps, in order
 
 1. Create the Sandbox project from the email link; record tier and region here. Set `ATLAS_URI`.
-2. ~~Harness lane: commit `harness/packages/build` and regenerate the lockfile.~~ Done 2026-09-26. Next: replace the dry adapters with real agent calls.
+2. ~~Harness lane: commit `harness/packages/build` and regenerate the lockfile.~~ Done 2026-09-26. Next: replace the dry run with the Strands compiler.
 3. `gh secret set CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; hub deploys go live.
 4. Protect `main`: require PR, require `herald` and `check`, allow rebase-merge only.
 5. Pages project `3pt-web`; `wrangler.jsonc` for the Worker with `nodejs_compat`; smoke-test the driver from a Worker before promising it in the video.

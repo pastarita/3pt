@@ -200,6 +200,9 @@ importers:
       '@3pt/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@3pt/improver':
+        specifier: workspace:*
+        version: link:../../packages/improver
       '@3pt/instrument':
         specifier: workspace:*
         version: link:../../packages/instrument
@@ -244,6 +247,19 @@ importers:
         version: 5.9.3
 
   harness/packages/core:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.18.0
+        version: 22.20.4
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
+  harness/packages/improver:
+    dependencies:
+      '@3pt/core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@types/node':
         specifier: ^22.18.0

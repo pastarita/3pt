@@ -50,14 +50,17 @@ Minimum viable loop, in order of implementation:
 1. **State in Atlas.** Collections: `policies` (versioned harness rules/context policies/tool grants),
    `checkpoints` (git sha + policy version + metrics + retrospective), `media_index`
    (asset id, tier, location, transcript ref), `transcripts` (read-once extraction, embedding),
-   `measurements` (hard metric signals per iteration).
+   `measurements` (hard metric signals per iteration), `findings` (standards-check results).
 2. **Plan.** Reads the latest checkpoint + measurements, selects a sprint mode (feature / improvement / fix),
    emits a spec and an evaluation plan. Persist as a `plans` document.
 3. **Build.** Wraps a coding agent (start with Claude Code headless; Kiro CLI second to prove "any harness").
    Runs builder ↔ instrumenter turns until the instrumenter's checks pass or a turn budget is exhausted.
-4. **Instrument.** Runs the standards checks, writes a retrospective, **rewrites `policies`**
-   (this is the Recursive Harnessing proof), and tags a checkpoint.
-5. **Rollback.** `3pt rollback <checkpoint>` restores the policy version as a new version and prints the `git checkout` for the code. Demo this live. Snapshot details: `docs/10-architecture.md` §4.7.
+4. **Instrument.** Runs the standards checks and writes `findings` and `measurements`. It cannot
+   write `policies` or `checkpoints`: its Store refuses.
+5. **Improve.** Outside the run, the improver (`@3pt/improver`) reads the findings, **rewrites
+   `policies`** (this is the Recursive Harnessing proof), writes a retrospective, and tags a
+   checkpoint. The loop and the run are separate: a stage sees a frozen policy only.
+6. **Rollback.** `3pt rollback <checkpoint>` restores the policy version as a new version and prints the `git checkout` for the code. Demo this live. Snapshot details: `docs/10-architecture.md` §4.7.
 
 The media workload (image indexing, transcription, tiering) is what the loop operates *on*.
 It is the source of hard metrics: storage cost, hot-tier hit rate, transcript reuse rate,

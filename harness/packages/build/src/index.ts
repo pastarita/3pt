@@ -1,39 +1,24 @@
-import { COLLECTIONS, type HarnessKind, type Measurement, type Plan, type Policy, type Stage, type StageContext } from '@3pt/core';
+import { COLLECTIONS, type Measurement, type Plan, type Stage, type StageContext } from '@3pt/core';
 
-/** What a harness adapter returns for one plan. The adapter owns the coding agent; the stage owns persistence. */
+/**
+ * Build stage, dry run. It reads the latest plan and reports what the coding agent would receive.
+ * The real agent call comes from the Strands compiler (harness/packages/strands, docs/12), which
+ * replaces our own adapter layer. Until that package compiles, this stage records one measurement.
+ */
 export interface BuildResult {
-  harness: HarnessKind;
   ok: boolean;
   summary: string;
 }
-
-/** One coding agent behind a common call. Add a harness: one adapter here, its key in HarnessKind (docs/10 §5). */
-export interface HarnessAdapter {
-  kind: HarnessKind;
-  run(plan: Plan, policy: Policy): Promise<BuildResult>;
-}
-
-/** Dry adapter: records what the agent would receive. Real agent calls replace this per kind. */
-const dry = (kind: HarnessKind): HarnessAdapter => ({
-  kind,
-  async run(plan, policy) {
-    const tools = policy.toolGrants.build.length;
-    return { harness: kind, ok: true, summary: `${kind} dry run: ${plan.mode} sprint, ${policy.rules.length} rules, ${tools} tool grants` };
-  },
-});
-
-export const ADAPTERS: Record<HarnessKind, HarnessAdapter> = {
-  'claude-code': dry('claude-code'),
-  kiro: dry('kiro'),
-  codex: dry('codex'),
-};
 
 export const buildStage: Stage<BuildResult> = {
   name: 'build',
   async run(ctx: StageContext) {
     const plan = await ctx.store.latest<Plan>(COLLECTIONS.plans, 'iteration');
     if (!plan) throw new Error('build: no plan in store; run the plan stage first');
-    const result = await ADAPTERS[ctx.harness].run(plan, ctx.policy);
+    const result: BuildResult = {
+      ok: true,
+      summary: `${ctx.harness} dry run: ${plan.mode} sprint, ${ctx.policy.rules.length} rules, ${ctx.policy.toolGrants.build.length} tool grants`,
+    };
     const m: Measurement = {
       iteration: ctx.iteration,
       at: new Date().toISOString(),

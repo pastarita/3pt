@@ -1,8 +1,8 @@
 {
-  "name": "@3pt/cli",
+  "name": "@3pt/improver",
   "version": "0.0.1",
   "private": true,
-  "description": "The 3pt command: plan · build · instrument · loop · rollback.",
+  "description": "The self-improving loop, separate from the stage run: reads findings and checkpoints, rewrites the policy (the backfeed), writes the checkpoint. Stages never import it and cannot write what it owns.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,6 +12,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist"
   },
-  "dependencies": { "@3pt/core": "workspace:*", "@3pt/plan": "workspace:*", "@3pt/build": "workspace:*", "@3pt/instrument": "workspace:*", "@3pt/improver": "workspace:*", "@3pt/battery-repo": "workspace:*" },
+  "dependencies": { "@3pt/core": "workspace:*" },
   "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
 }

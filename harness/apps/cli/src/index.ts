@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-/** 3pt · plan | build | instrument | loop [--git] | rollback <tag>. See root Makefile. */
+/** 3pt · plan | build | instrument | improve | loop [--git] | rollback <tag>. See root Makefile. */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { COLLECTIONS, runIteration, seedPolicy, type Checkpoint, type HarnessKind, type Policy, type StageContext } from '@3pt/core';
+import { COLLECTIONS, freezePolicy, runIteration, seedPolicy, stageStore, type Checkpoint, type HarnessKind, type Policy, type StageContext } from '@3pt/core';
 import { planStage } from '@3pt/plan';
 import { buildStage } from '@3pt/build';
 import { instrumentStage } from '@3pt/instrument';
+import { improve } from '@3pt/improver';
 import { headSha, repoRoot, showAt, snapshot } from '@3pt/battery-repo';
 import { fileStore } from './store.js';
 
@@ -17,7 +18,7 @@ const root = repoRoot() ?? process.cwd();
 const POLICIES = 'harness/policies';
 const CHECKPOINTS = 'harness/checkpoints';
 const store = fileStore(join(root, '.3pt/store'));   // swapped for the atlas battery's store when ATLAS_URI is set
-process.env.GIT_SHA ??= headSha(root);               // Instrument records the code sha the iteration ran on
+const gitSha = process.env.GIT_SHA ?? headSha(root);  // the improver records the code sha the iteration ran on
 
 /** Highest n among `<prefix><n><suffix>` files in a directory, or -1. */
 const maxN = (dir: string, re: RegExp) =>
@@ -48,7 +49,7 @@ const writePolicy = (p: Policy) => {
 /** The snapshot: mirror the new policy and the checkpoint into git-tracked files, then optionally commit + tag. */
 async function checkpoint(cp: Checkpoint) {
   const policy = await store.latest<Policy>(COLLECTIONS.policies, 'version');
-  if (!policy) throw new Error('checkpoint: Instrument wrote no policy');
+  if (!policy) throw new Error('checkpoint: the improver wrote no policy');
   mkdirSync(join(root, CHECKPOINTS), { recursive: true });
   const cpPath = `${CHECKPOINTS}/cp-${cp.iteration}.md`;
   writeFileSync(join(root, cpPath), [
@@ -92,24 +93,28 @@ async function rollback(tag: string) {
   console.log(`[rollback] code is not touched. To also restore it: git checkout ${tag}`);
 }
 
+// The loop and the run are separate: stages get a frozen policy and a store that refuses policy and
+// checkpoint writes. Only the improver, after the run, rewrites the policy and tags the checkpoint.
+const iteration = await nextIteration();
+const policy = await currentPolicy();
 const ctx: StageContext = {
-  iteration: await nextIteration(),
-  policy: await currentPolicy(),
-  store,
+  iteration,
+  policy: freezePolicy(policy),
+  store: stageStore(store),
   harness: (process.env.THREEPT_HARNESS as HarnessKind) ?? 'claude-code',
   log: (l) => console.log(l),
 };
 const stages = { plan: planStage, build: buildStage, instrument: instrumentStage } as const;
+const improveAndSnapshot = async () => checkpoint(await improve(store, iteration, policy, gitSha, ctx.log));
 
 switch (cmd) {
-  case 'plan': case 'build': await stages[cmd].run(ctx); break;
-  case 'instrument': await checkpoint(await instrumentStage.run(ctx)); break;
+  case 'plan': case 'build': case 'instrument': await stages[cmd].run(ctx); break;
+  case 'improve': await improveAndSnapshot(); break;
   case 'loop': {
     await runIteration([planStage, buildStage, instrumentStage], ctx);
-    const cp = await store.latest<Checkpoint>(COLLECTIONS.checkpoints, 'iteration');
-    if (cp) await checkpoint(cp);
+    await improveAndSnapshot();
     break;
   }
   case 'rollback': await rollback(arg ?? ''); break;
-  default: console.log('3pt <plan|build|instrument|loop [--git]|rollback cp/<n>>');
+  default: console.log('3pt <plan|build|instrument|improve|loop [--git]|rollback cp/<n>>');
 }

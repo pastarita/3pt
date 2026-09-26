@@ -7,7 +7,7 @@ That is what lets the Instrument stage change tool grants without changing stage
 
 | Battery | Package | Stands up | Provides (tool grants) |
 |---|---|---|---|
-| `batteries/atlas` | `@3pt/battery-atlas` | Sandbox db, 7 collections, indexes, vector index; MongoDB MCP server | `atlas.find` `atlas.latest` `atlas.insert` `atlas.*` `policy.write` |
+| `batteries/atlas` | `@3pt/battery-atlas` | Sandbox db, 8 collections, indexes, vector index; MongoDB MCP server | `atlas.find` `atlas.latest` `atlas.insert` `atlas.*` `policy.write` |
 | `batteries/blob` | `@3pt/battery-blob` | Image bytes: gridfs (default, in-Sandbox), r2, or fs | `blob.get` `blob.put` |
 | `batteries/artifacts` | `@3pt/battery-artifacts` | Checkpoint bundles keyed by tag | `artifacts.put` `artifacts.get` |
 | `batteries/repo` | `@3pt/battery-repo` | Repo instantiation, worktrees per iteration, tags per checkpoint | `repo.worktree` `repo.tag` `repo.rollback` `repo.instantiate` |

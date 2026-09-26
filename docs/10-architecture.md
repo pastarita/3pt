@@ -13,7 +13,7 @@ Three top-level lanes, and only three. Each lane owns one question.
 | Lane | Question it answers | Turborepo convention inside |
 |---|---|---|
 | `ui/` | How does a human see harness state? | `apps/` (pwa, web, macos) + `packages/` (design-system, inspector-client) |
-| `harness/` | What does the running pipeline do? | `apps/` (cli, api, worker) + `packages/` (core, plan, build, instrument, media) + `policies/`, `checkpoints/` as data |
+| `harness/` | What does the running pipeline do? | `apps/` (cli, api, worker) + `packages/` (core, plan, build, instrument, improver, media) + `policies/`, `checkpoints/` as data |
 | `infra/` | What does the pipeline run on, and how is it stood up? | `batteries/` (atlas, blob, artifacts, repo, tracing), one package each |
 
 **Turborepo, not Bazel.** Bazel would give hermetic polyglot builds we do not need today and would
@@ -25,9 +25,17 @@ Revisit Bazel only if a second native toolchain (Rust, Python wheels) joins the 
 **Batteries included.** A battery is an instantiable artifact: a package that can stand up one thing
 the pipeline runs on (a database, a blob store, a repo, a tracing project), idempotently, plus the
 agent skill and MCP wiring for using it. Stages never import batteries. They receive what a battery
-provides at the edge: a `Store`, a tool grant. That indirection is what lets the Instrument stage
-rewrite tool grants (data in Atlas) without touching stage code, which is the Recursive Harnessing
+provides at the edge: a `Store`, a tool grant. That indirection is what lets the improver rewrite
+tool grants (data in Atlas) without touching stage code, which is the Recursive Harnessing
 mechanism in the dependency graph rather than in prose.
+
+**The loop is separate from the run.** The self-improving loop lives in `@3pt/improver`, outside the
+three stages. The improver owns `policies` and `checkpoints`. It gives each run a frozen copy of the
+policy (`freezePolicy`) and a Store that refuses writes to those two collections (`stageStore`). The
+stages report `findings`. After the run ends, the improver reads the findings and writes the next
+policy and the checkpoint. A stage cannot change the rules it runs under while it runs, and a
+repeated lesson is not added to the rules twice, so the loop does not grow every stage prompt.
+Stages never import the improver. The improver never imports a stage: the CLI passes them in.
 
 **Two hosts for the same surface.** The hub (`hub/`) renders the repo and stays cordoned. The web
 inspector (`ui/apps/web`) is a separate Pages project. Harness code never goes in `hub/`.
@@ -50,15 +58,16 @@ inspector (`ui/apps/web`) is a separate Pages project. Harness code never goes i
     packages/core       @3pt/core          stage contract, runner, record types, COLLECTIONS, seed policy
     packages/plan       @3pt/plan          sprint-mode selector, plan writer
     packages/build      @3pt/build         harness adapters, builder ↔ instrumenter loop
-    packages/instrument @3pt/instrument    checks, retrospective, policy rewrite, checkpoint
+    packages/instrument @3pt/instrument    standards checks → findings (no policy writes)
+    packages/improver   @3pt/improver      the self-improving loop: findings → policy v n+1, checkpoint
     packages/media      @3pt/media         tiering, read-once rules, job derivation (left side)
-    apps/cli            @3pt/cli           3pt plan|build|instrument|loop|rollback
+    apps/cli            @3pt/cli           3pt plan|build|instrument|improve|loop|rollback
     apps/api            @3pt/api           HTTP for the surfaces
     apps/worker         @3pt/worker        job drainer; node locally, Cloudflare Worker deployed
     policies/           v<n>.json, git mirror of the policies collection
     checkpoints/        cp-<n>.md, git mirror of the checkpoints collection
   infra/
-    batteries/atlas     @3pt/battery-atlas     db, 7 collections, indexes, vector index, MCP server
+    batteries/atlas     @3pt/battery-atlas     db, 8 collections, indexes, vector index, MCP server
     batteries/blob      @3pt/battery-blob      gridfs | r2 | fs for image bytes
     batteries/artifacts @3pt/battery-artifacts checkpoint bundles by tag
     batteries/repo      @3pt/battery-repo      worktrees per iteration, tags per checkpoint, rollback
@@ -133,8 +142,10 @@ flowchart LR
     BU[packages/build]:::build
     IN[packages/instrument]:::inst
     ME[packages/media]:::build
+    IMP[packages/improver]:::inst
     CORE[packages/core]:::flag
-    CLI --> PL & BU & IN
+    CLI --> PL & BU & IN & IMP
+    IMP --> CORE
     WK --> ME
     PL & BU & IN & ME & API --> CORE
   end
@@ -175,33 +186,38 @@ sequenceDiagram
   participant B as Build
   participant H as adapter (claude-code · kiro · codex)
   participant I as Instrument
+  participant M as Improver
   participant A as Atlas (Store)
   participant R as repo battery
   participant T as tracing battery
-  CLI->>P: run(ctx: iteration, policy vN, store, harness)
+  CLI->>M: cycle(stages, iteration)
+  M->>A: latest(policies) → vN
+  M->>P: run(ctx: iteration, frozen vN, guarded store, harness)
   P->>A: latest(checkpoints), find(measurements, iteration-1)
   P->>P: selectMode → feature | improvement | fix
   P->>A: insert(plans)
-  CLI->>B: run(ctx)
+  M->>B: run(ctx)
   loop builder ↔ instrumenter, until 0 fixes or turn budget
     B->>H: buildTurn(spec, turn)
     H-->>B: summary
     B->>H: reviewTurn(summary)
     H-->>B: fixes[]
   end
-  CLI->>I: run(ctx)
+  M->>I: run(ctx)
   I->>T: read traces → M-* values
-  I->>A: insert(measurements)
-  I->>I: rewritePolicy(vN, findings) → vN+1
-  I->>A: insert(policies vN+1)
-  I->>R: tag cp/<iteration>
-  I->>A: insert(checkpoints)
+  I->>A: insert(measurements, findings)
+  Note over P,I: the run ends here; no stage can write policies or checkpoints
+  M->>A: find(findings, iteration)
+  M->>M: rewritePolicy(vN, findings) → vN+1
+  M->>A: insert(policies vN+1)
+  M->>R: tag cp/<iteration>
+  M->>A: insert(checkpoints)
   Note over P,A: next iteration's Plan reads vN+1 and cp/<iteration>: the backfeed closes
 ```
 
 ### 4.3 Batteries, tool grants, stages
 
-*Question: how does Instrument change what a stage may do without changing stage code?*
+*Question: how does the improver change what a stage may do without changing stage code?*
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#0f1216","primaryColor":"#1a2029","primaryTextColor":"#e6e9ee","primaryBorderColor":"#3a4552","lineColor":"#a3adbb","fontFamily":"ui-monospace, Menlo, monospace","fontSize":"12px"}}}%%
@@ -214,11 +230,11 @@ flowchart LR
     A4[repo]:::battery
     A5[tracing]:::battery
   end
-  subgraph GR["policy.toolGrants  ·  data in Atlas, rewritten by Instrument"]
+  subgraph GR["policy.toolGrants  ·  data in Atlas, rewritten by the improver"]
     direction TB
     G1["plan: atlas.find · atlas.latest"]:::plan
     G2["build: atlas.find · atlas.insert · blob.get · repo.worktree"]:::build
-    G3["instrument: atlas.* · repo.tag · tracing.read · policy.write"]:::inst
+    G3["instrument: atlas.find · atlas.insert · tracing.read"]:::inst
   end
   subgraph ST["harness/packages  ·  consumes"]
     direction TB
@@ -234,7 +250,8 @@ flowchart LR
   G1 --> S1
   G2 --> S2
   G3 --> S3
-  S3 ==>|"rewritePolicy: edits the grants"| GR
+  S3 -.->|"findings"| IMP[improver · outside the run]:::inst
+  IMP ==>|"rewritePolicy: edits the grants"| GR
   classDef plan fill:#241f3d,stroke:#8b7cf6,color:#e6e9ee
   classDef build fill:#3a2c12,stroke:#e0a33a,color:#e6e9ee
   classDef inst fill:#12342a,stroke:#3fb886,color:#e6e9ee
@@ -298,7 +315,7 @@ flowchart LR
     R2[("R2 · optional blob")]:::battery
   end
   subgraph AT["MongoDB Atlas Sandbox"]
-    DB[("3pt db · 7 collections")]:::atlas
+    DB[("3pt db · 8 collections")]:::atlas
     GF[("GridFS · media bytes, default")]:::atlas
     VS["Vector Search · transcripts_vec"]:::atlas
   end
@@ -333,9 +350,11 @@ flowchart TB
     RP[harness/packages/plan]:::plan
     RB[harness/packages/build]:::build
     RI[harness/packages/instrument]:::inst
+    RM[harness/packages/improver]:::inst
     RD[/harness/policies · harness/checkpoints/]:::data
     RP --> RB --> RI
-    RI ==>|backfeed| RD
+    RI -.->|findings| RM
+    RM ==>|backfeed| RD
     RD --> RP
   end
   subgraph LEFT["left side · media context"]
@@ -367,11 +386,11 @@ flowchart TB
 gitGraph
   commit id: "scaffold"
   commit id: "iter 1 build"
-  commit id: "iter 1 instrument · policy v1" tag: "cp/1"
+  commit id: "iter 1 improve · policy v1" tag: "cp/1"
   commit id: "iter 2 build"
-  commit id: "iter 2 instrument · policy v2" tag: "cp/2"
+  commit id: "iter 2 improve · policy v2" tag: "cp/2"
   commit id: "iter 3 build (regression)"
-  commit id: "iter 3 instrument · policy v3" tag: "cp/3"
+  commit id: "iter 3 improve · policy v3" tag: "cp/3"
   branch rollback
   checkout rollback
   commit id: "3pt rollback cp/2 · policy v2 restored" type: REVERSE
@@ -403,8 +422,9 @@ flowchart BT
   PL["@3pt/plan"]:::plan --> CORE
   BU["@3pt/build"]:::build --> CORE
   IN["@3pt/instrument"]:::inst --> CORE
+  IM["@3pt/improver"]:::inst --> CORE
   ME["@3pt/media"]:::build --> CORE
-  CLI["@3pt/cli"]:::build --> PL & BU & IN
+  CLI["@3pt/cli"]:::build --> PL & BU & IN & IM
   API["@3pt/api"]:::surface --> CORE
   WK["@3pt/worker"]:::build --> ME
   DS["@3pt/design-system"]:::surface
@@ -436,9 +456,9 @@ Each recipe is a fixed number of moves. If a change needs more, the architecture
 | To add… | Moves | Diagram |
 |---|---|---|
 | **A surface** (a new UI) | 1. `ui/apps/<name>` depending on `@3pt/design-system` + `@3pt/inspector-client`. 2. Nothing else. If it needs a verb the API lacks, that is an API change, made first. | 4.1, 4.4 |
-| **A build harness** | Struck 2026-09-26 13:00: the harness is Strands (`docs/12-strands-archaeology.md`). A new *model* is one route candidate; a new *tool* (Claude Code, Kiro as shell-outs) is one `tool({...})`. `HarnessAdapter` stays only until `@3pt/strands` compiles. | 4.2 |
+| **A build harness** | Struck 2026-09-26 13:00: the harness is Strands (`docs/12-strands-archaeology.md`). A new *model* is one route candidate; a new *tool* (Claude Code, Kiro as shell-outs) is one `tool({...})`. `@3pt/build` is a dry run until `@3pt/strands` compiles. | 4.2 |
 | **A battery** (a new data source, store, or service) | 1. `infra/batteries/<name>` with the four files (package, descriptor, provision, SKILL). 2. Name its grants in the descriptor. 3. Nothing in `harness/` changes until a policy grants them. | 4.3 |
-| **A measurement** (a new M-*) | 1. Add the id to `METRICS` in the tracing battery and define it in docs/07. 2. Instrument writes it; Plan may read it. | 4.2, 4.6 |
+| **A measurement** (a new M-*) | 1. Add the id to `METRICS` in the tracing battery and define it in docs/07. 2. Instrument writes it; Plan and the improver may read it. | 4.2, 4.6 |
 | **A collection** | 1. `COLLECTIONS` in core. 2. Its indexes in the atlas battery. 3. A record type in core if stages touch it. | 4.5 |
 | **A left-side job** (indexer, transcriber, migration) | 1. A `Job['kind']` in core. 2. Its derivation in `@3pt/media`. 3. Its handler in `apps/worker`. | 4.6 |
 

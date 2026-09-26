@@ -2,7 +2,7 @@
   "name": "@3pt/battery-atlas",
   "version": "0.0.1",
   "private": true,
-  "description": "Battery: MongoDB Atlas Sandbox. Provisions the database, the seven collections, indexes, and the vector index over transcripts. Supplies the real Store.",
+  "description": "Battery: MongoDB Atlas Sandbox. Provisions the database, the eight collections, indexes, and the vector index over transcripts. Supplies the real Store.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,8 +1,7 @@
 # Xcode / SwiftPM
 *.xcodeproj/
 !ui/apps/macos/project.yml
-build/
-!harness/packages/build/
+ui/apps/macos/build/
 DerivedData/
 .build/
 *.xcuserstate
