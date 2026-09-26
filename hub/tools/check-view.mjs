@@ -33,6 +33,7 @@ ok(sg.includes('id="s1.12"') && sg.includes('2 ideas') && sg.includes('<p>words<
 ok(V.md('[b](../brainstorming.md) [v](00-vision.md)', 'docs/').includes('f=brainstorming.md') && V.md('[v](00-vision.md)', 'docs/').includes('f=docs/00-vision.md'), 'relative links resolve against the document directory');
 ok(('a' + NUL + 'b').includes(NUL) === true, 'NUL canary cannot detect NUL');
 ok(!readFileSync(join(REPO, 'site', 'view-render.js')).includes(0), 'view-render.js contains a literal NUL byte (git will treat it as binary)');
+ok(V.md('## 2. Capability ledger\n### What each stage\'s harness is, concretely\n## a\n## a').match(/id="2-capability-ledger"[\s\S]*id="what-each-stages-harness-is-concretely"[\s\S]*id="a"[\s\S]*id="a-2"/), 'headings carry slug ids (prov.mjs rule, deduped) so #anchors land');
 
 // every real document in the artifact
 const docs = [];
@@ -77,5 +78,49 @@ for (const d of docs) {
   }
 }
 
+// every #anchor that points into a markdown document must land: on a heading slug (the Viewer's
+// rule, same as prov.mjs), on a literal id="…", or on a segment marker <!-- sN.NN. Checked for
+// markdown links in docs and for view.html?f=<doc>#<anchor> in every leaf and data file, so a
+// pointer page cannot ship a dead pointer. Leaf anchors (x.html#id) must find id="…" in that leaf.
+const slug = h => h.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-') || 'section';
+const headingIds = new Map();
+const idsOf = file => {
+  if (!headingIds.has(file)) {
+    const t = readFileSync(join(ROOT, file), 'utf8'); const seen = {}; const ids = new Set();
+    for (const m of t.matchAll(/^#{1,6}\s+(.*)$/gm)) { let s = slug(m[1]); if (seen[s]) { seen[s]++; s += '-' + seen[s]; } else seen[s] = 1; ids.add(s); }
+    for (const m of t.matchAll(/<!--\s*(s\d+\.\d{2})\b/g)) ids.add(m[1]);
+    for (const m of t.matchAll(/\bid="([^"]+)"/g)) ids.add(m[1]);
+    headingIds.set(file, { ids, text: t.toLowerCase() });
+  }
+  return headingIds.get(file);
+};
+const lands = (file, a) => { const { ids, text } = idsOf(file); const al = a.toLowerCase(); return ids.has(a) || [...ids].some(i => i.startsWith(al)) || text.includes(al); };
+let anchors = 0;
+for (const d of docs) {
+  if (!/\.md$/.test(d)) continue;
+  const text = readFileSync(join(ROOT, d), 'utf8');
+  for (const m of text.matchAll(/\[[^\]]*\]\(([^)\s#]+\.md)#([^)\s]+)\)/g)) {
+    const target = m[1].startsWith('/') ? m[1].slice(1) : relative(ROOT, join(ROOT, dirname(d), m[1]));
+    if (!existsSync(join(ROOT, target))) continue;   // reported above
+    anchors++; if (!lands(target, decodeURIComponent(m[2]))) errs.push(`${d}: #${m[2]} lands nowhere in ${target}`);
+  }
+}
+const leafIds = new Map();
+for (const f of readdirSync(ROOT).filter(x => /\.(html|js)$/.test(x))) {
+  // comments are not pointers: a data file may document the pointer grammar in its header
+  const text = readFileSync(join(ROOT, f), 'utf8').replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  for (const m of text.matchAll(/view\.html\?f=([^#"'\s)]+)#([^"'\s)<]+)/g)) {
+    const target = decodeURIComponent(m[1]);
+    if (!existsSync(join(ROOT, target))) { errs.push(`${f}: viewer target missing: ${target}`); continue; }
+    anchors++; if (!lands(target, decodeURIComponent(m[2]))) errs.push(`${f}: view.html?f=${target}#${m[2]} lands nowhere`);
+  }
+  for (const m of text.matchAll(/(?:^|["'(\s])\.?\/?([a-z0-9-]+\.html)#([\w.-]+)/g)) {
+    if (m[1] === 'view.html') continue;
+    const leaf = join(ROOT, m[1]); if (!existsSync(leaf)) { errs.push(`${f}: leaf missing for anchor ${m[1]}#${m[2]}`); continue; }
+    if (!leafIds.has(m[1])) leafIds.set(m[1], new Set([...readFileSync(leaf, 'utf8').matchAll(/\bid="([^"]+)"/g)].map(x => x[1])));
+    anchors++; if (!leafIds.get(m[1]).has(m[2])) errs.push(`${f}: ${m[1]}#${m[2]} has no id="${m[2]}" in that leaf`);
+  }
+}
+
 if (errs.length) { errs.forEach(e => console.error('FAIL:', e)); process.exit(1); }
-console.log(`OK — 14 unit checks, ${n} workspace documents rendered clean, ${links} markdown links resolve`);
+console.log(`OK — 15 unit checks, ${n} workspace documents rendered clean, ${links} markdown links resolve, ${anchors} anchors land`);

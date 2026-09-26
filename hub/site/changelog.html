@@ -99,6 +99,11 @@
       ['explorer', 'decide', 'ICP explorer',                        'Five directions × nine criteria, four presets, live dials. Reports which ordering holds under every preset instead of a single score.', ['Weigh the directions','./icp-explorer.html'], null],
       ['directions','decide','ICP directions brief',                'For each direction: focus, example use case, example company type, lander messaging, the fully instantiated app, and the rule risk.', ['Read the brief','./view.html?f=docs/08-icp-directions.md'], null],
       ['board',    'build',  'Lane board',                          'Owner, status ladder and next action per lane, persisted per browser, exportable as text for Discord. The hub tallies read from it.', ['Claim a lane','./lanes.html'], null]
+    ]],
+    ['2026-09-26 · 13:15–14:50', 'The harness finds its basis', 'Strands turned out to ship the harness layer the workflow doc planned to write. The archaeology graded it, the diagrams taught it, the journey answers what we asked of it.', [
+      ['strands',  'build',  'Strands archaeology and diagrams',    'Twenty-one fetched sources, a graded capability ledger, a strike list, a lexicon of handles; ten Mermaid diagrams of the systems we build on. 3PT becomes a Policy → harness compiler.', ['Read the ledger','./view.html?f=docs/12-strands-archaeology.md#2-capability-ledger'], '11212da'],
+      ['journey',  'build',  'Strands, answered',                   'Four questions (configure, fine-tune, self-improve, media workflow) as a journey leaf: an answer in a breath, a figure, then every pointer as a chip into the docs, the code, and Strands. Register in strands-data.js; record in docs/16.', ['Take the journey','./strands-journey.html'], null],
+      ['anchors',  'record', 'Viewer headings land',                'Every heading in a rendered document now carries a slug id, so view.html?f=<doc>#<heading> scrolls to it; the lint checks that every anchor in a doc, a leaf or a data file lands.', ['See it land','./view.html?f=docs/12-strands-archaeology.md#3-lexicon-the-semantic-basis'], null]
     ]]
   ];
   var total = WAVES.reduce(function(a,w){ return a+w[3].length; },0); T.save('changelog_total', total);

@@ -43,6 +43,8 @@ doc docs/glossary.md#Instrumentation backfeed
 term instrumentation loop
 term backfeed
 note "test in a production session, with some backport" was the mentor's prompt for the quality loop
+doc docs/16-strands-questions.md
+doc hub/site/index.html
 -->
 Why not also give some instructions here to maintain quality? We can test in a production session. There will be some backport. That's a great idea.
 
@@ -64,6 +66,7 @@ doc 3Pt_MOTTO.md
 term retrospective
 term measurement
 doc docs/12-decisions.md
+doc docs/16-strands-questions.md
 -->
 If we have the planning and instrumentation system, not only dispatch to build but also dispatch to instrument, we could also have a mechanism that considers it a little more heuristically. Provided that the build plan is going as desired, we will do a hypothetical retrospective on what this plan is over time. At every checkpoint, we just reflect on the last few things we don't only have to meet in those dimensions. That retrospective goes into the new dimension of the evolution of the harness, which is measurement. Great, so that the building of the harness
 
@@ -83,6 +86,8 @@ term checkpoint
 term build-with-instrumentation loop
 note Yash restating the system to the mentor ("you can correct me"); the mentor leaves here
 doc docs/12-decisions.md
+doc docs/16-strands-questions.md
+doc hub/site/index.html
 -->
 The planning stage does the build process and also plans for the evaluation and instrumentation. Once it starts building, we have a build-with-instrumentation loop.
 
@@ -111,6 +116,7 @@ from s1.05
 lane 2
 doc docs/00-vision.md#hackathon-framing
 doc docs/07-assessment-and-measurement.md#T-2
+doc docs/16-strands-questions.md
 -->
 Help someone run a business. I think I have a good problem statement here: we should focus on media-heavy harnesses. I feel like a lot of people don't work on media-heavy workloads, and I think long-term memory can be helpful for them over time. If we build a media-heavy harness that is self-replicating and self-improving, I think we will have some issues with storage, so we'll have to maintain and manage that. We can make a UI for media-heavy workloads and probably get some sort of feedback or information online from that.
 
@@ -129,6 +135,7 @@ doc docs/glossary.md#Furnace
 term furnace
 term left side / right side of the triangle
 doc docs/12-decisions.md
+doc docs/16-strands-questions.md
 -->
 I think the new dimension you're opening up for media-heavy harnesses is that we have terse indexes of large media assets, blobs, non-SQL stores, and other respective stores that need to be embedded in the codebase. The context and specificity of that content need to be managed over time. There are also codified pipelines that run as code and live inside the running repository.
 
@@ -243,6 +250,7 @@ term read-once transcript
 term hot / cold tier
 doc docs/08-icp-directions.md
 doc docs/12-decisions.md
+doc docs/16-strands-questions.md
 -->
 Yash is going to introduce some of the background and statement of need for the media-heavy workflows we're addressing, along with the problems we're addressing in them for our ICPs.
 - How do you manage storage for this? How do you manage what needs to be hot storage and what needs to be cold storage in media? Which media is relevant right now, and which media needs to be accessible right away?
@@ -365,6 +373,7 @@ pivot opportunity-finding :: value must come from the stored context, not outsid
 from s1.19
 doc docs/00-vision.md#hackathon-framing
 doc docs/06-goal-and-use-case.md#goal
+doc docs/16-strands-questions.md
 -->
  We're still considering whether we're going to go for the self-improving harness (which I think we have a good scaffold for) or the long-term domain harness. Even in the long-term domain harness, the more important input would be what is valuable in the industry rather than what is valuable in the context we are storing. That way, what we are building wouldn't create value because the value would actually come from outside sources and from using the context we have from our images.
 
@@ -381,6 +390,7 @@ from s1.20 s1.11
 doc docs/00-vision.md#scope-for-the-hackathon
 doc docs/06-goal-and-use-case.md#recap
 doc docs/07-assessment-and-measurement.md#transcript-claims-that-did-not-converge
+doc docs/16-strands-questions.md
 -->
 In what scenarios or workflow     or business cases to we want media over time:
 
@@ -519,6 +529,7 @@ doc docs/06-goal-and-use-case.md#the-ui-we-want
 doc docs/00-vision.md#the-supervisory-ui
 doc docs/07-assessment-and-measurement.md#T-10
 doc docs/12-decisions.md
+doc docs/16-strands-questions.md
 -->
  To recap there, we have this 3-point harness system. It's self-improving because there is an instrumentable flow of media that's incoming and being processed, and the processor for that is the harness. The harness is going to grow over time.
 
@@ -569,6 +580,7 @@ pull down the file as md with links
 note prompt 705ce548-b848-4109-84f0-ae3e8502b6a0 claude c1b624fa
 note commits in window 81a1cf1 3ea05e0 12942eb
 note 1 pasted block(s) unwrapped
+doc docs/16-strands-questions.md
 -->
 
 Once that's done, let's go ahead and pull from origin. There is a transcript block, and then we are going to build a parallel respective assessment against the transcript block as we converge on the respective thesis and hypothesis of the respective buildout here for this 3PT harness system for media workflows and the measurement system. The measurement system is for the way in which the recursive feedback loop for the improvement will be measured, which we then want to map to the accessible respective products and incentives that are provided from this respective hackathon.
@@ -677,6 +689,7 @@ Give me some respective Bash shell tree structures of the overall proposed layou
 <!-- s4.04 P 12:59
 note prompt a05188dc-f997-4d73-9895-ecd4dbd5469f claude ae92d983
 note commits in window 7ba6603
+doc docs/16-strands-questions.md
 -->
 
 But if you are just building off of strands  In the harness, we need a model router. What else do we need? We have strands, so we build off the AWS strands. We need to do an Archaeologization app utilizing the respective Archaeologization skill, so that we can then get some type of topology with respect to how to semantically invoke the respective available options and methods within that characterization. Don't rebuild stuff. Just see your strands and build on top of strands. Yes, we're just going to build on top of strands. That will be our primary harness capability, which we're iterating on. We want to get to a semantically referencable basis by which both Yash and I can communicate with that respective harness and the affordances thereof, which we're utilizing. Go ahead and research strands. It's part of this respectiv hackathon, and we want to see how we can build on that respectiv topology accordingly.

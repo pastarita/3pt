@@ -118,8 +118,8 @@
    "who": "XP",
    "line": 35,
    "bodyLines": [
-    47,
-    54
+    49,
+    56
    ],
    "words": 118,
    "excerpt": "Why not also give some instructions here to maintain quality? We can test in a production session. There will be some backport. That's a great idea.",
@@ -157,7 +157,9 @@
    "docs": [
     "docs/00-vision.md#loops-inside-the-loop",
     "docs/07-assessment-and-measurement.md#T-1",
-    "docs/glossary.md#Instrumentation backfeed"
+    "docs/glossary.md#Instrumentation backfeed",
+    "docs/16-strands-questions.md",
+    "hub/site/index.html"
    ],
    "code": [],
    "terms": [
@@ -171,6 +173,7 @@
    "citedBy": [
     "docs/00-vision.md",
     "docs/07-assessment-and-measurement.md",
+    "docs/16-strands-questions.md",
     "docs/glossary.md",
     "hub/site/index.html"
    ]
@@ -181,10 +184,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "XP",
-   "line": 55,
+   "line": 57,
    "bodyLines": [
-    68,
-    71
+    71,
+    74
    ],
    "words": 98,
    "excerpt": "If we have the planning and instrumentation system, not only dispatch to build but also dispatch to instrument, we could also have a mechanism that…",
@@ -226,7 +229,8 @@
     "docs/07-assessment-and-measurement.md#T-6",
     "docs/glossary.md#Retrospective",
     "3Pt_MOTTO.md",
-    "docs/12-decisions.md"
+    "docs/12-decisions.md",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [
@@ -240,6 +244,7 @@
     "docs/00-vision.md",
     "docs/07-assessment-and-measurement.md",
     "docs/12-decisions.md",
+    "docs/16-strands-questions.md",
     "docs/glossary.md"
    ]
   },
@@ -249,10 +254,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "YX",
-   "line": 72,
+   "line": 75,
    "bodyLines": [
-    87,
-    96
+    92,
+    101
    ],
    "words": 190,
    "excerpt": "The planning stage does the build process and also plans for the evaluation and instrumentation. Once it starts building, we have a…",
@@ -300,7 +305,9 @@
     "docs/03-workflow.md#the-initialized-pipeline",
     "docs/07-assessment-and-measurement.md#T-5",
     "docs/glossary.md#Checkpoint",
-    "docs/12-decisions.md"
+    "docs/12-decisions.md",
+    "docs/16-strands-questions.md",
+    "hub/site/index.html"
    ],
    "code": [],
    "terms": [
@@ -316,6 +323,7 @@
     "docs/03-workflow.md",
     "docs/07-assessment-and-measurement.md",
     "docs/12-decisions.md",
+    "docs/16-strands-questions.md",
     "docs/glossary.md",
     "hub/site/index.html"
    ]
@@ -326,10 +334,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "?",
-   "line": 97,
+   "line": 102,
    "bodyLines": [
-    102,
-    105
+    107,
+    110
    ],
    "words": 9,
    "excerpt": "What do we want our harness to do?",
@@ -362,10 +370,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 106,
+   "line": 111,
    "bodyLines": [
-    115,
-    116
+    121,
+    122
    ],
    "words": 92,
    "excerpt": "Help someone run a business. I think I have a good problem statement here: we should focus on media-heavy harnesses. I feel like a lot of people don't work…",
@@ -405,7 +413,8 @@
    ],
    "docs": [
     "docs/00-vision.md#hackathon-framing",
-    "docs/07-assessment-and-measurement.md#T-2"
+    "docs/07-assessment-and-measurement.md#T-2",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [],
@@ -413,7 +422,8 @@
    "notes": [],
    "citedBy": [
     "docs/00-vision.md",
-    "docs/07-assessment-and-measurement.md"
+    "docs/07-assessment-and-measurement.md",
+    "docs/16-strands-questions.md"
    ]
   },
   {
@@ -422,10 +432,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "P",
-   "line": 117,
+   "line": 123,
    "bodyLines": [
-    133,
-    140
+    140,
+    147
    ],
    "words": 219,
    "excerpt": "I think the new dimension you're opening up for media-heavy harnesses is that we have terse indexes of large media assets, blobs, non-SQL stores, and other…",
@@ -492,7 +502,8 @@
     "docs/00-vision.md#two-sides-of-the-triangle",
     "docs/07-assessment-and-measurement.md#T-11",
     "docs/glossary.md#Furnace",
-    "docs/12-decisions.md"
+    "docs/12-decisions.md",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [
@@ -505,6 +516,7 @@
     "docs/00-vision.md",
     "docs/07-assessment-and-measurement.md",
     "docs/12-decisions.md",
+    "docs/16-strands-questions.md",
     "docs/glossary.md"
    ]
   },
@@ -514,10 +526,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y?",
-   "line": 141,
+   "line": 148,
    "bodyLines": [
-    148,
-    151
+    155,
+    158
    ],
    "words": 120,
    "excerpt": "media context or media plus context, and then code plus infra, or maybe code plus harness. We can go really deep on the media-heavy harness because we could…",
@@ -564,10 +576,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "YP",
-   "line": 152,
+   "line": 159,
    "bodyLines": [
-    162,
-    169
+    169,
+    176
    ],
    "words": 155,
    "excerpt": "In images, what kind of problem do we want to solve with the harness specifically? Do we want to keep it generic, so that it can handle whatever…",
@@ -630,10 +642,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "YP",
-   "line": 170,
+   "line": 177,
    "bodyLines": [
-    181,
-    188
+    188,
+    195
    ],
    "words": 169,
    "excerpt": "Media generation over time and media consistency. I'm trying to think from a user perspective: what would a user want to do with such a harness?",
@@ -703,10 +715,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 189,
+   "line": 196,
    "bodyLines": [
-    201,
-    206
+    208,
+    213
    ],
    "words": 217,
    "excerpt": "I think once we start with users, one could be advertising, because they have a lot of images and need to drive value out of them. One could be marketing,…",
@@ -774,10 +786,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "PY",
-   "line": 207,
+   "line": 214,
    "bodyLines": [
-    220,
-    227
+    227,
+    234
    ],
    "words": 279,
    "excerpt": "What are some of the use cases there for the analysis and production, and in what way would you want to differentiate across analysis versus production? I…",
@@ -842,10 +854,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 228,
+   "line": 235,
    "bodyLines": [
-    247,
-    253
+    255,
+    261
    ],
    "words": 301,
    "excerpt": "Yash is going to introduce some of the background and statement of need for the media-heavy workflows we're addressing, along with the problems we're…",
@@ -904,7 +916,8 @@
     "docs/glossary.md#Read-once transcript",
     "docs/glossary.md#Hot / cold tier",
     "docs/08-icp-directions.md",
-    "docs/12-decisions.md"
+    "docs/12-decisions.md",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [
@@ -919,6 +932,7 @@
     "docs/07-assessment-and-measurement.md",
     "docs/08-icp-directions.md",
     "docs/12-decisions.md",
+    "docs/16-strands-questions.md",
     "docs/glossary.md"
    ]
   },
@@ -928,10 +942,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "PY",
-   "line": 254,
+   "line": 262,
    "bodyLines": [
-    268,
-    270
+    276,
+    278
    ],
    "words": 170,
    "excerpt": "To lean into the hackathon in this way, we can use a list-based system and a NoSQL database like MongoDB to manage that remotely. We can also engineer…",
@@ -1002,10 +1016,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "?",
-   "line": 271,
+   "line": 279,
    "bodyLines": [
-    277,
-    283
+    285,
+    291
    ],
    "words": 14,
    "excerpt": "How will we divide our labor/Agentic Development thrust across Across:",
@@ -1045,10 +1059,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "P",
-   "line": 284,
+   "line": 292,
    "bodyLines": [
-    301,
-    309
+    309,
+    317
    ],
    "words": 207,
    "excerpt": "Predications: some of the predictions are that Yash and I are in a respective hackathon. There are several lanes, and we want to distribute workloads with…",
@@ -1130,10 +1144,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "?",
-   "line": 310,
+   "line": 318,
    "bodyLines": [
-    318,
-    324
+    326,
+    332
    ],
    "words": 8,
    "excerpt": "hack resource master link: https://docs.google.com/document/u/0/d/13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8/mobilebasic",
@@ -1175,10 +1189,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "P",
-   "line": 325,
+   "line": 333,
    "bodyLines": [
-    336,
-    348
+    344,
+    356
    ],
    "words": 227,
    "excerpt": "Use Case Potential Potential",
@@ -1244,10 +1258,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "YP",
-   "line": 349,
+   "line": 357,
    "bodyLines": [
-    356,
-    360
+    364,
+    368
    ],
    "words": 93,
    "excerpt": "The question is whether, for these types of companies that are using images for compliance, that data does not have extensible utilization and the value…",
@@ -1297,10 +1311,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 361,
+   "line": 369,
    "bodyLines": [
-    369,
-    374
+    378,
+    383
    ],
    "words": 137,
    "excerpt": "We're still considering whether we're going to go for the self-improving harness (which I think we have a good scaffold for) or the long-term domain…",
@@ -1330,7 +1344,8 @@
    "lanes": [],
    "docs": [
     "docs/00-vision.md#hackathon-framing",
-    "docs/06-goal-and-use-case.md#goal"
+    "docs/06-goal-and-use-case.md#goal",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [],
@@ -1343,7 +1358,8 @@
    "notes": [],
    "citedBy": [
     "docs/00-vision.md",
-    "docs/06-goal-and-use-case.md"
+    "docs/06-goal-and-use-case.md",
+    "docs/16-strands-questions.md"
    ]
   },
   {
@@ -1352,10 +1368,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 375,
+   "line": 384,
    "bodyLines": [
-    385,
-    399
+    395,
+    409
    ],
    "words": 225,
    "excerpt": "In what scenarios or workflow     or business cases to we want media over time:",
@@ -1401,7 +1417,8 @@
    "docs": [
     "docs/00-vision.md#scope-for-the-hackathon",
     "docs/06-goal-and-use-case.md#recap",
-    "docs/07-assessment-and-measurement.md#transcript-claims-that-did-not-converge"
+    "docs/07-assessment-and-measurement.md#transcript-claims-that-did-not-converge",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [],
@@ -1410,7 +1427,8 @@
    "citedBy": [
     "docs/00-vision.md",
     "docs/06-goal-and-use-case.md",
-    "docs/07-assessment-and-measurement.md"
+    "docs/07-assessment-and-measurement.md",
+    "docs/16-strands-questions.md"
    ]
   },
   {
@@ -1419,10 +1437,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "?",
-   "line": 400,
+   "line": 410,
    "bodyLines": [
-    408,
-    410
+    418,
+    420
    ],
    "words": 119,
    "excerpt": "— Hackathon Overview",
@@ -1477,10 +1495,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "P",
-   "line": 411,
+   "line": 421,
    "bodyLines": [
-    419,
-    424
+    429,
+    434
    ],
    "words": 126,
    "excerpt": "—   We'll call this the business case thesis: media companies are producing polyglot, media-heavy feeds that are specific to a particular institution and…",
@@ -1534,10 +1552,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "?",
-   "line": 425,
+   "line": 435,
    "bodyLines": [
-    430,
-    437
+    440,
+    447
    ],
    "words": 37,
    "excerpt": "What is the goal of the harness for it to be more valuable overtime",
@@ -1575,10 +1593,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 438,
+   "line": 448,
    "bodyLines": [
-    443,
-    446
+    453,
+    456
    ],
    "words": 56,
    "excerpt": "The 3PT-Harness can handle any kind of media for a company, and help that company learn.",
@@ -1616,10 +1634,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "YP",
-   "line": 447,
+   "line": 457,
    "bodyLines": [
-    459,
-    467
+    469,
+    477
    ],
    "words": 236,
    "excerpt": "Use Case:",
@@ -1688,10 +1706,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "Y",
-   "line": 468,
+   "line": 478,
    "bodyLines": [
-    475,
-    486
+    485,
+    496
    ],
    "words": 125,
    "excerpt": "Value Props",
@@ -1738,10 +1756,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "PY",
-   "line": 487,
+   "line": 497,
    "bodyLines": [
-    499,
-    507
+    509,
+    517
    ],
    "words": 321,
    "excerpt": "One side effect is that we might be able to use the XFCE screenshotter or something like it to produce images from regular use of a respective computer in…",
@@ -1817,10 +1835,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "P",
-   "line": 508,
+   "line": 518,
    "bodyLines": [
-    523,
-    531
+    534,
+    542
    ],
    "words": 187,
    "excerpt": "To recap there, we have this 3-point harness system. It's self-improving because there is an instrumentable flow of media that's incoming and being…",
@@ -1888,7 +1906,8 @@
     "docs/06-goal-and-use-case.md#the-ui-we-want",
     "docs/00-vision.md#the-supervisory-ui",
     "docs/07-assessment-and-measurement.md#T-10",
-    "docs/12-decisions.md"
+    "docs/12-decisions.md",
+    "docs/16-strands-questions.md"
    ],
    "code": [],
    "terms": [],
@@ -1898,7 +1917,8 @@
     "docs/00-vision.md",
     "docs/06-goal-and-use-case.md",
     "docs/07-assessment-and-measurement.md",
-    "docs/12-decisions.md"
+    "docs/12-decisions.md",
+    "docs/16-strands-questions.md"
    ]
   },
   {
@@ -1907,10 +1927,10 @@
    "date": "2026-09-26",
    "time": null,
    "who": "P",
-   "line": 532,
+   "line": 543,
    "bodyLines": [
-    544,
-    550
+    555,
+    561
    ],
    "words": 153,
    "excerpt": "Still dialing in ICP/Usecase. Our use case is particularly about interior design. Yash brought up interior design and I brought up construction. Yash…",
@@ -1971,10 +1991,10 @@
    "date": "2026-09-26",
    "time": "12:09",
    "who": "P",
-   "line": 555,
+   "line": 566,
    "bodyLines": [
-    559,
-    561
+    570,
+    572
    ],
    "words": 7,
    "excerpt": "register the docs for this hackathon: https://docs.google.com/document/u/0/d/13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8/mobilebasic",
@@ -1999,10 +2019,10 @@
    "date": "2026-09-26",
    "time": "12:10",
    "who": "P",
-   "line": 562,
+   "line": 573,
    "bodyLines": [
-    565,
-    567
+    576,
+    578
    ],
    "words": 8,
    "excerpt": "pull down the file as md with links",
@@ -2026,10 +2046,10 @@
    "date": "2026-09-26",
    "time": "12:11",
    "who": "P",
-   "line": 568,
+   "line": 579,
    "bodyLines": [
-    573,
-    577
+    585,
+    589
    ],
    "words": 148,
    "excerpt": "Once that's done, let's go ahead and pull from origin. There is a transcript block, and then we are going to build a parallel respective assessment against…",
@@ -2038,7 +2058,9 @@
    "from": [],
    "to": [],
    "lanes": [],
-   "docs": [],
+   "docs": [
+    "docs/16-strands-questions.md"
+   ],
    "code": [],
    "terms": [],
    "qs": [],
@@ -2047,7 +2069,9 @@
     "commits in window 81a1cf1 3ea05e0 12942eb",
     "1 pasted block(s) unwrapped"
    ],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "id": "s2.04",
@@ -2055,10 +2079,10 @@
    "date": "2026-09-26",
    "time": "12:15",
    "who": "P",
-   "line": 578,
+   "line": 590,
    "bodyLines": [
-    581,
-    583
+    593,
+    595
    ],
    "words": 3,
    "excerpt": "open it up",
@@ -2082,10 +2106,10 @@
    "date": "2026-09-26",
    "time": "12:16",
    "who": "P",
-   "line": 584,
+   "line": 596,
    "bodyLines": [
-    587,
-    589
+    599,
+    601
    ],
    "words": 1,
    "excerpt": "agian",
@@ -2109,10 +2133,10 @@
    "date": "2026-09-26",
    "time": "12:18",
    "who": "P",
-   "line": 590,
+   "line": 602,
    "bodyLines": [
-    593,
-    595
+    605,
+    607
    ],
    "words": 6,
    "excerpt": "okay, comit and push all this",
@@ -2136,10 +2160,10 @@
    "date": "2026-09-26",
    "time": "12:14",
    "who": "P",
-   "line": 600,
+   "line": 612,
    "bodyLines": [
-    604,
-    610
+    616,
+    622
    ],
    "words": 359,
    "excerpt": "We're going to build a respective indexing system for brainstorming.md, which is the transcript log, almost verbatim, of the conversation between Yash and…",
@@ -2164,10 +2188,10 @@
    "date": "2026-09-26",
    "time": "12:40",
    "who": "P",
-   "line": 611,
+   "line": 623,
    "bodyLines": [
-    614,
-    616
+    626,
+    628
    ],
    "words": 13,
    "excerpt": "okay, do we have a firstclass representation for this in the hub workspace?",
@@ -2191,10 +2215,10 @@
    "date": "2026-09-26",
    "time": "12:43",
    "who": "P",
-   "line": 617,
+   "line": 629,
    "bodyLines": [
-    621,
-    623
+    633,
+    635
    ],
    "words": 9,
    "excerpt": "commit up well segmented with descriptive commits and push",
@@ -2219,10 +2243,10 @@
    "date": "2026-09-26",
    "time": "12:51",
    "who": "P",
-   "line": 624,
+   "line": 636,
    "bodyLines": [
-    628,
-    630
+    640,
+    642
    ],
    "words": 33,
    "excerpt": "Let's make sure the project setting has that, and we have some type of direction with respect to the worktree management, the naming convention therefor,…",
@@ -2247,10 +2271,10 @@
    "date": "2026-09-26",
    "time": "12:55",
    "who": "P",
-   "line": 631,
+   "line": 643,
    "bodyLines": [
-    635,
-    637
+    647,
+    649
    ],
    "words": 90,
    "excerpt": "Make. There are a couple of things in the hub now that require group decisioning. Make, at the top of the hub, a respective group decisioning overview…",
@@ -2275,10 +2299,10 @@
    "date": "2026-09-26",
    "time": "13:04",
    "who": "P",
-   "line": 638,
+   "line": 650,
    "bodyLines": [
-    642,
-    646
+    654,
+    658
    ],
    "words": 131,
    "excerpt": "Okay, we have a bunch of Claude sessions going, which are in this repository. Within those respective sessions, we should be able to grab the direct…",
@@ -2303,10 +2327,10 @@
    "date": "2026-09-26",
    "time": "12:26",
    "who": "P",
-   "line": 651,
+   "line": 663,
    "bodyLines": [
-    654,
-    656
+    666,
+    668
    ],
    "words": 1,
    "excerpt": "/clear",
@@ -2330,10 +2354,10 @@
    "date": "2026-09-26",
    "time": "12:28",
    "who": "P",
-   "line": 657,
+   "line": 669,
    "bodyLines": [
-    661,
-    669
+    673,
+    681
    ],
    "words": 310,
    "excerpt": "Okay, let's set up the respective repo. We're going to go with a polyglot mono repo, expecting a TypeScript PWA and a Swift app locally, as well as some…",
@@ -2358,10 +2382,10 @@
    "date": "2026-09-26",
    "time": "12:55",
    "who": "P",
-   "line": 670,
+   "line": 682,
    "bodyLines": [
-    674,
-    676
+    686,
+    688
    ],
    "words": 19,
    "excerpt": "Give me some respective Bash shell tree structures of the overall proposed layouts and open them up in code.",
@@ -2386,10 +2410,10 @@
    "date": "2026-09-26",
    "time": "12:59",
    "who": "P",
-   "line": 677,
+   "line": 689,
    "bodyLines": [
-    681,
-    683
+    694,
+    696
    ],
    "words": 157,
    "excerpt": "But if you are just building off of strands  In the harness, we need a model router. What else do we need? We have strands, so we build off the AWS strands.…",
@@ -2398,7 +2422,9 @@
    "from": [],
    "to": [],
    "lanes": [],
-   "docs": [],
+   "docs": [
+    "docs/16-strands-questions.md"
+   ],
    "code": [],
    "terms": [],
    "qs": [],
@@ -2406,7 +2432,9 @@
     "prompt a05188dc-f997-4d73-9895-ecd4dbd5469f claude ae92d983",
     "commits in window 7ba6603"
    ],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "id": "s5.01",
@@ -2414,10 +2442,10 @@
    "date": "2026-09-26",
    "time": "12:31",
    "who": "P",
-   "line": 688,
+   "line": 701,
    "bodyLines": [
-    692,
-    703
+    705,
+    716
    ],
    "words": 208,
    "excerpt": "Let's go ahead and work on a number of respective proposals for design-system.html That will decide:",
@@ -2442,10 +2470,10 @@
    "date": "2026-09-26",
    "time": "12:52",
    "who": "P",
-   "line": 704,
+   "line": 717,
    "bodyLines": [
-    708,
-    710
+    721,
+    723
    ],
    "words": 2,
    "excerpt": "push this",
@@ -2470,10 +2498,10 @@
    "date": "2026-09-26",
    "time": "13:03",
    "who": "P",
-   "line": 711,
+   "line": 724,
    "bodyLines": [
-    716,
-    728
+    729,
+    741
    ],
    "words": 346,
    "excerpt": "Let's discuss CI. We want to look up MongoDB Atlas and contemplate a bunch of respective directions we can go in, against our typical respective framework…",
@@ -2625,7 +2653,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "checkpoint-retrospective",
@@ -2664,7 +2694,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "build-with-instrumentation-loop",
@@ -2698,7 +2730,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "checkpoint-only-memory",
@@ -2737,7 +2771,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "media-storage-management",
@@ -2832,7 +2868,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "furnace",
@@ -3107,7 +3145,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "read-once-transcript",
@@ -3124,7 +3164,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "icp-pipeline-engineer",
@@ -3445,7 +3487,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "yes-no-signals",
@@ -3793,7 +3837,9 @@
    ],
    "docs": [],
    "code": [],
-   "citedBy": []
+   "citedBy": [
+    "docs/16-strands-questions.md"
+   ]
   },
   {
    "slug": "bit-storage-reduction",
@@ -4281,6 +4327,35 @@
    ]
   },
   {
+   "path": "docs/16-strands-questions.md",
+   "landed": [
+    "s1.02",
+    "s1.03",
+    "s1.04",
+    "s1.06",
+    "s1.07",
+    "s1.13",
+    "s1.20",
+    "s1.21",
+    "s1.29",
+    "s2.03",
+    "s4.04"
+   ],
+   "cites": [
+    "s4.04",
+    "s1.02",
+    "s1.03",
+    "s2.03",
+    "s1.04",
+    "s1.20",
+    "s1.29",
+    "s1.06",
+    "s1.07",
+    "s1.13",
+    "s1.21"
+   ]
+  },
+  {
    "path": "docs/glossary.md",
    "landed": [
     "s1.02",
@@ -4330,7 +4405,10 @@
   },
   {
    "path": "hub/site/index.html",
-   "landed": [],
+   "landed": [
+    "s1.02",
+    "s1.04"
+   ],
    "cites": [
     "s1.02",
     "s1.04"
@@ -4346,16 +4424,5 @@
    ]
   }
  ],
- "gaps": [
-  {
-   "kind": "unbaked",
-   "seg": "s1.02",
-   "path": "hub/site/index.html"
-  },
-  {
-   "kind": "unbaked",
-   "seg": "s1.04",
-   "path": "hub/site/index.html"
-  }
- ]
+ "gaps": []
 };
