@@ -44,9 +44,9 @@
 <script src="./nav.js"></script>
 <div class="page">
   <header class="top">
-    <p class="eyebrow">Build · hot · state persists in this browser under <code>tpt_lanes_v1</code></p>
+    <p class="eyebrow">Build · hot · state persists in this browser under <code>tpt_lanes_v2</code></p>
     <h1>Lane board</h1>
-    <p class="lede">Who is doing what, right now. Assign an owner, cycle the status, export as text for the other principal; the board does not sync between browsers yet.</p>
+    <p class="lede">Term 2, opened 14:15. Six lanes with a gate each; export at every checkpoint into the doc's log. The board does not sync between browsers.</p>
   </header>
   <!-- Figure: the three code lanes every work lane lands in, and the one direction of dependency (docs/10-architecture.md §2) -->
   <figure class="fig" id="lanes-map">
@@ -93,7 +93,7 @@
   <div class="bar">
     <button id="export">Export as text</button>
     <button id="reset">Reset to defaults</button>
-    <span style="font-size:12px;color:var(--faint)"><span class="pv a">AUTHORED</span> defaults from <code>docs/02-lanes.md</code> · your edits overlay them</span>
+    <span style="font-size:12px;color:var(--faint)"><span class="pv a">AUTHORED</span> defaults from <code>docs/17-term-2-lanes.md</code> §5 · your edits overlay them</span>
   </div>
   <pre class="export" id="out"></pre>
   <div id="board"></div>
@@ -103,9 +103,9 @@
 <script>
 (function(){
   var T = window.T;
-  var saved = T.load('lanes_v1', {});
+  var saved = T.load('lanes_v2', {});
   function get(l){ var s = saved[l.key] || {}; return { owner: s.owner || l.owner, status: s.status || l.status, next: (s.next != null ? s.next : l.next) }; }
-  function set(key, patch){ saved[key] = Object.assign({}, saved[key] || {}, patch); T.save('lanes_v1', saved); draw(); }
+  function set(key, patch){ saved[key] = Object.assign({}, saved[key] || {}, patch); T.save('lanes_v2', saved); draw(); }
   function draw(){
     var counts = {}; T.PEOPLE.forEach(function(p){ counts[p]=0; });
     T.LANES.forEach(function(l){ counts[get(l).owner] = (counts[get(l).owner]||0) + 1; });
@@ -137,7 +137,7 @@
     out.style.display = out.style.display==='block' ? 'none' : 'block';
     navigator.clipboard && navigator.clipboard.writeText(out.textContent);
   };
-  document.getElementById('reset').onclick = function(){ saved = {}; T.save('lanes_v1', saved); draw(); };
+  document.getElementById('reset').onclick = function(){ saved = {}; T.save('lanes_v2', saved); draw(); };
   draw();
 })();
 </script>

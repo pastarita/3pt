@@ -83,7 +83,7 @@
     'brainstorming':  'view.html?f=brainstorming.md',
     'sources':        'view.html?f=docs/sources/hackathon-resource-guide.md',
     'icp':            'view.html?f=docs/01-icp.md',
-    'lanes-doc':      'view.html?f=docs/02-lanes.md',
+    'lanes-doc':      'view.html?f=docs/17-term-2-lanes.md',
     'workflow':       'view.html?f=docs/03-workflow.md',
     'architecture-doc': 'view.html?f=docs/10-architecture.md',
     'strands':        'view.html?f=docs/12-strands-archaeology.md',

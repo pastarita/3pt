@@ -24,7 +24,7 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `CLAUDE.md` / `AGENTS.md` | Context every coding agent loads before touching this repo |
 | `docs/00-vision.md` | What 3PT is and why |
 | `docs/01-icp.md` | Who it is for |
-| `docs/02-lanes.md` | Lanes, owners, Stack/UI/Backend split |
+| `docs/17-term-2-lanes.md` | Term 2 lanes, gates, checkpoint criterion (L1–L7 closed in `docs/02-lanes.md`) |
 | `docs/03-workflow.md` | Repo layout, pipeline skeleton, DevX, the install loop |
 | `docs/04-resources.md` | Partners, MCPs, credits, and which 3PT slot each fills |
 | `docs/05-rules.md` | Rules, banned projects, judging weights, deadlines |

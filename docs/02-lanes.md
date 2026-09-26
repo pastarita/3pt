@@ -1,5 +1,7 @@
 # Lanes and Division of Labor
 
+> **Superseded 2026-09-26 14:15 ET** by `docs/17-term-2-lanes.md`. L1–L7 are closed there (§4). Kept for the record.
+
 *Source of record. Two people (Patrick, Yash), each driving their own coding agents against
 this shared repo. Owners marked TBD are to be assigned at kickoff; fill them in here.*
 
