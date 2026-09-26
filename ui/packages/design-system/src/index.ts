@@ -32,6 +32,8 @@ export const app = {
     accent: '#2f6fed', accentSoft: '#e8f0fe', onAccent: '#ffffff',
     good: '#1f8a5b', goodSoft: '#e5f4ec', warn: '#b76e00', warnSoft: '#fdf1dc', alert: '#c93c2c', alertSoft: '#fbe9e6',
     scrim: 'rgba(20,20,22,.55)',
+    /* the mark: three points of the loop (plan, build, instrument), the same hues as the hub; onPhoto: text over a photo */
+    plan: '#7a68f0', build: '#c98a1a', instrument: '#2ea577', onPhoto: '#ffffff',
   },
   dark: {
     bg: '#161617', surface: '#1f1f21', sunk: '#262628', line: '#323235', lineStrong: '#44444a',
@@ -39,6 +41,7 @@ export const app = {
     accent: '#6b9cff', accentSoft: '#1d2a45', onAccent: '#0b1020',
     good: '#4cc28a', goodSoft: '#16302a', warn: '#e6a23c', warnSoft: '#3a2c14', alert: '#f07060', alertSoft: '#3d1f1b',
     scrim: 'rgba(0,0,0,.6)',
+    plan: '#8b7cf6', build: '#e0a33a', instrument: '#3fb886', onPhoto: '#ffffff',
   },
   /** type scale in px: caption, body, lead, title, display */
   size: { xs: 12, sm: 13, md: 15, lg: 18, xl: 24, xxl: 32 },

@@ -12,7 +12,7 @@
       "kind": "pages", "provider": "cloudflare", "project": "3pt-web", "account": "kothariwork@gmail.com's Account", "status": "live",
       "source": "dist/web-site", "build": "THREEPT_API_URL=https://3pt-harness.3pt-worker.workers.dev scripts/build-web-site.sh",
       "deploy": "npx wrangler pages deploy dist/web-site --project-name=3pt-web --branch=main", "cwd": ".",
-      "routes": { "/": "ui/apps/live/landing", "/app/": "ui/apps/live", "/studio/": "ui/apps/web", "/media-pool/": "data/mock/media-pool" },
+      "routes": { "/": "ui/apps/live/landing", "/app/": "ui/apps/web", "/results/": "hub/site/results.html", "/media-pool/": "data/mock/media-pool" },
       "url": "https://3pt-web.pages.dev", "preview": "https://<branch>.3pt-web.pages.dev", "health": "https://3pt-web.pages.dev/",
       "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"], "fallback": "vercel", "workflow": ".github/workflows/ci.yml"
     },

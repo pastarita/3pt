@@ -64,7 +64,7 @@ command, one health URL, recorded once in `infra/targets.json`.
 | Service | Host | Why this host | Status |
 |---|---|---|---|
 | `hub` | Cloudflare Pages project `3pt`, gated | exists, works, previews per PR | live |
-| `web` (judges' demo link) | Cloudflare Pages project `3pt-web`, public: `/` landing page, `/app/` live app, `/studio/` role screens | same toolchain as the hub, no login for judges (a submission requirement) | live, https://3pt-web.pages.dev |
+| `web` (judges' demo link) | Cloudflare Pages project `3pt-web`, public: `/` landing page, `/app/` the app (`ui/apps/web`), `/results/` replay results, `/studio/` redirects to `/app/` | same toolchain as the hub, no login for judges (a submission requirement) | live, https://3pt-web.pages.dev |
 | `pwa` | same Pages project as `web`, `/app` path, or its own project `3pt-app` | installable from the same origin; decide when `web` deploys | planned |
 | `api` + `worker` | **one** Cloudflare Worker `3pt-harness`: `fetch()` serves the API, `scheduled()` runs the worker `tick()` | the Node driver works on Workers since the 2025-01 `nodejs_compat` TCP support (compat date ≥ 2024-09-23); one deploy instead of two; cron replaces a long-lived change stream, which a Worker cannot hold | planned, driver-on-Workers is TO CONFIRM by a smoke test |
 | `macos` | the two machines, via the install loop | no partner support for Swift; ad-hoc builds only | live locally |

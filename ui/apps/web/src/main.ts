@@ -6,7 +6,7 @@
  *   │ with role-focused cards        │ quick actions, earlier chats)
  *   └───────────────────────────────┴──────────────┘
  *
- * Routes (hash): #/ home · #/p/<id> project · #/setup first run · #/flags feature flags.
+ * Routes (hash): #/ home · #/p/<id> project · #/harness versions · #/setup first run · #/flags feature flags.
  * Conventions the capture suite relies on (docs/13-ui-capture.md):
  *   data-region="<name>"  every part of the screen a tour, a test or an image crop can point at
  *   data-screen="<name>"  on <main>, the screen that is showing
@@ -15,15 +15,17 @@
 import { appCssVars } from '@3pt/design-system';
 import './styles.css';
 import {
-  LAYOUT, LESSONS, PHOTOS, PROJECT_QUICK, QUICK, ROLES, SESSIONS,
+  LIVE, LAYOUT, LESSONS, PHOTOS, PROJECT_QUICK, QUICK, ROLES, SESSIONS,
   WIDGETS, cardsFor, isWidget, photo, project, projectsFor, role, saversFor, unitStatus,
   type CardId, type Project, type RoleId, type Tone, type Widget, type WidgetId,
 } from './data';
-import { icon, photoArt } from './art';
+import { icon, mark, photoArt } from './art';
 import { flags, on, resetFlags, setFlag, DEFAULTS, type Flag } from './flags';
 import { autostart, endTour, resetTours, startTour, tourActive, tourStep, TOURS } from './tour';
 import { reply, type Msg } from './agent';
-import { loadLive, send } from './live';
+import { api, loadLive, send, setTurnHandler } from './live';
+import { bulb, kindLabel } from './bulb';
+import type { HarnessState } from '@3pt/inspector-client';
 
 const vars = document.createElement('style');
 vars.textContent = appCssVars();
@@ -61,11 +63,12 @@ function log(action: string, detail?: string) {
 
 /* ---------- routing ---------- */
 
-type Route = { screen: 'home' } | { screen: 'project'; id: string } | { screen: 'setup' } | { screen: 'flags' } | { screen: 'components' };
+type Route = { screen: 'home' } | { screen: 'project'; id: string } | { screen: 'harness' } | { screen: 'setup' } | { screen: 'flags' } | { screen: 'components' };
 function route(): Route {
   const h = location.hash.replace(/^#\/?/, '');
   if (h.startsWith('p/')) return { screen: 'project', id: h.slice(2) };
   if (h === 'flags') return { screen: 'flags' };
+  if (h === 'harness') return { screen: 'harness' };
   if (h === 'components') return { screen: 'components' };
   if (h === 'setup' || (!S.role && on('setup'))) return { screen: 'setup' };
   return { screen: 'home' };
@@ -85,7 +88,7 @@ const pic = (id: string, label: string) => { const x = photo(id); return x ? pho
 
 /** One line under each project card, written for the person looking. */
 function roleLine(p: Project, r: RoleId): string {
-  if (p.status === 'done') return r === 'owner' ? 'See what it cost and what you got' : 'Lessons from this job help Tower B';
+  if (p.status === 'done') return r === 'owner' ? 'See what it cost and what you got' : `Lessons from this job help ${project(LIVE.demo)?.name ?? 'the next job'}`;
   if (p.status === 'planned') return p.next;
   const n = LAYOUT[r].filter(c => isWidget(c) && !S.insights[c] && !S.dismissed[c]).length;
   if (r === 'owner') return `${p.percent}% done · ${n} new from 3PT`;
@@ -96,7 +99,7 @@ function roleLine(p: Project, r: RoleId): string {
 
 function setupScreen(): string {
   return `<section class="setup" data-region="setup">
-    <div class="setup-mark">${icon('sparkle', 'ic lg')}</div>
+    <div class="setup-mark">${mark()}</div>
     <h1>Welcome. What is your job?</h1>
     <p class="lead">Pick one. We will show you only what matters for it. You can change it later.</p>
     <div class="role-grid" data-region="role-picker">
@@ -125,7 +128,9 @@ function homeScreen(): string {
     </header>
     <section data-region="projects">
       <div class="pgrid">${grid(live)}</div>
-      ${done.length ? `<h2 class="section">Finished</h2><div class="pgrid small">${grid(done)}</div>` : ''}
+      ${done.length ? `<h2 class="section">Finished <small class="muted">${done.length} jobs · each one left lessons</small></h2>
+        <div class="pgrid small">${grid(S.expanded.done ? done : done.slice(0, 6))}</div>
+        ${done.length > 6 && !S.expanded.done ? `<button class="more" data-act="more" data-id="done">${icon('plus', 'ic sm')} Show all ${done.length}</button>` : ''}` : ''}
     </section>`;
 }
 
@@ -272,6 +277,44 @@ function flagsScreen(): string {
     <div class="row-btns"><button class="btn ghost" data-act="reset-tips">Show all tips again</button><button class="btn ghost" data-act="reset-flags">Reset settings</button><button class="btn ghost" data-act="reset-all">Start over</button><a class="btn ghost" href="#/components">Component library</a></div>`;
 }
 
+/* ---------- the harness: every version, newest first, with rollback ---------- */
+
+/** Loaded on demand from @3pt/api; `null` until then. A shipped or undone version clears it. */
+let HS: HarnessState | null = null, hsLoad: 'idle' | 'busy' | 'failed' = 'idle';
+async function loadHarness() {
+  if (hsLoad === 'busy') return;
+  hsLoad = 'busy';
+  try { HS = await api.harness(); hsLoad = 'idle'; } catch { hsLoad = 'failed'; }
+  if (route().screen === 'harness') render();
+}
+
+function harnessScreen(): string {
+  const head = `<nav class="crumbs"><a href="#/" class="back">${icon('back', 'ic sm')} Projects</a></nav>`;
+  if (!HS) {
+    if (hsLoad === 'idle') void loadHarness();
+    return `${head}<header class="page-head"><div><h1>How 3PT learns</h1><p class="lead">${hsLoad === 'failed' ? '3PT is not reachable right now. Try again in a minute.' : 'Loading every version…'}</p></div></header>`;
+  }
+  const cur = HS.versions.find(v => v.v === HS!.current);
+  const pt = (k: string, name: string, text: string) => `<div class="loop-pt ${k}"><b>${name}</b><span>${esc(text)}</span></div>`;
+  return `${head}
+    <header class="page-head"><div><p class="hello">Version ${HS.current} is on duty · ${HS.events} taps this session</p><h1>How 3PT learns</h1>
+      <p class="lead">Every tap is a signal. 3PT plans one change, builds it, and checks that it helped. Nobody approves it by hand.</p></div></header>
+    <section class="loop" data-region="loop">
+      ${pt('plan', 'Plan', 'Reads taps, hides and searches that came back empty. Picks one change.')}
+      ${pt('build', 'Build', cur?.changes[0] ?? 'Nothing built yet.')}
+      ${pt('instrument', 'Check', cur?.score != null ? `${cur.score}% of actions were useful in this version.` : 'Scores each version on useful actions. A drop means undo.')}
+    </section>
+    <h2 class="section">What it reads from each photo</h2>
+    <div class="fields">${HS.fields.map(f => `<span class="pill quiet">${esc(f)}</span>`).join('')}</div>
+    <h2 class="section">Every version <small class="muted">newest first · never edited</small></h2>
+    <ol class="vers" data-region="versions">${HS.versions.map(v => `<li class="ver${v.v === HS!.current ? ' is-current' : ''}${v.rolledBack ? ' is-undone' : ''}">
+      <span class="ver-n">v${v.v}</span>
+      <div class="ver-text">${v.kind ? `<span class="kind ${v.kind}">${esc(kindLabel(v.kind, v.to))}</span>` : ''}
+        <b>${esc(v.changes.join('. ') || 'The starting screen')}</b><small>${esc(v.when)} · ${v.by === 'harness' ? '3PT' : esc(v.by)}${v.why ? ` · ${esc(v.why)}` : ''}${v.rolledBack ? ' · undone' : ''}</small></div>
+      ${v.v === HS!.current ? '<span class="pill good">On duty</span>' : v.rolledBack ? '' : `<button class="btn ghost small" data-act="rollback" data-id="${v.v}">${icon('undo', 'ic sm')} Go back to this</button>`}
+    </li>`).join('')}</ol>`;
+}
+
 /* ---------- sidebar ---------- */
 
 function sidebar(rt: Route): string {
@@ -303,10 +346,19 @@ function sidebar(rt: Route): string {
 
 function topbar(): string {
   const r = me();
-  return `<div class="brand"><span class="logo">3</span><b>3PT</b></div>
+  const rt = route();
+  const tab = (href: string, label: string, on: boolean) => `<a class="nav-a${on ? ' on' : ''}" href="${href}"${on ? ' aria-current="page"' : ''}>${label}</a>`;
+  const tip = TOURS.some(t => t.screen === rt.screen && t.flag === 'tour');
+  return `<a class="brand" href="/" aria-label="3PT home">${mark()}<b>3PT</b></a>
+    <nav class="topnav" aria-label="Site" data-region="site-nav">
+      ${tab('#/', 'Projects', rt.screen === 'home' || rt.screen === 'project')}${tab('#/harness', 'How it learns', rt.screen === 'harness')}
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a class="nav-a" href="/results/">Results</a><a class="nav-a" href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Code ↗</a>
+    </nav>
     <div class="top-right">
+      <span data-slot="bulb"></span>
       ${on('presenter') ? `<div class="tour-menu" data-region="tour-menu">${TOURS.filter(t => on(t.flag)).map(t => `<button class="chip small" data-act="tour" data-id="${t.id}">${icon('compass', 'ic sm')} ${t.name}</button>`).join('')}</div>` : ''}
-      ${on('tour') && !on('presenter') ? `<button class="icon-btn" data-act="help" aria-label="Show tips" data-region="help">${icon('compass')}</button>` : ''}
+      ${on('tour') && !on('presenter') && tip ? `<button class="icon-btn" data-act="help" aria-label="Show tips" data-region="help">${icon('compass')}</button>` : ''}
       <label class="role-select" data-region="role">${icon(r.icon, 'ic sm')}
         <select data-act="role" aria-label="Your job">${ROLES.map(x => `<option value="${x.id}" ${x.id === r.id ? 'selected' : ''}>${x.name}</option>`).join('')}</select></label>
       <a class="avatar" href="#/flags" aria-label="Settings" data-region="settings">${r.person[0]}</a>
@@ -316,6 +368,15 @@ function topbar(): string {
 /* ---------- render ---------- */
 
 const app = document.getElementById('app')!;
+/* the bulb: lights up when 3PT ships a version. It rings at once when a tap here made it ship; the poll
+   catches versions shipped from another device or by the Worker. Built once, put back after every render. */
+const news = bulb(() => api.news(-1));
+setTurnHandler(t => {
+  if (t.shipped) toast(`3PT shipped version ${t.shipped.version}: ${t.shipped.changes[0]}`);
+  else if (t.rolled_back) toast(`3PT undid version ${t.rolled_back.version}. ${t.rolled_back.why}.`);
+  HS = null; void news.refresh(!!t.shipped);
+  if (route().screen === 'harness') render();
+});
 /** Photo note. The bundled photos are public domain or CC0 (no credit needed). Live photos from the API
  *  come from data/mock/media-pool, where some are CC BY / CC BY-SA, so the link to the credits stays. */
 function credits(): string {
@@ -330,16 +391,17 @@ function render() {
     return expose(rt);
   }
   app.className = 'shell' + (S.sheet ? ' sheet-open' : '');
-  const main = rt.screen === 'project' ? projectScreen(rt.id) : rt.screen === 'flags' ? flagsScreen() : rt.screen === 'components' ? componentsScreen() : homeScreen();
+  const main = rt.screen === 'project' ? projectScreen(rt.id) : rt.screen === 'harness' ? harnessScreen() : rt.screen === 'flags' ? flagsScreen() : rt.screen === 'components' ? componentsScreen() : homeScreen();
   app.innerHTML = `<header class="topbar" data-region="topbar">${topbar()}</header>
     <main class="main" data-screen="${rt.screen}" data-region="main">${main}${credits()}</main>
     <aside class="side" data-region="assistant" aria-label="Assistant">${sidebar(rt)}</aside>
     <button class="ask-fab" data-act="sheet" data-region="ask-fab" aria-label="Open assistant">${icon('sparkle', 'ic sm')} Ask</button>
     <div class="sheet-scrim" data-act="sheet"></div>`;
+  app.querySelector('[data-slot="bulb"]')?.replaceWith(news.el);
   const th = app.querySelector('.thread');
   if (th) th.scrollTop = th.scrollHeight;
   expose(rt);
-  if (rt.screen === 'home' || rt.screen === 'project') autostart(rt.screen);
+  if (rt.screen === 'home' || rt.screen === 'project' || (rt.screen === 'harness' && HS)) autostart(rt.screen);
 }
 
 /** Read-only view of app state for the capture suite. Never used by the app itself. */
@@ -398,8 +460,9 @@ app.addEventListener('click', e => {
     case 'dismiss': S.dismissed[id] = true; log('insight-no', id); save(); render(); toast('Hidden. 3PT will show fewer like this.'); break;
     case 'saver-on': S.savers[id] = 'on'; log('saver-on', id); save(); render(); toast('Turned on. You can undo it any time.'); break;
     case 'saver-no': S.savers[id] = 'no'; log('saver-no', id); save(); render(); break;
+    case 'rollback': void api.rollback(+id).then(() => { toast(`Back to version ${id}.`); HS = null; void news.refresh(); render(); }).catch(() => toast('3PT is not reachable right now.')); break;
     case 'undo': S.undone[+id] = true; log('undo', id); save(); render(); toast('Undone. The assistant went back one step.'); break;
-    case 'help': { const rt = route(); const t = TOURS.find(x => x.screen === rt.screen && x.flag === 'tour'); if (t) startTour(t.id); break; }
+    case 'help': { const rt = route(); const t = TOURS.find(x => x.screen === rt.screen && x.flag === 'tour'); if (!t || !startTour(t.id)) toast('No tips for this screen yet.'); break; }
     case 'tour': startTour(id); break;
     case 'reset-tips': resetTours(); toast('Tips will show again.'); break;
     case 'reset-flags': resetFlags(); render(); break;
@@ -436,4 +499,10 @@ if (route().screen === 'project') { S.visits++; save(); }
 last = location.hash;
 render();
 /* swap the sample data for the harness's own when the API answers; the first paint never waits for it */
-if (on('live.api')) void loadLive().then(ok => { if (ok) render(); }).catch(() => undefined);
+if (on('live.api')) { void news.refresh(); setInterval(() => { if (!document.hidden) void news.refresh(); }, 30_000); }
+/* a sample project opened before the live data came in has no live twin: open the live demo job instead */
+if (on('live.api')) void loadLive().then(ok => {
+  if (!ok) return;
+  const rt = route();
+  if (rt.screen === 'project' && !project(rt.id)) go(`#/p/${LIVE.demo}`); else render();
+}).catch(() => undefined);

@@ -36,6 +36,13 @@ const P: Record<string, string> = {
   compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/>',
 };
 
+/** The 3PT mark: a triangle whose three points are the loop's stages. The same drawing as the landing
+ *  page and the hub favicon, in this app's tokens so it follows light and dark. */
+export function mark(cls = 'mark'): string {
+  return `<svg class="${cls}" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4.5 28 26.5H4Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>` +
+    `<circle cx="16" cy="4.5" r="3.4" fill="var(--plan)"/><circle cx="28" cy="26.5" r="3.4" fill="var(--build)"/><circle cx="4" cy="26.5" r="3.4" fill="var(--instrument)"/></svg>`;
+}
+
 export function icon(name: string, cls = 'ic'): string {
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] ?? P.more}</svg>`;
 }

@@ -9,7 +9,7 @@
 import { on, type Flag } from './flags';
 import { icon } from './art';
 
-export type Screen = 'home' | 'project';
+export type Screen = 'home' | 'project' | 'harness';
 export interface Step { region: string; title: string; body: string; flag?: Flag }
 export interface Tour { id: string; name: string; screen: Screen; flag: Flag; steps: Step[] }
 
@@ -27,6 +27,11 @@ export const TOURS: Tour[] = [
     { region: 'insight', title: 'What 3PT noticed', body: 'On top, 3PT adds one thing it found in your photos. It says what it looked at, so you can check.' },
     { region: 'card-week', title: 'This week', body: 'The newest photos. Tap one to see it big.' },
     { region: 'more', title: 'More when you want it', body: 'Extra cards wait here, so the screen stays calm.' },
+  ] },
+  { id: 'learns', name: 'How 3PT learns', screen: 'harness', flag: 'tour', steps: [
+    { region: 'loop', title: 'One loop, three points', body: 'Plan picks one change from what people tap. Build ships it. Check scores it.' },
+    { region: 'versions', title: 'Every version', body: 'Each change is a new version. Nothing is edited after it ships.' },
+    { region: 'bulb', title: 'The bulb', body: 'It lights up when 3PT ships something new. Tap it to see what changed and why.' },
   ] },
   { id: 'harness', name: 'How it learns', screen: 'project', flag: 'presenter', steps: [
     { region: 'card-savers', title: 'It spots repeat work', body: 'It watches what people do by hand, again and again, and offers to do it. You say yes or no.', flag: 'cards.savers' },

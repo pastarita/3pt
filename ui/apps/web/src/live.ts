@@ -4,10 +4,10 @@
  * and the harness's version history. Every tap goes back as an event, which is what the loop learns from.
  * If the API does not answer in 1.5 s, or the flag `live.api` is off (?ff=-live.api), the sample data stays.
  */
-import { createClient, type Photo as ApiPhoto } from '@3pt/inspector-client';
+import { createClient, type LoopTurn, type Photo as ApiPhoto } from '@3pt/inspector-client';
 import { FILES_BY_ID, LESSONS, LIVE, PHOTOS, PROJECTS, ROLES, SAVERS, TODOS, WIDGETS, type PhotoKind, type Project, type RoleId, type Todo } from './data';
 
-const api = createClient(import.meta.env.VITE_THREEPT_API_URL ?? 'http://127.0.0.1:8787');
+export const api = createClient(import.meta.env.VITE_THREEPT_API_URL ?? 'http://127.0.0.1:8787');
 const KIND: Record<string, PhotoKind> = {
   site: 'concrete', concrete: 'concrete', steel: 'concrete', framing: 'framing', plumbing: 'plumbing', electrical: 'electrical',
   hvac: 'electrical', insulation: 'drywall', drywall: 'drywall', finishes: 'finished', paint: 'finished', exterior: 'exterior',
@@ -46,12 +46,20 @@ export async function loadLive(): Promise<boolean> {
   PROJECTS.splice(0, PROJECTS.length, ...projects);
 
   /* photos: every live job's photos; the sample ones stay so the widgets' authored examples still resolve */
-  for (const p of firm.projects.filter(x => x.status === 'live')) for (const x of (await api.photos(p.id)).photos) addPhoto(x, p.id);
+  /* every request below runs in parallel: the Worker answers each in about 0.8 s, so in series the app waited 11 s */
+  const liveJobs = firm.projects.filter(x => x.status === 'live');
+  const [shots, needs, saverBlock, units] = await Promise.all([
+    Promise.all(liveJobs.map(p => api.photos(p.id))),
+    Promise.all(ALL.map(r => api.block('needs', demo, r))),
+    api.block('timesavers', demo, 'owner'),
+    api.block('beforeclose', demo, 'super') as Promise<{ level?: number; units?: { unit: number; missing: boolean; closed?: boolean; photo: ApiPhoto | null }[] }>,
+  ]);
+  liveJobs.forEach((p, i) => { for (const x of shots[i].photos) addPhoto(x, p.id); });
 
   /* to-dos: ask the harness once per role, merge by id */
   const todos = new Map<string, Todo>();
-  for (const r of ALL) {
-    const b = await api.block('needs', demo, r);
+  for (const [i, r] of ALL.entries()) {
+    const b = needs[i];
     for (const t of b.items as { id: string; kind: string; title: string; action: string; do: string; photo: ApiPhoto | null }[]) {
       if (t.photo) addPhoto(t.photo, demo);
       const have = todos.get(t.id);
@@ -63,13 +71,12 @@ export async function loadLive(): Promise<boolean> {
   TODOS.splice(0, TODOS.length, ...todos.values());
 
   /* time savers the harness found, and its own history */
-  const savers = (await api.block('timesavers', demo, 'owner')).items as { id: string; title: string; kind: string; hours: number; on: boolean }[];
+  const savers = saverBlock.items as { id: string; title: string; kind: string; hours: number; on: boolean }[];
   SAVERS.splice(0, SAVERS.length, ...savers.map(s => ({ id: s.id, title: s.title, why: `${s.kind}${s.on ? ' · already on' : ''} · found in past jobs`, hours: s.hours, from: 'past jobs', roles: ALL })));
   LESSONS.splice(0, LESSONS.length, ...harness.versions.slice().reverse().filter(v => v.v > 0).map(v => ({ v: v.v, when: v.when.slice(0, 7), by: v.by === 'harness' ? 'The assistant' : v.by, plain: v.changes[0], undone: !!v.rolledBack })));
   current = harness.current;
 
   /* the pre-drywall widget speaks about the level the harness is watching, not the sample level */
-  const units = (await api.block('beforeclose', demo, 'super')) as { level?: number; units?: { unit: number; missing: boolean; closed?: boolean; photo: ApiPhoto | null }[] };
   if (units.level && units.units?.length) {
     const miss = units.units.filter(u => u.missing);
     WIDGETS.predrywall.title = `Level ${units.level} · before walls close`;
@@ -103,11 +110,15 @@ export async function loadLive(): Promise<boolean> {
 /** The harness's own action for each to-do (take photo, look, send). */
 export const DO: Record<string, string> = {};
 
+/** What the loop did in answer to a tap (shipped or undid a version). main.ts sets it to ring the bulb. */
+let onTurn: (t: LoopTurn) => void = () => undefined;
+export function setTurnHandler(fn: (t: LoopTurn) => void): void { onTurn = fn; }
+
 /** Report one tap to the loop. Fire and forget: the screen never waits for it. */
 export function send(action: string, detail: string | undefined, role: RoleId | null): void {
   if (LIVE.source !== 'api' || !role) return;
   const e = { role, project: LIVE.demo };
-  const post = (x: Parameters<typeof api.event>[0]) => { void api.event(x).catch(() => undefined); };
+  const post = (x: Parameters<typeof api.event>[0]) => { void api.event(x).then(t => { if (t.shipped || t.rolled_back) onTurn(t); }).catch(() => undefined); };
   switch (action) {
     case 'photo': return post({ ...e, action: 'use', block: 'photos_week', photo: detail });
     case 'not-helpful': return post({ ...e, action: 'fb_down', block: 'ask', q: 'week', photo: detail });
@@ -116,7 +127,7 @@ export function send(action: string, detail: string | undefined, role: RoleId | 
     case 'insight-yes': return post({ ...e, action: 'act', block: detail });
     case 'insight-no': return post({ ...e, action: 'hide', block: detail });
     case 'todo': return post({ ...e, action: 'act', block: 'needs', do: DO[detail ?? ''] ?? '' });
-    case 'undo': if (Number(detail) === current) void api.rollback(Math.max(0, current - 1)).then(r => { current = r.version; }).catch(() => undefined); return post({ ...e, action: 'hide', block: 'learned' });
+    case 'undo': if (Number(detail) === current) void api.rollback(Math.max(0, current - 1)).then(r => { current = r.version; onTurn({ shipped: null, rolled_back: { version: Number(detail), to: r.version, why: 'You pressed Undo' } }); }).catch(() => undefined); return post({ ...e, action: 'hide', block: 'learned' });
     default: return post({ ...e, action: 'use', block: detail });
   }
 }

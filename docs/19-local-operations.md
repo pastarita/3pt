@@ -39,7 +39,7 @@ writes credential files, starts services nor creates provider accounts.
 | `harness/apps/worker/dist/main.js --watch` | Periodic media scan / job enqueueing |
 | `harness/apps/cli/dist/index.js` | One-shot harness stages, loop and policy rollback |
 | `harness/packages/*/dist`, `infra/batteries/*/dist` | Runtime libraries referenced through pnpm workspace links |
-| `dist/web-site/` | Static site: landing at `/`, live app at `/app/`, studio at `/studio/`, photos at `/media-pool/` |
+| `dist/web-site/` | Static site: landing at `/`, the app (`ui/apps/web`) at `/app/`, results at `/results/`, photos at `/media-pool/` |
 
 The Node runtime currently needs the checkout, installed workspace dependencies, and built
 workspace libraries. Copying just `harness/apps/api/dist` does not create a distributable service.
@@ -116,7 +116,7 @@ node harness/apps/worker/dist/main.js --watch
 caddy file-server --listen 127.0.0.1:8080 --root dist/web-site
 ```
 
-Check `http://127.0.0.1:8080/`, `/app/`, `/studio/`, a photo, and
+Check `http://127.0.0.1:8080/`, `/app/`, `/results/`, a photo, and
 `curl --fail http://127.0.0.1:8787/health`. Caddy's file server can serve the built directory;
 keep it in the foreground while validating the deployment. [Caddy command reference](https://caddyserver.com/docs/command-line#caddy-file-server).
 
