@@ -8,6 +8,8 @@ REPO="$(cd "$HUB/.." && pwd)"
 OUT="$HUB/_site"
 rm -rf "$OUT"
 mkdir -p "$OUT/docs"
+# what git knows about every document (site/doc-meta.js): regenerated here when history is available, else the committed copy ships
+node "$HUB/tools/docmeta.mjs" >/dev/null || true
 rsync -a --exclude '.DS_Store' "$HUB/site/"  "$OUT/"
 rsync -a --exclude '.DS_Store' "$REPO/docs/" "$OUT/docs/"
 # openly licensed demo photos (data/mock/media-pool), served at /media-pool/ for the app and the simulator

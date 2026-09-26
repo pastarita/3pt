@@ -1,11 +1,12 @@
 # 3PT · hub workspace targets. The harness's own targets (plan/build/instrument) land here later.
-.PHONY: stage check tersity tersity-check preview deploy verify
+.PHONY: stage check tersity tersity-check preview deploy verify meta
 
 stage:            ## build _site/ = hub/ + docs/ + README.md
 	@bash tools/stage.sh
 
 check: stage      ## lint the IA, the Viewer, the provenance pointers, and the tersity budget of every leaf
 	@node tools/check-nav.mjs
+	@node tools/docmeta.mjs --check || true   # advisory: a doc edited without `make -C hub meta` prints a warning, never blocks
 	@node tools/check-view.mjs
 	@node tools/check-diagram.mjs
 	@node ../scripts/prov.mjs --check
@@ -16,6 +17,9 @@ tersity:          ## words, figures, words-per-figure and longest paragraph for 
 
 tersity-check:    ## the hard gate: exit 1 when any leaf is over the tersity budget
 	@node tools/tersity.mjs --check
+
+meta:             ## regenerate site/doc-meta.js (what git knows about every document); run at every checkpoint
+	@node tools/docmeta.mjs
 
 prov:             ## rebuild docs/provenance-index.md + site/prov-data.js from brainstorming.md (repo root)
 	@node ../scripts/prov.mjs

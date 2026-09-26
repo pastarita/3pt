@@ -9,6 +9,7 @@
 <script src="./3pt-data.js"></script>
 <script src="./diagram.js"></script>
 <script src="./view-render.js"></script>
+<script src="./doc-meta.js"></script>
 <style>
   .doc{max-width:82ch;margin:0 auto;padding:26px 22px 90px}
   .crumb{font:11px/1.4 var(--mono);color:var(--faint);display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
@@ -36,29 +37,68 @@
   .doc .seg:target{background:color-mix(in srgb,var(--flag) 18%,transparent)}
   .doc details{margin:4px 0}.doc summary{cursor:pointer;font:600 12.5px var(--sans)}
   .warn{border-left:3px solid var(--warn);background:color-mix(in srgb,var(--warn) 9%,transparent);padding:12px 15px;border-radius:0 6px 6px 0;line-height:1.6}
-  /* the outline: h2/h3 of the rendered document, DERIVED at load. Wide: a sticky rail beside the text.
-     Narrow: a collapsible block above it (tpt_toc remembers shut). Hidden when the document has under three sections. */
-  .doc{display:grid;grid-template-columns:minmax(0,82ch);justify-content:center;column-gap:36px;align-items:start}
+  /* the Viewer's own layout: a text column with a real measure, anchored left of centre, an outline rail beside
+     it, room at the right edge for the minimap. Never squeezed by the Shell: the rail's margin is on <body>. */
+  .doc{max-width:none;margin:0;padding:26px 40px 90px 44px;display:grid;grid-template-columns:minmax(0,800px);column-gap:40px;align-items:start}
   .doc .crumb{grid-column:1/-1;order:-2}
-  .toc{display:none;font:12.5px/1.5 var(--sans);color:var(--soft);order:-1;margin:0 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:8px 12px 10px}
-  .toc.has{display:block}
-  .toc .toc-h{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;color:var(--faint);font:700 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:4px 0;cursor:pointer;text-align:left}
-  .toc .toc-h .n{margin-left:auto;font-weight:600;letter-spacing:.06em}
-  .toc .toc-h .chev{width:10px;height:10px;transition:transform .12s}
-  .toc.shut .toc-h .chev{transform:rotate(-90deg)}.toc.shut ol{display:none}
-  .toc ol{list-style:none;margin:6px 0 0;padding:0}
-  .toc li a{display:block;padding:4px 8px;border-radius:6px;color:var(--soft);text-decoration:none;border-left:2px solid transparent}
-  .toc li.l3 a{padding-left:20px;font-size:11.8px;color:var(--faint)}
-  .toc li a:hover{color:var(--ink);background:rgba(255,255,255,.04)}
-  .toc li a.on{color:var(--ink);border-left-color:var(--flag);background:rgba(255,107,74,.07)}
-  .toc .toc-top{display:block;margin:8px 0 0;padding:4px 8px;font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+  #out{min-width:0}
+  /* the outline: a first-class scroll area. Pinned header, scrolling list with thin scrollbar and edge fades,
+     pinned footer. A pin slides to the hovered entry and settles on the active one. DERIVED at load from h2/h3.
+     Narrow: a collapsible block between the crumb and the text (tpt_toc remembers shut). */
+  .toc{display:none;order:-1;margin:0 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font:12.5px/1.45 var(--sans);color:var(--soft);flex-direction:column;min-height:0}
+  .toc.has{display:flex}
+  .toc .toc-h{flex:none;display:flex;align-items:center;gap:8px;border:0;background:none;color:var(--faint);font:700 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:11px 12px 9px;cursor:pointer;text-align:left;width:100%}
+  .toc .toc-h .n{margin-left:auto;font-weight:600;letter-spacing:.06em;color:var(--faint)}
+  .toc .toc-h .chev{width:10px;height:10px;flex:none;transition:transform .12s}
+  .toc.shut .toc-h .chev{transform:rotate(-90deg)}.toc.shut .toc-sc,.toc.shut .toc-top{display:none}
+  .toc .toc-sc{position:relative;flex:1 1 auto;min-height:0}
+  .toc .toc-sc::before,.toc .toc-sc::after{content:'';position:absolute;left:0;right:8px;height:20px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1}
+  .toc .toc-sc::before{top:0;background:linear-gradient(var(--panel),transparent)}.toc .toc-sc::after{bottom:0;background:linear-gradient(transparent,var(--panel))}
+  .toc .toc-sc.more-top::before,.toc .toc-sc.more-bot::after{opacity:1}
+  .toc .toc-w{position:relative;max-height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--line) transparent;scrollbar-gutter:stable;padding:2px 6px 6px 0}
+  .toc .toc-w::-webkit-scrollbar{width:8px}.toc .toc-w::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--panel)}
+  .toc:hover .toc-w{scrollbar-color:var(--line-strong) transparent}.toc:hover .toc-w::-webkit-scrollbar-thumb{background:var(--line-strong)}
+  .toc ol{list-style:none;margin:0;padding:0 0 0 12px;position:relative}
+  .toc li a{display:block;padding:5px 10px 5px 12px;border-radius:6px;color:var(--soft);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .1s,background .1s;position:relative}
+  .toc li.l3 a{padding-left:24px;font-size:11.8px;color:var(--faint)}
+  .toc li a:hover{color:var(--ink);background:rgba(255,255,255,.045)}
+  .toc li a.on{color:var(--ink);font-weight:600}
+  .toc .pin{position:absolute;left:2px;width:3px;height:22px;border-radius:2px;background:var(--flag);opacity:0;transition:top .16s cubic-bezier(.4,0,.2,1),opacity .12s,background .12s;pointer-events:none}
+  .toc .pin.show{opacity:1}.toc .pin.hover{background:var(--soft)}
+  .toc .toc-top{flex:none;display:block;padding:8px 12px 9px;border-top:1px solid var(--line);font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-decoration:none}
   .toc .toc-top:hover{color:var(--ink)}
   @media(min-width:1240px){
-    .doc{grid-template-columns:minmax(0,82ch) 220px}
-    .toc{order:0;grid-column:2;position:sticky;top:46px;max-height:calc(100vh - 62px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;margin:0;border:0;background:none;padding:0 0 0 14px;border-left:1px solid var(--line);border-radius:0}
-    .toc .toc-h{cursor:default}.toc .toc-h .chev{display:none}.toc.shut ol{display:block}
+    .doc{grid-template-columns:minmax(0,800px) 260px;padding-right:76px}
+    .toc{order:0;grid-column:2;position:sticky;top:46px;max-height:calc(100vh - 62px);margin:0}
+    .toc .toc-h{cursor:default}.toc .toc-h .chev{display:none}.toc.shut .toc-sc,.toc.shut .toc-top{display:block}
   }
-  @media print{.toc{display:none!important}}
+  @media(max-width:900px){.doc{padding:22px 16px 80px}}
+  @media print{.toc{display:none!important}.doc{display:block;padding:0}}
+  /* metadata strip — one row: the Register chip, words and minutes, sections and figures (DERIVED at load),
+     the last commit (GENERATED, doc-meta.js). Everything else is in the document. */
+  .meta{grid-column:1/-1;order:-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-8px 0 16px;font:600 11px/1 var(--mono);letter-spacing:.04em;color:var(--soft)}
+  .meta .ch{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);white-space:nowrap;color:var(--soft)}
+  .meta .ch b{color:var(--ink);font-weight:700}.meta .ch small{color:var(--faint);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase}
+  .meta .ch.reg b{color:var(--accent,var(--cyan))}
+  .meta a.ch{text-decoration:none}.meta a.ch:hover{border-color:var(--line-strong);color:var(--ink)}
+  .meta .pv{font-size:9px}
+  /* minimap — the document's shape as a strip at the viewport's right edge: headings as ticks, figures as
+     blocks, prose as hairlines, the viewport as a window. Wide screens and long documents only. */
+  .mm{display:none;position:fixed;right:6px;top:46px;bottom:12px;width:44px;z-index:9;border-left:1px solid var(--line);background:linear-gradient(to right,rgba(15,18,22,.6),rgba(15,18,22,.95));cursor:pointer;user-select:none}
+  .mm.has{display:block}
+  .mm i{position:absolute;left:8px;right:6px;display:block;border-radius:1px;pointer-events:none}
+  .mm i.p{background:var(--line);height:1px;right:14px}
+  .mm i.h2{background:var(--ink);height:2px;left:4px}
+  .mm i.h3{background:var(--soft);height:1px;left:12px;right:12px}
+  .mm i.fig{background:color-mix(in srgb,var(--cyan) 35%,transparent);border:1px solid color-mix(in srgb,var(--cyan) 45%,transparent)}
+  .mm i.pre{background:color-mix(in srgb,var(--amber) 22%,transparent)}
+  .mm i.tbl{background:color-mix(in srgb,var(--violet) 26%,transparent)}
+  .mm i.seg{background:var(--flag);height:2px;left:2px;right:36px}
+  .mm .win{position:absolute;left:0;right:0;background:rgba(255,255,255,.07);border-top:1px solid var(--flag);border-bottom:1px solid var(--flag);pointer-events:none;box-sizing:border-box}
+  .mm .lbl{position:absolute;right:50px;transform:translateY(-50%);font:600 10.5px/1 var(--mono);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 8px;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;opacity:0;transition:opacity .1s}
+  .mm:hover .lbl{opacity:1}
+  @media(max-width:1239px){.mm{display:none!important}}
+  @media print{.mm,.meta{display:none!important}}
   @media print{.crumb{display:none}}
 </style>
 </head>
@@ -66,9 +106,11 @@
 <script src="./nav.js"></script>
 <div class="doc">
   <div class="crumb"><span class="p" id="path"></span><button id="copy">copy path</button><span id="kind"></span><a id="raw" href="#" style="display:none">open raw ↗</a></div>
+  <div class="meta" id="meta"></div>
   <div id="out"></div>
   <nav class="toc" id="toc" aria-label="Contents"></nav>
 </div>
+<div class="mm" id="mm" aria-hidden="true"><div class="win"></div><div class="lbl"></div></div>
 <script>
 (function(){
   var V = window.TPTVIEW;
@@ -77,27 +119,36 @@
   document.getElementById('path').textContent = f || '(no ?f= given)';
   document.title = '3PT · ' + (f.split('/').pop() || 'Viewer');
   document.getElementById('copy').onclick = function(e){ navigator.clipboard.writeText(f); e.target.textContent='copied ✓'; setTimeout(function(){ e.target.textContent='copy path'; },1200); };
-  /* the outline — DERIVED from the rendered h2/h3 (h1 is the title). Active section by IntersectionObserver;
-     a click lands on the heading and marks it, the same as arriving with #slug. */
+  /* the outline — DERIVED from the rendered h2/h3 (h1 is the title). A scroll area: pinned header, scrolling list
+     with edge fades, pinned footer. The pin follows the hovered entry and settles on the active section, which the
+     IntersectionObserver tracks; a click lands on the heading and marks it, the same as arriving with #slug. */
   function toc(){
     var nav = document.getElementById('toc'), hs = Array.prototype.slice.call(out.querySelectorAll('h2,h3'));
     if (hs.length < 3) return;
     var shut = false; try{ shut = localStorage.getItem('tpt_toc') === 'shut'; }catch(e){}
     var n2 = hs.filter(function(h){ return h.tagName === 'H2'; }).length;
     nav.className = 'toc has' + (shut ? ' shut' : '');
-    nav.innerHTML = '<button class="toc-h" aria-expanded="'+(!shut)+'"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>Contents<span class="n">'+n2+' section'+(n2===1?'':'s')+'</span></button>'
-      + '<ol>' + hs.map(function(h){ return '<li class="l'+h.tagName.charAt(1)+'"><a href="#'+h.id+'" data-id="'+h.id+'">'+V.esc(h.textContent)+'</a></li>'; }).join('') + '</ol>'
+    nav.innerHTML = '<button class="toc-h" aria-expanded="'+(!shut)+'"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>Contents<span class="n">'+n2+'</span></button>'
+      + '<div class="toc-sc"><div class="toc-w"><ol>' + hs.map(function(h){ var t = h.textContent.trim(); return '<li class="l'+h.tagName.charAt(1)+'"><a href="#'+h.id+'" data-id="'+h.id+'" title="'+V.esc(t)+'">'+V.esc(t)+'</a></li>'; }).join('') + '</ol><i class="pin"></i></div></div>'
       + '<a class="toc-top" href="#">↑ top</a>';
     nav.querySelector('.toc-h').addEventListener('click', function(){
+      if (window.innerWidth >= 1240) return;
       var s = nav.classList.toggle('shut'); this.setAttribute('aria-expanded', !s);
       try{ s ? localStorage.setItem('tpt_toc','shut') : localStorage.removeItem('tpt_toc'); }catch(e){}
     });
+    var sc = nav.querySelector('.toc-sc'), w = nav.querySelector('.toc-w'), pin = nav.querySelector('.pin'), active = null;
+    function fades(){ var t = w.scrollTop, m = w.scrollHeight - w.clientHeight; sc.classList.toggle('more-top', t > 2); sc.classList.toggle('more-bot', m - t > 2); }
+    w.addEventListener('scroll', fades, { passive:true }); window.addEventListener('resize', fades); fades();
+    function pinTo(a, hover){ if (!a) { pin.classList.remove('show'); return; } pin.style.top = (a.offsetTop + (a.offsetHeight - 22) / 2) + 'px'; pin.classList.add('show'); pin.classList.toggle('hover', !!hover); }
     var links = {}; Array.prototype.forEach.call(nav.querySelectorAll('ol a'), function(a){ links[a.getAttribute('data-id')] = a;
+      a.addEventListener('mouseenter', function(){ pinTo(a, a !== active); });
       a.addEventListener('click', function(e){ e.preventDefault(); var t = document.getElementById(a.getAttribute('data-id')); if (!t) return;
         history.replaceState(null, '', '#' + a.getAttribute('data-id')); t.scrollIntoView({ block:'start' });
         Array.prototype.forEach.call(out.querySelectorAll('.landed'), function(x){ x.classList.remove('landed'); }); t.classList.add('landed'); mark(a.getAttribute('data-id')); }); });
+    w.addEventListener('mouseleave', function(){ pinTo(active, false); });
     nav.querySelector('.toc-top').addEventListener('click', function(e){ e.preventDefault(); history.replaceState(null, '', location.pathname + location.search); window.scrollTo({ top:0 }); });
-    function mark(id){ for (var k in links) links[k].classList.toggle('on', k === id); var a = links[id]; if (a && nav.scrollHeight > nav.clientHeight) { var r = a.getBoundingClientRect(), w = nav.getBoundingClientRect(); if (r.top < w.top || r.bottom > w.bottom) a.scrollIntoView({ block:'nearest' }); } }
+    function mark(id){ for (var k in links) links[k].classList.toggle('on', k === id); active = links[id] || null; pinTo(active, false);
+      if (active && w.scrollHeight > w.clientHeight) { var r = active.getBoundingClientRect(), b = w.getBoundingClientRect(); if (r.top < b.top + 24 || r.bottom > b.bottom - 24) w.scrollTo({ top: active.offsetTop - w.clientHeight / 2, behavior:'smooth' }); } }
     if (!('IntersectionObserver' in window)) return;
     var visible = {};
     var io = new IntersectionObserver(function(es){ es.forEach(function(e){ visible[e.target.id] = e.isIntersecting; });
@@ -105,6 +156,55 @@
       if (!cur) { for (var j = hs.length - 1; j >= 0; j--) if (hs[j].getBoundingClientRect().top < 80) { cur = hs[j].id; break; } }
       if (cur) mark(cur); }, { rootMargin:'-40px 0px -70% 0px', threshold:0 });
     hs.forEach(function(h){ io.observe(h); });
+  }
+  /* metadata — one row. DERIVED: the Register chip, words and minutes, sections and figures, counted from the
+     rendered document. GENERATED: the last commit and the commit count, from doc-meta.js. */
+  function meta(){
+    if (kind !== 'markdown') return;
+    var el = document.getElementById('meta'), T = window.T, D = (window.DOCMETA||{})[f];
+    var q = function(sel){ return out.querySelectorAll(sel).length; };
+    var wordsN = (out.textContent.match(/[A-Za-z0-9][A-Za-z0-9'’\-\.]*/g)||[]).length, figs = q('figure') + q('table');
+    var reg = T && T.DOCS.filter(function(d){ return d.doc === f; })[0], h = [];
+    if (reg) h.push('<span class="ch reg" data-cluster="'+reg.cluster+'" title="'+V.esc(reg.epigram||'')+'"><b>'+reg.id+'</b><small>'+reg.cluster+'</small></span>');
+    h.push('<span class="ch" title="DERIVED at load from the rendered text"><b>'+wordsN.toLocaleString('en-US')+'</b><small>words</small><b>'+Math.max(1, Math.round(wordsN/220))+'</b><small>min</small></span>');
+    h.push('<span class="ch" title="DERIVED at load: h2 sections; figures are diagrams, images and tables"><b>'+q('h2')+'</b><small>sections</small><b>'+figs+'</b><small>figures</small></span>');
+    if (D) { var when = new Date(D.at).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true, timeZone:'America/New_York' });
+      h.push('<a class="ch" href="https://github.com/pastarita/3pt/commits/main/'+V.esc(f)+'" target="_blank" rel="noopener" title="'+V.esc(D.subject)+' — GENERATED, doc-meta.js"><b>'+V.esc(D.sha)+'</b><small>'+V.esc(when)+' · '+V.esc(D.by.split(' ')[0])+'</small><b>'+D.commits+'</b><small>commit'+(D.commits===1?'':'s')+'</small></a>'); }
+    el.innerHTML = h.join('');
+  }
+  /* minimap — DERIVED from the block layout of the rendered document. Long documents, wide screens. */
+  function minimap(){
+    var mm = document.getElementById('mm'); if (!mm || window.innerWidth < 1240) return;
+    var win = mm.querySelector('.win'), lbl = mm.querySelector('.lbl');
+    var kinds = [['h2','h2'],['h3','h3'],['figure','fig'],['.tbl-wrap','tbl'],['pre','pre'],['a.seg','seg'],['p','p'],['ul','p'],['ol','p'],['blockquote','p']];
+    var marks = [], heads = [];
+    function build(){
+      Array.prototype.forEach.call(mm.querySelectorAll('i'), function(i){ i.remove(); }); marks = []; heads = [];
+      var H = document.documentElement.scrollHeight; if (H < window.innerHeight * 2.5) { mm.classList.remove('has'); return; }
+      mm.classList.add('has');
+      var sh = mm.clientHeight, k = sh / H, frag = document.createDocumentFragment();
+      kinds.forEach(function(kd){ Array.prototype.forEach.call(out.querySelectorAll(kd[0]), function(el){
+        if (kd[1]==='p' && el.closest('figure,li,blockquote,.tbl-wrap')) return;
+        var r = el.getBoundingClientRect(), top = r.top + window.scrollY, i = document.createElement('i');
+        i.className = kd[1]; i.style.top = (top * k) + 'px';
+        if (kd[1]==='fig'||kd[1]==='tbl'||kd[1]==='pre') i.style.height = Math.max(2, r.height * k) + 'px';
+        if (kd[1]==='h2'||kd[1]==='h3') heads.push([top, el.textContent]);
+        frag.appendChild(i); }); });
+      mm.appendChild(frag); heads.sort(function(a,b){ return a[0]-b[0]; });
+      place();
+    }
+    function place(){ var H = document.documentElement.scrollHeight, k = mm.clientHeight / H; win.style.top = (window.scrollY * k) + 'px'; win.style.height = Math.max(6, window.innerHeight * k) + 'px'; }
+    function yAt(e){ var r = mm.getBoundingClientRect(); return (e.clientY - r.top) / r.height * document.documentElement.scrollHeight - window.innerHeight / 2; }
+    var drag = false;
+    mm.addEventListener('mousedown', function(e){ drag = true; window.scrollTo({ top: yAt(e) }); e.preventDefault(); });
+    window.addEventListener('mousemove', function(e){ if (drag) window.scrollTo({ top: yAt(e) });
+      if (e.target === mm || mm.contains(e.target)) { var y = (e.clientY - mm.getBoundingClientRect().top) / mm.clientHeight * document.documentElement.scrollHeight, best = null;
+        for (var i = 0; i < heads.length; i++) if (heads[i][0] <= y + 40) best = heads[i]; lbl.textContent = best ? best[1] : ''; lbl.style.top = (e.clientY - mm.getBoundingClientRect().top) + 'px'; } });
+    window.addEventListener('mouseup', function(){ drag = false; });
+    window.addEventListener('scroll', place, { passive:true });
+    var t = null; window.addEventListener('resize', function(){ clearTimeout(t); t = setTimeout(build, 120); });
+    build(); setTimeout(build, 600);   /* once more after diagrams and images settle */
+    if (window.ResizeObserver) new ResizeObserver(function(){ clearTimeout(t); t = setTimeout(build, 120); }).observe(out);
   }
   if (!f) { out.innerHTML = '<div class="warn">No document requested. Add <code>?f=path</code>.</div>'; return; }
   if (/^[a-z]+:/i.test(f) || f.indexOf('..')>=0 || f.charAt(0)==='/') { out.innerHTML = '<div class="warn">The Viewer reads paths inside this workspace only.</div>'; return; }
@@ -114,7 +214,7 @@
   fetch('./' + f).then(function(r){ if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.text(); }).then(function(text){
     out.innerHTML = kind==='markdown' ? V.md(text, f.slice(0, f.lastIndexOf('/')+1)) : kind==='csv' ? V.csv(text) : kind==='json' ? V.json(text) : kind==='jsonl' ? V.jsonl(text) : '<pre><code>'+V.esc(text)+'</code></pre>';
     var h1 = out.querySelector('h1'); if (h1) document.title = '3PT · ' + h1.textContent;
-    toc();
+    toc(); meta(); minimap();
     if (location.hash) {   /* the document arrives after load, so honour #sN.NN and #heading-slug here; a prefix or a heading that contains the words also lands (the prov.mjs rule) */
       var a = decodeURIComponent(location.hash.slice(1)), al = a.toLowerCase(), tgt = document.getElementById(a);
       if (!tgt) tgt = Array.prototype.find.call(out.querySelectorAll('h1,h2,h3,h4,h5,h6'), function(h){ return h.id.indexOf(al) === 0 || h.textContent.toLowerCase().indexOf(al) >= 0; }) || null;
