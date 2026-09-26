@@ -36,7 +36,7 @@ metric-driven sprint selection.
 ## Hard requirements
 
 - [ ] **MongoDB Atlas as a core component**, built inside the **Atlas Hackathon Sandbox** (link arrived by email). Non-negotiable for finalist eligibility.
-- [ ] **Repository is public.** (`pastarita/3pt` is currently **private** — flip before submitting.)
+- [x] **Repository is public.** (`pastarita/3pt` flipped public 2026-09-26; verified with `gh repo view`. Full due-diligence ledger: `docs/15-open-source-checklist.md`.)
 - [ ] **New work only.** Everything demoed must have been built today; judges must be able to identify it. Do not import pre-existing code or present prior projects.
 - [ ] Demo shows features, code, and functionality — **not a presentation**.
 - [ ] Rights to all code, data, and assets used.
