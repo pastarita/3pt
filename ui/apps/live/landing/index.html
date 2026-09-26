@@ -5,7 +5,7 @@
 <title>3PT · the harness for your construction projects</title>
 <meta name="description" content="3PT runs a coding agent through Plan, Build and Instrument, then rewrites its own rules. Every version is a checkpoint in MongoDB Atlas.">
 <meta name="theme-color" content="#0f1216">
-<!-- The landing page for the public demo site (3pt-web). Static on purpose: no build, no fetch.
+<!-- The landing page for the public demo site (3pt-web). Static on purpose: no build. One fetch: harness versions from the Worker, with a built-in copy.
      scripts/build-web-site.sh copies it to / and builds the live app under /app/. Tokens mirror @3pt/design-system `color`. -->
 <style>
 :root{--bg:#0f1216;--panel:#151a21;--card:#1a2029;--line:#2a323d;--lineStrong:#3a4552;--ink:#e6e9ee;--soft:#a3adbb;--faint:#6b7684;
@@ -25,7 +25,7 @@ img{display:block;max-width:100%}
 .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
 
 /* nav */
-nav{position:absolute;top:0;left:0;right:0;z-index:5}
+nav{position:absolute;top:0;left:0;right:0;z-index:5;background:linear-gradient(180deg,rgba(12,17,23,.92),rgba(12,17,23,0))}
 nav .wrap{display:flex;align-items:center;gap:24px;height:72px}
 .mark{display:flex;align-items:center;gap:10px;font:800 20px/1 var(--sans);letter-spacing:.02em;text-decoration:none}
 .mark svg{width:30px;height:30px}
@@ -94,6 +94,61 @@ h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;letter-spacing:-.02em;margi
 footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--faint);font-size:13.5px}
 footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
 
+
+/* hero: half the model is a real site photo */
+.hero__photo{position:absolute;top:0;bottom:0;right:0;width:36%;z-index:0;clip-path:polygon(24% 0,100% 0,100% 100%,0 100%)}
+.hero__photo img.wire{left:auto;right:0;width:100vw;max-width:none;object-position:70% 40%;filter:none;mix-blend-mode:screen;opacity:.9;z-index:2}
+.hero__photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.75) contrast(1.08) brightness(.85)}
+.hero__photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(12,17,23,.55),rgba(12,17,23,0) 40%),linear-gradient(0deg,var(--bg),transparent 30%)}
+.chip{position:absolute;z-index:2;font:700 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:7px 9px;border-radius:6px;background:rgba(12,17,23,.85);border:1px solid var(--lineStrong);color:var(--soft)}
+.chip b{color:var(--flag)}
+.chip--model{top:110px;left:calc(64% - 170px)}
+.chip--site{top:110px;right:24px}
+.hero::after{z-index:0}
+.hero > img{z-index:0}
+
+/* versions */
+.versions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding:4px 2px 18px;margin-top:44px;scroll-snap-type:x mandatory}
+.ver{scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px;min-height:210px}
+.ver__h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ver__v{font:800 26px/1 var(--sans)}
+.ver__d{font:600 12px/1 var(--mono);color:var(--faint)}
+.ver ul{margin:0;padding-left:18px;font-size:14.5px}
+.ver__why{margin-top:auto;font-size:13px;color:var(--soft);border-top:1px dashed var(--line);padding-top:10px}
+.ver__why::before{content:"Why: ";color:var(--faint);font-weight:700}
+.ver--now{border-color:var(--instrument);background:linear-gradient(160deg,rgba(63,184,134,.12),var(--panel) 60%)}
+.ver--back{border-style:dashed;opacity:.8}
+.ver--back .ver__v{text-decoration:line-through;color:var(--faint)}
+.pill{font:800 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:var(--card);color:var(--soft)}
+.pill--now{background:var(--instrument);color:#08140f}.pill--back{background:rgba(229,83,75,.2);color:#f08a83}
+.live{display:inline-flex;align-items:center;gap:8px;font:600 13px/1 var(--mono);color:var(--faint);margin-top:18px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--faint)}
+.live.on i{background:var(--instrument);box-shadow:0 0 0 4px rgba(63,184,134,.2)}
+
+/* atlas */
+.atlas{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:48px}
+.col-group{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.col-group h3{margin:0 0 4px;font-size:18px}
+.col-group p{margin:0 0 14px;color:var(--soft);font-size:14px}
+.col-group code{display:inline-block;font:600 13px/1 var(--mono);padding:7px 9px;margin:0 6px 8px 0;border-radius:6px;background:#0c1117;border:1px solid var(--line);color:var(--ink)}
+.col-group--core{border-color:rgba(63,184,134,.55)}
+.col-group--core code{border-color:rgba(63,184,134,.35)}
+
+/* judges */
+.judge{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.judge a{display:flex;flex-direction:column;gap:8px;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;transition:border-color .12s}
+.judge a:hover{border-color:var(--flag)}
+.judge .w{font:700 12px/1 var(--mono);color:var(--flag);letter-spacing:.08em}
+.judge b{font-size:18px}
+.judge span{color:var(--soft);font-size:14px}
+.judge code{font:12.5px var(--mono);color:var(--faint);margin-top:auto}
+@media (max-width:900px){
+  .hero__photo{width:100%;clip-path:polygon(0 55%,100% 45%,100% 100%,0 100%);opacity:.5}
+  .chip{display:none}
+  .hero > img{opacity:.35}
+  .atlas,.judge{grid-template-columns:1fr}
+}
+
 @media (max-width:900px){
   nav .links a:not(.btn){display:none}
   .points{grid-template-columns:1fr 1fr}.point:not(:last-child)::after{display:none}
@@ -117,7 +172,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
     </a>
     <div class="links">
       <a href="#loop">How it works</a>
-      <a href="#workload">Workload</a>
+      <a href="#versions">Versions</a>
+      <a href="#atlas">Atlas</a>
       <a href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Code</a>
       <a class="btn btn--primary" href="/app/">Open the app</a>
     </div>
@@ -126,6 +182,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 
 <header class="hero">
   <img src="/hero-bim.svg" alt="A building model: floors, columns, pipes and ducts, with site photos pinned to units" fetchpriority="high">
+  <div class="hero__photo" aria-hidden="true"><img src="/media-pool/steel/steel-05.jpg" alt=""><img class="wire" src="/hero-bim.svg" alt=""></div>
+  <span class="chip chip--model">Model</span>
+  <span class="chip chip--site">Site photo · <b>L2</b></span>
   <div class="wrap">
     <div class="eyebrow">Three Point Harness · Recursive Harnessing</div>
     <h1>The harness for your <em>construction projects</em></h1>
@@ -180,6 +239,16 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   </div>
 </section>
 
+<section id="versions" style="padding-top:40px">
+  <div class="wrap">
+    <div class="eyebrow">Recursive harnessing</div>
+    <h2>Ten versions. Each one written by the harness.</h2>
+    <p class="lede">Every change names what it changed and why. One version made answers worse, so it was rolled back. Scroll through the history of a simulated seven-year firm.</p>
+    <div class="live" id="live"><i></i><span>Built-in copy of the history</span></div>
+    <div class="versions" id="versions-list"></div>
+  </div>
+</section>
+
 <section id="workload">
   <div class="wrap">
     <div class="eyebrow">The workload</div>
@@ -193,6 +262,32 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
       <figure class="m5"><img src="/media-pool/electrical/electrical-03.jpg" alt="An electrician at work in a timber frame" loading="lazy"><figcaption>Electrical</figcaption></figure>
       <figure class="m6"><img src="/media-pool/insulation/insulation-06.jpg" alt="Spray foam insulation applied under a floor" loading="lazy"><figcaption>Insulation</figcaption></figure>
       <figure class="m7"><img src="/media-pool/site/site-07.jpg" alt="A large excavation site with cranes and new buildings" loading="lazy"><figcaption>Excavation</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="atlas" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">MongoDB Atlas</div>
+    <h2>Long-term memory is the database, not the context window.</h2>
+    <p class="lede">Every stateful thing lives in one Atlas cluster. The stages read from it, the improver writes to it, and any version can be run again over the same data.</p>
+    <div class="atlas">
+      <div class="col-group col-group--core"><h3>The harness</h3><p>What it is, and how it got here.</p><code>policies</code><code>checkpoints</code><code>harness_versions</code><code>plans</code><code>findings</code><code>measurements</code></div>
+      <div class="col-group"><h3>The media</h3><p>Photos are read once, then tiered.</p><code>media_index</code><code>transcripts</code><code>jobs</code></div>
+      <div class="col-group"><h3>The firm</h3><p>The simulated contractor it learns on.</p><code>demo_projects</code><code>demo_photos</code><code>demo_activity</code><code>demo_outcomes</code></div>
+    </div>
+  </div>
+</section>
+
+<section id="judges" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow">For the judges</div>
+    <h2>Check it in four clicks.</h2>
+    <div class="judge">
+      <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/improver" target="_blank" rel="noopener"><span class="w">DEMO · 35</span><b>The loop</b><span>The improver is the only writer of the rules.</span><code>harness/packages/improver</code></a>
+      <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/core" target="_blank" rel="noopener"><span class="w">DIFFICULTY · 30</span><b>Frozen policy</b><span>Stages get a read-only policy and a store that refuses rule writes.</span><code>harness/packages/core</code></a>
+      <a href="/app/"><span class="w">IMPACT · 20</span><b>The app</b><span>Each role sees the screen the current harness chose for it.</span><code>/app/</code></a>
+      <a href="https://github.com/pastarita/3pt/commits/main" target="_blank" rel="noopener"><span class="w">BUILT TODAY</span><b>Commit log</b><span>Every commit is from Sept 26, 2026.</span><code>git log</code></a>
     </div>
   </div>
 </section>
@@ -228,5 +323,37 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   </div>
 </footer>
 
+<script>
+// Harness versions: a built-in copy, replaced by the live list from the harness Worker when it answers.
+(function(){
+  var V=[[10,"2025-08-11",0,["Added flag: open edge, missing rail","Learned a screen for the safety manager"],"Safety manager joined and asked 30 hazard questions"],
+  [9,"2025-05-26",0,["Stopped keeping duplicate burst photos after 24 hours"],"150,000 photos stored, 18% near duplicates"],
+  [8,"2024-02-12",0,["Automated the closeout photo set per unit"],"12 closeouts built by hand"],
+  [7,"2024-01-08",0,["Learned a screen for 4 roles: superintendent, PM, owner, engineer"],"700 project-weeks of use, by role"],
+  [6,"2021-01-04",0,["Automated the Friday owner photo pack"],"200 hours spent building owner packs by hand"],
+  [5,"2020-11-23",0,["Added field: issue (water stain, crack, damage)","Flag water photos the day they arrive"],"8 water problems found only at closeout"],
+  [4,"2020-06-29",1,["Tried: send 20 photos to the model per question instead of 8"],"Answers were slow to improve"],
+  [3,"2020-05-04",0,["Added field: open or closed wall","Read older photos again, once"],"300 searches for \"before drywall\" came back wrong"],
+  [2,"2020-03-23",0,["Wrote a tool: find units with no open-wall photo","Reminder before drywall starts in a unit"],"6 walls reopened to find a pipe"],
+  [1,"2019-12-16",0,["Added fields: unit, level, trade"],"15,000 photos filed with only a date and a description"],
+  [0,"2019-01-07",0,["Generic start: describe each image, its date and its source"],"Install"]].map(function(r){return{v:r[0],when:r[1],rolledBack:!!r[2],changes:r[3],why:r[4]}});
+  var list=document.getElementById('versions-list'),live=document.getElementById('live');
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function draw(vs,cur){
+    list.innerHTML=vs.map(function(v){
+      var now=v.v===cur,back=v.rolledBack;
+      return '<article class="ver'+(now?' ver--now':'')+(back?' ver--back':'')+'"><div class="ver__h"><span class="ver__v">v'+v.v+'</span>'+
+        (now?'<span class="pill pill--now">Live</span>':back?'<span class="pill pill--back">Rolled back</span>':'<span class="ver__d">'+esc(v.when)+'</span>')+
+        '</div><ul>'+v.changes.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul><div class="ver__why">'+esc(v.why)+'</div></article>';
+    }).join('');
+  }
+  draw(V,10);
+  fetch('https://3pt-harness.3pt-worker.workers.dev/app/harness').then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(!j||!j.versions)return;
+    draw(j.versions,j.current);
+    live.classList.add('on');live.lastElementChild.textContent='Live from the harness · current v'+j.current;
+  }).catch(function(){});
+})();
+</script>
 </body>
 </html>
