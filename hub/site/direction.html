@@ -118,7 +118,7 @@ header{padding-top:48px;display:flex;flex-direction:column;gap:20px}
 .ver .bad{color:var(--marker)}
 
 /* mongo */
-.colls{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.colls{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .coll{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:8px}
 .coll .nm{font-family:var(--mono);font-weight:500;font-size:15px}
 .coll code{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.6;white-space:pre-wrap}
@@ -219,6 +219,19 @@ header{padding-top:48px;display:flex;flex-direction:column;gap:20px}
 .rung code{font-family:var(--mono)}
 .note{font-size:14px;color:var(--muted)}
 @media (max-width:820px){.phases,.split{grid-template-columns:1fr}.phase-arrow{transform:rotate(90deg);justify-self:center}}
+.rp{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:16px;align-items:start}
+.rp-col{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.rp-h{display:flex;gap:10px;align-items:center;font-family:var(--display);font-weight:700;font-size:17px}
+.rp-h .rn{width:26px;height:26px;border-radius:50%;background:var(--marker);color:var(--on-marker);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;flex:none}
+.rp-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rp-facts b{display:block;font-size:30px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.rp-facts small{color:var(--muted);font-size:13px}
+.rp td:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pb{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.pb li{border-left:3px solid var(--keep);padding-left:10px}
+.pb b{display:block;font-size:14px}
+.pb small{color:var(--muted);font-size:13px}
+@media (max-width:1000px){.rp{grid-template-columns:1fr}}
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .vs .opt ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
 .ask{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px}
@@ -290,7 +303,7 @@ header{padding-top:48px;display:flex;flex-direction:column;gap:20px}
 <section>
   <div class="goal">
     <div class="eyebrow">Hackathon goal · Statement one, Recursive Harnessing</div>
-    <p>A harness for media-heavy work that starts generic and <span class="marker">rewrites its own rules, context policy, guardrails and tools</span> from feedback. We demo it on a construction firm's lifetime of site photos. Every version lives in MongoDB.</p>
+    <p>A harness for media-heavy work that starts generic and <span class="marker">rewrites its own rules, context policy, guardrails and tools</span> from feedback. We demo it on a construction firm's lifetime of site photos. Every finished project becomes a retrospective, a ranked list of opportunities, and a playbook for the next job. Every version lives in MongoDB.</p>
   </div>
 </section>
 
@@ -396,6 +409,47 @@ header{padding-top:48px;display:flex;flex-direction:column;gap:20px}
       <p class="note">One-offs also show what matters. Photos nobody ever opens can move to cheap storage.</p>
     </div>
   </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Per project</div>
+    <h2>Every job ends in a retrospective. Every retrospective ends in a playbook.</h2>
+    <p class="lede">Media is filed under the project it belongs to. When a job closes, the harness looks back at its photos and its activity, ranks what could have saved time or avoided cost, and writes the reminders and prompts for the next job.</p>
+    <span class="pv a">AUTHORED · example numbers</span>
+  </div>
+  <div class="rp">
+    <div class="rp-col">
+      <div class="rp-h"><span class="rn">1</span>Retrospective · Job 1, Tower A</div>
+      <div class="rp-facts">
+        <div><b>38</b><small>owner reports built by hand</small></div>
+        <div><b>14</b><small>units closed with no open-wall photo</small></div>
+        <div><b>3</b><small>walls reopened later to find a pipe</small></div>
+        <div><b>22</b><small>searches that found nothing useful</small></div>
+      </div>
+    </div>
+    <div class="rp-col">
+      <div class="rp-h"><span class="rn">2</span>Opportunities, ranked</div>
+      <div class="tbl-wrap"><table>
+        <tr><th>Opportunity</th><th>Kind</th><th>Hours / job</th></tr>
+        <tr><td>Build the Friday owner photo pack</td><td>automate</td><td>28</td></tr>
+        <tr><td>Open-wall photo before drywall</td><td>remind</td><td>12 + 3 reopened walls</td></tr>
+        <tr><td>Search by wall state</td><td>harness change</td><td>9</td></tr>
+        <tr><td>Water damage near windows</td><td>feature</td><td>to measure</td></tr>
+      </table></div>
+      <p class="note">Hours per job = times it happened × minutes each. Minutes come from event timestamps where the log has them. Otherwise the user sets them. Cost avoided, such as a reopened wall, uses a cost the user enters.</p>
+    </div>
+    <div class="rp-col">
+      <div class="rp-h"><span class="rn">3</span>Playbook · Job 3, Tower B</div>
+      <ul class="pb">
+        <li><b>On from day 1</b><small>Friday owner photo pack</small></li>
+        <li><b>Reminder</b><small>when drywall starts in a unit: "Take the open-wall photo first."</small></li>
+        <li><b>Prompt at kickoff</b><small>"Which units have window flashing? Tag them so water issues are findable."</small></li>
+        <li><b>Starts on</b><small>harness v6, not v0</small></li>
+      </ul>
+    </div>
+  </div>
+  <p class="lede">Every opportunity has a button that does something: turn on the reminder, build the automation, or send a harness change to the loop. It is an inbox of actions, not a chart. That keeps it clear of the dashboard ban.</p>
 </section>
 
 <section>
@@ -598,7 +652,13 @@ guardrails, tools,
 parent_v, score, status</code></div>
     <div class="coll"><div class="nm">events</div><code>user, action, target,
 result: yes | no | skip,
-harness_v, ts</code></div>
+harness_v, ts, duration</code></div>
+    <div class="coll"><div class="nm">projects</div><code>name, type, start, end,
+phases, outcomes,
+retro, playbook</code></div>
+    <div class="coll"><div class="nm">opportunities</div><code>project, kind, evidence,
+hours_saved, cost_avoided,
+status: open | on | done</code></div>
   </div>
   <div class="uses">
     <span>Atlas sandbox (required to be a finalist)</span>
@@ -614,6 +674,8 @@ harness_v, ts</code></div>
     <h2>Hard questions about construction</h2>
   </div>
   <div class="risks">
+    <div class="risk"><span class="st open">Open</span><div class="q">Where does "time saved" come from?</div><p>From event timestamps where the log has them, such as search start to export. Otherwise a minutes value the user sets. Show which one each number uses. Never present an estimate as measured.</p></div>
+    <div class="risk"><span class="st open">Open</span><div class="q">Can photos alone support a retrospective?</div><p>No. A retrospective needs outcomes: reopened walls, punch-list items, delays. Log them as events. The demo seeds 3 reopened walls on job 1 and labels them synthetic.</p></div>
     <div class="risk"><span class="st open">Open</span><div class="q">Where does a usage history come from?</div><p>A new install has none. For the demo we seed a past activity log for jobs 1 and 2 and label it synthetic. In a real install, the log starts on day one.</p></div>
     <div class="risk"><span class="st open">Open</span><div class="q">Is this too much for one day?</div><p>Show one repeat, one one-off and one live photo. The ladder thresholds (3 and 3) are starting values, not tuned.</p></div>
     <div class="risk"><span class="st ok">Decided</span><div class="q">Will reminders annoy people?</div><p>Every dismiss counts as a "no" and moves the task back down the ladder. Automations need a person's approval.</p></div>
@@ -632,10 +694,10 @@ harness_v, ts</code></div>
     <h2>Shoot this first, then build to it</h2>
   </div>
   <div class="story">
-    <div class="frame"><div class="pic"><span class="t">0:00–0:12</span><b>v0 knows nothing. It backfills jobs 1 and 2.</b></div><p>Versions tick v0 → v3 on screen. Voice-over on every frame.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:12–0:24</span><b>It finds a repeat: the Friday owner report.</b></div><p>Reminder, then an offer to automate it.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:24–0:38</span><b>It finds a failed one-off: water damage.</b></div><p>Plan item becomes v4 with an issue field. Score goes up.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:38–0:50</span><b>Job 3 goes live. A new photo arrives.</b></div><p>Filed, snapshot v5, and a reminder: unit 206 needs a photo.</p></div>
+    <div class="frame"><div class="pic"><span class="t">0:00–0:12</span><b>v0 knows nothing. It backfills jobs 1 and 2 by project.</b></div><p>Versions tick v0 → v3. Voice-over on every frame.</p></div>
+    <div class="frame"><div class="pic"><span class="t">0:12–0:26</span><b>Retrospective on job 1. Opportunities ranked by hours saved.</b></div><p>Top row: the Friday owner pack, 28 hours per job.</p></div>
+    <div class="frame"><div class="pic"><span class="t">0:26–0:38</span><b>"Send to loop." The harness rewrites itself: v4.</b></div><p>Diff on screen. Score goes up.</p></div>
+    <div class="frame"><div class="pic"><span class="t">0:38–0:50</span><b>Job 3 starts with a playbook.</b></div><p>A new photo arrives. Reminder: take the open-wall photo in unit 206.</p></div>
     <div class="frame"><div class="pic"><span class="t">0:50–1:00</span><b>Version history, one rollback.</b></div><p>"Same core for any media-heavy business."</p></div>
   </div>
 </section>
@@ -655,6 +717,8 @@ harness_v, ts</code></div>
       <li>Label about 50 photos as the eval set</li>
       <li>Loop: read feedback, propose a harness diff, backfill, score, roll back</li>
       <li>Pattern finder: repeats and one-offs, as aggregations on events</li>
+      <li>Retro and opportunity scorer per project: hours saved from event timestamps</li>
+      <li>Playbook writer for the next project</li>
       <li>Live mode: a change stream wakes the harness on each new photo</li>
     </ol></div>
     <div class="lane"><h3>Lane 2 · the web app</h3><ol>
@@ -662,7 +726,8 @@ harness_v, ts</code></div>
       <li>Main screen: harness version diff with approve and roll back</li>
       <li>Search with yes and no on each result</li>
       <li>Side panel: photos by trade and week</li>
-      <li>Proposal inbox: reminders, automations and plan items to approve</li>
+      <li>Opportunity inbox: each row has an act button (remind, automate, send to loop)</li>
+      <li>Project view: retrospective and playbook</li>
       <li>Record the 60-second video</li>
     </ol></div>
   </div>
