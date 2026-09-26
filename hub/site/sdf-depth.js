@@ -4,7 +4,8 @@
    takes the hue of the nearest point (plan, build, instrument). Colours are read from CSS custom
    properties on the host so the same shader re-skins with the design system's tokens.
 
-     SDF.mount(el, { fixed:false, intensity:0.6, speed:1, scale:1, vars:{...} })  → handle
+     SDF.mount(el, { fixed:false, intensity:0.6, speed:1, scale:1, points:3|4, vars:{...} })  → handle
+     points:4 adds the core: a fourth vertex at the centroid joined to the three points (the tetrahedron, projected)
      handle.recolor()  after the host's tokens change   ·  handle.destroy()
 
    Reduced motion renders one still frame. Offscreen and hidden tabs pause. No WebGL → a CSS
@@ -17,7 +18,8 @@
   var FS = [
     'precision highp float;',
     'uniform vec2 u_res;uniform float u_time;uniform float u_int;uniform float u_scale;',
-    'uniform vec3 u_bg;uniform vec3 u_a;uniform vec3 u_b;uniform vec3 u_c;',
+    'uniform vec3 u_bg;uniform vec3 u_a;uniform vec3 u_b;uniform vec3 u_c;uniform vec3 u_d;uniform float u_four;',
+    'float sdSeg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}',
     'float sdTri(vec2 p,vec2 p0,vec2 p1,vec2 p2){',
     ' vec2 e0=p1-p0,e1=p2-p1,e2=p0-p2,v0=p-p0,v1=p-p1,v2=p-p2;',
     ' vec2 q0=v0-e0*clamp(dot(v0,e0)/dot(e0,e0),0.,1.),q1=v1-e1*clamp(dot(v1,e1)/dot(e1,e1),0.,1.),q2=v2-e2*clamp(dot(v2,e2)/dot(e2,e2),0.,1.);',
@@ -28,6 +30,7 @@
     'float field(vec2 p,vec2 A,vec2 B,vec2 C){',
     ' float d=sdTri(p,A,B,C);',
     ' d=smin(d,length(p-A)-.055,.09);d=smin(d,length(p-B)-.055,.09);d=smin(d,length(p-C)-.055,.09);',
+    ' if(u_four>.5){vec2 O=(A+B+C)/3.;d=smin(d,length(p-O)-.075,.10);d=smin(d,sdSeg(p,O,A)-.006,.05);d=smin(d,sdSeg(p,O,B)-.006,.05);d=smin(d,sdSeg(p,O,C)-.006,.05);}',
     ' return d;}',
     'void main(){',
     ' vec2 uv=(gl_FragCoord.xy-.5*u_res)/min(u_res.x,u_res.y);',
@@ -39,7 +42,8 @@
     ' float e=1.5/min(u_res.x,u_res.y);',
     ' vec2 g=vec2(field(uv+vec2(e,0.),A,B,C)-field(uv-vec2(e,0.),A,B,C),field(uv+vec2(0.,e),A,B,C)-field(uv-vec2(0.,e),A,B,C))/(2.*e);',
     ' float wa=1./(dot(uv-A,uv-A)+.02),wb=1./(dot(uv-B,uv-B)+.02),wc=1./(dot(uv-C,uv-C)+.02);',
-    ' vec3 hue=(u_a*wa+u_b*wb+u_c*wc)/(wa+wb+wc);',
+    ' vec2 O=(A+B+C)/3.;float wd=u_four>.5?1.6/(dot(uv-O,uv-O)+.02):0.;',
+    ' vec3 hue=(u_a*wa+u_b*wb+u_c*wc+u_d*wd)/(wa+wb+wc+wd);',
     ' float glow=1.-smoothstep(0.,.75,d);',
     ' float plateau=1.-smoothstep(-.08,.0,d);',
     ' float rim=exp(-abs(d)*38.);',
@@ -67,23 +71,23 @@
 
   function mount(host, opts){
     opts = opts||{};
-    var vars = opts.vars || { bg:['--t-canvas','--bg-canvas','--bg'], a:['--t-plan','--point-plan','--plan'], b:['--t-build','--point-build','--build'], c:['--t-instrument','--point-instrument','--instrument'] };
+    var vars = opts.vars || { bg:['--t-canvas','--bg-canvas','--bg'], a:['--t-plan','--point-plan','--plan'], b:['--t-build','--point-build','--build'], c:['--t-instrument','--point-instrument','--instrument'], d:['--t-accent','--accent-default','--cyan','--flag'] };
     var canvas = document.createElement('canvas'); canvas.className = 'sdf' + (opts.fixed ? ' fixed' : ''); canvas.setAttribute('aria-hidden','true');
     if (!opts.fixed) host.classList.add('sdf-host');
     host.insertBefore(canvas, host.firstChild);
     var gl = canvas.getContext('webgl', { antialias:false, alpha:false, powerPreference:'low-power' });
-    var colors = function(){ return { bg:rgb(readVar(host,vars.bg,'#0f1216'))||[.06,.07,.09], a:rgb(readVar(host,vars.a,'#8b7cf6'))||[.55,.49,.96], b:rgb(readVar(host,vars.b,'#e0a33a'))||[.88,.64,.23], c:rgb(readVar(host,vars.c,'#3fb886'))||[.25,.72,.53] }; };
+    var colors = function(){ return { bg:rgb(readVar(host,vars.bg,'#0f1216'))||[.06,.07,.09], a:rgb(readVar(host,vars.a,'#8b7cf6'))||[.55,.49,.96], b:rgb(readVar(host,vars.b,'#e0a33a'))||[.88,.64,.23], c:rgb(readVar(host,vars.c,'#3fb886'))||[.25,.72,.53], d:rgb(readVar(host,vars.d||['--cyan'],'#3aa6d9'))||[.23,.65,.85] }; };
     if (!gl) { host.classList.add('sdf-fallback'); var c0=colors(); ['a','b','c'].forEach(function(k){ var v=c0[k]; host.style.setProperty('--sdf-'+k,'rgba('+Math.round(v[0]*255)+','+Math.round(v[1]*255)+','+Math.round(v[2]*255)+',.18)'); }); canvas.remove(); return { recolor:function(){}, destroy:function(){ host.classList.remove('sdf-fallback'); } }; }
     function sh(t,s){ var o=gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; }
     var prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER,VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER,FS)); gl.linkProgram(prog); gl.useProgram(prog);
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog,'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U = {}; ['u_res','u_time','u_int','u_scale','u_bg','u_a','u_b','u_c'].forEach(function(n){ U[n]=gl.getUniformLocation(prog,n); });
+    var U = {}; ['u_res','u_time','u_int','u_scale','u_bg','u_a','u_b','u_c','u_d','u_four'].forEach(function(n){ U[n]=gl.getUniformLocation(prog,n); });
     var col = colors(), intensity = opts.intensity==null?0.6:opts.intensity, speed = opts.speed==null?1:opts.speed, scale = opts.scale==null?1:opts.scale;
     var running = true, visible = true, raf = 0, t0 = performance.now(), w=0, h=0;
     function size(){ var dpr=Math.min(devicePixelRatio||1,1.5); var r=opts.fixed?{width:innerWidth,height:innerHeight}:host.getBoundingClientRect(); var W=Math.max(1,Math.round(r.width*dpr)), H=Math.max(1,Math.round(r.height*dpr)); if(W!==w||H!==h){ w=W;h=H;canvas.width=W;canvas.height=H;gl.viewport(0,0,W,H);} }
     function frame(now){ raf=0; size(); gl.uniform2f(U.u_res,w,h); gl.uniform1f(U.u_time,((now-t0)/1000)*speed); gl.uniform1f(U.u_int,intensity); gl.uniform1f(U.u_scale,scale);
-      gl.uniform3fv(U.u_bg,col.bg); gl.uniform3fv(U.u_a,col.a); gl.uniform3fv(U.u_b,col.b); gl.uniform3fv(U.u_c,col.c); gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+      gl.uniform3fv(U.u_bg,col.bg); gl.uniform3fv(U.u_a,col.a); gl.uniform3fv(U.u_b,col.b); gl.uniform3fv(U.u_c,col.c); gl.uniform3fv(U.u_d,col.d); gl.uniform1f(U.u_four,opts.points===4?1:0); gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
       if (running && visible && !reduced.matches) raf=requestAnimationFrame(frame); }
     function kick(){ if(!raf) raf=requestAnimationFrame(frame); }
     var ro = ('ResizeObserver' in G) ? new ResizeObserver(kick) : null; if (ro && !opts.fixed) ro.observe(host);
