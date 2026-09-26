@@ -48,6 +48,7 @@ points to.
 | `references/access-runbook.md` | Cloudflare Access, first and always: the exact dashboard click path, reading the AUD from the redirect, verifying, the failure table. Written to be driven by browser automation. |
 | `references/collaborator-access.md` | The three gate tiers, when to graduate, and the eleven rules that make a self-service door safe. |
 | `references/polyglot-viewer.md` | The one Viewer for `.md` / `.csv` / `.json` / `.jsonl`, and the bugs its first drafts shipped. |
+| `references/viewer-navigation.md` | Long documents inside the Viewer: the layout rule, the outline as a scroll area with a pin, the one-row metadata strip, the minimap. Derived from the 3PT hub, 2026-09-26. |
 | `references/derived-layer.md` | Authored model, generated derived file, generator and verifier: how numbers stay true. |
 | `references/symbolic-system.md` | Register, cluster registry, glyph minting, status glyphs, stable handles. |
 | `references/estate.md` | The tier above one hub: federated and layered estates. |

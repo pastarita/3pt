@@ -425,4 +425,6 @@ first deploy in ~30 minutes).
 
 See `references/polyglot-viewer.md` for the Viewer leaf — a tested markdown/CSV/JSON/source
 renderer that keeps the Shell, plus the regression checks that caught two bugs its first draft
-shipped.
+shipped. Then `references/viewer-navigation.md` for what makes a long document navigable inside it:
+the Viewer's own layout rule, the outline as a scroll area with a pin, the one-row metadata strip
+(DERIVED counts, GENERATED git facts), and the minimap. Nothing typed into the markdown.
