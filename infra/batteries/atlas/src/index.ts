@@ -8,7 +8,7 @@ export { loadKeys, putSecret, deleteSecret, vaultStatus, vaultRead, VAULT_NAMES,
  *  A placeholder from .env.example (contains `<`) counts as unset. Returns undefined when nothing usable is set. */
 export function atlasUri(env: NodeJS.ProcessEnv = process.env): string | undefined {
   const raw = env.ATLAS_URI?.trim();
-  if (raw && !raw.includes('<')) return raw;
+  if (raw && !raw.includes('<') && /^mongodb(\+srv)?:\/\//.test(raw)) return raw;   // anything else pasted there is not a URI
   const host = env.ATLAS_HOST?.trim(), user = env.ATLAS_DBUSER?.trim(), pass = env.ATLAS_DBPASS?.trim();
   if (!host || !user || !pass) return undefined;
   const db = env.ATLAS_DB?.trim() || '3pt';

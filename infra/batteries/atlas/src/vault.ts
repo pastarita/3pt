@@ -96,7 +96,10 @@ export async function vaultRead(env: Record<string, string | undefined>): Promis
  * No .env file is read.
  */
 export async function loadKeys(log: (l: string) => void = () => {}): Promise<Record<string, string | undefined>> {
-  const base: Record<string, string | undefined> = { ...keychainEnv(), ...process.env };
+  // A blank or `<placeholder>` host value is "unset", never an override: a sourced .env with `OPENROUTER_API_KEY=`
+  // must not blank the vault's key (the same rule readSecrets() applies).
+  const real = (o: Record<string, string | undefined>) => Object.fromEntries(Object.entries(o).filter(([, v]) => v?.trim() && !v.includes('<')));
+  const base: Record<string, string | undefined> = { ...real(keychainEnv()), ...real(process.env) };
   try {
     const vault = await vaultRead(base);
     if (Object.keys(vault).length) log(`[keys] ${Object.keys(vault).length} key(s) from the Atlas vault`);
