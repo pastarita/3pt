@@ -54,6 +54,8 @@
       epigram:'Three lanes (ui, harness, infra), Turborepo inside each, batteries injected at the edge; eight Mermaid perspectives and the extension recipes.' },
     { id:'DC', slug:'ci',             name:'CI & deployment',      verb:'Shipping',  cluster:'build',  temp:'hot',  doc:'docs/13-ci-and-deployment.md',
       epigram:'Build and deploy infrastructure, the topology, what each credit can actually fund, the herald that guards branching, and the target resolver.' },
+    { id:'DP', slug:'setup-doc',      name:'Setup cascade',        verb:'Standing up', cluster:'build', temp:'hot',  doc:'docs/14-setup-cascade.md',
+      epigram:'Eight slots, provider options per slot, signup and key links, the env keys and scripted step each choice drives; the proposed gateway battery.' },
     { id:'D4', slug:'resources',      name:'Resources & credits',  verb:'Provisioning', cluster:'build', temp:'warm', doc:'docs/04-resources.md',
       epigram:'Every partner, credit, MCP, and which 3PT slot it fills.' },
     { id:'DB', slug:'brainstorming',  name:'Brainstorming transcript', verb:'Recording', cluster:'record', temp:'cold', doc:'brainstorming.md',
