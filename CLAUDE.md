@@ -36,6 +36,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Theses, hypotheses, the measurement system, partner-incentive mapping, requirement set | `docs/07-assessment-and-measurement.md` |
 | Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `hub/site/direction.html` (hub leaf "Direction") |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
+| Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 
 ## Working rules for agents in this repo
 
@@ -47,6 +48,11 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 - Keep `main` installable. If you break the install loop, fix it before anything else.
 - Two humans (Patrick, Yash) run agents concurrently. Stay inside your lane's directories; if you
   must touch another lane, say so in the commit message.
+- **Provenance.** When a doc section or a piece of code implements something said in the brainstorm,
+  cite the segment in a comment (`<!-- @s1.28 -->`, `// @s1.28`); ids are in `docs/provenance-index.md`.
+  Never edit the spoken text in `brainstorming.md`; add or enrich the `<!-- sN.NN -->` markers instead.
+  Then run `node scripts/prov.mjs --bake && node scripts/prov.mjs` and commit the regenerated index.
+  `node scripts/prov.mjs --check` runs in CI and fails on any broken pointer.
 
 ## The hub workspace (`hub/`)
 
@@ -78,8 +84,15 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
 
 - 2026-09-26 11:30 ET: docs of record written. No application code yet, by decision.
   Repo is **private**; must be public before submission. Atlas Sandbox project not yet created.
+- 2026-09-26 13:00 ET: brainstorm Session 1 indexed: 30 segments, 75 ideas, 7 questions (1 open: which
+  ICP direction). Every doc of record cites its segments. Timeline leaf on the hub.
 - 2026-09-26 12:45 ET: hub workspace live at https://3pt.pages.dev behind the Tier 0 gate
   (verified anon 401 / valid 200 / wrong-domain 401). `ACCESS_PASS` set in Production and Preview;
   the local copy is in `~/.config/3pt/ACCESS_PASS` on Patrick's machine. GitHub Actions secrets
   (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) not yet set, so CI lints but does not deploy.
   Yash not yet on the gate (`ACCESS_USERS`) or the repo. ICP not decided; see the explorer.
+- 2026-09-26 13:05 ET: Tier 1 live. Cloudflare Access app "3PT hub" on team
+  `lively-king-be23.cloudflareaccess.com` fronts `3pt.pages.dev` and `*.3pt.pages.dev`; reusable
+  policy "3PT team" allows `@factorita.com` plus kothariwork@gmail.com and patrickastarita@gmail.com.
+  `ACCESS_TEAM_DOMAIN` + `ACCESS_AUD` set in both Pages environments; middleware verifies the
+  assertion. Verified: anon, forged header, and preview all 302 to Access. Add people in the policy.

@@ -4,9 +4,13 @@
 stage:            ## build _site/ = hub/ + docs/ + README.md
 	@bash tools/stage.sh
 
-check: stage      ## lint the IA and the Viewer against the staged artifact
+check: stage      ## lint the IA and the Viewer against the staged artifact, and the provenance pointers
 	@node tools/check-nav.mjs
 	@node tools/check-view.mjs
+	@node ../scripts/prov.mjs --check
+
+prov:             ## rebuild docs/provenance-index.md + site/prov-data.js from brainstorming.md (repo root)
+	@node ../scripts/prov.mjs
 
 preview: stage    ## serve _site/ with Pages-style routing at http://127.0.0.1:8000/
 	@python3 tools/serve.py 8000

@@ -59,11 +59,16 @@ Visitors sign in with a one-time PIN to their email (or any identity provider en
 published keys, issuer, audience, expiry) and fails closed with 503 if the keys are unreachable.
 The convenience email header is never trusted on its own.
 
+**Current state (2026-09-26):** the Access application **3PT hub** exists on team
+`lively-king-be23.cloudflareaccess.com`, destinations `3pt.pages.dev` + `*.3pt.pages.dev`, one
+reusable policy **3PT team** (Allow: emails ending in `@factorita.com`, plus the two principals'
+Gmail addresses). `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` are set in both Pages environments.
+To add a person: Zero Trust → Access controls → Policies → *3PT team* → add an email. No redeploy.
+
 ```sh
-# once: an API token with  Access: Apps and Policies · Edit  +  Access: Organizations · Read
-#       saved to ~/.config/3pt/CF_API_TOKEN (chmod 600). Never committed.
-ACCESS_EMAILS="patrick@factorita.com,yash@example.com" make access   # creates/updates app + policy,
-                                                                     # writes ACCESS_TEAM_DOMAIN + ACCESS_AUD to Pages
+# to (re)create the app from the API instead of the dashboard — needs an API token with
+# Access: Apps and Policies · Edit + Access: Organizations · Read in ~/.config/3pt/CF_API_TOKEN
+ACCESS_EMAILS="patrick@factorita.com,kothariwork@gmail.com,patrickastarita@gmail.com" make access
 make deploy && make verify
 ```
 
