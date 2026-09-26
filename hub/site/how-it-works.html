@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · How it works</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./replay-data.js"></script>
+<style>
+  /* mode hues: one per sprint mode, used by figures 3, 5 and 7 */
+  :root{--m-feature:var(--build);--m-improvement:var(--instrument);--m-fix:var(--alert)}
+  .jump{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;background:var(--bg);border-bottom:1px solid var(--line);margin:0 0 6px}
+  .jump a{font:600 11.5px/1 var(--sans);color:var(--soft);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:var(--panel)}
+  .jump a b{font-family:var(--mono);color:var(--faint);margin-right:5px}
+  .jump a:hover,.jump a.on{color:var(--ink);border-color:var(--line-strong)}
+  figure{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 12px;margin:16px 0;scroll-margin-top:56px}
+  figure h2{margin:0 0 2px;font-size:15px}
+  figure h2 i{font:700 11px/1 var(--mono);color:var(--faint);font-style:normal}
+  figure .q{font:italic 13.5px/1.45 var(--serif);color:var(--soft);margin:0 0 12px}
+  figcaption{font-size:12.5px;color:var(--soft);margin:10px 0 0}
+  figcaption .pv{margin-right:6px}
+  figcaption code{font-size:11px}
+  svg.d{width:100%;height:auto;display:block;font-family:var(--mono);font-size:11px;overflow:visible}
+  svg.d text{fill:var(--ink)}
+  svg.d .t{font-weight:700;font-size:12.5px}
+  svg.d .s{fill:var(--soft);font-size:10px}
+  svg.d .k{fill:var(--faint);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+  svg.d .lbl{fill:var(--soft);font-size:10px;font-style:italic}
+  svg.d rect.b{stroke-width:1.3}
+  .plan{fill:var(--violet-soft);stroke:var(--plan)}
+  .build{fill:var(--amber-soft);stroke:var(--build)}
+  .inst{fill:color-mix(in srgb,var(--instrument) 15%,var(--bg));stroke:var(--instrument)}
+  .atlas{fill:var(--cyan-soft);stroke:var(--cyan)}
+  .surface{fill:var(--slate-soft);stroke:var(--slate)}
+  .loop{fill:color-mix(in srgb,var(--flag) 13%,var(--bg));stroke:var(--flag)}
+  .bad{fill:color-mix(in srgb,var(--alert) 14%,var(--bg));stroke:var(--alert)}
+  .ask{fill:var(--card);stroke:var(--line-strong)}
+  .frame{fill:none;stroke:var(--line-strong);stroke-dasharray:5 4}
+  .e{fill:none;stroke:var(--soft);stroke-width:1.4;marker-end:url(#ah)}
+  .e.dash{stroke-dasharray:4 3}
+  .e.hot{stroke:var(--flag);stroke-width:2.4;marker-end:url(#ahf)}
+  .e.no{stroke:var(--alert);marker-end:url(#ahr)}
+  .e.yes{stroke:var(--instrument);marker-end:url(#ahg)}
+  /* figure 1 stepper */
+  #loop .n,#loop .e{transition:opacity .25s}
+  #loop.stepping .n,#loop.stepping .e{opacity:.22}
+  #loop.stepping .n.on,#loop.stepping .e.on{opacity:1}
+  #loop .n.on rect.b{stroke-width:2.6}
+  .steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 0}
+  .steps button,.tog button,.acts button{font:600 12px/1 var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--line-strong);border-radius:7px;padding:7px 11px;cursor:pointer}
+  .steps button:hover,.tog button:hover,.acts button:hover{border-color:var(--soft)}
+  .dots{display:flex;gap:5px}
+  .dots i{width:22px;height:6px;border-radius:3px;background:var(--line);cursor:pointer}
+  .dots i.on{background:var(--flag)}
+  .say{flex:1 1 320px;min-height:36px;font-size:13px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:7px;padding:8px 11px}
+  .say code{font-size:11px}
+  /* figure 2 */
+  .wall{width:100%;border-collapse:collapse;font-size:12.5px}
+  .wall th,.wall td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:center}
+  .wall th{font:700 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .wall td:first-child,.wall th:first-child{text-align:left;font-family:var(--mono);font-size:12px;color:var(--ink)}
+  .wall .own td:first-child{color:var(--flag)}
+  .c{display:inline-block;min-width:26px;font:700 11px/1 var(--mono);padding:4px 6px;border-radius:5px}
+  .c.w{background:var(--amber-soft);color:var(--build)}
+  .c.r{background:var(--cyan-soft);color:var(--cyan)}
+  .c.x{background:color-mix(in srgb,var(--alert) 16%,transparent);color:var(--alert)}
+  .c.o{color:var(--faint)}
+  .keyrow{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--soft);margin:10px 0 0}
+  /* figure 3 + 7: mode strip */
+  .mf{fill:var(--m-feature)} .mi{fill:var(--m-improvement)} .mx{fill:var(--m-fix)}
+  .modekey{display:flex;gap:14px;font:600 11px/1 var(--mono);color:var(--soft);margin:8px 0 0}
+  .modekey i{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+  /* figure 5 */
+  .lab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+  @media (max-width:760px){.lab{grid-template-columns:1fr}}
+  .chk{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;font-size:12.5px}
+  .chk .nm{font-family:var(--mono);font-size:12px}
+  .chk .nm small{display:block;color:var(--faint);font-size:10.5px}
+  .tog{display:flex;border:1px solid var(--line-strong);border-radius:7px;overflow:hidden}
+  .tog button{border:0;border-radius:0;padding:6px 9px;background:transparent;color:var(--soft)}
+  .tog button+button{border-left:1px solid var(--line-strong)}
+  .tog button.on{background:var(--card);color:var(--ink)}
+  .tog button.on.f{background:var(--amber-soft);color:var(--build)}
+  .tog button.on.v{background:color-mix(in srgb,var(--alert) 16%,transparent);color:var(--alert)}
+  .diff{font:12px/1.55 var(--mono);background:var(--pine);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-height:220px;white-space:pre-wrap;word-break:break-word}
+  .diff .add{color:var(--good)} .diff .del{color:var(--alert)} .diff .mute{color:var(--faint)} .diff .hd{color:var(--ink);font-weight:700}
+  .acts{display:flex;gap:8px;margin:10px 0 0;flex-wrap:wrap}
+  .acts button.go{background:var(--amber-soft);border-color:var(--build);color:var(--build)}
+  /* figure 6 routes */
+  .routes{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+  .routes th,.routes td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  .routes th{font:700 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .routes td{font-family:var(--mono);font-size:11.5px;color:var(--soft)}
+  .routes td:first-child{color:var(--ink)}
+  /* figure 7 */
+  .stats{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+  .scrub{display:flex;align-items:center;gap:10px;margin:10px 0 0}
+  .scrub input{flex:1;accent-color:var(--flag)}
+  .scrub b{font:700 12px/1 var(--mono);min-width:64px}
+  .read{font-size:12.5px;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:9px 11px;margin-top:8px;min-height:62px}
+  .read .hd{font:700 12px/1.4 var(--mono);color:var(--ink)}
+  .read ul{margin:6px 0 0;padding-left:0;list-style:none}
+  .read li{margin:3px 0;color:var(--soft)} .read li b{font-family:var(--mono);color:var(--ink)}
+  #lanes svg .row:hover rect.bg{fill:var(--card)}
+  #lanes svg .mk{cursor:pointer}
+  /* figure 8 */
+  .two{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}
+  @media (max-width:760px){.two{grid-template-columns:1fr}}
+  @media print{.jump,.steps,.acts,.scrub{display:none!important}figure{break-inside:avoid;background:#fff;border-color:#ccc}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Build · hot · drawn from the code at <code>6b6857b</code> · the tree itself is on <a href="./architecture.html">Architecture</a></p>
+    <h1>How it works</h1>
+    <p class="lede">A run cannot change its own rules. Between runs, the improver can, and only from failed checks. Eight figures, one mechanism.</p>
+  </header>
+
+  <nav class="jump" aria-label="figures">
+    <a href="#f1"><b>1</b>Two loops</a><a href="#f2"><b>2</b>The wall</a><a href="#f3"><b>3</b>Sprint mode</a><a href="#f4"><b>4</b>A grant's life</a>
+    <a href="#f5"><b>5</b>Try the rewrite</a><a href="#f6"><b>6</b>Policy to agent</a><a href="#f7"><b>7</b>92 months</a><a href="#f8"><b>8</b>State and keys</a>
+  </nav>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--soft)"/></marker>
+    <marker id="ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--flag)"/></marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--alert)"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--instrument)"/></marker>
+  </defs></svg>
+
+  <!-- 1 · two loops -->
+  <figure id="f1">
+    <h2><i>1</i> Two loops</h2>
+    <p class="q">The run is the inner loop. The improver is the outer loop. Step through one iteration.</p>
+    <svg class="d" id="loop" viewBox="0 0 960 318" role="img" aria-label="One iteration: policy, freeze, Plan, Build, Instrument, findings, improver, checkpoint, back to policy">
+      <path class="e hot" data-n="loop" d="M894 116 V40 H90 V114"/>
+      <text class="s" x="492" y="31" text-anchor="middle">policy v n+1 · the next iteration starts here</text>
+      <rect class="frame" x="180" y="80" width="640" height="130" rx="10"/>
+      <text class="k" x="194" y="98">the run · frozen policy · guarded store</text>
+      <g class="n" data-n="pol"><rect class="b atlas" x="16" y="118" width="144" height="64" rx="8"/><text class="t" x="88" y="146" text-anchor="middle">policies</text><text class="s" x="88" y="164" text-anchor="middle">Atlas · newest version</text></g>
+      <g class="n" data-n="frz"><rect class="b surface" x="196" y="118" width="134" height="64" rx="8"/><text class="t" x="263" y="146" text-anchor="middle">freeze + guard</text><text class="s" x="263" y="164" text-anchor="middle">read-only copy</text></g>
+      <g class="n" data-n="plan"><rect class="b plan" x="348" y="118" width="136" height="64" rx="8"/><text class="t" x="416" y="146" text-anchor="middle">Plan</text><text class="s" x="416" y="164" text-anchor="middle">picks the sprint</text></g>
+      <g class="n" data-n="build"><rect class="b build" x="504" y="118" width="136" height="64" rx="8"/><text class="t" x="572" y="146" text-anchor="middle">Build</text><text class="s" x="572" y="164" text-anchor="middle">Strands agent</text></g>
+      <g class="n" data-n="inst"><rect class="b inst" x="660" y="118" width="144" height="64" rx="8"/><text class="t" x="732" y="146" text-anchor="middle">Instrument</text><text class="s" x="732" y="164" text-anchor="middle">10 checks</text></g>
+      <g class="n" data-n="fnd"><rect class="b atlas" x="660" y="246" width="144" height="56" rx="8"/><text class="t" x="732" y="270" text-anchor="middle">findings</text><text class="s" x="732" y="287" text-anchor="middle">pass / fail + a lesson</text></g>
+      <g class="n" data-n="imp"><rect class="b loop" x="840" y="118" width="110" height="64" rx="8"/><text class="t" x="895" y="146" text-anchor="middle">Improver</text><text class="s" x="895" y="164" text-anchor="middle">rewritePolicy</text></g>
+      <g class="n" data-n="cp"><rect class="b atlas" x="840" y="246" width="110" height="56" rx="8"/><text class="t" x="895" y="270" text-anchor="middle">checkpoints</text><text class="s" x="895" y="287" text-anchor="middle">cp/n · git tag</text></g>
+      <path class="e" data-n="frz" d="M160 150 H194"/>
+      <path class="e" data-n="plan" d="M330 150 H346"/>
+      <path class="e" data-n="build" d="M484 150 H502"/>
+      <path class="e" data-n="inst" d="M640 150 H658"/>
+      <path class="e" data-n="fnd" d="M732 182 V244"/>
+      <path class="e" data-n="imp" d="M790 246 L852 186"/>
+      <path class="e" data-n="cp" d="M895 182 V244"/>
+    </svg>
+    <div class="steps">
+      <button id="prev" aria-label="previous step">◀</button><button id="next" aria-label="next step">▶</button><button id="play">play</button>
+      <div class="dots" id="dots"></div>
+      <div class="say" id="say"></div>
+    </div>
+    <figcaption><span class="pv a">AUTHORED</span>Drawn by hand from <code>harness/packages/improver/src/index.ts</code> <code>cycle()</code>.</figcaption>
+  </figure>
+
+  <!-- 2 · the wall -->
+  <figure id="f2">
+    <h2><i>2</i> The wall</h2>
+    <p class="q">Who may touch which collection. A stage that writes a loop-owned collection throws.</p>
+    <table class="wall">
+      <thead><tr><th>collection</th><th>Plan</th><th>Build</th><th>Instrument</th><th>Improver</th></tr></thead>
+      <tbody>
+        <tr class="own"><td>policies</td><td><span class="c x">✕ W</span></td><td><span class="c x">✕ W</span></td><td><span class="c x">✕ W</span></td><td><span class="c w">RW</span></td></tr>
+        <tr class="own"><td>checkpoints</td><td><span class="c r">R</span></td><td><span class="c x">✕ W</span></td><td><span class="c x">✕ W</span></td><td><span class="c w">W</span></td></tr>
+        <tr><td>plans</td><td><span class="c w">W</span></td><td><span class="c r">R</span></td><td><span class="c r">R</span></td><td><span class="c o">·</span></td></tr>
+        <tr><td>measurements</td><td><span class="c r">R</span></td><td><span class="c w">W</span></td><td><span class="c w">RW</span></td><td><span class="c o">·</span></td></tr>
+        <tr><td>findings</td><td><span class="c r">R</span></td><td><span class="c o">·</span></td><td><span class="c w">RW</span></td><td><span class="c r">R</span></td></tr>
+        <tr><td>demo_outcomes · activity · photos</td><td><span class="c o">·</span></td><td><span class="c o">·</span></td><td><span class="c r">R</span></td><td><span class="c o">·</span></td></tr>
+      </tbody>
+    </table>
+    <div class="keyrow"><span><span class="c w">W</span> writes</span><span><span class="c r">R</span> reads</span><span><span class="c x">✕ W</span> refused by <code>stageStore()</code></span><span>stages get the policy as a frozen copy, not from the store</span></div>
+    <figcaption><span class="pv a">AUTHORED</span>Read from each stage's <code>run()</code>. The guard is <code>LOOP_OWNED</code> in <code>harness/packages/core/src/index.ts</code>.</figcaption>
+  </figure>
+
+  <!-- 3 · sprint mode -->
+  <figure id="f3">
+    <h2><i>3</i> Which sprint runs</h2>
+    <p class="q">Plan asks four questions in order. The first yes wins. One mode per iteration, never two.</p>
+    <svg class="d" viewBox="0 0 960 200" role="img" aria-label="selectMode decision chain">
+      <rect class="b ask" x="8" y="14" width="200" height="62" rx="8"/><text class="t" x="108" y="40" text-anchor="middle">First iteration?</text><text class="s" x="108" y="58" text-anchor="middle">no checkpoint yet</text>
+      <rect class="b ask" x="240" y="14" width="200" height="62" rx="8"/><text class="t" x="340" y="40" text-anchor="middle">Last build broke?</text><text class="s" x="340" y="58" text-anchor="middle">M-ERR &gt; 0</text>
+      <rect class="b ask" x="472" y="14" width="210" height="62" rx="8"/><text class="t" x="577" y="40" text-anchor="middle">An effect check failed?</text><text class="s" x="577" y="58" text-anchor="middle">a grant did not cut its problem</text>
+      <rect class="b ask" x="714" y="14" width="238" height="62" rx="8"/><text class="t" x="833" y="40" text-anchor="middle">Improvement turn?</text><text class="s" x="833" y="58" text-anchor="middle">grants held · iteration % 4 = 0</text>
+      <path class="e no" d="M208 45 H238"/><text class="lbl" x="214" y="38">no</text>
+      <path class="e no" d="M440 45 H470"/><text class="lbl" x="446" y="38">no</text>
+      <path class="e no" d="M682 45 H712"/><text class="lbl" x="688" y="38">no</text>
+      <path class="e yes" d="M108 76 V132"/><text class="lbl" x="114" y="108">yes</text>
+      <path class="e yes" d="M340 76 V132"/><text class="lbl" x="346" y="108">yes</text>
+      <path class="e yes" d="M577 76 V132"/><text class="lbl" x="583" y="108">yes</text>
+      <path class="e yes" d="M774 76 V132"/><text class="lbl" x="780" y="108">yes</text>
+      <path class="e no" d="M892 76 V132"/><text class="lbl" x="898" y="108">no</text>
+      <rect class="b build" x="48" y="134" width="120" height="40" rx="20"/><text class="t" x="108" y="159" text-anchor="middle">feature</text>
+      <rect class="b bad" x="280" y="134" width="120" height="40" rx="20"/><text class="t" x="340" y="159" text-anchor="middle">fix</text>
+      <rect class="b bad" x="517" y="134" width="120" height="40" rx="20"/><text class="t" x="577" y="159" text-anchor="middle">fix</text>
+      <rect class="b inst" x="714" y="134" width="118" height="40" rx="20"/><text class="t" x="773" y="159" text-anchor="middle">improvement</text>
+      <rect class="b build" x="842" y="134" width="110" height="40" rx="20"/><text class="t" x="897" y="159" text-anchor="middle">feature</text>
+    </svg>
+    <svg class="d" id="strip" viewBox="0 0 960 150" role="img" aria-label="Sprint mode of each replayed month"></svg>
+    <div class="modekey"><span><i style="background:var(--m-feature)"></i>feature <b id="nF"></b></span><span><i style="background:var(--m-improvement)"></i>improvement <b id="nI"></b></span><span><i style="background:var(--m-fix)"></i>fix <b id="nX"></b></span></div>
+    <figcaption><span class="pv a">AUTHORED</span>chain from <code>selectMode()</code> in <code>harness/packages/plan/src/index.ts</code>. <span class="pv d">DERIVED</span>strip: one cell per month of <code>3pt replay</code>, counted from <code>replay-data.js</code>.</figcaption>
+  </figure>
+
+  <!-- 4 · a grant's life -->
+  <figure id="f4">
+    <h2><i>4</i> A grant's life</h2>
+    <p class="q">A grant is a new tool or field for Build. It must prove itself, or the loop takes it back.</p>
+    <svg class="d" viewBox="0 0 960 250" role="img" aria-label="Grant state machine">
+      <rect class="b surface" x="8" y="24" width="200" height="62" rx="8"/><text class="t" x="108" y="50" text-anchor="middle">Problem over its bar</text><text class="s" x="108" y="68" text-anchor="middle">≥ 3 in 3 months · hazard ≥ 1</text>
+      <rect class="b build" x="262" y="24" width="170" height="62" rx="8"/><text class="t" x="347" y="50" text-anchor="middle">Granted</text><text class="s" x="347" y="68" text-anchor="middle">in policy v n+1</text>
+      <rect class="b inst" x="492" y="24" width="190" height="62" rx="8"/><text class="t" x="587" y="50" text-anchor="middle">Effect check</text><text class="s" x="587" y="68" text-anchor="middle">problem now vs at grant</text>
+      <rect class="b inst" x="742" y="24" width="210" height="62" rx="8"/><text class="t" x="847" y="50" text-anchor="middle">Kept</text><text class="s" x="847" y="68" text-anchor="middle">judged again next turn</text>
+      <rect class="b loop" x="492" y="164" width="190" height="62" rx="8"/><text class="t" x="587" y="190" text-anchor="middle">Debug</text><text class="s" x="587" y="208" text-anchor="middle">fix sprint</text>
+      <rect class="b inst" x="742" y="164" width="210" height="62" rx="8"/><text class="t" x="847" y="190" text-anchor="middle">Kept: it was noise</text><text class="s" x="847" y="208" text-anchor="middle">problem fell since</text>
+      <rect class="b bad" x="262" y="164" width="170" height="62" rx="8"/><text class="t" x="347" y="190" text-anchor="middle">Revoked</text><text class="s" x="347" y="208" text-anchor="middle">a rule records why</text>
+      <path class="e" d="M208 55 H260"/><text class="lbl" x="214" y="47">feature</text>
+      <path class="e" d="M432 55 H490"/><text class="lbl" x="436" y="47">≥ 6 months</text>
+      <path class="e yes" d="M682 55 H740"/><text class="lbl" x="688" y="47">cut it</text>
+      <path class="e no" d="M587 86 V162"/><text class="lbl" x="594" y="128">did not</text>
+      <path class="e yes" d="M682 195 H740"/><text class="lbl" x="686" y="187">fell</text>
+      <path class="e no" d="M492 195 H434"/><text class="lbl" x="440" y="187">still high</text>
+      <path class="e dash" d="M262 206 H108 V88"/><text class="lbl" x="116" y="150">12-month cooldown</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span><code>runChecks()</code> in <code>harness/packages/instrument/src/index.ts</code>. Window 3, age 6, cooldown 12 and bar 3 are demo tuning, one value each.</figcaption>
+  </figure>
+
+  <!-- 5 · try the rewrite -->
+  <figure id="f5">
+    <h2><i>5</i> Try the rewrite</h2>
+    <p class="q">Fail some checks. See the next policy. Apply it, then fail a granted check to revoke it.</p>
+    <div class="lab">
+      <div class="chk" id="chk"></div>
+      <div>
+        <div class="diff" id="diff" aria-live="polite"></div>
+        <div class="acts"><button class="go" id="apply">apply → next version</button><button id="reset">reset to seed</button></div>
+      </div>
+    </div>
+    <figcaption><span class="pv d">DERIVED</span>computed in the page by a line-for-line copy of <code>rewritePolicy()</code>, <code>harness/packages/improver/src/index.ts:18</code>.</figcaption>
+  </figure>
+
+  <!-- 6 · policy to agent -->
+  <figure id="f6">
+    <h2><i>6</i> Policy to agent</h2>
+    <p class="q">Build does not run a hand-written prompt. It compiles the policy into a Strands agent.</p>
+    <svg class="d" viewBox="0 0 960 262" role="img" aria-label="Policy fields compile into Strands harness options">
+      <rect class="b surface" x="8" y="8" width="262" height="246" rx="10"/><text class="k" x="22" y="30">policy v n</text>
+      <rect class="b ask" x="22" y="44" width="234" height="38" rx="6"/><text x="34" y="67">rules[]</text><text class="s" x="244" y="67" text-anchor="end">seed + learned</text>
+      <rect class="b ask" x="22" y="92" width="234" height="38" rx="6"/><text x="34" y="115">maxTokensPerStage</text><text class="s" x="244" y="115" text-anchor="end">build 120k</text>
+      <rect class="b ask" x="22" y="140" width="234" height="38" rx="6"/><text x="34" y="163">toolGrants.build</text><text class="s" x="244" y="163" text-anchor="end">repo, atlas</text>
+      <rect class="b ask" x="22" y="188" width="234" height="38" rx="6"/><text x="34" y="211">product grants</text><text class="s" x="244" y="211" text-anchor="end">field.* tool.* flag.*</text>
+      <rect class="b build" x="352" y="100" width="196" height="62" rx="8"/><text class="t" x="450" y="126" text-anchor="middle">harnessOptions()</text><text class="s" x="450" y="144" text-anchor="middle">@3pt/strands</text>
+      <rect class="b atlas" x="630" y="8" width="322" height="246" rx="10"/><text class="k" x="644" y="30">createHarness(options)</text>
+      <rect class="b ask" x="644" y="44" width="294" height="38" rx="6"/><text x="656" y="67">instructions</text><text class="s" x="926" y="67" text-anchor="end">one line per rule</text>
+      <rect class="b ask" x="644" y="92" width="294" height="38" rx="6"/><text x="656" y="115">limits.totalTokens</text><text class="s" x="926" y="115" text-anchor="end">hard cap on spend</text>
+      <rect class="b ask" x="644" y="140" width="294" height="38" rx="6"/><text x="656" y="163">builtinTools</text><text class="s" x="926" y="163" text-anchor="end">read · shell · write · edit</text>
+      <rect class="b ask" x="644" y="188" width="294" height="38" rx="6"/><text x="656" y="211">model</text><text class="s" x="926" y="211" text-anchor="end">ModelRouter · OpenRouter</text>
+      <path class="e" d="M256 63 C310 63 310 118 350 122"/>
+      <path class="e" d="M256 111 C300 111 320 128 350 130"/>
+      <path class="e" d="M256 159 C300 159 320 140 350 140"/>
+      <path class="e dash" d="M256 207 C290 207 300 240 330 240"/><text class="lbl" x="336" y="244">data only: Plan counts them, Instrument judges them</text>
+      <path class="e" d="M548 122 C590 122 600 63 642 63"/>
+      <path class="e" d="M548 130 C590 130 600 111 642 111"/>
+      <path class="e" d="M548 138 C590 138 600 159 642 159"/>
+      <path class="e" d="M548 146 C590 146 600 207 642 207"/>
+    </svg>
+    <table class="routes">
+      <thead><tr><th>stage</th><th>models, in order</th><th>effort</th><th>router</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>claude-haiku-4.5 → claude-sonnet-5</td><td>low</td><td>classifier</td></tr>
+        <tr><td>build</td><td>claude-opus-5.5 → claude-sonnet-5</td><td>high</td><td>fallback · 2 switches</td></tr>
+        <tr><td>instrument</td><td>claude-sonnet-5 → claude-haiku-4.5</td><td>medium</td><td>fallback</td></tr>
+      </tbody>
+    </table>
+    <figcaption><span class="pv a">AUTHORED</span><code>harnessOptions()</code> and <code>DEFAULT_ROUTES</code> in <code>harness/packages/strands/src/index.ts</code>. No OpenRouter key: Build is a dry run.</figcaption>
+  </figure>
+
+  <!-- 7 · 92 months -->
+  <figure id="f7">
+    <h2><i>7</i> <span id="nM"></span> months of Acme Builders, replayed</h2>
+    <p class="q">One iteration per month, real stages, memory store. Each row is one grant. Drag the month.</p>
+    <div class="stats" id="tiles"></div>
+    <svg class="d" id="lanes" viewBox="0 0 960 330" role="img" aria-label="Grant lanes over the replayed months"></svg>
+    <div class="scrub"><input type="range" id="mo" min="0" max="91" value="7" aria-label="month"><b id="moL"></b></div>
+    <div class="read" id="read" aria-live="polite"></div>
+    <div class="keyrow"><span>● granted</span><span style="color:var(--instrument)">✓ worked</span><span style="color:var(--alert)">✗ did not</span><span style="color:var(--alert)">▮ revoked</span><span style="color:var(--instrument)">○ kept after debug</span><span style="color:var(--slate)">◇ hand-written plan</span></div>
+    <figcaption><span class="pv d">DERIVED</span>from <code>3pt replay</code> by <code>scripts/replay-data.mjs</code>, which fails if its recount differs from the replay's own totals. ◇ comes from <code>expected/harness-versions.json</code>.</figcaption>
+  </figure>
+
+  <!-- 8 · state and keys -->
+  <figure id="f8">
+    <h2><i>8</i> Where state lives, where keys come from</h2>
+    <p class="q">Surfaces reach the harness only over HTTP. Stages never see a URI or read the environment.</p>
+    <div class="two">
+      <svg class="d" viewBox="0 0 520 250" role="img" aria-label="Request path to Atlas">
+        <rect class="b surface" x="6" y="20" width="150" height="64" rx="8"/><text class="t" x="81" y="47" text-anchor="middle">Surfaces</text><text class="s" x="81" y="65" text-anchor="middle">web · pwa · macOS</text>
+        <rect class="b build" x="196" y="20" width="150" height="64" rx="8"/><text class="t" x="271" y="47" text-anchor="middle">Worker</text><text class="s" x="271" y="65" text-anchor="middle">client per request</text>
+        <rect class="b atlas" x="384" y="20" width="130" height="64" rx="8"/><text class="t" x="449" y="47" text-anchor="middle">Atlas</text><text class="s" x="449" y="65" text-anchor="middle">Cluster0 · M10</text>
+        <rect class="b bad" x="196" y="150" width="150" height="64" rx="8"/><text class="t" x="271" y="177" text-anchor="middle">memory</text><text class="s" x="271" y="195" text-anchor="middle">5 min, says so</text>
+        <rect class="b plan" x="6" y="150" width="150" height="64" rx="8"/><text class="t" x="81" y="177" text-anchor="middle">3pt CLI</text><text class="s" x="81" y="195" text-anchor="middle">loop · rollback</text>
+        <rect class="b surface" x="384" y="150" width="130" height="64" rx="8"/><text class="t" x="449" y="177" text-anchor="middle">.3pt/store</text><text class="s" x="449" y="195" text-anchor="middle">file store</text>
+        <path class="e" d="M156 52 H194"/><text class="lbl" x="160" y="44">HTTPS</text>
+        <path class="e" d="M346 52 H382"/>
+        <path class="e dash" d="M271 84 V148"/><text class="lbl" x="278" y="140">Atlas silent 3 s</text>
+        <path class="e" d="M140 150 L400 86"/><text class="lbl" x="300" y="98" transform="rotate(-13 300 98)">atlasStore()</text>
+        <path class="e dash" d="M81 214 V236 H449 V216"/><text class="lbl" x="200" y="248">no Atlas parts</text>
+      </svg>
+      <svg class="d" viewBox="0 0 420 250" role="img" aria-label="Key sources merge into ctx.secrets and atlasUri">
+        <rect class="b atlas" x="6" y="14" width="150" height="58" rx="8"/><text class="t" x="81" y="39" text-anchor="middle">Atlas vault</text><text class="s" x="81" y="56" text-anchor="middle">3pt.secrets · CSFLE</text>
+        <rect class="b surface" x="6" y="96" width="150" height="58" rx="8"/><text class="t" x="81" y="121" text-anchor="middle">macOS Keychain</text><text class="s" x="81" y="138" text-anchor="middle">Atlas parts · master key</text>
+        <rect class="b surface" x="6" y="178" width="150" height="58" rx="8"/><text class="t" x="81" y="203" text-anchor="middle">host env</text><text class="s" x="81" y="220" text-anchor="middle">CI, Worker secret</text>
+        <rect class="b loop" x="190" y="96" width="96" height="58" rx="8"/><text class="t" x="238" y="130" text-anchor="middle">loadKeys()</text>
+        <rect class="b build" x="312" y="40" width="102" height="58" rx="8"/><text class="t" x="363" y="65" text-anchor="middle">ctx.secrets</text><text class="s" x="363" y="82" text-anchor="middle">to stages</text>
+        <rect class="b atlas" x="312" y="152" width="102" height="58" rx="8"/><text class="t" x="363" y="177" text-anchor="middle">atlasUri()</text><text class="s" x="363" y="194" text-anchor="middle">to the store</text>
+        <path class="e" d="M156 43 C175 43 172 110 188 114"/>
+        <path class="e" d="M156 125 H188"/>
+        <path class="e" d="M156 207 C175 207 172 140 188 136"/>
+        <path class="e" d="M286 112 C300 112 296 70 310 70"/><text class="lbl" x="290" y="30">readSecrets()</text>
+        <path class="e" d="M286 138 C300 138 296 180 310 180"/>
+      </svg>
+    </div>
+    <figcaption><span class="pv a">AUTHORED</span><code>harness/apps/worker/src/edge.ts</code>, <code>harness/apps/cli/src/index.ts</code>, <code>infra/batteries/atlas/src/vault.ts:98</code>. The Worker sets header <code>x-3pt-store</code> to say which store answered.</figcaption>
+  </figure>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  var NS = 'http://www.w3.org/2000/svg';
+
+  /* ---------- 1 · stepper ---------- */
+  var STEPS = [
+    [['pol'], 'Read the newest policy from Atlas. No policy yet: write the seed, v0.', 'improver/src/index.ts:40'],
+    [['frz'], 'Freeze the policy. Wrap the store so a write to <code>policies</code> or <code>checkpoints</code> throws.', 'core/src/index.ts:184'],
+    [['plan'], 'Plan picks feature, improvement or fix (figure 3) and writes <code>plans</code>.', 'plan/src/index.ts:26'],
+    [['build'], 'Build compiles the policy into a Strands agent and runs the plan (figure 6). Writes <code>M-ERR-build</code>.', 'build/src/index.ts:15'],
+    [['inst','fnd'], 'Instrument reads 3 months of photos, activity and outcomes. Writes one measurement per check and the findings.', 'instrument/src/index.ts:161'],
+    [['imp'], 'The run is over. The improver reads the failed findings and writes policy v n+1 (figure 5).', 'improver/src/index.ts:45'],
+    [['cp'], 'Checkpoint <code>cp/n</code>. With <code>--git</code> the CLI commits and tags it. Rollback restores a tag as a new version.', 'apps/cli/src/index.ts'],
+    [['loop','pol'], 'The next iteration starts from v n+1. Nothing in the run changed the rules. Only the improver did.', 'improver/src/index.ts:75']
+  ];
+  var loop = $('loop'), cur = -1, timer = null;
+  var dots = $('dots');
+  STEPS.forEach(function(_, i){ var d = document.createElement('i'); d.title = 'step ' + (i+1); d.onclick = function(){ stop(); show(i); }; dots.appendChild(d); });
+  function show(i){
+    cur = (i + STEPS.length) % STEPS.length;
+    var on = STEPS[cur][0];
+    loop.classList.add('stepping');
+    loop.querySelectorAll('[data-n]').forEach(function(el){ el.classList.toggle('on', on.indexOf(el.getAttribute('data-n')) >= 0); });
+    [].forEach.call(dots.children, function(d, k){ d.classList.toggle('on', k === cur); });
+    $('say').innerHTML = '<b>' + (cur+1) + '/' + STEPS.length + '</b> ' + STEPS[cur][1] + ' <code>' + STEPS[cur][2] + '</code>';
+  }
+  function stop(){ if (timer){ clearInterval(timer); timer = null; $('play').textContent = 'play'; } }
+  $('next').onclick = function(){ stop(); show(cur + 1); };
+  $('prev').onclick = function(){ stop(); show(cur - 1); };
+  $('play').onclick = function(){ if (timer) return stop(); $('play').textContent = 'pause'; show(cur + 1); timer = setInterval(function(){ show(cur + 1); }, 2200); };
+  show(0);
+
+  /* ---------- replay data (figures 3 and 7) ---------- */
+  var R = globalThis.REPLAY;
+  function rect(p, a){ var r = document.createElementNS(NS, 'rect'); for (var k in a) r.setAttribute(k, a[k]); p.appendChild(r); return r; }
+  function txt(p, x, y, s, cls, anchor){ var t = document.createElementNS(NS, 'text'); t.setAttribute('x', x); t.setAttribute('y', y); if (cls) t.setAttribute('class', cls); if (anchor) t.setAttribute('text-anchor', anchor); t.textContent = s; p.appendChild(t); return t; }
+  var MC = { feature:'mf', improvement:'mi', fix:'mx' };
+
+  if (R){
+    /* 3 · strip: one row per year, one cell per month */
+    var strip = $('strip'), years = {};
+    R.months.forEach(function(m){ var y = m.month.slice(0,4); (years[y] = years[y] || []).push(m); });
+    Object.keys(years).forEach(function(y, row){
+      txt(strip, 0, 16 + row*17, y, 's');
+      years[y].forEach(function(m){
+        var mo = +m.month.slice(5) - 1;
+        var r = rect(strip, { x: 44 + mo*76, y: 6 + row*17, width: 72, height: 13, rx: 2, 'class': MC[m.mode] });
+        var t = document.createElementNS(NS, 'title'); t.textContent = m.month + ' · ' + m.mode; r.appendChild(t);
+      });
+    });
+    ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].forEach(function(n, k){ txt(strip, 80 + k*76, 148, n, 's', 'middle'); });
+    var cnt = function(mode){ return R.months.filter(function(m){ return m.mode === mode; }).length; };
+    $('nF').textContent = cnt('feature'); $('nI').textContent = cnt('improvement'); $('nX').textContent = cnt('fix');
+
+    /* 7 · lanes */
+    var N = R.months.length; $('nM').textContent = N; $('mo').max = N - 1;
+    var order = [], held = {}, open = {}, marks = [];
+    R.months.forEach(function(m, k){
+      m.events.forEach(function(e){
+        if (order.indexOf(e.grant) < 0) order.push(e.grant);
+        if (e.k === '+') open[e.grant] = k;
+        if (e.k === '-' && open[e.grant] !== undefined){ (held[e.grant] = held[e.grant] || []).push([open[e.grant], k]); delete open[e.grant]; }
+        marks.push({ k: k, e: e });
+      });
+    });
+    Object.keys(open).forEach(function(g){ (held[g] = held[g] || []).push([open[g], N]); });
+    var cap = {}; R.expected.forEach(function(x){ cap[x.grant] = x; });
+    var X0 = 212, W = (952 - X0) / N, X = function(k){ return X0 + k*W; }, Y = function(r){ return 40 + r*28; };
+    var lanes = $('lanes');
+    lanes.setAttribute('viewBox', '0 0 960 ' + (Y(order.length) + 6));
+    R.months.forEach(function(m, k){
+      rect(lanes, { x: X(k), y: 4, width: Math.max(W - 0.8, 1), height: 12, 'class': MC[m.mode] });
+      if (m.month.slice(5) === '01'){ var l = document.createElementNS(NS, 'path'); l.setAttribute('d', 'M' + X(k) + ' 20 V' + Y(order.length)); l.setAttribute('style', 'stroke:var(--line);stroke-width:1'); lanes.appendChild(l); txt(lanes, X(k) + 3, 30, m.month.slice(0,4), 's'); }
+    });
+    txt(lanes, 0, 14, 'sprint', 'k');
+    order.forEach(function(g, r){
+      var gr = document.createElementNS(NS, 'g'); gr.setAttribute('class', 'row'); lanes.appendChild(gr);
+      rect(gr, { 'class': 'bg', x: 0, y: Y(r), width: 960, height: 26, fill: 'transparent' });
+      txt(gr, 0, Y(r) + 12, cap[g] ? cap[g].capability : g, 't');
+      txt(gr, 0, Y(r) + 23, g, 's');
+      (held[g] || []).forEach(function(s){ rect(gr, { x: X(s[0]), y: Y(r) + 9, width: Math.max(X(s[1]) - X(s[0]), 2), height: 9, rx: 3, style: 'fill:var(--amber-soft);stroke:var(--build);stroke-width:1' }); });
+      if (cap[g]){
+        var ek = R.months.findIndex(function(m){ return m.month === cap[g].expected; });
+        if (ek >= 0){ var d = document.createElementNS(NS, 'path'); var cx = X(ek) + W/2, cy = Y(r) + 13.5; d.setAttribute('d', 'M' + cx + ' ' + (cy-6) + ' l6 6 -6 6 -6 -6z'); d.setAttribute('style', 'fill:none;stroke:var(--slate);stroke-width:1.4'); var t = document.createElementNS(NS, 'title'); t.textContent = 'hand-written plan: ' + cap[g].expected; d.appendChild(t); gr.appendChild(d); }
+      }
+    });
+    var GLY = { '+': ['●','var(--build)'], '✓': ['✓','var(--instrument)'], '✗': ['✗','var(--alert)'], '-': ['▮','var(--alert)'], '=': ['○','var(--instrument)'] };
+    marks.forEach(function(m){
+      var r = order.indexOf(m.e.grant), gl = GLY[m.e.k];
+      var t = txt(lanes, X(m.k) + W/2, Y(r) + 18, gl[0], 'mk', 'middle'); t.setAttribute('style', 'fill:' + gl[1] + ';font-size:12px;font-weight:700');
+      var ti = document.createElementNS(NS, 'title'); ti.textContent = R.months[m.k].month + ' · ' + m.e.note; t.appendChild(ti);
+      t.addEventListener('click', function(){ setMonth(m.k); });
+    });
+    var cursor = document.createElementNS(NS, 'rect'); cursor.setAttribute('style', 'fill:var(--flag);opacity:.18;pointer-events:none'); cursor.setAttribute('y', 2); cursor.setAttribute('height', Y(order.length)); cursor.setAttribute('width', Math.max(W, 2)); lanes.appendChild(cursor);
+    lanes.addEventListener('click', function(ev){
+      var pt = lanes.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+      var p = pt.matrixTransform(lanes.getScreenCTM().inverse());
+      if (p.x >= X0) setMonth(Math.min(N - 1, Math.floor((p.x - X0) / W)));
+    });
+    function heldAt(k){ return order.filter(function(g){ return (held[g] || []).some(function(s){ return s[0] <= k && k < s[1]; }); }); }
+    var WORD = { '+':'granted', '✓':'worked', '✗':'did not work', '-':'revoked', '=':'kept after debug' };
+    function setMonth(k){
+      $('mo').value = k;
+      var m = R.months[k];
+      cursor.setAttribute('x', X(k));
+      $('moL').textContent = m.month;
+      var h = heldAt(k);
+      $('read').innerHTML = '<div class="hd">' + m.month + ' · ' + m.mode + ' sprint · cp/' + (k+1) + ' · policy v' + (k+1) + ' · ' + h.length + ' grants held</div>' +
+        (m.events.length ? '<ul>' + m.events.map(function(e){ return '<li><b>' + WORD[e.k] + '</b> ' + esc(e.note) + '</li>'; }).join('') + '</ul>'
+                         : '<ul><li>No grant changed this month.</li></ul>');
+    }
+    $('mo').addEventListener('input', function(){ setMonth(+this.value); });
+    setMonth(7);
+
+    var n = function(k){ return marks.filter(function(m){ return m.e.k === k; }).length; };
+    var found = R.expected.filter(function(x){ return x.firstTry; }).length;
+    var tiles = [[N, 'months replayed'], [n('+'), 'grants made'], [n('-'), 'grants revoked'], [n('='), 'kept after debug'],
+                 ['v' + R.final.version, 'policy at the end'], [R.final.grants.length, 'grants held at the end'], [found + ' / ' + R.expected.length, 'hand-written steps the loop found']];
+    $('tiles').innerHTML = tiles.map(function(t){ return '<div class="stat"><div class="n">' + t[0] + '</div><div class="l">' + t[1] + ' <span class="pv d">DERIVED</span></div></div>'; }).join('');
+  }
+
+  /* ---------- 5 · the rewrite, a copy of rewritePolicy() ---------- */
+  /* copied from PROJECT_CHECKS in harness/packages/instrument/src/index.ts: check, answeredBy, bar, note, needs */
+  var CHECKS = [
+    ['search-miss', 'field.unit_level_trade', 3, function(n){ return n + ' photo searches by supers, PMs and PEs came back empty; tag every photo by unit, floor and trade at upload'; }],
+    ['wall-evidence', 'tool.open_wall_gap', 3, function(n){ return n + ' walls closed up with no in-wall photos, or opened again to find a line; remind the super to shoot MEP rough-in before board goes up'; }],
+    ['water-late', 'flag.issue_on_arrival', 3, function(n){ return n + ' water stains first caught on the closeout walk; flag leak and stain photos to the super the day they come in'; }],
+    ['manual-pack', 'tool.owner_pack', 3, function(n){ return Math.round(n) + ' PM hours building the weekly owner photo report by hand; build the OAC photo pack automatically'; }],
+    ['wall-search', 'field.wall_state', 3, function(n){ return n + ' "plumbing before drywall" lookups came back empty; tag each photo open wall or closed wall, and re-read the older rough-in photos once'; }],
+    ['slow-answers', 'context.photos_per_question_20', 3, function(n){ return n + ' lookups still empty with unit, floor and trade tags; pull 20 photos per question instead of 8'; }, 'field.unit_level_trade'],
+    ['repeat-questions', 'screen.by_role', 3, function(n){ return Math.round(n * 20) + ' repeat lookups by the same super, PM or PE on one job; give each role its own screen'; }],
+    ['closeout-by-hand', 'tool.closeout_set', 3, function(n){ return n + ' searches for turnover photos by unit; build the per-unit closeout photo set for the turnover package automatically'; }],
+    ['duplicate-photos', 'tool.drop_bursts', 3, function(n){ return Math.round(n * 20) + ' duplicate shots stored on one job; keep one shot per burst after 24 hours'; }],
+    ['hazard-photos', 'flag.hazard', 1, function(n){ return n + ' fall-protection photos (unprotected edge, missing guardrail or toe board, unsecured ladder) with no flag; flag them to the safety manager the same day'; }]
+  ];
+  function seed(){ return { version: 0, rules: [
+      'Atlas is the only state store; nothing stateful lives in process memory across iterations.',
+      'Read an image once, store the transcript, re-read only deliberately.',
+      'The harness is the product; the UI is an inspector.'],
+    toolGrants: { build: ['atlas.find', 'atlas.insert', 'blob.get', 'repo.worktree'] }, provenance: { reason: 'seed' } }; }
+  function rewritePolicy(prev, findings, tag){
+    var failed = findings.filter(function(f){ return !f.passed; });
+    var rest = JSON.parse(JSON.stringify(prev));
+    var learned = failed.filter(function(f){ return f.revoke || !prev.rules.some(function(r){ return r.indexOf('(' + f.check + '):') >= 0; }); })
+                        .map(function(f){ return 'Learned at ' + tag + ' (' + f.check + '): ' + f.note; });
+    var revoked = failed.map(function(f){ return f.revoke; }).filter(function(g){ return g && rest.toolGrants.build.indexOf(g) >= 0; });
+    var grants = failed.map(function(f){ return f.answer; }).filter(function(g){ return g && rest.toolGrants.build.indexOf(g) < 0; });
+    grants = grants.filter(function(g, i){ return grants.indexOf(g) === i; });
+    rest.toolGrants.build = rest.toolGrants.build.filter(function(g){ return revoked.indexOf(g) < 0; }).concat(grants);
+    var reason = failed.length
+      ? failed.length + ' failed checks (' + failed.map(function(f){ return f.check; }).join(', ') + ')' + (grants.length ? '; granted ' + grants.join(', ') : '') + (revoked.length ? '; revoked ' + revoked.join(', ') : '')
+      : 'no failed checks; version bump for lineage';
+    rest.version = prev.version + 1; rest.rules = prev.rules.concat(learned); rest.provenance = { checkpoint: tag, reason: reason };
+    return rest;
+  }
+  var pol = seed(), fail = { 'search-miss': 1, 'hazard-photos': 1 };
+  var active = function(c){ var g = pol.toolGrants.build; return !c[4] || g.indexOf(c[4]) >= 0 || g.indexOf(c[1]) >= 0; };
+  function findings(){
+    return CHECKS.filter(active).map(function(c){
+      var granted = pol.toolGrants.build.indexOf(c[1]) >= 0;
+      if (!fail[c[0]]) return { check: c[0], passed: true };
+      return granted ? { check: 'fix:' + c[0], passed: false, revoke: c[1], note: 'revoked ' + c[1] + ': problem still at ' + c[2] }
+                     : { check: c[0], passed: false, answer: c[1], note: c[3](c[2]) };
+    });
+  }
+  function drawLab(){
+    $('chk').innerHTML = CHECKS.filter(active).map(function(c){
+      var granted = pol.toolGrants.build.indexOf(c[1]) >= 0;
+      return '<div class="nm">' + c[0] + '<small>' + (granted ? 'held: ' : 'answer: ') + c[1] + '</small></div>' +
+        '<div class="tog" data-c="' + c[0] + '"><button class="' + (fail[c[0]] ? '' : 'on') + '" data-v="0">pass</button>' +
+        '<button class="' + (fail[c[0]] ? 'on ' : '') + (granted ? 'v' : 'f') + '" data-v="1">' + (granted ? 'fail → revoke' : 'fail → grant') + '</button></div>';
+    }).join('');
+    var next = rewritePolicy(pol, findings(), 'cp/' + (pol.version + 1));
+    var added = next.rules.slice(pol.rules.length);
+    var plus = next.toolGrants.build.filter(function(g){ return pol.toolGrants.build.indexOf(g) < 0; });
+    var minus = pol.toolGrants.build.filter(function(g){ return next.toolGrants.build.indexOf(g) < 0; });
+    $('diff').innerHTML = '<span class="hd">policy v' + pol.version + ' → v' + next.version + '</span>\n' +
+      '<span class="mute">reason: ' + esc(next.provenance.reason) + '</span>\n\n' +
+      (plus.map(function(g){ return '<span class="add">+ grant ' + g + '</span>'; }).concat(minus.map(function(g){ return '<span class="del">- grant ' + g + '</span>'; }))
+        .concat(added.map(function(r){ return '<span class="add">+ rule  ' + esc(r) + '</span>'; })).join('\n') || '<span class="mute">no change but the version number</span>') +
+      '\n\n<span class="mute">build grants now: ' + next.toolGrants.build.join(', ') + '\nrules: ' + next.rules.length + '</span>';
+    return next;
+  }
+  $('chk').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var c = b.parentNode.getAttribute('data-c');
+    if (b.getAttribute('data-v') === '1') fail[c] = 1; else delete fail[c];
+    drawLab();
+  });
+  $('apply').onclick = function(){ pol = drawLab(); fail = {}; drawLab(); };
+  $('reset').onclick = function(){ pol = seed(); fail = { 'search-miss': 1, 'hazard-photos': 1 }; drawLab(); };
+  drawLab();
+
+  /* jump bar: mark the figure in view */
+  var links = document.querySelectorAll('.jump a');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(en){ if (en.isIntersecting) links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id); }); });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    document.querySelectorAll('figure').forEach(function(f){ io.observe(f); });
+  }
+})();
+</script>
+</body>
+</html>
