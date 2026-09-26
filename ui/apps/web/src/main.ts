@@ -316,17 +316,25 @@ function topbar(): string {
 /* ---------- render ---------- */
 
 const app = document.getElementById('app')!;
+/** Photo credits. Two photos are CC BY, so their authors must show on screen (THIRD_PARTY.md). */
+function credits(): string {
+  return `<footer class="credits" data-region="credits">Photos: Wikimedia Commons and openly licensed archives (CC0, public domain, CC BY, CC BY-SA).
+    Cable entry (electrical-3) by Michael Bemmerl, <a href="https://creativecommons.org/licenses/by/3.0/de/deed.en" target="_blank" rel="noopener">CC BY 3.0 DE</a>.
+    Steel frame building (exterior-5) by Dwight Burdette, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>.
+    <a href="https://github.com/pastarita/3pt/blob/main/THIRD_PARTY.md" target="_blank" rel="noopener">All credits</a> · Buildings: NYC Open Data.</footer>`;
+}
+
 function render() {
   const rt = route();
   if (rt.screen === 'setup') {
     app.className = 'shell setup-mode';
-    app.innerHTML = `<main data-screen="setup">${setupScreen()}</main>`;
+    app.innerHTML = `<main data-screen="setup">${setupScreen()}${credits()}</main>`;
     return expose(rt);
   }
   app.className = 'shell' + (S.sheet ? ' sheet-open' : '');
   const main = rt.screen === 'project' ? projectScreen(rt.id) : rt.screen === 'flags' ? flagsScreen() : rt.screen === 'components' ? componentsScreen() : homeScreen();
   app.innerHTML = `<header class="topbar" data-region="topbar">${topbar()}</header>
-    <main class="main" data-screen="${rt.screen}" data-region="main">${main}</main>
+    <main class="main" data-screen="${rt.screen}" data-region="main">${main}${credits()}</main>
     <aside class="side" data-region="assistant" aria-label="Assistant">${sidebar(rt)}</aside>
     <button class="ask-fab" data-act="sheet" data-region="ask-fab" aria-label="Open assistant">${icon('sparkle', 'ic sm')} Ask</button>
     <div class="sheet-scrim" data-act="sheet"></div>`;
