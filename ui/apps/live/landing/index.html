@@ -28,12 +28,14 @@ img{display:block;max-width:100%}
 .btn--primary:hover{border-color:#fff}
 :focus-visible{outline:2px solid var(--flag);outline-offset:3px}
 .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
-/* the teacher's mark: the hero line written by hand in neon pencil, with a scrawled underline. System hand fonts only, so the page still makes one fetch. */
-.scrawl{--neon:#d7ff3a;position:relative;display:inline-block;transform:rotate(-2deg);transform-origin:left center;padding-bottom:10px;
-  font:400 clamp(20px,2.3vw,27px)/1.1 "Marker Felt","Bradley Hand","Segoe Print","Ink Free","Chalkboard SE","Comic Sans MS",cursive;
+/* the teacher's mark: "self-improving" written by hand in neon pencil above the headline, with a proofreader's caret
+   under the gap where it goes ("The ^ harness"). System hand fonts only, so the page still makes one fetch. */
+.ins{--neon:#d7ff3a;position:relative;display:inline-block;width:0;height:.72em;vertical-align:baseline}
+.ins .scrawl{position:absolute;bottom:calc(100% + .2em);left:-.13em;transform:translateX(-50%);white-space:nowrap;letter-spacing:0;
+  font:400 clamp(17px,1.8vw,22px)/1 "Marker Felt","Bradley Hand","Segoe Print","Ink Free","Chalkboard SE","Comic Sans MS",cursive;
   color:var(--neon);text-shadow:0 0 6px rgba(215,255,58,.55),0 0 18px rgba(215,255,58,.3)}
-.scrawl svg{position:absolute;left:-2%;bottom:-2px;width:104%;height:14px;overflow:visible;filter:drop-shadow(0 0 4px rgba(215,255,58,.6))}
-.scrawl path{fill:none;stroke:var(--neon);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.ins svg{position:absolute;top:calc(100% + .02em);left:-.13em;width:.34em;height:.22em;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 0 4px rgba(215,255,58,.6))}
+.ins path{fill:none;stroke:var(--neon);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:20;background:linear-gradient(180deg,rgba(12,17,23,.92),rgba(12,17,23,0));border-bottom:1px solid transparent;transition:background .2s,border-color .2s}
@@ -54,7 +56,7 @@ nav .btn{padding:10px 14px;font-size:14px}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 0%,transparent 25%)}
 .hero .wrap{position:relative;z-index:1;width:100%}
 .hero__grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center}
-.hero h1{font-size:clamp(40px,5.2vw,72px);line-height:1.02;letter-spacing:-.03em;margin:18px 0 22px;max-width:14ch}
+.hero h1{font-size:clamp(40px,5.2vw,72px);line-height:1.02;letter-spacing:-.03em;margin:44px 0 22px;max-width:14ch}
 .hero h1 em{font-style:normal;color:var(--flag)}
 .hero p{font-size:clamp(18px,2vw,21px);color:var(--soft);max-width:36em;margin:0 0 32px}
 .ctas{display:flex;flex-wrap:wrap;gap:12px}
@@ -278,8 +280,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
   <img class="hero__bg" src="/hero-bim.svg" alt="" aria-hidden="true">
   <div class="wrap hero__grid">
     <div>
-      <div class="scrawl">A self-improving harness for general contractors<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9 C 60 4, 130 11, 200 6 S 280 5, 297 8 M 30 12 C 110 8, 190 13, 270 9"/></svg></div>
-      <h1>The harness for your <em>construction projects</em></h1>
+      <h1>The <span class="ins"><span class="scrawl"> self-improving</span><svg viewBox="0 0 20 12" aria-hidden="true"><path d="M1.5 11 C 5 7, 8 3, 10.2 1 C 12 3.5, 15 7.5, 18.5 10.6"/></svg></span>harness for your <em>construction projects</em></h1>
       <p>Your supers, PMs and project engineers take photos and use the app. 3PT is a self-improving harness. It learns how each role works, builds the next feature, ships it and scores it. A version that does worse rolls back. Every version is a checkpoint in MongoDB Atlas.</p>
       <div class="ctas">
         <a class="btn btn--primary" href="/app/">Open the app →</a>
