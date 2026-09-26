@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · the harness that rewrites itself</title>
+<meta name="description" content="3PT runs a coding agent through Plan, Build and Instrument, then rewrites its own rules. Every version is a checkpoint in MongoDB Atlas.">
+<meta name="theme-color" content="#0f1216">
+<!-- The landing page for the public demo site (3pt-web). Static on purpose: no build, no fetch.
+     scripts/build-web-site.sh copies it to / and builds the live app under /app/. Tokens mirror @3pt/design-system `color`. -->
+<style>
+:root{--bg:#0f1216;--panel:#151a21;--card:#1a2029;--line:#2a323d;--lineStrong:#3a4552;--ink:#e6e9ee;--soft:#a3adbb;--faint:#6b7684;
+  --plan:#8b7cf6;--build:#e0a33a;--instrument:#3fb886;--flag:#ff6b4a;--cyan:#3aa6d9;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:650 15px/1 var(--sans);padding:14px 20px;border-radius:10px;text-decoration:none;border:1px solid var(--lineStrong);background:rgba(15,18,22,.55);backdrop-filter:blur(6px);transition:transform .12s,border-color .12s}
+.btn:hover{transform:translateY(-1px);border-color:var(--soft)}
+.btn--primary{background:var(--flag);border-color:var(--flag);color:#fff}
+.btn--primary:hover{border-color:#fff}
+:focus-visible{outline:2px solid var(--flag);outline-offset:3px}
+.eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
+
+/* nav */
+nav{position:absolute;top:0;left:0;right:0;z-index:5}
+nav .wrap{display:flex;align-items:center;gap:24px;height:72px}
+.mark{display:flex;align-items:center;gap:10px;font:800 20px/1 var(--sans);letter-spacing:.02em;text-decoration:none}
+.mark svg{width:30px;height:30px}
+nav .links{margin-left:auto;display:flex;gap:22px;align-items:center;font-size:14.5px;color:var(--soft)}
+nav .links a{text-decoration:none}nav .links a:hover{color:var(--ink)}
+nav .btn{padding:10px 14px;font-size:14px}
+
+/* hero */
+.hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,18,22,.96) 0%,rgba(15,18,22,.78) 45%,rgba(15,18,22,.2) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 35%)}
+.hero .wrap{position:relative;z-index:1;padding-bottom:12vh;width:100%}
+.hero h1{font-size:clamp(44px,7.4vw,92px);line-height:.98;letter-spacing:-.03em;margin:18px 0 22px;max-width:11ch}
+.hero h1 em{font-style:normal;color:var(--flag)}
+.hero p{font-size:clamp(18px,2vw,21px);color:var(--soft);max-width:36em;margin:0 0 32px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+
+/* sections */
+section{padding:110px 0}
+h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 18px;max-width:18ch}
+.lede{color:var(--soft);font-size:19px;max-width:40em;margin:0}
+
+/* the loop */
+.points{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px;counter-reset:p}
+.point{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 22px 24px;border-top:3px solid var(--c)}
+.point b{display:block;font-size:22px;margin:14px 0 8px}
+.point p{margin:0;color:var(--soft);font-size:15.5px}
+.point .n{font:700 12px/1 var(--mono);color:var(--c);letter-spacing:.1em}
+.point:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:18px;z-index:1}
+.point--atlas{background:linear-gradient(160deg,rgba(63,184,134,.14),var(--panel) 60%)}
+
+/* terminal */
+.split{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center}
+.term{background:#0a0d10;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.term__bar{display:flex;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.term__bar i{width:11px;height:11px;border-radius:50%;background:var(--lineStrong)}
+.term pre{margin:0;padding:22px 22px 26px;font:13.5px/1.75 var(--mono);color:var(--soft);white-space:pre-wrap;word-break:break-word}
+.term .cmd{color:var(--ink)}.term .cmd::before{content:"$ ";color:var(--faint)}
+.term .p{color:var(--plan)}.term .b{color:var(--build)}.term .i{color:var(--instrument)}.term .k{color:var(--flag)}
+.checks{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:14px}
+.checks li{display:flex;gap:12px;color:var(--soft)}
+.checks li::before{content:"";flex:none;width:8px;height:8px;margin-top:10px;border-radius:50%;background:var(--flag)}
+.checks strong{color:var(--ink)}
+
+/* workload */
+.mosaic{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:170px;gap:10px;margin-top:52px}
+.mosaic figure{position:relative;margin:0;border-radius:12px;overflow:hidden;background:var(--card)}
+.mosaic img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.mosaic figure:hover img{transform:scale(1.04)}
+.mosaic figcaption{position:absolute;left:10px;bottom:10px;font:700 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:rgba(15,18,22,.8);padding:6px 8px;border-radius:6px}
+.m1{grid-column:span 3;grid-row:span 2}.m2{grid-column:span 3}.m3{grid-column:span 2}.m4{grid-column:span 1}
+.m5{grid-column:span 2}.m6{grid-column:span 2}.m7{grid-column:span 2}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fact{padding:38px 24px}
+.fact + .fact{border-left:1px solid var(--line)}
+.fact b{display:block;font-size:44px;line-height:1;letter-spacing:-.02em}
+.fact span{display:block;margin-top:10px;color:var(--soft);font-size:15px}
+.note{margin:28px 0 0;color:var(--faint);font-size:14.5px;max-width:52em}
+
+/* closing */
+.close{text-align:center;padding:130px 0 120px;background:radial-gradient(ellipse at 50% 0%,rgba(255,107,74,.16),transparent 60%)}
+.close h2{margin:14px auto 22px;max-width:16ch}
+.close .ctas{justify-content:center}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--faint);font-size:13.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
+
+@media (max-width:900px){
+  nav .links a:not(.btn){display:none}
+  .points{grid-template-columns:1fr 1fr}.point:not(:last-child)::after{display:none}
+  .split{grid-template-columns:1fr;gap:36px}
+  .mosaic{grid-template-columns:1fr 1fr;grid-auto-rows:150px}
+  .mosaic figure{grid-column:span 1;grid-row:span 1}.m1{grid-column:span 2;grid-row:span 2}
+  .facts{grid-template-columns:1fr 1fr}.fact:nth-child(3){border-left:0}.fact:nth-child(n+3){border-top:1px solid var(--line)}
+  section{padding:80px 0}
+}
+@media (max-width:520px){ .points{grid-template-columns:1fr} .wrap{padding:0 16px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;scroll-behavior:auto!important} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="3PT home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 29 27H3Z" fill="none" stroke="#e6e9ee" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="3.5" r="3.2" fill="#8b7cf6"/><circle cx="28.5" cy="27" r="3.2" fill="#e0a33a"/><circle cx="3.5" cy="27" r="3.2" fill="#3fb886"/></svg>
+      3PT
+    </a>
+    <div class="links">
+      <a href="#loop">How it works</a>
+      <a href="#workload">Workload</a>
+      <a href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Code</a>
+      <a class="btn btn--primary" href="/app/">Open the app</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <img src="/media-pool/steel/steel-03.jpg" alt="A steel frame tower under construction with a crane on top" fetchpriority="high">
+  <div class="wrap">
+    <div class="eyebrow">Three Point Harness · Recursive Harnessing</div>
+    <h1>The harness that <em>rewrites itself.</em></h1>
+    <p>3PT runs a coding agent through Plan, Build and Instrument. After every run it rewrites its own rules, context and tools, and saves each version as a checkpoint in MongoDB Atlas.</p>
+    <div class="ctas">
+      <a class="btn btn--primary" href="/app/">Open the app →</a>
+      <a class="btn" href="/studio/">See the role screens</a>
+      <a class="btn" href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Read the code</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="loop">
+  <div class="wrap">
+    <div class="eyebrow">The loop</div>
+    <h2>Three points. One loop. Every turn, a better harness.</h2>
+    <p class="lede">The run cannot change its own rules. Only the improver can, and only from what Instrument found. So each new version has a reason you can read.</p>
+    <div class="points">
+      <div class="point" style="--c:var(--plan)"><span class="n">01 · PLAN</span><b>Pick the sprint</b><p>Reads the last checkpoint and its scores. Picks one mode: feature, improvement or fix.</p></div>
+      <div class="point" style="--c:var(--build)"><span class="n">02 · BUILD</span><b>Run the agent</b><p>Wraps the coding agent with a frozen copy of the rules. It cannot edit them mid-run.</p></div>
+      <div class="point" style="--c:var(--instrument)"><span class="n">03 · INSTRUMENT</span><b>Measure it</b><p>Runs the checks and writes findings. Nothing else.</p></div>
+      <div class="point point--atlas" style="--c:var(--flag)"><span class="n">+ · IMPROVE</span><b>Rewrite the harness</b><p>Turns findings into policy v<i>n</i>+1, tags a checkpoint, saves it to Atlas.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:20px">
+  <div class="wrap split">
+    <div>
+      <div class="eyebrow">Real output</div>
+      <h2>Every version is a checkpoint. Any checkpoint comes back.</h2>
+      <ul class="checks">
+        <li><span><strong>Rules are data.</strong> Rules, context policy and tool grants live in a versioned policy, not in a prompt.</span></li>
+        <li><span><strong>Checkpoints are durable.</strong> Git sha, policy version, scores and a retrospective, in MongoDB Atlas.</span></li>
+        <li><span><strong>Rollback is one command.</strong> The old policy returns as a new version, so history is never lost.</span></li>
+      </ul>
+    </div>
+    <div class="term" role="img" aria-label="Terminal output of pnpm 3pt loop and pnpm 3pt rollback">
+      <div class="term__bar"><i></i><i></i><i></i></div>
+<pre><span class="cmd">pnpm 3pt loop</span>
+<span class="p">[plan]</span> start iteration 1
+<span class="p">[plan]</span> mode=feature basedOn=none
+<span class="b">[build]</span> claude-code dry run: feature sprint, 3 rules, 4 tool grants
+<span class="i">[instrument]</span> 3 checks planned, 0 findings written
+<span class="k">[improver]</span> policy v1 written; checkpoint cp/1
+
+<span class="cmd">pnpm 3pt rollback cp/1</span>
+<span class="k">[rollback]</span> policy v1 from cp/1 restored as v2
+<span class="k">[rollback]</span> code is not touched. To also restore it: git checkout cp/1</pre>
+    </div>
+  </div>
+</section>
+
+<section id="workload">
+  <div class="wrap">
+    <div class="eyebrow">The workload</div>
+    <h2>Built on construction site photos.</h2>
+    <p class="lede">Photos are what the harness learns on, not what it sells. A contractor's crew takes thousands of them. The harness learns which unit, which trade, and which walls are still open, and shows each person what they need first.</p>
+    <div class="mosaic">
+      <figure class="m1"><img src="/media-pool/site/site-08.jpg" alt="Piling rig and cranes on an excavation site" loading="lazy"><figcaption>Site</figcaption></figure>
+      <figure class="m2"><img src="/media-pool/steel/steel-05.jpg" alt="Aerial view of a steel frame structure" loading="lazy"><figcaption>Steel</figcaption></figure>
+      <figure class="m3"><img src="/media-pool/exterior/exterior-05.jpg" alt="Scaffolding on a building under construction" loading="lazy"><figcaption>Exterior</figcaption></figure>
+      <figure class="m4"><img src="/media-pool/plumbing/plumbing-06.jpg" alt="Workers fitting pipes inside a metal stud wall" loading="lazy"><figcaption>Plumbing</figcaption></figure>
+      <figure class="m5"><img src="/media-pool/electrical/electrical-03.jpg" alt="An electrician at work in a timber frame" loading="lazy"><figcaption>Electrical</figcaption></figure>
+      <figure class="m6"><img src="/media-pool/insulation/insulation-06.jpg" alt="Spray foam insulation applied under a floor" loading="lazy"><figcaption>Insulation</figcaption></figure>
+      <figure class="m7"><img src="/media-pool/site/site-07.jpg" alt="A large excavation site with cranes and new buildings" loading="lazy"><figcaption>Excavation</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="facts">
+      <div class="fact"><b>3 + 1</b><span>stages, plus the improver that is the only writer</span></div>
+      <div class="fact"><b>1</b><span>MongoDB Atlas cluster for policies and checkpoints</span></div>
+      <div class="fact"><b>20</b><span>real NYC building records from NYC Open Data</span></div>
+      <div class="fact"><b>1 day</b><span>every line written at the hackathon, Sept 26, 2026</span></div>
+    </div>
+    <p class="note">What is real and what is simulated: the loop, the policies, the checkpoints and the rollback are code in the repo. The firm in the app, with its years of jobs, is a simulation with a fixed seed.</p>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap">
+    <div class="eyebrow">Try it</div>
+    <h2>Watch a harness get better at a job.</h2>
+    <div class="ctas">
+      <a class="btn btn--primary" href="/app/">Open the app →</a>
+      <a class="btn" href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Read the code</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>3PT · Patrick Astarita &amp; Yash Kothari · MongoDB × Cerebral Valley hackathon, NYC</span>
+    <span>Photos: openly licensed (CC0, public domain, CC BY, CC BY-SA). <a href="https://github.com/pastarita/3pt/blob/main/data/mock/media-pool/CREDITS.md" target="_blank" rel="noopener">Credits</a> · Buildings: NYC Open Data · MIT licence</span>
+  </div>
+</footer>
+
+</body>
+</html>
