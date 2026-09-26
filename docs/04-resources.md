@@ -94,3 +94,29 @@ in `docs/07-assessment-and-measurement.md` §4.*
 - **Image bytes** need a store. Options: Atlas GridFS (in-sandbox, simplest for eligibility), or local filesystem with Atlas holding only indexes and transcripts. Nothing in the guide provides object storage.
 - **CI/CD and the install loop** are entirely ours. See `docs/03-workflow.md`.
 - **Swift** has no partner support. Talk to Atlas via the Data API / HTTP and to Voyage via REST.
+
+## Redemption, after the hackathon (2026-09-26 evening)
+
+Every perk, in the order to do them: the ones with a clock first, then the ones that need a code from the
+check-in email, then the self-serve ones. Each row names what the redemption asks for. Nothing here
+requires a charge; two rows ask for a card on file that is not billed. Tick the box when done.
+
+| # | Perk | Do | Needs | Clock |
+|---|---|---|---|---|
+| 1 | [ ] **LangSmith · $50 + Deployments** | Form: https://airtable.com/appzjKToipPcn2dKI/pagTsO0Ld3edczsrV/form ; event = "MongoDB × Cerebral Valley Harness Engineering & Model Wrangling Hackathon"; then add a card in LangSmith settings to make the credits show | check-in email, a card (not charged) | **within 10 days: by 2026-10-06** |
+| 2 | [ ] **AWS Kiro · 500-credit new-user bonus** | https://kiro.dev/ , sign in with GitHub or Google; the bonus lands on first sign-in | nothing | **bonus usable 30 days from sign-in** |
+| 3 | [ ] **Vercel v0 · $30** | https://v0.app → profile picture → Credits → Redeem Code | the code emailed to the checked-in address after 10:30 | none stated |
+| 4 | [ ] **OpenRouter · free credits** | https://openrouter.ai/settings/credits → redeem the code; put the key in the vault as `OPENROUTER_API_KEY` (`3pt keys`) | the code emailed after 10:30 | none stated |
+| 5 | [ ] **OpenAI · 1,250 Codex credits** | Redeem at the link in the email (platform.openai.com billing) | the code emailed after 10:30 | none stated |
+| 6 | [ ] **ElevenLabs · 1 month Creator** | The bot in the event Discord, matched to the check-in email; the Hacker Guide: https://docs.google.com/document/d/1mCh5MtOzBw0aJpurQVUmIVFfPMAHW3MjNemE-LNiMto/edit | Discord, check-in email | none stated |
+| 7 | [ ] **Voyage AI · 200M tokens** | https://dashboard.voyageai.com/ → API key → https://dashboard.voyageai.com/organization/billing add a payment method to unlock Tier 1 limits (not billed within the allowance); usage at https://dashboard.voyageai.com/organization/usage | email sign-up, a card (not charged) | none stated |
+| 8 | [ ] **MongoDB Atlas credits** | Atlas → Sandbox org → Billing → Available Credits → Apply Code. As of 15:20 ET no code had arrived and the balance was empty; ask MongoDB staff (or the Sandbox invitation thread) for the code | the code | ask before the org is reclaimed |
+| 9 | [ ] **MongoDB for Startups** | https://www.mongodb.com/startups — Atlas credits, Voyage tokens, support; the post-hackathon path | an application | rolling |
+| 10 | [ ] **Prize credits** (if placed) | 1st: $7,000 MongoDB · ElevenLabs 3 months Scale · LangSmith $3,000 · Vercel $1,800 v0; 2nd: $5,000 · 3 months Pro · $2,000 · … | organisers reach out | — |
+
+**Where the codes are.** OpenRouter, OpenAI and v0 codes went to the address registered on the Cerebral Valley
+platform (patrickastarita@gmail.com); search that inbox for "OpenRouter", "Codex", "v0" and "Cerebral Valley"
+from 2026-09-26 10:30 onward. ElevenLabs is the Discord bot, not email. The Atlas code was never received.
+
+**After redeeming:** rotate the Atlas db password and remove `0.0.0.0/0` from the access list (`docs/17` §7), and
+record any key in the vault (`3pt keys`), never in a file.
