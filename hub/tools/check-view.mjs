@@ -1,4 +1,4 @@
-// check-view.mjs — Viewer regression checks against the SHIPPED renderers (site/view-render.js),
+// check-view.mjs — Viewer regression checks (prov:ignore — the @s tokens below are fixtures, not cites) against the SHIPPED renderers (site/view-render.js),
 // then every real document in the staged artifact. Run from hub/: tools/stage.sh && node tools/check-view.mjs
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -25,6 +25,11 @@ ok(b.includes('banner') && b.includes('2 columns'), 'CSV banner lifted');
 ok(V.md('- [ ] open\n- [x] done').includes('class="todo"') && V.md('- [x] d').includes('class="done"'), 'task list');
 ok((V.md('line one\nline two').match(/<p>/g) || []).length === 1, 'hard-wrapped prose must join into one paragraph');
 ok(V.md('- a\n  continues').includes('<li>a continues</li>'), 'indented list continuation');
+ok(V.md('```\n<!-- s9.99 P -->\n```').includes('&lt;!-- s9.99 P --&gt;') && !V.md('```\n<!-- s9.99 P -->\n```').includes(NUL), 'a marker inside a code fence is shown, not rendered');
+ok(!V.md('a\n<!-- @s1.01 -->\nb').includes('s1.01') && !V.md('<!-- x\ny -->\nz').includes('&lt;!--'), 'HTML comments must render as nothing');
+const sg = V.md('<!-- s1.12 PY\nidea a\ngrow b\n-->\nwords');
+ok(sg.includes('id="s1.12"') && sg.includes('2 ideas') && sg.includes('<p>words</p>') && V.md('<!-- s1.05 ? -->\nq').includes('id="s1.05"'), 'segment marker renders as an anchored chip');
+ok(V.md('[b](../brainstorming.md) [v](00-vision.md)', 'docs/').includes('f=brainstorming.md') && V.md('[v](00-vision.md)', 'docs/').includes('f=docs/00-vision.md'), 'relative links resolve against the document directory');
 ok(('a' + NUL + 'b').includes(NUL) === true, 'NUL canary cannot detect NUL');
 ok(!readFileSync(join(REPO, 'site', 'view-render.js')).includes(0), 'view-render.js contains a literal NUL byte (git will treat it as binary)');
 
@@ -51,4 +56,4 @@ for (const d of docs) {
   n++;
 }
 if (errs.length) { errs.forEach(e => console.error('FAIL:', e)); process.exit(1); }
-console.log(`OK — 10 unit checks, ${n} workspace documents rendered clean`);
+console.log(`OK — 14 unit checks, ${n} workspace documents rendered clean`);

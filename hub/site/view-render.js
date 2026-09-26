@@ -9,18 +9,34 @@
   var TOK_LINE = new RegExp('^' + NUL + 'F\\d+' + NUL + '$');
   var TOK_ALL  = new RegExp(NUL + 'F(\\d+)' + NUL, 'g');
 
-  function md(src){
+  /* Provenance segment markers (docs/09-provenance.md): <!-- s1.12 PY ... --> becomes an anchored chip so
+     view.html?f=brainstorming.md#s1.12 lands on the segment. Every other HTML comment renders as nothing. */
+  var SEG_BLOCK = /^<!--[ \t]*(s\d+\.\d{2})(?:[ \t]+([PYX?]+))?[^\n]*?(?:-->[ \t]*$|\n([\s\S]*?)^-->[ \t]*$)/gm;
+  function segChip(id, who, body){
+    var n = (body||'').split('\n').filter(function(l){ return /^\s*(idea|grow|pivot|drop)\s/.test(l); }).length;
+    return '<a class="seg" id="'+id+'" href="timeline.html#'+id+'" title="open in the timeline">'+id+(who?' · '+who:'')+(n?' · '+n+' idea'+(n===1?'':'s'):'')+'</a>';
+  }
+  /* join a link target to the directory of the document being viewed ('' for the root) */
+  function rel(base, h){
+    if (!base || h.charAt(0)==='/') return h.replace(/^\//,'');
+    var parts = (base + h).split('/'), out = [];
+    parts.forEach(function(p){ if (p==='..') out.pop(); else if (p!=='.' && p!=='') out.push(p); });
+    return out.join('/');
+  }
+  function md(src, base){
     var fences = [];
     src = src.replace(/```(\w*)\n([\s\S]*?)```/g, function(_, lang, body){
       return TOK(fences.push('<pre><code data-lang="'+lang+'">'+esc(body)+'</code></pre>') - 1);
     });
+    src = src.replace(SEG_BLOCK, function(_, id, who, body){ return TOK(fences.push(segChip(id, who, body)) - 1); });
+    src = src.replace(/<!--[\s\S]*?-->/g, '');
     var inline = function(s){
       return esc(s)
         .replace(/`([^`]+)`/g, '<code>$1</code>')
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/(^|\W)\*([^*]+)\*/g, '$1<em>$2</em>')
         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(_, t, h){
-          var href = /^https?:|^#|^mailto:/.test(h) ? h : (/\.html(\?|#|$)/.test(h) ? h : 'view.html?f=' + h);
+          var href = /^https?:|^#|^mailto:/.test(h) ? h : (/\.html(\?|#|$)/.test(h) ? h : 'view.html?f=' + rel(base, h));
           return '<a href="'+href+'">'+t+'</a>';
         });
     };
@@ -118,5 +134,5 @@
   var KIND = { md:'markdown', markdown:'markdown', csv:'csv', json:'json', jsonl:'jsonl',
     js:'source', mjs:'source', css:'source', txt:'source', svg:'source', geojson:'json', py:'source', yml:'source', yaml:'source', sh:'source', jsonc:'source' };
   function resolve(f){ var ext = (f.split('.').pop()||'').toLowerCase(); return KIND[ext] || 'source'; }
-  (typeof globalThis!=='undefined'?globalThis:window).TPTVIEW = { md:md, csv:csv, json:json, jsonl:jsonl, resolve:resolve, esc:esc };
+  (typeof globalThis!=='undefined'?globalThis:window).TPTVIEW = { md:md, csv:csv, json:json, jsonl:jsonl, resolve:resolve, esc:esc, rel:rel };
 })();
