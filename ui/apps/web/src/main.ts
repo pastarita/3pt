@@ -59,11 +59,12 @@ function log(action: string, detail?: string) {
 
 /* ---------- routing ---------- */
 
-type Route = { screen: 'home' } | { screen: 'project'; id: string } | { screen: 'setup' } | { screen: 'flags' };
+type Route = { screen: 'home' } | { screen: 'project'; id: string } | { screen: 'setup' } | { screen: 'flags' } | { screen: 'components' };
 function route(): Route {
   const h = location.hash.replace(/^#\/?/, '');
   if (h.startsWith('p/')) return { screen: 'project', id: h.slice(2) };
   if (h === 'flags') return { screen: 'flags' };
+  if (h === 'components') return { screen: 'components' };
   if (h === 'setup' || (!S.role && on('setup'))) return { screen: 'setup' };
   return { screen: 'home' };
 }
@@ -103,18 +104,20 @@ function setupScreen(): string {
   </section>`;
 }
 
+function homeCard(p: Project): string {
+  const c = coverPhoto(p);
+  return `<a class="pcard" href="#/p/${p.id}" data-region="project-${p.id}">
+    <div class="pcard-photo">${photoArt(c, `${p.name} photo`)}${statusPill(p)}</div>
+    <div class="pcard-body"><b>${p.name}</b><span class="meta">${p.kind} · ${p.when}</span>
+    <span class="role-line">${esc(roleLine(p, me().id))}</span></div></a>`;
+}
+
 function homeScreen(): string {
   const r = me();
   const list = projectsFor(r.id);
   const live = list.filter(p => p.status !== 'done');
   const done = list.filter(p => p.status === 'done');
-  const grid = (ps: Project[]) => ps.map(p => {
-    const c = coverPhoto(p);
-    return `<a class="pcard" href="#/p/${p.id}" data-region="project-${p.id}">
-      <div class="pcard-photo">${photoArt(c, `${p.name} photo`)}${statusPill(p)}</div>
-      <div class="pcard-body"><b>${p.name}</b><span class="meta">${p.kind} · ${p.when}</span>
-      <span class="role-line">${esc(roleLine(p, r.id))}</span></div></a>`;
-  }).join('');
+  const grid = (ps: Project[]) => ps.map(homeCard).join('');
   return `<header class="page-head">
       <div><p class="hello">Good morning, ${r.person}</p><h1>Your projects</h1></div>
     </header>
@@ -227,13 +230,44 @@ function projectScreen(id: string): string {
     ${rest > 0 ? `<button class="more" data-act="more" data-id="${p.id}" data-region="more">${icon('plus', 'ic sm')} Show ${rest} more</button>` : ''}`;
 }
 
+/**
+ * Component library: every part of the app, rendered by the same functions the screens use, so it
+ * cannot drift from them. K-numbers match the hub design-system leaf (§8); A-numbers are app-only.
+ * The capture suite screenshots this screen for the hub Components leaf.
+ */
+function componentsScreen(): string {
+  const tp = project('towerb')!;
+  const r = me();
+  const sec = (id: string, name: string, note: string, body: string) =>
+    `<section class="comp" data-region="comp-${id.toLowerCase()}"><header><span class="pill quiet">${id}</span><b>${name}</b><small>${note}</small></header><div class="comp-body">${body}</div></section>`;
+  return `<header class="page-head"><div><p class="hello">3PT app</p><h1>Component library</h1>
+      <p class="lead">Live parts of the app. K numbers match the hub design system.</p></div></header>
+    <div class="comps">
+    ${sec('K1', 'Button', 'Primary, ghost, small. One primary per card.', `<div class="row-btns start"><button class="btn primary">Review draft</button><button class="btn ghost">Not now</button><button class="btn ghost small">${icon('undo', 'ic sm')} Undo</button><button class="btn primary small">Turn on</button></div>`)}
+    ${sec('K2', 'Status pill', 'Good, warn, alert, quiet. Words first, color second.', `<div class="row-btns start"><span class="pill good">Filled</span><span class="pill warn">Due soon</span><span class="pill alert">Photo missing</span><span class="pill quiet">Drafted</span></div>`)}
+    ${sec('A1', 'Quick question', 'A one-tap question in the assistant.', `<div class="quick narrow">${QUICK[r.id].slice(0, 2).map(q => `<button class="chip">${icon(q.icon, 'ic sm')} ${q.label}</button>`).join('')}</div>`)}
+    ${sec('K4', 'Project card', 'Photo first. One line for this role.', `<div class="pgrid narrow">${homeCard(tp)}</div>`)}
+    ${sec('K10', 'Insight on a familiar widget', 'What 3PT noticed, what it looked at, one action and one no.', `<div class="narrow-card">${widgetCard(WIDGETS.dailylog, false)}</div>`)}
+    ${sec('K7', 'Unit grid', 'One square per unit. Red means act before the wall closes.', `<div class="narrow-card">${widgetCard(WIDGETS.predrywall, false)}</div>`)}
+    ${sec('K5', 'Stat tiles', 'Big number, plain label.', `<div class="narrow-card">${widgetCard(WIDGETS.inspections, false)}</div>`)}
+    ${sec('A2', 'Then and now', 'Photo pairs for the owner.', `<div class="card">${familiar(WIDGETS.weekly)}</div>`)}
+    ${sec('A3', 'Photo grid', 'Tap a photo to see it big.', `<div class="card">${CARD_BODY.week(tp)}</div>`)}
+    ${sec('K10', 'Time saver', 'Hours saved a job, the reason, yes or not now.', `<div class="card">${CARD_BODY.savers(tp)}</div>`)}
+    ${sec('K6', 'Change log with undo', 'The harness, explained in plain words.', `<div class="card">${CARD_BODY.learned(tp)}</div>`)}
+    ${sec('A4', 'Chat', 'Your question right, the answer left, photos below.', `<div class="thread"><div class="msg me"><p>Find photos of unit 203</p></div><div class="msg ai"><p>I found 6 photos of unit 203. The newest is from week 14.</p><div class="msg-photos">${['IMG_2108', 'IMG_2109', 'IMG_2110', 'IMG_2111'].map(id => `<button class="thumb">${pic(id, id)}</button>`).join('')}</div></div></div>`)}
+    ${sec('A5', 'Ask box', 'Always at the bottom of the assistant. Enter sends.', `<form class="composer flat" onsubmit="return false"><textarea rows="2" placeholder="Ask about Tower B…" aria-label="Ask"></textarea><div class="composer-row"><span class="ctx">${icon(r.icon, 'ic sm')} ${r.name} · Tower B</span><button class="send" type="button" aria-label="Send">${icon('up', 'ic sm')}</button></div></form>`)}
+    ${sec('A6', 'Tip', 'One region at a time. Skip is always there.', `<div class="tour-pop static"><div class="tour-head"><span class="tour-kicker">${icon('compass', 'ic sm')} Tip 2 of 4</span><button class="icon-btn" aria-label="Close">${icon('close', 'ic sm')}</button></div><h3>What 3PT noticed</h3><p>On top, 3PT adds one thing it found in your photos.</p><div class="tour-foot"><span class="dots"><i></i><i class="on"></i><i></i><i></i></span><button class="btn ghost">Back</button><button class="btn primary">Next</button></div></div>`)}
+    ${sec('A7', 'Role tile', 'First run: pick your job.', `<div class="role-grid narrow">${ROLES.slice(0, 2).map(x => `<button class="role-tile"><span class="role-ic">${icon(x.icon, 'ic lg')}</span><b>${x.name}</b><small>${x.blurb}</small></button>`).join('')}</div>`)}
+    </div>`;
+}
+
 function flagsScreen(): string {
   const f = flags();
   return `<nav class="crumbs"><a href="#/" class="back">${icon('back', 'ic sm')} Projects</a></nav>
     <header class="page-head"><div><h1>Settings</h1><p class="lead">Turn parts of the app on or off. Presenter mode adds the "How it learns" tour.</p></div></header>
     <div class="flag-list" data-region="flags">${(Object.keys(DEFAULTS) as Flag[]).map(k => `<label class="flag-row"><span><b>${k}</b></span>
       <input type="checkbox" class="switch" data-flag="${k}" ${f[k] ? 'checked' : ''}></label>`).join('')}</div>
-    <div class="row-btns"><button class="btn ghost" data-act="reset-tips">Show all tips again</button><button class="btn ghost" data-act="reset-flags">Reset settings</button><button class="btn ghost" data-act="reset-all">Start over</button></div>`;
+    <div class="row-btns"><button class="btn ghost" data-act="reset-tips">Show all tips again</button><button class="btn ghost" data-act="reset-flags">Reset settings</button><button class="btn ghost" data-act="reset-all">Start over</button><a class="btn ghost" href="#/components">Component library</a></div>`;
 }
 
 /* ---------- sidebar ---------- */
@@ -288,7 +322,7 @@ function render() {
     return expose(rt);
   }
   app.className = 'shell' + (S.sheet ? ' sheet-open' : '');
-  const main = rt.screen === 'project' ? projectScreen(rt.id) : rt.screen === 'flags' ? flagsScreen() : homeScreen();
+  const main = rt.screen === 'project' ? projectScreen(rt.id) : rt.screen === 'flags' ? flagsScreen() : rt.screen === 'components' ? componentsScreen() : homeScreen();
   app.innerHTML = `<header class="topbar" data-region="topbar">${topbar()}</header>
     <main class="main" data-screen="${rt.screen}" data-region="main">${main}</main>
     <aside class="side" data-region="assistant" aria-label="Assistant">${sidebar(rt)}</aside>

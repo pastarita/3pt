@@ -1,5 +1,5 @@
 /**
- * Capture suite config. See docs/15-ui-capture.md for the conventions.
+ * Capture suite config. See docs/17-ui-capture.md for the conventions.
  * Chromium only: the iPhone project keeps iPhone size, touch and user agent, but runs in Chromium
  * so no WebKit download is needed. @playwright/test is pinned to 1.61.1 to match the browser build
  * already in ~/Library/Caches/ms-playwright (chromium-1228).

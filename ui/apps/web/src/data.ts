@@ -48,7 +48,7 @@ export const PROJECTS: Project[] = [
 ];
 
 /** Which cards each role sees on a project, in order. The first three show at once; the rest wait. */
-// Case study: docs/16-role-ui-case-study.md. Each role first sees the screens it already uses.
+// Case study: docs/18-role-ui-case-study.md. Each role first sees the screens it already uses.
 export const LAYOUT: Record<RoleId, CardId[]> = {
   super: ['dailylog', 'predrywall', 'punch', 'week', 'savers', 'learned'],
   pm: ['openitems', 'ownerreport', 'changeorders', 'week', 'savers', 'learned'],

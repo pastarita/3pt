@@ -56,7 +56,7 @@ score from 1 to 5 on each qualifier, with one sentence of evidence each:
    Does it follow from the previous screen?
 3. **Progressive disclosure.** Does the screen show only what this role needs at this step?
 4. **Familiar patterns.** Does it look like a screen this role already uses (daily log, punch
-   list, photo grid, iPhone sheet)? See `docs/16-role-ui-case-study.md`.
+   list, photo grid, iPhone sheet)? See `docs/18-role-ui-case-study.md`.
 
 Store each score with the shot's `file` as the key. A change to the app is better only when no
 qualifier drops and at least one rises. That is the multi-objective rule.

@@ -56,7 +56,7 @@ h1{font-size:var(--fs-xxl);line-height:1.15;font-weight:700;letter-spacing:-.02e
 .pgrid.small .pcard-photo{aspect-ratio:16/9}
 .pcard-photo .pill{position:absolute;left:var(--s-3);top:var(--s-3);background:var(--surface)}
 .pcard-photo .pill.good{background:var(--good-soft)}
-.art{display:block;width:100%;height:100%}
+.art{display:block;width:100%;height:100%;object-fit:cover}
 .pcard-body{display:flex;flex-direction:column;gap:var(--s-1);padding:var(--s-3) var(--s-4) var(--s-4)}
 .pcard-body b{font-size:var(--fs-lg)}
 .meta{color:var(--faint);font-size:var(--fs-sm)}
@@ -250,3 +250,16 @@ h1{font-size:var(--fs-xxl);line-height:1.15;font-weight:700;letter-spacing:-.02e
 .pairs{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2)}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-1)}
 @media (max-width:900px){.pairs{grid-template-columns:1fr}}
+
+/* ---------- component library (#/components) ---------- */
+.comps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-5)}
+.comp{display:flex;flex-direction:column;gap:var(--s-3);min-width:0}
+.comp header{display:flex;align-items:baseline;gap:var(--s-2);flex-wrap:wrap}
+.comp header b{font-size:var(--fs-lg)}
+.comp header small{color:var(--faint);font-size:var(--fs-sm);flex-basis:100%}
+.row-btns.start{justify-content:flex-start;margin-top:0}
+.narrow,.narrow-card{max-width:420px}
+.pgrid.narrow{grid-template-columns:1fr}
+.composer.flat{margin:0}
+.tour-pop.static{position:static;max-width:340px;box-shadow:none;border:1px solid var(--line)}
+@media (max-width:900px){.comps{grid-template-columns:1fr}}

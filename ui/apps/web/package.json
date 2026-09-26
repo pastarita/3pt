@@ -1,6 +1,6 @@
 {
   "name": "@3pt/web", "version": "0.0.1", "private": true, "description": "The role-based 3PT app for non-technical users, plus the Playwright capture suite that feeds the image review loop. Secondary by rule.", "type": "module",
-  "scripts": { "dev": "vite", "build": "vite build", "typecheck": "tsc -p tsconfig.json --noEmit", "preview": "vite preview", "clean": "rm -rf dist", "capture": "playwright test", "capture:ui": "playwright test --ui" },
+  "scripts": { "dev": "vite", "build": "vite build", "typecheck": "tsc -p tsconfig.json --noEmit", "preview": "vite preview", "clean": "rm -rf dist", "capture": "playwright test", "capture:ui": "playwright test --ui", "library": "CAPTURE_RUN=library playwright test e2e/library.spec.ts", "library:hub": "mkdir -p ../../../hub/site/components && cp captures/library/library/*.png ../../../hub/site/components/" },
   "dependencies": { "@3pt/design-system": "workspace:*", "@3pt/inspector-client": "workspace:*", "@3pt/core": "workspace:*" },
   "devDependencies": { "vite": "^7.1.5", "typescript": "^5.9.2", "@playwright/test": "1.61.1", "@types/node": "^22.18.0" }
 }

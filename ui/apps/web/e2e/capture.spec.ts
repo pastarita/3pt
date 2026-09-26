@@ -6,16 +6,15 @@
  *   regions  the box of every [data-region] on screen, so a reviewer can crop one part
  * Output: captures/<run>/<viewport>/<flow>/<NN>-<step>.png and <flow>.json beside them.
  * teardown.ts merges the JSON into captures/<run>/manifest.json and flowmap.json.
- * Conventions: docs/15-ui-capture.md.
+ * Conventions: docs/17-ui-capture.md.
  */
 import { test, expect, type Page } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { app } from '@3pt/design-system';
 import { FLOWS, type Flow } from './flows';
+import { OUT } from './paths';
 
-export const RUN = process.env.CAPTURE_RUN ?? 'latest';
-export const OUT = join(import.meta.dirname, '..', 'captures', RUN);
 
 /** Token values as the browser reports them (rgb()/rgba() strings and px). */
 function tokenSets() {
@@ -103,6 +102,7 @@ for (const flow of FLOWS) {
     for (const step of flow.steps) {
       const res = await step.run(page);
       if (res === 'skip') continue;
+      await page.waitForFunction(() => [...document.images].filter(i => i.loading !== 'lazy' || i.getBoundingClientRect().top < innerHeight).every(i => i.complete));
       await page.waitForTimeout(120);
       const file = `${String(++n).padStart(2, '0')}-${step.id}.png`;
       await page.screenshot({ path: join(dir, file), animations: 'disabled', caret: 'hide' });

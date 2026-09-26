@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Components</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .modes{display:flex;gap:6px;margin:14px 0}
+  .modes button.on{background:var(--flag);border-color:var(--flag);color:#fff}
+  .shot{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+  .map{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-top:12px}
+  .map div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+  .map b{font:700 11px/1 var(--mono);color:var(--flag);margin-right:6px}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Decide · hot · component library · captured from the app</p>
+    <h1>Components: the parts of the role app, live</h1>
+    <p class="lede">Every part of the app, rendered by the same code the screens use. K numbers match the design system.</p>
+  </header>
+
+  <p><span class="pv d">DERIVED</span> Screenshot of <code>ui/apps/web</code> route <code>#/components</code>, desktop 1440 px. Refresh with <code>pnpm --filter @3pt/web library &amp;&amp; pnpm --filter @3pt/web library:hub</code>, then convert to JPEG.</p>
+
+  <div class="map" id="map"></div>
+
+  <div class="modes" role="group" aria-label="Mode">
+    <button class="on" data-m="light">Light</button><button data-m="dark">Dark</button>
+  </div>
+  <img class="shot" id="shot" src="./components/desktop-light.jpg" alt="Component library, light mode, desktop">
+</div>
+<script>
+(function(){
+  var ROWS=[['K1','Button: primary, ghost, small'],['K2','Status pill: good, warn, alert, quiet'],['A1','Quick question'],['K4','Project card'],
+    ['K10','Insight on a familiar widget'],['K7','Unit grid'],['K5','Stat tiles'],['A2','Then and now pairs'],['A3','Photo grid'],
+    ['K10','Time saver'],['K6','Change log with undo'],['A4','Chat'],['A5','Ask box'],['A6','Tip (tour step)'],['A7','Role tile']];
+  document.getElementById('map').innerHTML=ROWS.map(function(r){return '<div><b>'+r[0]+'</b>'+r[1]+'</div>';}).join('');
+  var shot=document.getElementById('shot');
+  document.querySelectorAll('.modes button').forEach(function(b){ b.onclick=function(){
+    document.querySelectorAll('.modes button').forEach(function(x){x.classList.toggle('on',x===b);});
+    shot.src='./components/desktop-'+b.dataset.m+'.jpg'; shot.alt='Component library, '+b.dataset.m+' mode, desktop';
+  };});
+})();
+</script>
+</body>
+</html>

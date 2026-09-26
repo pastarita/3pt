@@ -70,8 +70,35 @@ const SCENES: Record<PhotoKind, (r: () => number, flag?: string) => string> = {
   finished: (r) => `<rect width="400" height="300" fill="#efe9df"/><rect y="215" width="400" height="85" fill="#b58b5c"/><rect x="${230 + r() * 40}" y="50" width="110" height="130" fill="#cfe2f1" stroke="#fff" stroke-width="8"/><rect x="40" y="150" width="130" height="70" rx="10" fill="#6d8c7a"/><circle cx="90" cy="80" r="22" fill="#f3d9a4"/>`,
 };
 
-/** A drawn photo. `label` is the plain caption a screen reader hears. */
+/**
+ * Real site photos in public/photos, copied from hub/site/photos (Wikimedia Commons, public domain,
+ * CC0 or CC BY; credits.json keeps every credit). A photo id always maps to the same file.
+ */
+const FILES: Record<string, string[]> = {
+  framing: ['framing-1', 'framing-2', 'framing-3', 'framing-4', 'framing-5'],
+  plumbing: ['plumbing-1', 'plumbing-2', 'plumbing-3', 'plumbing-4'],
+  electrical: ['electrical-1', 'electrical-2', 'electrical-3'],
+  drywall: ['drywall-1', 'drywall-2', 'drywall-3'],
+  exterior: ['exterior-1', 'exterior-2', 'exterior-3', 'exterior-4', 'exterior-5', 'exterior-6'],
+  concrete: ['exterior-3', 'exterior-5'],
+  finished: ['finished-1', 'finished-2', 'finished-3', 'finished-4'],
+  water: ['water-1'],
+  hazard: ['safety-1'],
+};
+const PHOTO_BASE = `${import.meta.env.BASE_URL}photos/`;
+
+/** A site photo. `label` is the plain caption a screen reader hears. Falls back to drawn art. */
 export function photoArt(p: Pick<Photo, 'id' | 'kind' | 'flag'>, label: string): string {
+  const list = FILES[p.flag ?? p.kind] ?? FILES[p.kind];
+  if (list?.length) {
+    const f = list[Math.floor(rng(p.id)() * list.length)];
+    return `<img class="art" src="${PHOTO_BASE}${f}.jpg" alt="${label}" loading="lazy" decoding="async" data-photo="${p.id}">`;
+  }
+  return drawn(p, label);
+}
+
+/** Drawn stand-in, for a kind with no real photo yet. */
+export function drawn(p: Pick<Photo, 'id' | 'kind' | 'flag'>, label: string): string {
   const r = rng(p.id);
   return `<svg class="art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${label}" data-photo="${p.id}">${SCENES[p.kind](r, p.flag)}</svg>`;
 }
