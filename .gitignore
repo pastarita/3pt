@@ -2,6 +2,7 @@
 *.xcodeproj/
 !ui/apps/macos/project.yml
 build/
+!harness/packages/build/
 DerivedData/
 .build/
 *.xcuserstate
