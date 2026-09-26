@@ -1,6 +1,9 @@
 /* 3PT · shared nav shell — the single source of IA.
    Desktop (>900px): fixed left rail grouped by phase, custom SVG glyph per leaf, collapsible
-   (persisted as tpt_nav). Mobile (≤900px): sticky header + hamburger. Hidden on print.
+   (persisted as tpt_nav). The brand block and the footer are pinned; only the link list (.nv-scroll)
+   scrolls, with a thin themed scrollbar, edge fades that appear only when there is more, the scroll
+   offset remembered across leaves (tpt_nav_scroll, per tab) and the current leaf brought into view.
+   Mobile (≤900px): sticky header + hamburger. Hidden on print.
    Adding a page = ONE entry in GROUPS below (+ a glyph, + a hub card).
    Hrefs ALWAYS carry .html and NEVER branch on the page's own location (see skill → Link resolution).
    Node-safe: exports globalThis.TPTNAV and returns before any DOM work when `document` is absent,
@@ -55,7 +58,8 @@
     'app':            g('<rect x="3" y="4" width="18" height="15" rx="2"/><path d="M3 8h18"/><rect x="6" y="11" width="5" height="5"/><path d="M14 12h4M14 15h3"/>'),
     'ci':             g('<path d="M4 6h6v6H4ZM14 6h6v6h-6ZM9 15h6v6H9Z"/><path d="M10 9h4M7 12v3h5M17 12v3h-5"/><circle cx="12" cy="18" r="1" fill="currentColor"/>'),
     'sim':            g('<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5Z"/>'),
-    'view':           g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>')
+    'view':           g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>'),
+    'fold':           g('<path d="M7 3h8l4 4v6"/><path d="M15 3v4h4"/><path d="M5 9h8l3 3v9H5Z"/><path d="M8 15h6M8 18h4"/>')
   };
 
   /* Cluster registry — mirrors T.CLUSTERS keys in 3pt-data.js. The Shell keeps its own copy
@@ -75,7 +79,7 @@
   var GROUPS = [
     ['',       [['index','Hub']]],
     ['orient', [['charter','README','DR'], ['vision','Vision'], ['goal','Goal'], ['use-case','Use case'], ['rules','Rules & judging'], ['checklist','Open-source checklist'], ['submission','Submission'],
-                ['vision-doc','Vision doc','D0'], ['goal-doc','Goal & use case doc','D6'], ['rules-doc','Rules doc','D5'], ['checklist-doc','Checklist doc','DL'], ['submission-doc','Submission doc','DU']]],
+                ['vision-doc','Vision doc','D0'], ['goal-doc','Goal doc','D6'], ['rules-doc','Rules doc','D5'], ['checklist-doc','Checklist doc','DL'], ['submission-doc','Submission doc','DU']]],
     ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['design-spec','Design system spec','DK'], ['sketches','Sketch gallery'], ['icons','Icons'], ['components','Components'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
     ['build', [['results','Results'], ['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['how-it-works','How it works'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['strands-journey','Strands, answered'], ['strands-questions','Strands questions','DJ'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG']]]
@@ -123,6 +127,14 @@
   var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
   var FRESH = { 'results':1, 'how-it-works':1, 'vision':1, 'goal':1, 'use-case':1, 'rules':1, 'tour':1, 'app':1, 'sim':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1, 'ci':1, 'icons':1, 'components':1, 'setup':1, 'checklist':1, 'charter':1, 'submission':1, 'sketches':1, 'strands-journey':1 }; /* retire at next check-in */
 
+  /* FOLD: entries of a group that sit inside one accordion instead of the open list. The five Orient
+     document twins fold under "Documents": the leaf is the way in, the document is the record behind it.
+     Open when the current page is inside it, else as last left (tpt_nav_fold_<cluster>). Slugs stay in
+     GROUPS (one Register; the lint walks GROUPS unchanged and checks every folded slug is registered). */
+  var FOLD = {
+    orient: { label:'Documents', slugs:['vision-doc','goal-doc','rules-doc','checklist-doc','submission-doc'] }
+  };
+
   /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
   function href(s){
     if (ROUTE[s]) return './'+ROUTE[s];
@@ -130,7 +142,7 @@
     return /\/$/.test(d) ? './'+d+'index.html' : './'+d+s+'.html';
   }
 
-  G.TPTNAV = { GROUPS:GROUPS, GLYPH:GLYPH, CLUSTERS:CLUSTERS, ROUTE:ROUTE, PATH:PATH, FRESH:FRESH, PUBLISHED:PUBLISHED, href:href };
+  G.TPTNAV = { GROUPS:GROUPS, GLYPH:GLYPH, CLUSTERS:CLUSTERS, ROUTE:ROUTE, PATH:PATH, FRESH:FRESH, FOLD:FOLD, PUBLISHED:PUBLISHED, href:href };
   if (typeof document === 'undefined') return;   /* node: registry only */
 
   /* current-page detection: viewer routes match on pathname+search, else on the bare slug */
@@ -143,11 +155,32 @@
   var TITLE = {}; GROUPS.forEach(function(gr){ gr[1].forEach(function(p){ TITLE[p[0]]=p[1]; }); });
 
   var css =
-    "#tptnav{position:fixed;left:0;top:0;bottom:0;width:206px;transition:width .15s;background:#0b0e12;border-right:1px solid #1e252e;z-index:100000;display:flex;flex-direction:column;font:600 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;overflow-y:auto}"
+    "#tptnav{position:fixed;left:0;top:0;bottom:0;width:206px;transition:width .15s;background:#0b0e12;border-right:1px solid #1e252e;z-index:100000;display:flex;flex-direction:column;font:600 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;overflow:hidden}"
    +"body{margin-left:206px!important;transition:margin-left .15s}"
    +"html.navmin #tptnav{width:52px}html.navmin body{margin-left:52px!important}"
    +"html.navmin #tptnav .nv-b,html.navmin #tptnav .nv-sub,html.navmin #tptnav .nv-g,html.navmin #tptnav .nv-links a span,html.navmin #tptnav .nv-ft{display:none}"
    +"html.navmin #tptnav .nv-links a{justify-content:center;padding:11px 0}"
+   /* the scroll region: the one part of the rail that moves. Pinned brand above, pinned footer below. */
+   +"#tptnav .nv-scroll{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column}"
+   +"#tptnav .nv-wrap{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#2a333e transparent;scrollbar-gutter:stable;padding-bottom:10px}"
+   +"#tptnav .nv-wrap::-webkit-scrollbar{width:8px}#tptnav .nv-wrap::-webkit-scrollbar-track{background:transparent}"
+   +"#tptnav .nv-wrap::-webkit-scrollbar-thumb{background:#2a333e;border-radius:8px;border:2px solid #0b0e12}"
+   +"#tptnav:hover .nv-wrap::-webkit-scrollbar-thumb,#tptnav .nv-wrap:focus-within::-webkit-scrollbar-thumb{background:#3d4855}"
+   +"#tptnav:hover .nv-wrap{scrollbar-color:#3d4855 transparent}"
+   +"#tptnav .nv-scroll::before,#tptnav .nv-scroll::after{content:'';position:absolute;left:0;right:8px;height:22px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1}"
+   +"#tptnav .nv-scroll::before{top:0;background:linear-gradient(#0b0e12,rgba(11,14,18,0))}"
+   +"#tptnav .nv-scroll::after{bottom:0;background:linear-gradient(rgba(11,14,18,0),#0b0e12)}"
+   +"#tptnav .nv-scroll.more-top::before,#tptnav .nv-scroll.more-bot::after{opacity:1}"
+   +"#tptnav .nv-links a.on{scroll-margin:40px 0}"
+   +"#tptnav .nv-fold{margin:2px 0 0}#tptnav .nv-fold summary{list-style:none;cursor:pointer;color:#6b7684;padding:8px 16px;display:flex;align-items:center;gap:10px;white-space:nowrap;font:700 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;user-select:none}"
+   +"#tptnav .nv-fold summary::-webkit-details-marker{display:none}#tptnav .nv-fold summary:hover{color:#fff;background:rgba(255,255,255,.04)}"
+   +"#tptnav .nv-fold summary svg{width:17px;height:17px;flex:none;opacity:.8}#tptnav .nv-fold summary .nv-n{font-weight:600;color:#4c5663;margin-left:auto}"
+   +"#tptnav .nv-fold summary .nv-chev{width:12px;height:12px;flex:none;transition:transform .15s;opacity:.7}#tptnav .nv-fold[open] summary .nv-chev{transform:rotate(90deg)}"
+   +"#tptnav .nv-fold .nv-links{margin-left:24px;border-left:1px solid #1e252e}#tptnav .nv-fold .nv-links a{padding:7px 12px 7px 14px;font-size:12px}"
+   +"#tptnav .nv-fold.has-on:not([open]) summary{color:#a3adbb;box-shadow:inset 3px 0 0 rgba(255,107,74,.55)}"
+   +"html.navmin #tptnav .nv-fold summary{justify-content:center;padding:11px 0}html.navmin #tptnav .nv-fold summary span,html.navmin #tptnav .nv-fold summary .nv-chev{display:none}"
+   +"html.navmin #tptnav .nv-fold .nv-links{margin-left:0;border-left:0}"
+   +"html.navmin #tptnav .nv-wrap{scrollbar-width:none}html.navmin #tptnav .nv-wrap::-webkit-scrollbar{width:0}"
    +"#tptnav .nv-b{color:#ff6b4a;font-weight:800;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:16px 16px 3px;white-space:nowrap}"
    +"#tptnav .nv-sub{color:#6b7684;font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:0 16px 13px;border-bottom:1px solid #1e252e;margin-bottom:4px;white-space:nowrap}"
    +"#tptnav .nv-g{font-weight:800;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:14px 16px 5px;white-space:nowrap;opacity:.95}"
@@ -158,7 +191,7 @@
    +"#tptnav .nv-links a:hover{background:rgba(255,255,255,.06);color:#fff}"
    +"#tptnav .nv-links a.on{color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 3px 0 0 #ff6b4a}"
    +"#tptnav .nv-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff6b4a;vertical-align:middle;margin-left:6px}"
-   +"#tptnav .nv-sp{flex:1;min-height:10px}"
+   +"#tptnav .nv-sp{flex:none;height:6px}"
    +"#tptnav .nv-min{border:none;background:none;color:#6b7684;cursor:pointer;font:800 13px/1 inherit;padding:10px 16px;text-align:left}"
    +"#tptnav .nv-min:hover{color:#fff}html.navmin #tptnav .nv-min{text-align:center;padding:10px 0}"
    +"#tptnav .nv-ft{font-size:9.5px;color:#4c5663;padding:12px 16px;border-top:1px solid #1e252e;letter-spacing:.08em;text-transform:uppercase}"
@@ -170,7 +203,8 @@
    +"#tptnav .nv-g{padding:12px 18px 4px}"
    +"#tptnav .nv-cur{display:block;color:#fff;font-weight:800;font-size:13px;margin-left:10px;padding-left:10px;border-left:1px solid rgba(255,255,255,.18);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"
    +"#tptnav .nv-burger{display:flex;align-items:center;justify-content:center;margin-left:auto;width:48px;height:48px;border:none;background:none;color:#eef4ee;font-size:20px;cursor:pointer}"
-   +"#tptnav .nv-wrap{position:absolute;top:48px;left:0;right:0;background:#0b0e12;box-shadow:0 10px 24px rgba(0,0,0,.5);display:none;padding:0 0 12px;z-index:100001;max-height:calc(100vh - 48px);overflow-y:auto}"
+   +"#tptnav .nv-scroll{display:contents}#tptnav .nv-scroll::before,#tptnav .nv-scroll::after{display:none}"
+   +"#tptnav .nv-wrap{position:absolute;top:48px;left:0;right:0;background:#0b0e12;box-shadow:0 10px 24px rgba(0,0,0,.5);display:none;padding:0 0 12px;z-index:100001;max-height:calc(100vh - 48px);overflow-y:auto;flex:none}"
    +"#tptnav.open .nv-wrap{display:block}#tptnav .nv-links a{padding:13px 18px;font-size:14px}"
    +"}"
    +"#tptpub{position:sticky;top:0;z-index:99999;display:flex;align-items:center;gap:4px;padding:0 14px;height:34px;background:rgba(11,14,18,.92);backdrop-filter:blur(6px);border-bottom:1px solid #1e252e;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:#a3adbb;overflow-x:auto;white-space:nowrap;scrollbar-width:none}"
@@ -190,17 +224,25 @@
     GROUPS.forEach(function(gr){
       var c=CLUSTERS[gr[0]]||{};
       if (gr[0]) links+='<div class="nv-g" style="color:'+(c.color||'#6b7684')+'">'+(c.label||gr[0])+'</div>';
+      var fold=FOLD[gr[0]], inFold={}, folded='', hasOn=false;
+      if (fold) fold.slugs.forEach(function(k){ inFold[k]=1; });
+      function row(p){ return '<a class="'+(p[0]===cur?'on':'')+'" href="'+href(p[0])+'">'+(GLYPH[p[0]]||'')
+          +(p[2]?'<span class="id">'+p[2]+'</span>':'')+'<span>'+p[1]+(FRESH[p[0]]?'<i class="nv-dot"></i>':'')+'</span></a>'; }
       links+='<div class="nv-links">';
-      gr[1].forEach(function(p){
-        links+='<a class="'+(p[0]===cur?'on':'')+'" href="'+href(p[0])+'">'+(GLYPH[p[0]]||'')
-          +(p[2]?'<span class="id">'+p[2]+'</span>':'')+'<span>'+p[1]+(FRESH[p[0]]?'<i class="nv-dot"></i>':'')+'</span></a>';
-      });
+      gr[1].forEach(function(p){ if (inFold[p[0]]) { folded+=row(p); if (p[0]===cur) hasOn=true; } else links+=row(p); });
       links+='</div>';
+      if (fold && folded) {
+        var open=hasOn; try{ var fs=localStorage.getItem('tpt_nav_fold_'+gr[0]); if(!hasOn&&fs) open=(fs==='open'); }catch(e){}
+        links+='<details class="nv-fold'+(hasOn?' has-on':'')+'" data-fold="'+gr[0]+'"'+(open?' open':'')+'><summary>'+GLYPH.fold
+          +'<span>'+fold.label+'</span><span class="nv-n">'+fold.slugs.length+'</span>'
+          +'<svg class="nv-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></summary>'
+          +'<div class="nv-links">'+folded+'</div></details>';
+      }
     });
     nav.innerHTML='<div class="nv-b">3PT</div><div class="nv-sub">Three Point Harness</div>'
       +'<span class="nv-cur">'+(TITLE[cur]||cur)+'</span>'
       +'<button class="nv-burger" aria-label="Menu" aria-expanded="false">☰</button>'
-      +'<div class="nv-wrap">'+links+'</div><div class="nv-sp"></div>'
+      +'<div class="nv-scroll"><div class="nv-wrap">'+links+'</div></div><div class="nv-sp"></div>'
       +'<button class="nv-min" title="Collapse / expand sidebar">⇤⇥</button>'
       +'<div class="nv-ft">Hackathon · Sep 26 2026</div>';
     document.body.insertBefore(nav, document.body.firstChild);
@@ -216,6 +258,20 @@
       var m=document.documentElement.classList.toggle('navmin');
       try{ m?localStorage.setItem('tpt_nav','min'):localStorage.removeItem('tpt_nav'); }catch(e){}
     });
+    /* the scroll region: fades track the offset; the offset survives a leaf change (per tab); the current
+       leaf is scrolled into view when it is off-screen, so a deep entry never lands hidden under the footer */
+    var sc=nav.querySelector('.nv-scroll'), wrap=nav.querySelector('.nv-wrap');
+    function fades(){ var t=wrap.scrollTop, m=wrap.scrollHeight-wrap.clientHeight; sc.classList.toggle('more-top',t>2); sc.classList.toggle('more-bot',m-t>2); }
+    var tick=null;
+    wrap.addEventListener('scroll',function(){ fades(); if(tick) return; tick=setTimeout(function(){ tick=null; try{ sessionStorage.setItem('tpt_nav_scroll',String(wrap.scrollTop)); }catch(e){} },80); },{passive:true});
+    function place(){
+      try{ var s=sessionStorage.getItem('tpt_nav_scroll'); if(s!==null) wrap.scrollTop=+s; }catch(e){}
+      var on=wrap.querySelector('a.on');
+      if(on){ var r=on.getBoundingClientRect(), w=wrap.getBoundingClientRect(); if(r.top<w.top+8||r.bottom>w.bottom-8) wrap.scrollTop=on.offsetTop-(wrap.clientHeight-on.offsetHeight)/2; }   /* not scrollIntoView: that would also move the page off its #anchor */
+      fades();
+    }
+    place(); window.addEventListener('resize',fades);
+    Array.prototype.forEach.call(nav.querySelectorAll('.nv-fold'),function(d){ d.addEventListener('toggle',function(){ fades(); try{ localStorage.setItem('tpt_nav_fold_'+d.getAttribute('data-fold'), d.open?'open':'shut'); }catch(e){} }); });
     var burger=nav.querySelector('.nv-burger');
     burger.addEventListener('click',function(e){ e.stopPropagation(); var o=nav.classList.toggle('open'); burger.setAttribute('aria-expanded',o); burger.textContent=o?'✕':'☰'; });
     document.addEventListener('click',function(e){ if(nav.classList.contains('open')&&!nav.contains(e.target)){ nav.classList.remove('open'); burger.textContent='☰'; burger.setAttribute('aria-expanded','false'); } });

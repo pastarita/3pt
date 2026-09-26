@@ -64,6 +64,7 @@ for (const d of T.DOCS) {
   if (!slugs.has(d.slug)) warns.push(`${d.id} (${d.slug}) is in the Register but not in the sidebar`);
 }
 for (const k of Object.keys(N.FRESH)) if (!slugs.has(k)) bad(`FRESH marks unknown slug ${k}`);
+for (const [c, f] of Object.entries(N.FOLD || {})) { if (!N.CLUSTERS[c]) bad(`FOLD cluster "${c}" missing from nav CLUSTERS`); for (const k of f.slugs) if (!slugs.has(k)) bad(`FOLD ${c} lists unknown slug ${k}`); }
 if (!existsSync(join(ROOT, 'view.html'))) bad('view.html missing — every document card dead-ends');
 
 // 8 — documents are markdown; HTML under docs/ is a leaf that escaped the site root (no shell
