@@ -100,3 +100,4 @@ button.photo{cursor:pointer}
 .toast{position:fixed;right:16px;bottom:16px;background:var(--bg);border:1px solid var(--lineStrong);padding:10px 14px;border-radius:8px;z-index:60}
 @media (max-width:760px){.units,.queries{grid-template-columns:repeat(2,1fr)}.loop{grid-template-columns:1fr}.progress{grid-template-columns:1fr}.wall .photo--hero{grid-column:span 2;grid-row:span 1;aspect-ratio:16/9}}
 @media (prefers-reduced-motion:reduce){.pcard{transition:none}}
+.credits{margin-top:32px;font-size:12px;color:var(--faint)}.credits a{color:var(--soft)}

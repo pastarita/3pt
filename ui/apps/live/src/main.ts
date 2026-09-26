@@ -41,7 +41,8 @@ async function act(doStr: string) {
 }
 
 function shell(crumbs: { label: string; href?: string }[], body: HTMLElement, strips: HTMLElement[] = []) {
-  root.replaceChildren(topBar({ crumbs, roles: ROLES, role, onRole: r => { role = r; setRole(r); ask.q = null; void render(); }, version }), ...strips, body);
+  const credits = h('footer', { class: 'credits' }, 'Photos: openly licensed (CC0, public domain, CC BY, CC BY-SA). ', h('a', { href: 'https://github.com/pastarita/3pt/blob/main/data/mock/media-pool/CREDITS.md', target: '_blank', rel: 'noopener' }, 'Credits'), ' · Buildings: NYC Open Data.');
+  root.replaceChildren(topBar({ crumbs, roles: ROLES, role, onRole: r => { role = r; setRole(r); ask.q = null; void render(); }, version }), ...strips, body, credits);
 }
 
 async function render() {

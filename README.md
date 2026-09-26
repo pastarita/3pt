@@ -80,3 +80,7 @@ Patrick Astarita, Yash Kothari.
 MIT. See `LICENSE`. Third-party code arrives as dependencies under their own licenses (AWS Strands
 is Apache-2.0); nothing is vendored. The open-sourcing due diligence, and what the hackathon
 requires of a public repo, is the checklist in `docs/15-open-source-checklist.md`.
+
+## Third-party material
+
+Photos, building records and fonts keep their own free licences. List and credits: [`THIRD_PARTY.md`](https://github.com/pastarita/3pt/blob/main/THIRD_PARTY.md).
