@@ -5,46 +5,49 @@
 
 **A self-improving harness for coding agents, for teams whose work is photos and plans, not code.**
 Three stages, Plan → Build → Instrument, run in a loop. After each run an improver rewrites the
-harness's own rules, context policies and tool grants as data, tags a checkpoint, and persists it to
+harness's own rules, context policies and tool grants as data, writes a checkpoint, and persists it to
 MongoDB Atlas. Any checkpoint can be rolled back. Any version can be re-run over the same corpus and
 graded against the last.
 
-Built on 2026-09-26 at the MongoDB × Cerebral Valley **Harness Engineering & Model Wrangling
-Hackathon**, NYC, for **Problem Statement 1: Recursive Harnessing**. MIT licensed. Every commit is
-dated today.
+Built at the MongoDB × Cerebral Valley Harness Engineering & Model Wrangling Hackathon, NYC,
+September 2026. MIT licensed.
 
 | | |
 |---|---|
 | **What it is** | A meta-harness: it wraps a coding agent (Claude Code, Kiro, Codex, or a Strands harness compiled from a policy) and evolves the environment the agent runs in. |
-| **What it is not** | Not an image analyzer, not a dashboard, not RAG. Images are the workload; the harness is the product; the UI is an inspector. |
 | **Who it serves** | A construction firm's superintendents, project managers, owners, safety leads and trades. Secondary: any media-heavy team (interior design, creative ops, visual trend analysis). |
 | **Why Atlas** | Every stateful thing lives in one Sandbox cluster: policies, checkpoints, plans, findings, measurements, the media index, transcripts and jobs. Long-term memory is the database, not the context window. |
 | **Why it gets better** | The run cannot change the rules. The improver can, and only from findings. Each version is scored on hard metrics against the previous one, so improvement is caused, not drifted. |
 
+## Gist
+
+- **Plan → Build → Instrument.** Each run uses a frozen policy, builds against it, and records findings.
+- **Learn between runs.** The improver uses those findings to version the harness's rules, context policies and tool grants.
+- **Keep the history.** MongoDB Atlas stores policies, checkpoints and workload context; rollback restores an earlier policy as a new version.
+- **Work with growing media libraries.** Construction photos exercise context reuse, storage tiering and the tools a team needs over time.
+
+## Setup
+
+Requires Node 22+ and the pnpm version pinned in `package.json`.
+
 ```sh
-pnpm install && pnpm build          # 20 workspaces, Turborepo
-pnpm 3pt loop                       # Plan → Build → Instrument → improver → checkpoint cp/1
-pnpm 3pt rollback cp/1              # restore that policy as a new version; code is not touched
-make sandbox                        # Atlas CLI: project, cluster, user, access list → ATLAS_URI in .env
+node scripts/setup.mjs --site       # install dependencies; build workspaces and dist/web-site
+# Configure Atlas through the local key page or host environment, then:
+node scripts/setup.mjs --provision  # provision the configured batteries
+node harness/apps/cli/dist/index.js loop
 ```
 
-With `ATLAS_URI` set the CLI injects the Atlas store; without it the loop runs against the memory
-store so the demo never depends on the network. Full setup: `docs/14-setup-cascade.md`.
+Setup uses the existing Keychain, Atlas vault and host environment. Configure `ATLAS_HOST`,
+`ATLAS_DBUSER`, `ATLAS_DBPASS` and `ATLAS_DB`; leave `ATLAS_URI` blank. Without an Atlas connection the CLI uses a local file store.
+The loop prints its checkpoint tag; pass that tag to `rollback` to restore its policy.
 
-### What is built, what is due, what is simulated
+For local server startup, service options and an agent operating procedure, read
+[`docs/19-local-operations.md`](docs/19-local-operations.md). Provider choices are in
+[`docs/14-setup-cascade.md`](docs/14-setup-cascade.md).
 
-Judges must be able to tell. The submission doc grades every claim (`docs/18-submission.md` §4).
-
-| Claim | Status | Evidence |
-|---|---|---|
-| The harness's rules are data, versioned, rewritten after each run | built | `Policy` in core; `rewritePolicy` in the improver; stages get `freezePolicy()` |
-| Every iteration ends in a checkpoint: git sha, policy version, metrics, retrospective | built | `Checkpoint` type; `3pt loop` prints `cp/1` |
-| Rollback restores a prior policy from its checkpoint | built | `3pt rollback <tag>` inserts the restored policy as a new version |
-| Checkpoints and policies persist in the Atlas Sandbox cluster | due | `atlasStore()` in the atlas battery; `make sandbox`; the `checkpoints` collection |
-| The workload is construction site photos; the harness learns fields like unit, level, wall open or closed | due | `media_index` seeded from `data/mock/acme-builders`; the v1 policy diff names the fields |
-| 3PT compiles a policy into a Strands harness instead of owning a loop | built, not compiled | `harness/packages/strands`; `docs/12-strands-archaeology.md`; gaps in `docs/18-strands-questions.md` §5 |
-| Twenty real NYC building records, 144 openly licensed photos | built | `data/mock/README.md`, `THIRD_PARTY.md`, NYC Open Data `ic3t-wcy2` |
-| "Reads sixteen thousand old photos once", "undoes a bad version by itself", "one tap makes a tool part of the harness" | simulated | `hub/site/sim-data.js`, fixed seed; the real rollback is operator-approved |
+The policy loop, rollback and Strands compiler are implemented. Build calls a model when an
+OpenRouter key is configured and otherwise runs without a model. Role screens use a simulated construction workflow; the local API still
+needs its Atlas store wired through before its state survives restarts.
 
 ## Who it is for
 
@@ -60,7 +63,7 @@ learned about their photos.
 | Safety | "Which photos show a hazard we have not closed?" | Route findings to the right person; keep the outcome. |
 | Trade | "What do I need to see before I start?" | Surface the last photos of the same unit before drywall. |
 
-The ideal-customer analysis, ranking and rule risks are in `docs/01-icp.md` and
+The customer analysis and alternative use cases are in `docs/01-icp.md` and
 `docs/08-icp-directions.md`. The longer story, an interior design firm, is `docs/06-goal-and-use-case.md`.
 
 ## How it works
@@ -77,18 +80,6 @@ The ideal-customer analysis, ranking and rule risks are in `docs/01-icp.md` and
 Sprint modes are selected one per iteration, never in parallel: feature, improvement, fix. The
 Fix mode is triggered by the metrics, not by a prompt. The loop is separate from the run on purpose:
 the stages hold a frozen policy and a store that refuses writes to `policies` and `checkpoints`.
-
-<details>
-<summary>How the banned project types are avoided</summary>
-
-| Banned type | The risk in our framing | How 3PT stays clear |
-|---|---|---|
-| Image analyzer | "Generate context from images" | The harness is the product; image content is incidental. The demo shows a policy rewrite, not a label. |
-| Dashboard as the feature | A supervisory UI as the headline | Surfaces are inspectors over Atlas state; the CLI is the headline. |
-| Basic RAG | Embeddings over transcripts | Retrieval serves the harness's own memory and policy evolution, not user Q&A. |
-
-Rules, weights and deadlines: `docs/05-rules.md`.
-</details>
 
 ## Architecture
 
@@ -171,12 +162,11 @@ Credits and licences: `THIRD_PARTY.md`. Layout and what is real: `data/mock/READ
 | Who it is for; five directions compared | `docs/01-icp.md`, `docs/08-icp-directions.md` |
 | Goal over time, the use case, value props | `docs/06-goal-and-use-case.md` |
 | Theses, hypotheses, the M-* metrics, the R-* requirements | `docs/07-assessment-and-measurement.md` |
-| Rules, judging weights, banned projects, deadlines | `docs/05-rules.md` |
 | The monorepo and the recipes | `docs/10-architecture.md` |
 | Strands: what we build on, what we struck; the questions answered with pointers | `docs/12-strands-archaeology.md`, `docs/13-strands-diagrams.md`, `docs/18-strands-questions.md` |
-| Setup for a non-technical operator; sandbox provisioning; the Atlas console screen by screen | `docs/14-setup-cascade.md`, `docs/16-sandbox-provisioning.md`, `docs/17-atlas-setup-dossier.md` |
+| Local build and services; provider setup; Atlas provisioning | `docs/19-local-operations.md`, `docs/14-setup-cascade.md`, `docs/16-sandbox-provisioning.md`, `docs/17-atlas-setup-dossier.md` |
 | CI and deployment; worktrees; PR heraldry | `docs/13-ci-and-deployment.md`, `docs/11-worktrees.md`, `docs/pr-descriptions/README.md` |
-| Open-sourcing and admissibility checklist; the submission plan | `docs/15-open-source-checklist.md`, `docs/18-submission.md` |
+| License and repository hygiene | `docs/15-open-source-checklist.md` |
 | Provenance: where every idea came from | `docs/09-provenance.md`, `docs/provenance-index.md` |
 | Terms | `docs/glossary.md` |
 </details>
@@ -199,8 +189,8 @@ Patrick Astarita, Yash Kothari.
 ## License
 
 MIT. See `LICENSE`. Third-party code arrives as dependencies under their own licenses (AWS Strands
-is Apache-2.0); nothing is vendored. The open-sourcing due diligence, and what the hackathon
-requires of a public repo, is the checklist in `docs/15-open-source-checklist.md`.
+is Apache-2.0); nothing is vendored. Repository licensing and hygiene are tracked in
+`docs/15-open-source-checklist.md`.
 
 ## Third-party material
 

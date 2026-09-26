@@ -44,10 +44,15 @@ are the same shape (one base URL, one key, OpenAI-compatible); Bedrock and a dir
 1. Open the leaf, walk the eight slots, pick a provider each. Every pick shows **Get account** and
    **Get key** links: first-class signup, no docs to read.
 2. Copy the generated `.env` block (names only) and paste keys into it.
-3. `make install`, then `make provision`: every battery stands itself up idempotently and prints
-   what it still lacks instead of failing.
-4. `make plan` · `make build` · `make instrument`: the first iteration; `cp/1` is tagged.
+3. `node scripts/setup.mjs --site` builds the local workspaces and site.
+4. Configure keys through the local key page or host environment, then
+   `node scripts/setup.mjs --provision`. It loads the connection parts and
+   runs the Atlas, blob, artifacts, repo and tracing provisioners. Some optional providers still
+   print a plan; a zero exit code alone does not establish readiness.
+5. `node harness/apps/cli/dist/index.js loop` runs the stages and improver,
+   writes the checkpoint, and prints its tag. Git commits and tags require the CLI's explicit
+   `--git` option. Local services and the agent handoff: [Local operations](19-local-operations.md).
 
 Next: the leaf calls the provision step itself through the API once the Worker is deployed, so
-step 3 becomes a button; the choices are stored as a `setup` document in Atlas beside the policy, so
+provisioning becomes a button; the choices are stored as a `setup` document in Atlas beside the policy, so
 a second machine inherits them through the install loop instead of the browser's local storage.

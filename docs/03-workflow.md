@@ -24,6 +24,7 @@ Three top-level lanes, Turborepo `apps/` + `packages/` inside each. Full tree an
   hub/                        gated Pages site over docs/ (cordoned; not a lane)
   package.json  pnpm-workspace.yaml  turbo.json  tsconfig.base.json  Makefile  .env.example
   scripts/
+    setup.mjs                 locked dependency install, local build, optional site and battery provisioning
     bootstrap.sh              one-time machine setup (node 22, pnpm, xcodegen, .env)
     install-loop.sh           merge → download → build → install (+ --watch)
   ui/
@@ -74,6 +75,14 @@ token spend per iteration.
 - Formatters and linters run in the instrumenter, not as pre-commit hooks, so the builder stays fast.
 - One `Makefile` at root: `make install`, `make loop`, `make plan`, `make build`, `make instrument`, `make rollback CP=cp/<n>`, `make provision`, `make check`. The hub keeps its own under `hub/`.
 - Turborepo runs every workspace, Swift included, through `pnpm turbo run build`; the Swift wrapper skips itself where Xcode is absent.
+
+## Local server setup
+
+`node scripts/setup.mjs --site` (or `make setup`) installs the pinned dependencies, builds the
+workspaces except the optional native app, and assembles `dist/web-site`. Once Atlas keys are
+configured through the local key page or host environment, `node scripts/setup.mjs --provision`
+runs the configured battery provisioners using the shared key loader. The local service options, build
+outputs, startup commands and agent handoff are in [Local operations](19-local-operations.md).
 
 ## The install loop
 <!-- @s1.16 -->

@@ -5,7 +5,11 @@
 #   make check        everything CI checks: workspace build + typecheck, hub lints, provenance
 #   make box          stand up the sandbox box (Colima VM + Ansible) and run the first workflow in it
 #   make sandbox      create the Atlas Sandbox project + cluster with the Atlas CLI and write ATLAS_URI to .env
-.PHONY: install loop build-all typecheck check plan build instrument rollback provision box box-status box-down sandbox worker-secret hub-check hub-preview hub-deploy clean
+.PHONY: setup install loop build-all typecheck check plan build instrument rollback provision box box-status box-down sandbox worker-secret hub-check hub-preview hub-deploy clean
+
+setup:            ## install dependencies and build the local server and site
+	@node scripts/setup.mjs --site
+
 
 install:          ## bootstrap the machine, then install and build every workspace
 	@bash scripts/bootstrap.sh
