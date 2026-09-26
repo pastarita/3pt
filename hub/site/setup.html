@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Setup cascade</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<script src="./setup-data.js"></script>
+<script src="./phosphor.js"></script>
+<style>
+  .hero{position:relative;height:400px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);margin-top:16px}
+  .page .hero>span.lab{position:absolute;transform:translate(-50%,-50%);font:700 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:99px;border:1px solid;background:rgba(15,18,22,.72);backdrop-filter:blur(2px);white-space:nowrap}
+  .hero>span.lab small{display:block;font:500 9.5px/1.3 var(--sans);letter-spacing:.02em;text-transform:none;color:var(--soft);margin-top:3px}
+  .page .hero>span.cap{position:absolute;left:14px;top:12px;font:500 10.5px/1.4 var(--mono);color:var(--soft);max-width:34ch}
+  .cascade{display:flex;flex-direction:column;gap:0;margin-top:14px}
+  .slot{display:grid;grid-template-columns:44px 1fr;gap:12px;position:relative;padding-bottom:16px}
+  .slot::before{content:"";position:absolute;left:21px;top:44px;bottom:0;border-left:2px dashed var(--line)}
+  .slot:last-child::before{display:none}
+  .slot .num{width:44px;height:44px;border-radius:50%;background:var(--card);border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font:800 15px/1 var(--mono);color:var(--ink);position:relative;z-index:1}
+  .slot.done .num{border-color:var(--good);color:var(--good)}
+  .slot.req .num::after{content:"";position:absolute;right:-3px;top:-3px;width:9px;height:9px;border-radius:50%;background:var(--flag);border:2px solid var(--bg)}
+  .slot.done.req .num::after{background:var(--good)}
+  .card2{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+  .card2 .hd{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .card2 .hd b{font-size:15px}
+  .card2 .why{font-size:12.5px;color:var(--soft);margin:3px 0 8px;max-width:70ch}
+  .opts{display:flex;gap:6px;flex-wrap:wrap}
+  .opts button{font:600 11.5px/1 var(--sans);padding:7px 10px;border-radius:99px}
+  .opts button.on{background:var(--pine-soft);border-color:var(--ink);color:#fff}
+  .pick{display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);align-items:start}
+  .pick .meta{font-size:12px;color:var(--soft);line-height:1.5}
+  .pick .meta b{color:var(--ink)}
+  .pick .links{display:flex;flex-direction:column;gap:6px;min-width:150px}
+  .pick .links a,.pick .links button{text-align:center}
+  .keys{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+  .keys code{font-size:11px}
+  .grants{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .grants .g{font:600 10px/1 var(--mono);letter-spacing:.04em;padding:3px 7px;border-radius:4px;background:var(--sand);color:var(--soft)}
+  .grants .stg{width:9px;height:9px;border-radius:50%;display:inline-block;margin-left:2px}
+  .script{font:12px/1.5 var(--mono);color:var(--soft);margin-top:8px}
+  .script b{color:var(--ink);font-weight:500}
+  .prop{font:600 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--warn);border:1px solid var(--warn);border-radius:3px;padding:2px 6px}
+  .out{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
+  .out pre{font:12px/1.5 var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto;margin:0;max-height:360px;white-space:pre}
+  .seq{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px}
+  .seq ol{margin:6px 0 0;padding-left:18px;font:12.5px/1.8 var(--mono)}
+  .matrix td.y{color:var(--good);font-weight:700;text-align:center}.matrix td.n{color:var(--faint);text-align:center}
+  svg.flow{width:100%;height:auto;display:block;margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+  @media(max-width:760px){.out{grid-template-columns:1fr}.pick{grid-template-columns:1fr}.hero{height:320px}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<script src="./sdf-depth.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Build · hot · batteries included · choices stay in this browser</p>
+    <h1>Setup cascade</h1>
+    <p class="lede">Eight slots, one provider each, signup and key links on every pick. The scripts do the rest. This is the batteries-included core of the tetrahedron, stood up by someone who never opens a terminal until the last step.</p>
+  </header>
+
+  <div class="hero" id="hero">
+    <span class="lab" data-v="A" style="border-color:var(--plan);color:var(--plan)">Plan<small>reads the Store</small></span>
+    <span class="lab" data-v="B" style="border-color:var(--build);color:var(--build)">Build<small>wraps a harness</small></span>
+    <span class="lab" data-v="C" style="border-color:var(--instrument);color:var(--instrument)">Instrument<small>rewrites the grants</small></span>
+    <span class="lab" data-v="O" style="border-color:var(--cyan);color:var(--cyan)">Batteries<small id="core-sub">8 slots · the core</small></span>
+    <span class="cap">The tetrahedron, projected: three points on the base, the batteries core at the centre. Every edge is a tool grant. The field is the same shader as the design system's depth motif, in its four-point mode.</span>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <p style="margin:6px 0 0;font-size:12px;color:var(--faint)"><span class="pv d">DERIVED</span> tallies from <code>setup-data.js</code> and this browser's choices at load. <span class="pv a">AUTHORED</span> credits and costs from <code>docs/04-resources.md</code>, 2026-09-26.</p>
+
+  <h2 data-cluster="build">The cascade <span>in order; each slot assumes the ones above it</span></h2>
+  <div class="cascade" id="cascade"></div>
+
+  <h2 data-cluster="build">What you paste, what you run <span>derived from the choices above</span></h2>
+  <div class="out">
+    <div><div class="bar" style="margin:0 0 8px"><button class="primary" id="copy-env">Copy .env template</button><span style="font-size:12px;color:var(--faint)" id="copy-note">names only; values are yours</span></div><pre id="env"></pre></div>
+    <div class="seq"><b>Then, in order</b><ol id="seq"></ol><p style="font-size:12px;color:var(--soft);margin-top:8px">Each battery prints what it still lacks instead of failing, so a half-filled <code>.env</code> is a report, not a crash.</p></div>
+  </div>
+
+  <h2 data-cluster="build">Batteries → grants → stages <span>which slot powers which point</span></h2>
+  <div id="flow"></div>
+
+  <h2 data-cluster="build">The four named systems <span>which slots each can fill</span></h2>
+  <div class="tbl-wrap"><table class="matrix" id="matrix"></table></div>
+  <div class="rulebox"><b>Credits are not compute.</b> MongoDB funds every stateful slot. AWS appears four times and carries one credit, Kiro, which is a coding agent, not infrastructure. OpenRouter carries credits; Vercel's $30 is v0 scaffolding credit, so its gateway is a route, not a subsidy. <code>docs/13-ci-and-deployment.md</code> §5.</div>
+
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Choose eight times. Paste. Run provision. The harness takes it from there.</p></footer>
+</div>
+<script>
+(function(){
+  var S = window.SETUP, N = window.TPTNAV, PH = window.PH;
+  var state = S.load();
+  var STG = { plan:'var(--plan)', build:'var(--build)', instrument:'var(--instrument)' };
+  var ICON = { state:'database', embeddings:'stack', bytes:'image', models:'arrows-clockwise', harness:'hammer', repo:'git-branch', tracing:'chart-line-up', compute:'lightning' };
+  function pv(id){ return S.PROVIDERS[id]; }
+  function done(sl){ return !!(state[sl.id]&&state[sl.id].done); }
+  function render(){
+    var c = document.getElementById('cascade');
+    c.innerHTML = S.SLOTS.map(function(sl){
+      var ch = S.choice(state, sl), p = pv(ch), keys = sl.env[ch]||[];
+      return '<div class="slot'+(done(sl)?' done':'')+(sl.required?' req':'')+'" data-slot="'+sl.id+'"><div class="num">'+(done(sl)?'●':sl.n)+'</div><div class="card2">'
+        +'<div class="hd"><b>'+(PH?PH.svg(ICON[sl.id],16)+' ':'')+sl.name+'</b><span style="font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)">battery · '+sl.battery+(sl.proposed?' <span class="prop">proposed</span>':'')+(sl.required?' · required':' · optional')+'</span></div>'
+        +'<p class="why">'+sl.why+'</p>'
+        +'<div class="opts">'+sl.options.map(function(o){ return '<button data-pick="'+o+'" class="'+(o===ch?'on':'')+'">'+pv(o).name+'</button>'; }).join('')+'</div>'
+        +'<div class="pick"><div class="meta"><b>'+p.name+'</b> · '+p.cost+' · <b>credit:</b> '+p.credit+'<br>'+p.note
+        +'<div class="keys">'+(keys.length?keys.map(function(k){ return '<code>'+k+'</code>'; }).join(''):'<span style="color:var(--faint);font-size:11px">no key needed</span>')+'</div>'
+        +'<div class="grants">'+(sl.grants.length?sl.grants.map(function(g){ return '<span class="g">'+g+'</span>'; }).join(''):'<span class="g" style="opacity:.6">no grant; a switch</span>')+sl.stages.map(function(s){ return '<i class="stg" style="background:'+STG[s]+'" title="'+s+'"></i>'; }).join('')+'</div>'
+        +'<div class="script">run <b>'+sl.script+'</b></div></div>'
+        +'<div class="links">'+(p.signup?'<a class="btn" target="_blank" rel="noopener" href="'+p.signup+'">Get account ↗</a>':'')+(p.keys?'<a class="btn" target="_blank" rel="noopener" href="'+p.keys+'">Get key ↗</a>':'')
+        +'<button data-done="1" class="'+(done(sl)?'on':'')+'">'+(done(sl)?'● in .env':'○ mark done')+'</button></div></div>'
+        +'</div></div>';
+    }).join('');
+    var dn = S.SLOTS.filter(done).length, req = S.SLOTS.filter(function(s){ return s.required && !done(s); }).length;
+    var keysN = S.SLOTS.reduce(function(a,sl){ return a + (sl.env[S.choice(state,sl)]||[]).filter(function(k){ return k.indexOf('=')<0; }).length; }, 0);
+    document.getElementById('stats').innerHTML = [[dn+' / '+S.SLOTS.length,'slots marked done'],[req,'required slots still open'],[keysN,'keys to paste for these choices'],[Object.keys(S.PROVIDERS).length,'providers on the menu']].map(function(t){ return '<div class="stat"><div class="n">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>'; }).join('');
+    document.getElementById('core-sub').textContent = dn+' / '+S.SLOTS.length+' stood up · the core';
+    document.getElementById('env').textContent = S.envFor(state);
+    document.getElementById('seq').innerHTML = S.SEQUENCE.map(function(s){ return '<li>'+s.replace(/#(.*)$/,'<span style="color:var(--faint)">#$1</span>')+'</li>'; }).join('');
+    flow(); matrix();
+  }
+  function flow(){
+    var W=760, rowH=30, top=26, H=top+S.SLOTS.length*rowH+20, xs=180, xg=430, xt=660;
+    var stages=['plan','build','instrument'], sy={}; stages.forEach(function(s,i){ sy[s]=top+40+i*((S.SLOTS.length*rowH-80)/2); });
+    var svg='<svg class="flow" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Slots to grants to stages"><title>Batteries, grants, stages</title>';
+    svg+='<text x="20" y="16" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="1.5" fill="var(--faint)">SLOT · BATTERY</text><text x="'+xg+'" y="16" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="1.5" fill="var(--faint)" text-anchor="middle">GRANTS</text><text x="'+xt+'" y="16" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="1.5" fill="var(--faint)" text-anchor="middle">STAGE</text>';
+    S.SLOTS.forEach(function(sl,i){ var y=top+i*rowH+18, ok=done(sl);
+      svg+='<circle cx="30" cy="'+(y-4)+'" r="6" fill="'+(ok?'var(--good)':'var(--card)')+'" stroke="'+(ok?'var(--good)':'var(--line-strong)')+'"/>';
+      svg+='<text x="44" y="'+y+'" font-family="-apple-system,Segoe UI,sans-serif" font-size="12" fill="var(--ink)">'+sl.n+' · '+sl.name+'</text><text x="'+xs+'" y="'+y+'" font-family="ui-monospace,Menlo,monospace" font-size="10.5" fill="var(--soft)">'+sl.battery+'</text>';
+      svg+='<text x="'+xg+'" y="'+y+'" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--soft)" text-anchor="middle">'+(sl.grants.length?sl.grants.slice(0,3).join(' · ')+(sl.grants.length>3?' …':''):'—')+'</text>';
+      sl.stages.forEach(function(s){ svg+='<path d="M'+(xg+120)+' '+(y-4)+' C '+(xg+170)+' '+(y-4)+', '+(xt-90)+' '+sy[s]+', '+(xt-40)+' '+sy[s]+'" fill="none" stroke="'+STG[s]+'" stroke-width="1.4" opacity=".75"/>'; });
+    });
+    stages.forEach(function(s){ svg+='<circle cx="'+xt+'" cy="'+sy[s]+'" r="16" fill="var(--card)" stroke="'+STG[s]+'" stroke-width="2"/><text x="'+xt+'" y="'+(sy[s]+4)+'" font-family="-apple-system,Segoe UI,sans-serif" font-size="10" font-weight="700" fill="'+STG[s]+'" text-anchor="middle">'+s.slice(0,4).toUpperCase()+'</text>'; });
+    svg+='</svg>';
+    document.getElementById('flow').innerHTML = svg;
+  }
+  function matrix(){
+    var fam = { 'MongoDB':['atlas','atlasauto','gridfs'], 'OpenRouter':['openrouter'], 'Vercel AI Gateway + hosting':['vercelgw','vercel'], 'AWS':['s3','bedrock','lambda','kiro'] };
+    var h='<tr><th>System</th>'+S.SLOTS.map(function(sl){ return '<th>'+sl.n+' '+sl.name+'</th>'; }).join('')+'<th>Funded here</th></tr>';
+    Object.keys(fam).forEach(function(f){ var ids=fam[f]; h+='<tr><td><b>'+f+'</b></td>'+S.SLOTS.map(function(sl){ var hit=sl.options.filter(function(o){ return ids.indexOf(o)>-1; }); return hit.length?'<td class="y" title="'+hit.map(function(o){return pv(o).name;}).join(', ')+'">●</td>':'<td class="n">·</td>'; }).join('')+'<td>'+ids.map(function(o){ return pv(o).credit; }).filter(function(v,i,a){ return a.indexOf(v)===i; }).join(' · ')+'</td></tr>'; });
+    document.getElementById('matrix').innerHTML = h;
+  }
+  document.getElementById('cascade').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return; var id=e.target.closest('.slot').getAttribute('data-slot'); state[id]=state[id]||{};
+    if(b.hasAttribute('data-pick')){ state[id].provider=b.getAttribute('data-pick'); state[id].done=false; }
+    if(b.hasAttribute('data-done')){ state[id].done=!state[id].done; }
+    S.save(state); render();
+  });
+  document.getElementById('copy-env').addEventListener('click', function(){ try{ navigator.clipboard.writeText(S.envFor(state)); document.getElementById('copy-note').textContent='copied'; }catch(e){ document.getElementById('copy-note').textContent='select and copy the block'; } });
+  render();
+  /* the tetrahedron: four-point field, static so the labels can sit on the vertices */
+  var hero=document.getElementById('hero');
+  if (window.SDF){ window.SDF.mount(hero, { points:4, intensity:0.85, speed:0, scale:1.3, vars:{ bg:['--panel'], a:['--plan'], b:['--build'], c:['--instrument'], d:['--cyan'] } }); }
+  function place(){ var r=hero.getBoundingClientRect(), m=Math.min(r.width,r.height), rr=.30*1.3, P={ A:[0,rr], B:[.866*rr,-.5*rr], C:[-.866*rr,-.5*rr], O:[0,0] };
+    hero.querySelectorAll('.lab').forEach(function(l){ var v=P[l.getAttribute('data-v')]; l.style.left=(r.width/2+v[0]*m)+'px'; l.style.top=(r.height/2-v[1]*m+(v[1]>0?-30:v[1]<0?30:0))+'px'; l.style.left=(r.width/2+v[0]*m*(v[0]?1.18:1))+'px'; }); }
+  place(); addEventListener('resize', place);
+})();
+</script>
+</body>
+</html>

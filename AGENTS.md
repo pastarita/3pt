@@ -39,6 +39,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
 | How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
+| Setup cascade: batteries included for a non-technical operator, provider options per slot, the proposed gateway battery | `docs/14-setup-cascade.md` (hub leaf "Setup cascade") |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
