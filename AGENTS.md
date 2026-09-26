@@ -34,7 +34,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Rules, judging weights, banned projects, deadlines | `docs/05-rules.md` |
 | Goal over time, the interior-design use case, value props, screen-capture onboarding | `docs/06-goal-and-use-case.md` |
 | Theses, hypotheses, the measurement system, partner-incentive mapping, requirement set | `docs/07-assessment-and-measurement.md` |
-| Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `docs/07-direction.html` |
+| Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `hub/site/direction.html` (hub leaf "Direction") |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 
 ## Working rules for agents in this repo
