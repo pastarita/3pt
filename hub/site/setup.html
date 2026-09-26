@@ -49,6 +49,7 @@
   .matrix td.y{color:var(--good);font-weight:700;text-align:center}.matrix td.n{color:var(--faint);text-align:center}
   svg.flow{width:100%;height:auto;display:block;margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
   @media(max-width:760px){.out{grid-template-columns:1fr}.pick{grid-template-columns:1fr}.hero{height:320px}}
+  figure.fig0{margin:0}
 </style>
 </head>
 <body>
@@ -58,16 +59,16 @@
   <header class="top">
     <p class="eyebrow">Build · hot · batteries included · choices stay in this browser</p>
     <h1>Setup cascade</h1>
-    <p class="lede">Eight slots, one provider each, signup and key links on every pick. The scripts do the rest. This is the batteries-included core of the tetrahedron, stood up by someone who never opens a terminal until the last step.</p>
+    <p class="lede">Eight slots, one provider each, with signup and key links on every pick. The scripts do the rest, so no one opens a terminal until the last step.</p>
   </header>
 
-  <div class="hero" id="hero">
+  <figure class="fig0"><div class="hero" id="hero">
     <span class="lab" data-v="A" style="border-color:var(--plan);color:var(--plan)">Plan<small>reads the Store</small></span>
     <span class="lab" data-v="B" style="border-color:var(--build);color:var(--build)">Build<small>wraps a harness</small></span>
     <span class="lab" data-v="C" style="border-color:var(--instrument);color:var(--instrument)">Instrument<small>rewrites the grants</small></span>
     <span class="lab" data-v="O" style="border-color:var(--cyan);color:var(--cyan)">Batteries<small id="core-sub">8 slots · the core</small></span>
     <span class="cap">The tetrahedron, projected: three points on the base, the batteries core at the centre. Every edge is a tool grant. The field is the same shader as the design system's depth motif, in its four-point mode.</span>
-  </div>
+  </div></figure>
 
   <div class="stats" id="stats"></div>
   <p style="margin:6px 0 0;font-size:12px;color:var(--faint)"><span class="pv d">DERIVED</span> tallies from <code>setup-data.js</code> and this browser's choices at load. <span class="pv a">AUTHORED</span> credits and costs from <code>docs/04-resources.md</code>, 2026-09-26.</p>
@@ -82,7 +83,7 @@
   </div>
 
   <h2 data-cluster="build">Batteries → grants → stages <span>which slot powers which point</span></h2>
-  <div id="flow"></div>
+  <figure class="fig0"><div id="flow"></div></figure>
 
   <h2 data-cluster="build">The four named systems <span>which slots each can fill</span></h2>
   <div class="tbl-wrap"><table class="matrix" id="matrix"></table></div>
