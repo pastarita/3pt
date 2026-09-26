@@ -76,9 +76,12 @@ nav .btn{padding:10px 14px;font-size:14px}
 .offer h3{margin:10px 0 6px;font-size:19px;line-height:1.25}
 .offer p{margin:0 0 14px;font-size:14px;color:var(--soft)}
 .offer__b{display:flex;gap:8px}
-.offer__b span{flex:1;text-align:center;font:650 14px/1 var(--sans);padding:11px;border-radius:10px;border:1px solid var(--lineStrong)}
-.offer__b span:first-child{color:#1a0c07;border-color:rgba(255,160,130,.55);text-shadow:0 1px 0 rgba(255,255,255,.28);background:var(--noise),linear-gradient(180deg,#ff8561,#f4623f 55%,#df5231);box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 0 rgba(90,20,5,.22),0 8px 20px -10px rgba(255,107,74,.7)}
+.offer__b>*{flex:1;text-align:center;font:650 14px/1 var(--sans);padding:11px;border-radius:10px;border:1px solid var(--lineStrong);background:transparent;color:var(--ink);text-decoration:none;cursor:pointer;transition:transform .12s,border-color .12s}
+.offer__b>*:hover{transform:translateY(-1px);border-color:var(--soft)}
+.offer__b>:first-child{color:#1a0c07;border-color:rgba(255,160,130,.55);text-shadow:0 1px 0 rgba(255,255,255,.28);background:var(--noise),linear-gradient(180deg,#ff8561,#f4623f 55%,#df5231);box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 0 rgba(90,20,5,.22),0 8px 20px -10px rgba(255,107,74,.7)}
 .offer__f{margin-top:10px;font:600 11px/1.4 var(--mono);color:var(--soft)}
+/* Undo: the card shows the rollback the harness would make (v6 → v5); Redo puts v6 back */
+.offer.is-undone .offer__k{color:var(--build)}.offer.is-undone .offer__k::before{background:var(--build);box-shadow:0 0 0 4px rgba(224,163,58,.25)}
 .device-wrap{position:relative}
 .float{position:absolute;z-index:3;right:-28px;top:16%;max-width:230px;background:var(--panel);border:1px solid var(--plan);border-radius:14px;padding:12px 14px;font-size:13.5px;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:rise .7s 1s both}
 .float b{display:block;font:800 10.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--plan);margin-bottom:6px}
@@ -288,15 +291,15 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
       </div>
       <p class="demo-note">The demo firm is simulated with a fixed seed. The loop, the checkpoints and the policy rollback are real code.</p>
     </div>
-    <div class="device-wrap"><div class="device" role="img" aria-label="The app on a site photo of unit 206, showing a new feature the harness built from the team's usage and shipped">
+    <div class="device-wrap"><div class="device" role="group" aria-label="The app on a site photo of unit 206, showing a new feature the harness built from the team's usage and shipped">
       <img src="/media-pool/plumbing/plumbing-06.jpg" alt="">
-      <div class="device__bar"><b>ACME BUILDERS</b><span>Harness v6</span></div>
+      <div class="device__bar"><b>ACME BUILDERS</b><span id="offer-v">Harness v6</span></div>
       <div class="device__tag">Unit 206 · plumbing · open wall</div>
-      <div class="offer">
+      <div class="offer" id="offer" aria-live="polite">
         <span class="offer__k">New for you</span>
         <h3>Your OAC photo pack, in one tap</h3>
         <p>Your team built the owner-architect-contractor photo pack by hand every Friday: 28 hours a job. I built it from this week's photos and turned it on.</p>
-        <div class="offer__b"><span>Open it</span><span>Undo</span></div>
+        <div class="offer__b"><a href="/app/">Open it</a><button type="button" id="offer-undo">Undo</button></div>
         <div class="offer__f">Example feature from the simulated firm</div>
       </div>
     </div>
@@ -513,6 +516,13 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
     edges();
   }
   draw(V,10);
+  // the hero card: Undo rolls the example feature back to v5 and says so; Redo turns it on again
+  var offer=document.getElementById('offer'),undo=document.getElementById('offer-undo'),ov=document.getElementById('offer-v'),
+      ok=offer.querySelector('.offer__k'),oh=offer.querySelector('h3'),op=offer.querySelector('p'),
+      on={k:ok.textContent,h:oh.textContent,p:op.textContent},
+      off={k:'Rolled back',h:'Back on v5. The photo pack is off.',p:'Your team builds the Friday pack by hand again. I keep v6 as a checkpoint, so Redo turns it back on.'};
+  undo.onclick=function(){var u=offer.classList.toggle('is-undone'),t=u?off:on;
+    ok.textContent=t.k;oh.textContent=t.h;op.textContent=t.p;ov.textContent='Harness v'+(u?5:6);undo.textContent=u?'Redo':'Undo'};
   // nav: solid once the hero scrolls away; the link for the section in view is marked
   var nav=document.querySelector('nav'),links=[].slice.call(nav.querySelectorAll('.links a[href^="#"]'));
   function navState(){nav.classList.toggle('is-stuck',scrollY>40)}
