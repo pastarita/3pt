@@ -27,6 +27,7 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `docs/03-workflow.md` | Repo layout, pipeline skeleton, DevX, the install loop |
 | `docs/04-resources.md` | Partners, MCPs, credits, and which 3PT slot each fills |
 | `docs/05-rules.md` | Rules, banned projects, judging weights, deadlines |
+| `docs/sources/` | Verbatim local copies of external source documents (the hackathon resource guide) |
 | `docs/06-goal-and-use-case.md` | Goal over time, interior-design use case, value props, screen-capture onboarding |
 | `docs/glossary.md` | Terms |
 

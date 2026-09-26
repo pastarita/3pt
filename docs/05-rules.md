@@ -1,7 +1,8 @@
 # Hackathon Rules & Compliance
 
 *Source of record. Captured 2026-09-26 from
-https://cerebralvalley.ai/e/mongodb-nyc-hackathon/details and the partner resource guide.
+https://cerebralvalley.ai/e/mongodb-nyc-hackathon/details and the partner resource guide
+(Google Doc, registered in `docs/04-resources.md` under Source documents).
 Event: **The Harness Engineering & Model Wrangling Hackathon** (MongoDB × Cerebral Valley).*
 
 **Hackathon day: Saturday, September 26, 2026, at The Malin Chelsea (220 W 26th St, NYC).**

@@ -1,9 +1,22 @@
 # Hackathon Resources: Partners, MCPs, Credits, and Where Each Fits in 3PT
 
-*Source of record. Compiled 2026-09-26 from the official resource guide
-(Google Doc `13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8`). No coupon codes appear in the
-doc; every code arrives by email or the Discord bot from 10:30 AM Saturday, and only for
-participants registered on Cerebral Valley and checked in on site.*
+*Source of record. Compiled 2026-09-26 from the official resource guide (registered below).
+No coupon codes appear in the doc; every code arrives by email or the Discord bot from 10:30 AM
+Saturday, and only for participants registered on Cerebral Valley and checked in on site.*
+
+## Source documents (register)
+
+External documents this file and `docs/05-rules.md` were compiled from. Registered 2026-09-26.
+If a link stops working, the Google Doc ID is the durable key.
+
+| Document | Owner | Link | Notes |
+|---|---|---|---|
+| **The Harness Engineering & Model Wrangling Hackathon: Resource Guide** | MongoDB × Cerebral Valley | https://docs.google.com/document/d/13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8/edit · mobile view: https://docs.google.com/document/u/0/d/13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8/mobilebasic | Problem statements, requirements, prizes, MongoDB resources, partner credits. Doc ID `13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8`. **Local verbatim copy with links: `docs/sources/hackathon-resource-guide.md`** (pulled 2026-09-26). |
+| Event page and rules | Cerebral Valley | https://cerebralvalley.ai/e/mongodb-nyc-hackathon/details | Timeline, judging, submission platform. |
+| ElevenLabs Hacker Guide | ElevenLabs | https://docs.google.com/document/d/1mCh5MtOzBw0aJpurQVUmIVFfPMAHW3MjNemE-LNiMto/edit | Linked from the resource guide. |
+| LangChain hacker resources | LangChain | https://app.notion.com/p/Hackathon-Resources-from-LangChain-34f808527b1780c8a82bd0b8f0c322a2 | Linked from the resource guide. |
+| LangSmith credit redemption form | LangChain | https://airtable.com/appzjKToipPcn2dKI/pagTsO0Ld3edczsrV/form | Enter the hackathon name as the event; within 10 days. |
+| Voyage AI dashboard | Voyage AI | https://dashboard.voyageai.com/ · API keys: https://dashboard.voyageai.com/organization/api-keys · billing: https://dashboard.voyageai.com/organization/billing · usage: https://dashboard.voyageai.com/organization/usage | Pricing: https://docs.voyageai.com/docs/pricing |
 
 ## Credit ledger
 
@@ -15,7 +28,7 @@ participants registered on Cerebral Valley and checked in on site.*
 | **OpenAI** | 1,250 Codex credits | Code by email | — |
 | **AWS Kiro** | 50 credits/mo free tier + 500-credit new-user bonus; no card, no AWS account | Self-serve, sign in with GitHub/Google | Bonus valid 30 days |
 | **Vercel** | $30 v0 credits per attendee | v0.app → profile → Credits → Redeem Code (emailed) | — |
-| **LangChain / LangSmith** | $50 LangSmith credits + Deployments access | Airtable form (link in guide), enter hackathon as event, add card to LangSmith to display credits | Within 10 days |
+| **LangChain / LangSmith** | $50 LangSmith credits + Deployments access | Airtable form (see Source documents), enter hackathon as event, add card to LangSmith to display credits | Within 10 days |
 | **ElevenLabs** | 1 month Creator plan | Coupon via Discord bot, matched to check-in email | — |
 
 Not provided by any partner: **Anthropic/Claude credits**, AWS Strands/Bedrock, blob/object
@@ -52,10 +65,10 @@ natural-language prompting guide at hand.
 | Partner | Tooling | Links |
 |---|---|---|
 | Voyage AI | Python client `pip install voyageai`; REST API; embeddings + reranking. Multimodal/image embedding models **not mentioned** in the guide — verify at docs.voyageai.com before relying on them. | https://docs.voyageai.com/docs/quickstart-tutorial · https://docs.voyageai.com/docs/rate-limits |
-| LangChain | LangGraph (state/checkpoints), Deep Agents, LangSmith tracing | https://docs.langchain.com/oss/python/langgraph/overview · https://docs.langchain.com/oss/python/deepagents/quickstart · Notion hacker resources (link in guide) |
+| LangChain | LangGraph (state/checkpoints), Deep Agents, LangSmith tracing | https://docs.langchain.com/oss/python/langgraph/overview · https://docs.langchain.com/oss/python/deepagents/quickstart · Notion hacker resources (see Source documents) |
 | AWS Kiro | Spec-driven coding agent: IDE, CLI, Crew | https://kiro.dev/ · https://kiro.dev/cli/ · https://kiro.dev/crew/ |
 | Vercel | AI SDK (agent loops, tool calling, streaming), AI Gateway, v0 scaffolder, one-click deploy | https://ai-sdk.dev · https://vercel.com/docs/ai-gateway · https://v0.app/docs |
-| ElevenLabs | Speech, agents, dubbing, SFX | Hacker Guide (Google Doc, link in resource guide) |
+| ElevenLabs | Speech, agents, dubbing, SFX | Hacker Guide (Google Doc, see Source documents) |
 
 ## Mapping partners onto 3PT
 
