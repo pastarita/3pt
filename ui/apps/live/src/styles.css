@@ -89,7 +89,7 @@ button.photo{cursor:pointer}
 .loop__pt{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--plan);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:4px}
 .loop__pt span{color:var(--soft);font-size:13px}.loop__pt--build{border-top-color:var(--build)}.loop__pt--instrument{border-top-color:var(--instrument)}
 .layouts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.layout{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px}.layout ol{margin:4px 0 0;padding-left:18px;color:var(--soft)}
+.layout{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px}.layout b{display:block}.layout ol{margin:4px 0 0;padding-left:18px;color:var(--soft)}
 .chips{display:flex;gap:6px;flex-wrap:wrap}.chip{font:700 11px/1 var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 10px}
 .vers{list-style:none;margin:0;padding:0}
 .viewer{position:fixed;inset:0;background:rgba(11,14,18,.85);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
