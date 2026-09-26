@@ -104,6 +104,9 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   figure, no paragraph over 55 words, lede ≤30). Over budget means: turn the paragraph into a labelled
   figure. Documents under `docs/` are exempt; the Viewer renders them.
 - **Harness code never goes in `hub/`.** The hub renders the repo; it is not the repo.
+- **Published bar:** every leaf shows the surfaces that exist outside the repo and their state, from `PUBLISHED` in
+  `hub/site/nav.js`. The steward updates it at each checkpoint. Orient documents have a leaf (`vision.html` …) drawn
+  in the banner's language (`orient.css`, `mark.js`) and a document twin (`vision-doc`) that carries the Register id.
 - **No HTML under `docs/`.** Documents are markdown, rendered by the Viewer. Anything HTML is a leaf
   and lives in `hub/site/` with the Shell and tokens. Relative links in a doc resolve from that
   doc's directory (`../brainstorming.md` from `docs/`). Leaves fetch nothing external; vendor fonts

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Goal</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<link rel="stylesheet" href="./orient.css">
+<script src="./3pt-data.js"></script>
+<script src="./mark.js"></script>
+<style>
+  /* This leaf invents no colours; the banner's language comes from orient.css and mark.js. */
+  .quote{font:italic 400 15px/1.55 var(--serif);color:var(--ink);margin:0;max-width:78ch}
+  .quote b{font-style:normal;color:var(--flag)}
+  .pane .pb h3{margin:0 0 6px;font:800 13px/1.2 var(--sans)}
+  .pane .pb p{margin:0;font-size:12.8px;color:var(--soft)}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+
+<header class="hero">
+  <div>
+    <p class="eb">3PT · Orient · D6 · source of record <a href="./view.html?f=docs/06-goal-and-use-case.md">docs/06-goal-and-use-case.md</a></p>
+    <p class="eb2">Problem Statement One · Recursive Harnessing</p>
+    <h1>A harness that gets more valuable <span class="a">the longer it runs.</span></h1>
+    <p class="sub">A purpose-built image and knowledge pipeline for a media-heavy business. It learns the media as it arrives, organises it, and dials down the context needed to represent it all.</p>
+    <div class="ctl"><a class="primary" href="./use-case.html">The use case</a><a class="ghost" href="./vision.html">Vision</a>
+      <span class="stage plan">Plan</span><span class="stage build">Build</span><span class="stage instrument">Instrument</span></div>
+  </div>
+  <div class="mark" id="mark"></div>
+</header>
+
+<h2 data-cluster="orient">The statement we answer <span>from the hackathon guide</span></h2>
+<figure class="fig">
+  <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--cyan)">STATEMENT ONE</b></div>
+    <div class="pb"><p class="quote">Build a <b>self-improving agent harness</b> that automatically evolves its own architecture: updating rules, context policies, guardrails, tool access, and more. How can agents dynamically adapt their entire environment to fit a specific user, task, or use case?</p></div></div>
+  <figcaption><span class="pv d">DERIVED</span> The organiser's words. Harness engineering: the systems around a model that let agents adapt, sustain long horizons, and act on real data, with MongoDB as the memory layer.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Value over time <span>why the curve bends up</span></h2>
+<!-- @s1.19 @s1.20 @s1.23 @s1.24 @s1.25 -->
+<figure class="fig">
+  <svg viewBox="0 0 1000 300" role="img" aria-label="Harness versions v0 to vN along time; value rises while bit storage falls; the supervisory outer loop dials streams up and down">
+    <defs><marker id="g-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--soft)"/></marker>
+          <marker id="g-ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--flag)"/></marker></defs>
+    <path d="M60 240 L940 240" class="e" marker-end="url(#g-ah)"/><text x="940" y="262" text-anchor="end" class="f">TIME · TODAY · THIS QUARTER · THIS DECADE</text>
+    <path d="M60 240 L60 40" class="e" marker-end="url(#g-ah)"/>
+    <path d="M60 225 C300 215 520 150 940 60" fill="none" stroke="var(--instrument)" stroke-width="3"/>
+    <text x="760" y="70" class="k" fill="var(--instrument)">value extracted</text>
+    <path d="M60 120 C300 130 520 185 940 215" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <text x="700" y="232" class="k" fill="var(--cyan)">bits stored per unit of context</text>
+    <g class="m" fill="var(--build)"><text x="110" y="292">v0</text><text x="320" y="292">v1</text><text x="530" y="292">v2</text><text x="740" y="292">v3</text><text x="900" y="292">vN</text></g>
+    <g fill="var(--build)"><circle cx="115" cy="240" r="5"/><circle cx="325" cy="240" r="5"/><circle cx="535" cy="240" r="5"/><circle cx="745" cy="240" r="5"/><circle cx="905" cy="240" r="5"/></g>
+    <rect x="330" y="40" width="340" height="52" rx="10" class="box" stroke-width="1.5"/>
+    <text x="500" y="61" text-anchor="middle" class="k">Supervisory outer loop</text>
+    <text x="500" y="80" text-anchor="middle" class="s">watches productivity, observability, output streams</text>
+    <path d="M400 92 L330 150" class="e acc" stroke-dasharray="4 5" marker-end="url(#g-ahf)"/><text x="250" y="168" class="m" fill="var(--flag)">STREAM DOWN · noise</text>
+    <path d="M600 92 L670 150" class="e acc" stroke-dasharray="4 5" marker-end="url(#g-ahf)"/><text x="600" y="168" class="m" fill="var(--flag)">STREAM UP · pays for itself</text>
+  </svg>
+  <figcaption><span class="pv a">AUTHORED</span> Each version understands more media models, organises them better, and needs less context to represent everything ever generated.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Value props <span>three, and the recursive one</span></h2>
+<!-- @s1.27 -->
+<figure class="fig">
+  <div class="grid3">
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--cyan)">FEEDBACK</b></div><div class="pb"><h3>Pipeline data becomes feedback</h3><p>The harness learns your media workflows and what repeats in your outputs, then suggests automations for the repeated parts.</p></div></div>
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--instrument)">RECURSION</b></div><div class="pb"><h3>Automations join the harness</h3><p>A recurring template or line drawing becomes an automation. That automation is harness architecture now, not a one-off script.</p></div></div>
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--plan)">BLOCKS</b></div><div class="pb"><h3>Building blocks, not instructions</h3><p>The harness offers blocks you can incorporate, so the workflow becomes composition instead of repetition.</p></div></div>
+  </div>
+  <figcaption><span class="pv a">AUTHORED</span> The middle pane is the recursive part: what the harness learns rewrites what the harness is.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Two objectives <span>what the outer loop optimises</span></h2>
+<!-- @s1.21 @s1.29 -->
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>Objective</th><th>Signal</th><th>Time domain</th></tr>
+    <tr><td>Reduce bit-storage load over time</td><td>Bytes per unit of retained context; hot-tier bytes</td><td>Today, then every checkpoint</td></tr>
+    <tr><td>Extract value from the media streams</td><td>Tool suggestions taken; repeated work automated</td><td>Today · this quarter · this decade</td></tr>
+    <tr><td>Dial each stream up or down</td><td>Does the stream still pay for itself</td><td>Per iteration, as a tool-grant rewrite</td></tr>
+  </table></div>
+  <figcaption><span class="pv a">AUTHORED</span> The processor is the harness. The harness grows over time; the outer loop finds where to add affordance, specificity, capability.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">The UI we want <span>inspector, never headline</span></h2>
+<!-- @s1.29 -->
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>It should</th><th>For whom</th><th>Rule</th></tr>
+    <tr><td>Set up and steer the harness without code</td><td>A non-technical operator</td><td rowspan="3">An inspector and configurator. Never the headline feature (<a href="./rules.html">Rules &amp; judging</a>).</td></tr>
+    <tr><td>Visualise the media flows: how they arrive, how they are shaped over time</td><td>The person supervising</td></tr>
+    <tr><td>Show, simply, how the harness plans, builds and evolves</td><td>Anyone who opens it</td></tr>
+  </table></div>
+  <figcaption><span class="pv a">AUTHORED</span> Configure from what people already know and use; the loop stays the product.</figcaption>
+</figure>
+
+<div class="gate"><b>In one line.</b> An instrumentable flow of media comes in; the processor is the harness; the harness rewrites itself as it learns. <a href="./use-case.html">See it on one firm →</a></div>
+
+<footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">The business ends up knowing what it has actually been doing.</p></footer>
+</div>
+<script>MARK.mount('#mark', { w:520, h:400, focus:'instrument' });</script>
+</body>
+</html>

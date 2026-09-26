@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Vision</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<link rel="stylesheet" href="./orient.css">
+<script src="./3pt-data.js"></script>
+<script src="./mark.js"></script>
+<style>
+  /* This leaf invents no colours; the banner's language comes from orient.css and mark.js. */
+  .pts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pt{background:var(--panel);border:1px solid var(--line);border-top:3px solid;border-radius:8px;padding:12px 14px}
+  .pt.plan{border-top-color:var(--plan)} .pt.build{border-top-color:var(--build)} .pt.instrument{border-top-color:var(--instrument)}
+  .pt h3{margin:0 0 6px;font:800 13px/1.2 var(--sans)} .pt p{margin:0 0 6px;font-size:12.8px;color:var(--soft)} .pt .own{font:600 10px/1.5 var(--mono);color:var(--faint);letter-spacing:.06em}
+  .scope{display:flex;gap:8px;flex-wrap:wrap}
+  .scope span{font:600 11px/1 var(--mono);padding:7px 10px;border-radius:99px;border:1px solid var(--line-strong);color:var(--ink);background:var(--panel)}
+  .scope span.no{color:var(--faint);text-decoration:line-through;border-style:dashed}
+  @media(max-width:760px){.pts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+
+<header class="hero">
+  <div>
+    <p class="eb">3PT · Orient · D0 · source of record <a href="./view.html?f=docs/00-vision.md">docs/00-vision.md</a></p>
+    <p class="eb2">Harness · v2 → v3 · proposal</p>
+    <h1>A harness that rewrites its own rules <span class="a">as it learns the work.</span></h1>
+    <p class="sub">3PT wraps any frontier coding agent in a three-stage loop, Plan → Build → Instrument. Instrument rewrites the harness's rules, context policies and tool grants, and every checkpoint lands in MongoDB Atlas.</p>
+    <div class="ctl"><a class="primary" href="./tour.html">Approve v3</a><a class="ghost" href="./sim.html">Roll back</a>
+      <span class="stage plan">Plan</span><span class="stage build">Build</span><span class="stage instrument">Instrument</span></div>
+  </div>
+  <div class="mark" id="mark"></div>
+</header>
+<!-- @s1.01 @s1.02 -->
+
+<h2 data-cluster="orient">The three points <span>what each stage owns</span></h2>
+<!-- @s1.01 @s1.04 -->
+<figure class="fig">
+  <div class="pts">
+    <div class="pt plan"><h3>Plan</h3><p>The polyglot gateway. Decides what to build and how it will be evaluated. Reads harness health, checkpoint retrospectives, the media-context state.</p><span class="own">OWNS · roadmap · acceptance · eval plan · sprint mode</span></div>
+    <div class="pt build"><h3>Build</h3><p>A meta-harness over any agent harness. The frontier model builds; the instrumentation model reviews for repo patterns and pushes fixes back.</p><span class="own">OWNS · feature code · tests · pipelines</span></div>
+    <div class="pt instrument"><h3>Instrument</h3><p>Observability, DevX, CI, deployments, memory. Standards are enforced on the codebase and backfed into the harness and into Plan's prompt.</p><span class="own">OWNS · standards · checks · memory schema</span></div>
+  </div>
+  <figcaption><span class="pv a">AUTHORED</span> From the founding conversation; the table in <code>docs/00-vision.md</code> § The three points.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Loops inside the loop <span>where the self-improvement lives</span></h2>
+<!-- @s1.02 @s1.03 @s1.04 @s1.12 -->
+<figure class="fig">
+  <svg viewBox="0 0 1000 250" role="img" aria-label="Four loops: build with instrumentation, the backfeed, checkpoint retrospectives, and the sprint-mode choice">
+    <defs><marker id="v-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--soft)"/></marker>
+          <marker id="v-ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--flag)"/></marker></defs>
+    <rect x="30" y="40" width="200" height="70" rx="10" class="box" stroke-width="1.5"/><text x="130" y="70" text-anchor="middle" class="k">Build ↔ review</text><text x="130" y="92" text-anchor="middle" class="s">until standards pass</text>
+    <rect x="400" y="40" width="200" height="70" rx="10" class="box" stroke-width="1.5"/><text x="500" y="70" text-anchor="middle" class="k">Instrument</text><text x="500" y="92" text-anchor="middle" class="s">measures, rewrites policy</text>
+    <rect x="770" y="40" width="200" height="70" rx="10" class="box" stroke-width="1.5"/><text x="870" y="70" text-anchor="middle" class="k">Checkpoint</text><text x="870" y="92" text-anchor="middle" class="s">git tag + Atlas document</text>
+    <path d="M230 75 L400 75" class="e" marker-end="url(#v-ah)"/><path d="M600 75 L770 75" class="e" marker-end="url(#v-ah)"/>
+    <path d="M870 110 C870 200 130 200 130 110" class="e acc" stroke-dasharray="5 6" marker-end="url(#v-ahf)"/>
+    <text x="500" y="182" text-anchor="middle" class="m" fill="var(--flag)">BACKFEED · retrospective → next policy → Plan's context</text>
+    <text x="30" y="230" class="f">SPRINT MODE, ONE PER ITERATION</text>
+    <text x="260" y="230" class="m" fill="var(--plan)">FEATURE</text><text x="360" y="230" class="m" fill="var(--build)">IMPROVEMENT</text><text x="500" y="230" class="m" fill="var(--instrument)">FIX</text>
+    <text x="620" y="230" class="s">rolling back to a healthier harness is a git checkout</text>
+  </svg>
+  <figcaption><span class="pv a">AUTHORED</span> Builder and reviewer loop until standards pass; what Instrument learns becomes harness code; each checkpoint keeps only checkpoint-level memory and reflects on it.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Two sides of the triangle <span>drawn once per iteration</span></h2>
+<!-- @s1.07 @s1.08 -->
+<figure class="fig">
+  <svg viewBox="0 0 1000 300" role="img" aria-label="A triangle: right side is harness history, left side is media context; the base is the iteration">
+    <path d="M500 30 L900 260 L100 260 Z" fill="none" stroke="var(--line-strong)" stroke-width="1.5"/>
+    <path d="M500 30 L900 260" stroke="var(--build)" stroke-width="3"/><path d="M500 30 L100 260" stroke="var(--cyan)" stroke-width="3"/>
+    <circle cx="500" cy="30" r="8" fill="var(--flag)"/><text x="500" y="16" text-anchor="middle" class="m" fill="var(--flag)">ITERATION N</text>
+    <text x="760" y="120" class="k" fill="var(--build)">Right side · harness history</text>
+    <text x="760" y="142" class="s">git history of the harness itself,</text><text x="760" y="160" class="s">mapped to Plan / Build / Instrument</text>
+    <text x="345" y="120" class="k" fill="var(--cyan)">Left side · media context</text>
+    <text x="345" y="142" class="s">terse indexes over large assets, blob and</text><text x="345" y="160" class="s">NoSQL stores, embeddings, codified pipelines</text>
+    <text x="345" y="178" class="s">that live inside the running repo</text>
+    <path d="M700 215 L300 215" class="e acc" stroke-dasharray="4 5" marker-end="url(#v-ahf)"/>
+    <text x="500" y="206" text-anchor="middle" class="m" fill="var(--flag)">FURNACE · right-side state drives left-side migrations</text>
+    <text x="500" y="285" text-anchor="middle" class="f">POLYGLOT LEFT SIDE · MANY WAYS TO INDEX, PARSE, MAINTAIN · A TEMPORAL VIEW FOR HUMANS</text>
+  </svg>
+  <figcaption><span class="pv a">AUTHORED</span> The media context needs migrations over time, and the state of the harness decides them.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Framed against the rules <span>revised 2026-09-26</span></h2>
+<!-- @s1.06 @s1.20 @s1.22 -->
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>Reads as</th><th>So instead</th></tr>
+    <tr><td>Image analyzer</td><td>The harness is the product. Images are the workload that makes context budgets, storage tiering and read-once transcripts hard. Nothing of ours classifies, captions or judges an image for a user.</td></tr>
+    <tr><td>Dashboard as the feature</td><td>The UI is an inspector. A human supervises; the headline is the loop and its Atlas-backed state.</td></tr>
+    <tr><td>Basic RAG</td><td>Retrieval serves the harness: Plan selects context, Instrument finds prior retrospectives. It answers no user's question.</td></tr>
+    <tr><td>Where Atlas sits</td><td>The memory and state layer: policies, checkpoints, retrospectives, media indexes, transcripts, measurements.</td></tr>
+  </table></div>
+  <figcaption><span class="pv d">DERIVED</span> From the banned list in <a href="./rules.html">Rules &amp; judging</a>; Problem Statement One, almost verbatim.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Scope today <span>in, and deliberately out</span></h2>
+<!-- @s1.08 @s1.10 @s1.14 @s1.21 -->
+<figure class="fig">
+  <div class="scope">
+    <span>images only</span><span>context maintenance</span><span>single user</span><span>hot / cold tiering</span><span>read once, trust the transcript</span>
+    <span class="no">video</span><span class="no">audio</span><span class="no">image analysis</span><span class="no">generation</span><span class="no">collaboration and roles</span><span class="no">trend analysis</span>
+  </div>
+  <figcaption><span class="pv a">AUTHORED</span> Repeated re-reading of an image is a hallucination vector; the transcript is the source of truth.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">The need <span>four problems, one processor</span></h2>
+<!-- @s1.13 @s1.09 @s1.29 -->
+<figure class="fig">
+  <div class="grid2">
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--cyan)">STORAGE</b></div><div class="pb">Hot and cold tiers for media, with relevance-driven promotion and demotion.</div></div>
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--instrument)">TRANSCRIPTS</b></div><div class="pb">Images transcribed once into durable, non-hallucinated context.</div></div>
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--build)">PIPELINES</b></div><div class="pb">Engineers who build their own extraction pipelines need large datasets organised, indexed and stratified across stores.</div></div>
+    <div class="pane"><div class="ph"><i></i><i></i><i></i><b style="color:var(--plan)">ADAPTATION</b></div><div class="pb">Media organisation is personal; the harness adapts its layout to the user over time. A supervisory macOS view stays on the roadmap.</div></div>
+  </div>
+  <figcaption><span class="pv a">AUTHORED</span> The statement of need, and the inspector as the human's supervisory mode over long-running iteration.</figcaption>
+</figure>
+
+<div class="gate"><b>Names.</b> Install loop: merge → download → build → install between machines. Instrumentation loop: everything that manages instrumentation. Furnace: the right-side state that drives left-side migrations. <a href="./view.html?f=docs/glossary.md">Glossary</a></div>
+<!-- @s1.02 @s1.07 @s1.16 -->
+
+<footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">The harness is the product. Images are the workload. The UI is an inspector.</p></footer>
+</div>
+<script>MARK.mount('#mark', { w:520, h:400 });</script>
+</body>
+</html>

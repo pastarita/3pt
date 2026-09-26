@@ -1,0 +1,40 @@
+/* 3PT · Orient leaves. The README banner's language (scripts/banner.mjs, direction D2 "Instrument
+   panel", dark, depth) as page chrome: mono eyebrows, an 800-weight headline with one coral clause,
+   the mark at the right, stage chips, the two controls. Every colour is a 3pt.css token. */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.9fr);gap:22px;align-items:center;padding:26px 0 8px;position:relative}
+.hero .eb{font:600 10.5px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+.hero .eb2{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:0 0 18px}
+.hero h1{font:800 38px/1.08 var(--sans);letter-spacing:-.018em;margin:0 0 14px;color:var(--ink);max-width:22ch}
+.hero h1 .a{color:var(--flag)}
+.hero .sub{font:400 15.5px/1.5 var(--sans);color:var(--soft);margin:0 0 20px;max-width:60ch}
+.hero .mark{position:relative;min-height:240px}
+.ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ctl .primary{background:var(--flag);color:#14100e;border:0;border-radius:10px;padding:12px 20px;font:600 14px/1 var(--sans);text-decoration:none;display:inline-block}
+.ctl .ghost{background:var(--panel);color:var(--ink);border:1.5px solid var(--line-strong);border-radius:10px;padding:11px 18px;font:600 14px/1 var(--sans);text-decoration:none;display:inline-block}
+.stage{display:inline-flex;align-items:center;border:1.5px solid;border-radius:99px;padding:6px 12px;font:600 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;background:var(--panel)}
+.stage.plan{color:var(--plan);border-color:var(--plan)} .stage.build{color:var(--build);border-color:var(--build)} .stage.instrument{color:var(--instrument);border-color:var(--instrument)} .stage.core{color:var(--cyan);border-color:var(--cyan)}
+.foot-eb{font:500 10.5px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:12px 0 0}
+/* figures: one card each, the caption wears a provenance badge */
+figure.fig{margin:14px 0 0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 12px;box-shadow:var(--shadow)}
+figure.fig svg{display:block;width:100%;height:auto}
+figure.fig figcaption{font:italic 12.5px/1.45 var(--serif);color:var(--soft);margin:8px 0 0}
+figure.fig figcaption .pv{font-style:normal;margin-right:6px}
+figure.fig .tbl-wrap{border:0;background:transparent}
+figure.fig table{font-size:12.8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+/* inspector pane, as in the banner's surfaces */
+.pane{background:var(--card);border:1px solid var(--line-strong);border-radius:8px;padding:0;overflow:hidden}
+.pane .ph{display:flex;align-items:center;gap:6px;padding:7px 12px;border-bottom:1px solid var(--line);font:600 9px/1 var(--mono);letter-spacing:.14em;color:var(--soft)}
+.pane .ph i{width:5px;height:5px;border-radius:50%;background:var(--faint);opacity:.7}
+.pane .ph b{margin-left:auto;font-weight:600}
+.pane .pb{padding:12px}
+/* svg text classes shared by the leaves' inline figures */
+svg .k{font:800 12px/1 var(--sans);fill:var(--ink)} svg .m{font:600 10px/1 var(--mono);letter-spacing:.1em;fill:var(--soft)}
+svg .s{font:500 11px/1.3 var(--sans);fill:var(--soft)} svg .f{font:500 10px/1 var(--mono);fill:var(--faint)}
+svg .e{stroke:var(--soft);stroke-width:1.3;fill:none} svg .e.acc{stroke:var(--flag)} svg .box{fill:var(--panel);stroke:var(--line-strong)}
+/* the gate row: the one control the banner promises */
+.gate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--flag);border-radius:var(--radius);padding:12px 16px;margin:18px 0 0;font-size:13.5px}
+.gate b{color:var(--ink)} .gate .st{margin-left:auto}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero .mark{order:-1;min-height:200px}.hero h1{font-size:30px}.grid2,.grid3{grid-template-columns:1fr}}
+@media(max-width:560px){.hero h1{font-size:26px}}

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Submission</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<link rel="stylesheet" href="./orient.css">
+<script src="./3pt-data.js"></script>
+<script src="./mark.js"></script>
+<style>
+  /* This leaf invents no colours; the banner's language comes from orient.css and mark.js. */
+  figure.fig td code{font-size:11px}
+  .desc .pb{font:400 13.5px/1.55 var(--sans);color:var(--ink)}
+  .desc .pb p{margin:0}
+  .desc .ph button{margin-left:auto;font-size:10px;padding:4px 9px}
+  .desc .ph b{margin-left:0}
+  pre.cmd{margin:10px 0 0;padding:10px 12px;background:var(--sand);border:1px solid var(--line);border-radius:8px;font:12px/1.5 var(--mono);color:var(--soft);overflow-x:auto;white-space:pre}
+  td .pv{margin:0}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+
+<header class="hero">
+  <div>
+    <p class="eb">3PT · Orient · DU · source of record <a href="./view.html?f=docs/18-submission.md">docs/18-submission.md</a></p>
+    <p class="eb2">Lane T5 · due 17:00 ET</p>
+    <h1>The form, the film, the claims. <span class="a">Only what a judge can open.</span></h1>
+    <p class="sub">The asks, the filming tool, eight artifacts, eleven graded claims, the order to 5 PM.</p>
+    <div class="ctl"><a class="primary" href="https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit" target="_blank" rel="noopener">Submit</a><a class="ghost" href="./checklist.html">Checklist</a>
+      <span class="stage plan">Plan</span><span class="stage build">Build</span><span class="stage instrument">Instrument</span></div>
+  </div>
+  <div class="mark" id="mark"></div>
+</header>
+<!-- @s1.04 @s1.22 -->
+
+<h2 data-cluster="orient">What the platform asks <span>event page, 14:35</span></h2>
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>Ask</th><th>Organizer's words</th><th>Where</th></tr>
+    <tr><td>Submit</td><td>"submit here when they have completed hacking"</td><td><a href="https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit" target="_blank" rel="noopener">cerebralvalley.ai · submit</a></td></tr>
+    <tr><td>Deadline</td><td>5:00 PM; judging 5:15–6:45, "~3 minutes to live demo"</td><td>Assigned rooms</td></tr>
+    <tr><td>Video</td><td>"one minute demo video" of what was built today</td><td>The form, with audio</td></tr>
+    <tr><td>Repo</td><td>"Repositories must be public"</td><td>github.com/pastarita/3pt</td></tr>
+        <tr><td>Team · link</td><td>"all team members added"; "demo link is accessible"</td><td>Not the gated hub</td></tr>
+    <tr><td>Atlas</td><td>Finalists "must build … using the MongoDB Atlas Sandbox"</td><td>Lane T1</td></tr>
+    <tr><td>Provenance</td><td>"clearly identify what was created during the event"</td><td>Commit log, README</td></tr>
+    <tr><td>Sept 30</td><td>Finalists at MongoDB.local "starting at 10 AM"</td><td>Who?</td></tr>
+  </table></div>
+  <figcaption><span class="pv d">DERIVED</span> Weights: Demo 35, Difficulty 30, Impact 20, Creativity 15. "Please do not show us a presentation."</figcaption>
+</figure>
+
+<h2 data-cluster="orient">The filming tool <span>no install, a local master</span></h2>
+<figure class="fig">
+  <svg viewBox="0 0 1000 210" role="img" aria-label="QuickTime takes, ffmpeg cut under sixty seconds, mp4, form upload; Loom or unlisted YouTube as the fallback link">
+    <defs><marker id="s-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--soft)"/></marker>
+          <marker id="s-ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--flag)"/></marker></defs>
+    <rect x="20" y="40" width="200" height="70" rx="10" class="box" stroke-width="1.5"/><text x="120" y="70" text-anchor="middle" class="k">QuickTime</text><text x="120" y="92" text-anchor="middle" class="s">screen + mic, one take per file</text>
+    <rect x="280" y="40" width="200" height="70" rx="10" class="box" stroke-width="1.5"/><text x="380" y="70" text-anchor="middle" class="k">ffmpeg</text><text x="380" y="92" text-anchor="middle" class="s">concat, cut to 60 s, aac</text>
+    <rect x="540" y="40" width="200" height="70" rx="10" class="box" stroke-width="1.5"/><text x="640" y="70" text-anchor="middle" class="k">3pt-demo-60s.mp4</text><text x="640" y="92" text-anchor="middle" class="s">~/Movies/3pt/ · faststart</text>
+    <rect x="800" y="40" width="180" height="70" rx="10" fill="var(--flag)" fill-opacity=".15" stroke="var(--flag)" stroke-width="1.5"/><text x="890" y="70" text-anchor="middle" class="k">The form</text><text x="890" y="92" text-anchor="middle" class="s">upload; check audio</text>
+    <path d="M220 75 L280 75" class="e" marker-end="url(#s-ah)"/><path d="M480 75 L540 75" class="e" marker-end="url(#s-ah)"/><path d="M740 75 L800 75" class="e acc" marker-end="url(#s-ahf)"/>
+    <rect x="540" y="140" width="200" height="50" rx="10" class="box" stroke-dasharray="4 4"/><text x="640" y="161" text-anchor="middle" class="k">Loom · YouTube unlisted</text><text x="640" y="180" text-anchor="middle" class="s">fallback link</text>
+    <path d="M640 110 L640 140" class="e" stroke-dasharray="3 4" marker-end="url(#s-ah)"/>
+    <text x="20" y="165" class="f">ALSO ON THIS MAC</text><text x="20" y="185" class="s">screencapture -v (no mic) · Loom (camera bubble) · phone camera (the on-site cut)</text>
+  </svg>
+  <pre class="cmd">ffmpeg -i take1.mov -i take2.mov -filter_complex "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1" -t 60 -c:v libx264 -crf 20 -c:a aac -movflags +faststart 3pt-demo-60s.mp4</pre>
+  <figcaption><span class="pv a">AUTHORED</span> Before upload: under 60 s, audible, terminal legible, the Atlas UI on screen once.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Artifacts <span>one file or screen per row</span></h2>
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>#</th><th>Artifact</th><th>Owner · lane</th><th>Gate</th><th>Due</th></tr>
+    <tr><td>S1</td><td>60-second video with audio</td><td>Both · T5</td><td>Audio; today's work only</td><td>16:30</td></tr>
+    <tr><td>S2</td><td>Description, under 150 words</td><td>Patrick · T5</td><td>Names Statement One, the cluster</td><td>16:15</td></tr>
+    <tr><td>S3</td><td>Public repo, today's log</td><td>Patrick · T6</td><td>History starts today</td><td>16:45</td></tr>
+    <tr><td>S4</td><td>Demo link without login</td><td>Yash · T3</td><td>200, no redirect to Access</td><td>16:00</td></tr>
+    <tr><td>S5</td><td>The live loop, three minutes</td><td>Both · T5</td><td>Two clean runs</td><td>16:30</td></tr>
+    <tr><td>S6</td><td>Q&amp;A crib</td><td>Patrick · T4</td><td>Every answer names a file</td><td>16:15</td></tr>
+    <tr><td>S7</td><td>Photo credits</td><td>Yash · T6</td><td>Every pool file has a row</td><td>done</td></tr>
+    <tr><td>S8</td><td>Both members on the form</td><td>Patrick</td><td>Sept 30 attendee named</td><td>16:45</td></tr>
+  </table></div>
+  <figcaption><span class="pv a">AUTHORED</span> <a href="./checklist.html">Checklist</a> rows C-01 to C-05 tick from here.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Claims <span>graded</span></h2>
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>#</th><th>Claim as spoken</th><th>Grade</th><th>Evidence to open</th></tr>
+    <tr><td>K1</td><td>Rules are data; the loop rewrites them each run</td><td><span class="pv d">BUILT</span></td><td><code>core</code> Policy · <code>improver</code> rewritePolicy</td></tr>
+    <tr><td>K2</td><td>Each iteration ends in a checkpoint</td><td><span class="pv d">BUILT</span></td><td><code>Checkpoint</code> type; <code>3pt loop</code> prints cp/1</td></tr>
+    <tr><td>K3</td><td>Checkpoints persist in the Sandbox cluster</td><td><span class="pv a">DUE · T1</span></td><td><code>atlasStore()</code>; the Atlas UI</td></tr>
+    <tr><td>K4</td><td>Rollback restores a prior policy</td><td><span class="pv a">DUE · T1</span></td><td><code>3pt rollback</code> reads the checkpoint</td></tr>
+    <tr><td>K5</td><td>It learns unit, level, open wall from photos</td><td><span class="pv a">DUE · T2</span></td><td><code>data/mock/acme-builders</code>; the v1 diff</td></tr>
+    <tr><td>K6</td><td>A policy compiles into a Strands harness</td><td><span class="pv d">BUILT</span></td><td><code>harness/packages/strands</code>; docs/12</td></tr>
+    <tr><td>K7</td><td>"Sixteen thousand photos once", "fifty labelled"</td><td><span class="pv c">SIMULATED</span></td><td><code>sim-data.js</code>, fixed seed</td></tr>
+    <tr><td>K8</td><td>"It undoes that one by itself"</td><td><span class="pv c">SIMULATED</span></td><td>The real rollback is K4</td></tr>
+    <tr><td>K9</td><td>"One tap, it becomes a tool"</td><td><span class="pv c">SIMULATED</span></td><td>No tool-grant rewrite today</td></tr>
+    <tr><td>K10</td><td>20 real NYC records; 144 licensed photos</td><td><span class="pv d">BUILT</span></td><td><code>data/mock/README.md</code>; CREDITS.md</td></tr>
+    <tr><td>K11</td><td>Everything was built today</td><td><span class="pv d">BUILT</span></td><td>First commit 12:46 ET; checklist A-03</td></tr>
+  </table></div>
+  <figcaption><span class="pv d">DERIVED</span> K7–K9 say "simulated" on screen, or are cut.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Priority order <span>rows above must be green or parked</span></h2>
+<figure class="fig">
+  <svg viewBox="0 0 1000 300" role="img" aria-label="Priority ladder from P0 to park with slot times">
+    <path d="M60 30 L60 250" stroke="var(--line-strong)" stroke-width="2"/>
+    <g><circle cx="60" cy="40" r="7" fill="var(--flag)"/><text x="85" y="36" class="m" fill="var(--flag)">P0 · 15:15 · 15:30</text><text x="85" y="56" class="s">Sandbox cluster, ATLAS_URI on both machines · pull Yash, reconcile the skill, commit the tree, push · main green</text></g>
+    <g><circle cx="60" cy="95" r="7" fill="var(--build)"/><text x="85" y="91" class="m" fill="var(--build)">P1 · 15:45 · 16:00</text><text x="85" y="111" class="s">rollback reads the checkpoint · media_index seeded, one Instrument pass names the fields · raw takes recorded</text></g>
+    <g><circle cx="60" cy="150" r="7" fill="var(--cyan)"/><text x="85" y="146" class="m" fill="var(--cyan)">P2 · 16:00 · 16:30</text><text x="85" y="166" class="s">app reads versions from Atlas, ungated link · cut the video, write the description, rehearse twice</text></g>
+    <g><circle cx="60" cy="205" r="7" fill="var(--plan)"/><text x="85" y="201" class="m" fill="var(--plan)">P3 · 16:15 · 16:45</text><text x="85" y="221" class="s">Strands journey leaf and Q&amp;A crib · checklist rows ticked, CI secrets set</text></g>
+    <g><circle cx="60" cy="250" r="7" fill="none" stroke="var(--faint)" stroke-dasharray="2 2"/><text x="85" y="246" class="m" fill="var(--faint)">PARK · say "next" in Q&amp;A</text><text x="85" y="266" class="s">Strands compiled · Kiro as second builder · automatic rollback · tool-grant rewrite</text></g>
+    <text x="980" y="290" text-anchor="end" class="f">FREEZE 16:45 · SUBMIT BY 16:50 · THE PLATFORM CONFIRMS, NOT THE CLOCK</text>
+  </svg>
+  <figcaption><span class="pv a">AUTHORED</span> If T1 slips, T3 demos on the memory store.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Description for the form <span>fill the cluster name from T1</span></h2>
+<figure class="fig">
+  <div class="pane desc"><div class="ph"><i></i><i></i><i></i><b style="color:var(--cyan)">DESCRIPTION</b><button id="copy">Copy</button></div>
+    <div class="pb" id="desc"><p><b>3PT (Three Point Harness)</b> is a self-improving harness for coding agents, built today for Problem Statement One, Recursive Harnessing. Three stages, Plan → Build → Instrument, run in a loop. Instrument rewrites the harness's own rules, context policies, and tool grants as data.</p>
+    <p>Every iteration ends in a checkpoint (git sha, policy version, metrics, retrospective) persisted to the MongoDB Atlas Sandbox cluster [cluster name]. Roll back to any checkpoint and the harness runs the earlier policy.</p>
+    <p>The workload is media-heavy: a construction firm's site photos (144 openly licensed images, 20 real NYC building records), which stress memory, storage tiering, and context policy. 3PT compiles a policy into an AWS Strands harness instead of owning its own loop.</p>
+    <p>Everything in the repo was written today: monorepo, harness, Atlas battery, sandbox provisioning, the inspector app, and the docs of record. Team: Patrick Astarita, Yash Kothari.</p></div>
+  </div>
+  <figcaption><span class="pv a">AUTHORED</span> One bracket to fill.</figcaption>
+</figure>
+
+<h2 data-cluster="orient">Q&amp;A crib <span>each answer names a file</span></h2>
+<figure class="fig">
+  <div class="tbl-wrap"><table>
+    <tr><th>Likely question</th><th>Answer · file to open</th></tr>
+    <tr><td>What did the harness change about itself?</td><td>The v0 → v1 policy diff · <code>harness/packages/improver</code></td></tr>
+    <tr><td>Where is that stored?</td><td>The Sandbox cluster · <code>COLLECTIONS</code> in core</td></tr>
+    <tr><td>How do you roll back?</td><td>From the checkpoint · <code>harness/apps/cli</code></td></tr>
+    <tr><td>Why not just prompts?</td><td>State machine, checkpoints, a policy compiler · docs/07, docs/12</td></tr>
+    <tr><td>Isn't this an image analyzer?</td><td>Images are the workload; nothing classifies them for a user · docs/05</td></tr>
+    <tr><td>What is simulated?</td><td>The Simulator; the loop is real · <code>data/mock/README.md</code></td></tr>
+    <tr><td>What was built before today?</td><td>Nothing; first commit 12:46 ET · checklist A-03</td></tr>
+    <tr><td>What is next?</td><td>Strands compiled, automatic rollback · docs/17 §5</td></tr>
+  </table></div>
+  <figcaption><span class="pv a">AUTHORED</span> After the demo.</figcaption>
+</figure>
+
+<div class="gate"><b>Freeze 16:45.</b> Submit by 16:50 at <a href="https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit" target="_blank" rel="noopener">the form</a>; its confirmation closes lane T5.</div>
+
+<footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Only what a judge can open.</p></footer>
+</div>
+<script>
+MARK.mount('#mark', { w:520, h:400 });
+document.getElementById('copy').addEventListener('click', function(){
+  var t = document.getElementById('desc').innerText, b = this;
+  var done = function(){ b.textContent = 'Copied'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(done); else done();
+});
+</script>
+</body>
+</html>

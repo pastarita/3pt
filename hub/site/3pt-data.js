@@ -30,15 +30,15 @@
   /* The Register — one record per document of record. id = spoken ordinal, slug = join key
      (stable forever), doc = the markdown source read through view.html?f= */
   T.DOCS = [
-    { id:'D0', slug:'vision',         name:'Vision',               verb:'Framing',   cluster:'orient', temp:'warm', doc:'docs/00-vision.md',
+    { id:'D0', slug:'vision-doc',         name:'Vision',               verb:'Framing',   cluster:'orient', temp:'warm', doc:'docs/00-vision.md',
       epigram:'Plan, Build, Instrument. The harness is the product; images are the workload.' },
-    { id:'D6', slug:'goal',           name:'Goal & use case',      verb:'Aiming',    cluster:'orient', temp:'warm', doc:'docs/06-goal-and-use-case.md',
+    { id:'D6', slug:'goal-doc',           name:'Goal & use case',      verb:'Aiming',    cluster:'orient', temp:'warm', doc:'docs/06-goal-and-use-case.md',
       epigram:'More valuable the longer it runs. The interior-design firm, and the screen as onboarding.' },
-    { id:'D5', slug:'rules',          name:'Rules & judging',      verb:'Complying', cluster:'orient', temp:'hot',  doc:'docs/05-rules.md',
+    { id:'D5', slug:'rules-doc',          name:'Rules & judging',      verb:'Complying', cluster:'orient', temp:'hot',  doc:'docs/05-rules.md',
       epigram:'Banned: image analyzers, dashboards as the feature, basic RAG. Due 5:00 PM.' },
-    { id:'DL', slug:'checklist',      name:'Open-source checklist', verb:'Clearing',  cluster:'orient', temp:'hot',  doc:'docs/15-open-source-checklist.md',
+    { id:'DL', slug:'checklist-doc',      name:'Open-source checklist', verb:'Clearing',  cluster:'orient', temp:'hot',  doc:'docs/15-open-source-checklist.md',
       epigram:'Admissibility, hygiene, the submission package. Every row wears a status and names the command that checks it.' },
-    { id:'DU', slug:'submission',     name:'Submission',           verb:'Filing',    cluster:'orient', temp:'hot',  doc:'docs/18-submission.md',
+    { id:'DU', slug:'submission-doc',     name:'Submission',           verb:'Filing',    cluster:'orient', temp:'hot',  doc:'docs/18-submission.md',
       epigram:'What the platform asks, the filming tool, the artifacts, the claims with their evidence, the priority order to 5 PM.' },
     { id:'DQ', slug:'decisions',      name:'Group decisions',      verb:'Deciding',  cluster:'decide', temp:'hot',  doc:'docs/12-decisions.md',
       epigram:'Nine domains, a few questions each, a default if time runs out, and a blank line for the answer.' },

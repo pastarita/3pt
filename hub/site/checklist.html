@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Open-source checklist</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<link rel="stylesheet" href="./orient.css">
+<script src="./3pt-data.js"></script>
+<script src="./mark.js"></script>
+<style>
+  /* This leaf invents no colours; the ledgers are data in the script below, transcribed from docs/15. */
+  .ledger td.id{font:700 11px/1.4 var(--mono);color:var(--faint);white-space:nowrap}
+  .ledger td.it{min-width:220px} .ledger td.it b{color:var(--ink)}
+  .ledger td.ev{color:var(--soft);font-size:12.3px} .ledger td.ev code{font-size:11px}
+  .ledger tr.done td.it{color:var(--soft)} .ledger tr.done td.it::before{content:"●";color:var(--good);font-family:var(--mono);margin-right:8px}
+  .ledger tr.todo td.it::before{content:"○";color:var(--faint);font-family:var(--mono);margin-right:8px}
+  .ledger td.gr{white-space:nowrap}
+  .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .strip .stat .n small{font:600 13px/1 var(--mono);color:var(--faint);margin-left:4px}
+  .strip .stat .bar{height:4px;border-radius:2px;background:var(--line);margin:8px 0 0;overflow:hidden}
+  .strip .stat .bar i{display:block;height:100%;background:var(--good)}
+  .export{display:none;background:var(--sand);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:12px/1.5 var(--mono);white-space:pre-wrap;margin:12px 0 0;color:var(--soft)}
+  @media(max-width:760px){.strip{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+
+<header class="hero">
+  <div>
+    <p class="eb">3PT · Orient · DL · source of record <a href="./view.html?f=docs/15-open-source-checklist.md">docs/15-open-source-checklist.md</a></p>
+    <p class="eb2">Three ledgers · status at last pass 14:00 ET</p>
+    <h1>Admissible, publishable, filed. <span class="a">Every row names the command that checks it.</span></h1>
+    <p class="sub">What the hackathon requires, what an open-source release requires on top, and what the form takes. Tick the box when done; keep the status honest.</p>
+    <div class="ctl"><button class="primary" id="copy">Copy open rows as text</button><a class="ghost" href="./submission.html">Submission</a>
+      <span class="stage plan">A · admissibility</span><span class="stage build">B · hygiene</span><span class="stage instrument">C · package</span></div>
+  </div>
+  <div class="mark" id="mark"></div>
+</header>
+<!-- @s1.22 -->
+
+<figure class="fig">
+  <div class="strip" id="strip"></div>
+  <figcaption><span class="pv d">DERIVED</span> Counted from the rows below at render time. <span class="pv d">DERIVED</span> was checked by a command; <span class="pv a">AUTHORED</span> is our decision; <span class="pv c">TO CONFIRM</span> needs a human.</figcaption>
+</figure>
+<pre class="export" id="out"></pre>
+
+<h2 data-cluster="orient">A · Admissibility <span>hard requirements, from <a href="./rules.html">Rules &amp; judging</a></span></h2>
+<figure class="fig"><div class="tbl-wrap"><table class="ledger" id="tblA"></table></div>
+  <figcaption><span class="pv a">AUTHORED</span> A-04 is the finalist gate: the Sandbox cluster, a checkpoint in it, on screen.</figcaption></figure>
+
+<h2 data-cluster="orient">B · Open-source hygiene <span>what a public MIT repo owes</span></h2>
+<figure class="fig"><div class="tbl-wrap"><table class="ledger" id="tblB"></table></div>
+  <figcaption><span class="pv a">AUTHORED</span> Licenses, secrets, fonts, emails, photo rights, the transcript, the mirrored guide.</figcaption></figure>
+
+<h2 data-cluster="orient">C · Submission package <span>Cerebral Valley platform, due 5:00 PM ET</span></h2>
+<figure class="fig"><div class="tbl-wrap"><table class="ledger" id="tblC"></table></div>
+  <figcaption><span class="pv a">AUTHORED</span> Never send judges a gated link; the demo runs locally or on a public preview.</figcaption></figure>
+
+<h2 data-cluster="orient">Verification <span>run before submitting</span></h2>
+<figure class="fig">
+  <svg viewBox="0 0 1000 200" role="img" aria-label="Five verification commands in a row, each with a pass dot: git log since today, secret grep, pnpm licenses, make check, prov check">
+    <defs><marker id="c-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--soft)"/></marker></defs>
+    <g transform="translate(20,40)"><rect width="176" height="86" rx="10" class="box" stroke-width="1.5"/><circle cx="18" cy="20" r="5" fill="var(--good)"/><text x="32" y="24" class="m">A-01 · A-02</text><text x="14" y="50" class="k">gh repo view</text><text x="14" y="70" class="s">git log --reverse · first commit today</text></g>
+    <g transform="translate(216,40)"><rect width="176" height="86" rx="10" class="box" stroke-width="1.5"/><circle cx="18" cy="20" r="5" fill="var(--good)"/><text x="32" y="24" class="m">B-03 · B-07</text><text x="14" y="50" class="k">git grep secrets</text><text x="14" y="70" class="s">tokens, PEM headers, emails</text></g>
+    <g transform="translate(412,40)"><rect width="176" height="86" rx="10" class="box" stroke-width="1.5"/><circle cx="18" cy="20" r="5" fill="var(--good)"/><text x="32" y="24" class="m">B-05 · B-06</text><text x="14" y="50" class="k">pnpm licenses list</text><text x="14" y="70" class="s">no GPL, unknown · OFL beside fonts</text></g>
+    <g transform="translate(608,40)"><rect width="176" height="86" rx="10" class="box" stroke-width="1.5"/><circle cx="18" cy="20" r="5" fill="var(--warn)"/><text x="32" y="24" class="m">MAIN</text><text x="14" y="50" class="k">make check</text><text x="14" y="70" class="s">turbo build · hub lints · tersity</text></g>
+    <g transform="translate(804,40)"><rect width="176" height="86" rx="10" class="box" stroke-width="1.5"/><circle cx="18" cy="20" r="5" fill="var(--good)"/><text x="32" y="24" class="m">DOCS</text><text x="14" y="50" class="k">prov.mjs --check</text><text x="14" y="70" class="s">every cite resolves</text></g>
+    <path d="M196 83 L216 83" class="e" marker-end="url(#c-ah)"/><path d="M392 83 L412 83" class="e" marker-end="url(#c-ah)"/><path d="M588 83 L608 83" class="e" marker-end="url(#c-ah)"/><path d="M784 83 L804 83" class="e" marker-end="url(#c-ah)"/>
+    <text x="20" y="160" class="f">● PASSED AT LAST PASS · ● NOT YET RUN OR RED · THE FULL COMMAND BLOCK IS AT THE FOOT OF DOCS/15</text>
+    <text x="500" y="185" text-anchor="middle" class="m" fill="var(--flag)">FREEZE 16:45 · SUBMIT BY 16:50 · THE PLATFORM CONFIRMS, NOT THE CLOCK</text>
+  </svg>
+  <figcaption><span class="pv a">AUTHORED</span> The verification block from the foot of the doc, as a pipeline. Green was checked on 2026-09-26; amber has not been run on the merged tree.</figcaption>
+</figure>
+
+<div class="gate"><b>Freeze.</b> At 16:45 <code>main</code>, the hub, the video and the form stop moving. Open rows after that are narrated, not fixed. <a href="./view.html?f=docs/17-term-2-lanes.md">Term 2 lanes</a><span class="st s2">◐</span></div>
+
+<footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">A row without evidence is a wish. Keep the status honest.</p></footer>
+</div>
+<script>
+(function(){
+  var T = window.T, esc = T.esc;
+  /* AUTHORED · transcribed from docs/15-open-source-checklist.md at 14:00 ET. The doc is the source of record;
+     edit there, then here. status: done | todo. grade: d DERIVED · a AUTHORED · c TO CONFIRM */
+  var ROWS = [
+    ['A','A-01','done','d','Repository is <b>public</b>','<code>gh repo view pastarita/3pt</code> → PUBLIC'],
+    ['A','A-02','done','d','<b>New work only.</b> Every commit is dated today','<code>git log --reverse</code> first commit 2026-09-26 11:56 ET'],
+    ['A','A-03','done','d','No pre-existing project code imported; public libraries only','Strands, Turborepo, MongoDB driver arrive as npm dependencies; <code>harness/packages/strands</code> is our compiler over them'],
+    ['A','A-04','todo','c','<b>MongoDB Atlas is a core component</b>, running in the <b>Atlas Hackathon Sandbox</b>','Sandbox cluster not yet created. Set <code>ATLAS_URI</code> from the Sandbox, run <code>3pt loop</code>, show a checkpoint in <code>checkpoints</code>'],
+    ['A','A-05','todo','a','Demo shows features, code, functionality, <b>not a presentation</b>','Live: the loop runs, Instrument rewrites a policy, checkpoint lands in Atlas, roll back'],
+    ['A','A-06','todo','a','Not an image analyzer, dashboard, or basic RAG','Headline is the recursive loop; images are the workload; UI is an inspector'],
+    ['A','A-07','todo','c','<b>Rights to all code, data, and assets</b>','Code: ours + MIT/Apache deps (B-05). Assets: fonts (B-06), banner (ours). Data: the corpus must be ours or CC0 (B-08)'],
+    ['A','A-08','todo','c','<b>All team members on the submission</b> and on the repo','Yash Kothari as collaborator on <code>pastarita/3pt</code>; both names on the form'],
+    ['A','A-09','todo','d','Team size ≤ 4','Two: Patrick Astarita, Yash Kothari'],
+    ['A','A-10','todo','a','Problem statement named in the description','Statement 1, Recursive Harnessing; Statement 2 touched via checkpoint memory'],
+    ['B','B-01','done','d','<b>License file</b> at the root','<code>LICENSE</code>, MIT, copyright Patrick Astarita and Yash Kothari'],
+    ['B','B-02','done','d','<code>license</code> field in the root <code>package.json</code>','<code>"license": "MIT"</code>'],
+    ['B','B-03','done','d','<b>No secrets in the tree or the history</b>','<code>git log --all -- .env</code> empty; token-pattern grep empty; <code>.env</code> gitignored'],
+    ['B','B-04','done','d','Hub credentials never in the repo','<code>ACCESS_PASS</code>, Cloudflare tokens live in Pages secrets and <code>~/.config/3pt/</code>; the middleware verifies, never embeds'],
+    ['B','B-05','done','d','<b>Third-party licenses compatible</b> with MIT','Strands is Apache-2.0, consumed as a dependency. Run <code>pnpm licenses list</code>; no GPL, AGPL or unknown'],
+    ['B','B-06','done','d','<b>Vendored fonts carry their license</b>','<code>hub/site/fonts/</code>: all SIL OFL 1.1 upstream. Ship the OFL text beside them via <code>hub/tools/vendor-fonts.sh</code>'],
+    ['B','B-07','todo','c','<b>Personal emails in a public repo</b>: keep or redact','CLAUDE.md, AGENTS.md, hub/README.md, the middleware list team addresses; the rules doc has the organizer email and the venue SSID. Decision: redact the gmails, drop the SSID'],
+    ['B','B-08','todo','c','<b>Demo image corpus rights</b>','The team’s own site photos or a CC0 set; name the source in <code>docs/06-goal-and-use-case.md</code>'],
+    ['B','B-09','todo','c','<b>Transcript consent</b>: <code>brainstorming.md</code> is both people’s speech, public','Yash agrees to publish Session 1 verbatim; <code>scripts/prompts.mjs</code> redacts secrets from appended sessions'],
+    ['B','B-10','todo','c','<b>Verbatim copy of the organizer’s resource guide</b>','<code>docs/sources/hackathon-resource-guide.md</code> mirrors a Google Doc. Keep with its source line, or replace with the link'],
+    ['B','B-11','todo','d','README states license, team, and how to run','<code>README.md</code> § Team, § License, § Hub workspace; install loop in <code>docs/03-workflow.md</code>'],
+    ['C','C-01','todo','d','Public repo link','https://github.com/pastarita/3pt'],
+    ['C','C-02','todo','a','1-minute demo video <b>with audio</b>','Tool, cut and gate in <code>docs/18-submission.md</code> §2–3; record the live loop, not slides'],
+    ['C','C-03','todo','a','Description: what, problem statement, Atlas role, what was built today','Text ready in <code>docs/18-submission.md</code> §6; fill the cluster name from T1'],
+    ['C','C-04','todo','c','Both members added','A-08'],
+    ['C','C-05','todo','c','Demo link accessible to judges','The hub is behind Access by design; the demo runs locally or on a public preview']
+  ];
+  var LEDGER = { A:'A · Admissibility', B:'B · Open-source hygiene', C:'C · Submission package' };
+  var GRADE = { d:['d','DERIVED'], a:['a','AUTHORED'], c:['c','TO CONFIRM'] };
+  function table(L){
+    var rows = ROWS.filter(function(r){ return r[0]===L; });
+    return '<tr><th>id</th><th>Item</th><th>Status</th><th>Evidence · where</th></tr>' + rows.map(function(r){
+      var g = GRADE[r[3]];
+      return '<tr class="'+r[2]+'"><td class="id">'+esc(r[1])+'</td><td class="it">'+r[4]+'</td><td class="gr"><span class="pv '+g[0]+'">'+g[1]+'</span></td><td class="ev">'+r[5]+'</td></tr>';
+    }).join('');
+  }
+  function strip(){
+    var keys = ['A','B','C'], tot = 0, done = 0, out = '';
+    keys.forEach(function(L){
+      var rows = ROWS.filter(function(r){ return r[0]===L; }), d = rows.filter(function(r){ return r[2]==='done'; }).length;
+      tot += rows.length; done += d;
+      out += '<div class="stat"><div class="n">'+d+'<small>/ '+rows.length+'</small></div><div class="l">'+esc(LEDGER[L])+' · '+(rows.length-d)+' open</div><div class="bar"><i style="width:'+Math.round(100*d/rows.length)+'%"></i></div></div>';
+    });
+    out += '<div class="stat"><div class="n">'+done+'<small>/ '+tot+'</small></div><div class="l">all ledgers · '+(tot-done)+' rows open</div><div class="bar"><i style="width:'+Math.round(100*done/tot)+'%"></i></div></div>';
+    return out;
+  }
+  document.getElementById('strip').innerHTML = strip();
+  ['A','B','C'].forEach(function(L){ document.getElementById('tbl'+L).innerHTML = table(L); });
+  document.getElementById('copy').onclick = function(){
+    var out = document.getElementById('out'), div = document.createElement('div');
+    var lines = ROWS.filter(function(r){ return r[2]!=='done'; }).map(function(r){ div.innerHTML = r[4]; var item = div.textContent; div.innerHTML = r[5]; return '○ '+r[1]+' '+item+' — '+GRADE[r[3]][1]+' — '+div.textContent; });
+    out.textContent = '3PT checklist · open rows · ' + new Date().toISOString().slice(0,16).replace('T',' ') + '\n' + lines.join('\n');
+    out.style.display = out.style.display==='block' ? 'none' : 'block';
+    if (navigator.clipboard) navigator.clipboard.writeText(out.textContent);
+  };
+  MARK.mount('#mark', { w:520, h:400, focus:'build' });
+})();
+</script>
+</body>
+</html>

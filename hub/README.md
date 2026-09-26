@@ -27,6 +27,23 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 | `wrangler.jsonc`, `Makefile` | Deploy config and targets. |
 | `_site/` | Generated. Gitignored. |
 
+
+## The Published bar and the orient leaves
+
+Every leaf carries a second strip under the Shell, **Published**: each surface of this project that
+exists outside the repo (hub, repo, Atlas Sandbox, demo link, video, submission form) with its state
+(`live` · `public` · `gated` · `open` · `pending`). It is AUTHORED in `site/nav.js` `PUBLISHED` and the
+steward updates it at each checkpoint (`docs/17-term-2-lanes.md` §1 K2). Leaves fetch nothing, so the
+bar never probes a URL; a state is a claim someone made, and it says so.
+
+The orient cluster is rendered twice: a **leaf** per subject (`vision`, `goal`, `use-case`, `rules`,
+`checklist`, `submission`) in the README banner's language (`site/orient.css`, the mark from
+`site/mark.js`, a port of `scripts/banner.mjs`), and the **document twin** (`vision-doc` …) that routes
+through the Viewer and carries the Register id. A leaf links its source of record in the eyebrow and
+never restates it; it draws it. Adding a leaf for another document follows the three moves plus the
+twin: register `<slug>` as the leaf and `<slug>-doc` in `ROUTE`, alias the glyph, move the Register
+slug to the twin.
+
 ## Working it
 
 ```sh

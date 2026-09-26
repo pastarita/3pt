@@ -17,6 +17,7 @@
     'goal':           g('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3.5v3M20.5 12h-3"/>'),
     'rules':          g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
     'submission':     g('<rect x="4" y="5" width="16" height="12" rx="2"/><path d="M4 9l8 5 8-5"/><path d="M9 21h6"/>'),
+    'use-case':       g('<path d="M3 20h18"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/>'),
     'checklist':      g('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6Z"/><path d="M9 12l2 2 4-4"/>'),
     'decisions':      g('<path d="M12 4v16"/><path d="M5 8l7-4 7 4"/><path d="M4 14h5l1.5 3h3L15 14h5"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/>'),
     'icp-explorer':   g('<path d="M4 20V10M9 20V5M14 20v-8M19 20V7"/><path d="M2.5 20h19"/><circle cx="9" cy="5" r="1.3" fill="currentColor"/>'),
@@ -66,9 +67,13 @@
 
   /* Sidebar entries: [slug, label, id?]. id is the spoken ordinal rendered in the row.
      REGISTERING A LEAF = ONE ENTRY HERE. */
+  /* document twins of the orient leaves share the leaf's glyph */
+  ['vision','goal','rules','checklist','submission'].forEach(function(k){ GLYPH[k+'-doc'] = GLYPH[k]; });
+
   var GROUPS = [
     ['',       [['index','Hub']]],
-    ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5'], ['checklist','Open-source checklist','DL'], ['submission','Submission','DU']]],
+    ['orient', [['vision','Vision'], ['goal','Goal'], ['use-case','Use case'], ['rules','Rules & judging'], ['checklist','Open-source checklist'], ['submission','Submission'],
+                ['vision-doc','Vision doc','D0'], ['goal-doc','Goal & use case doc','D6'], ['rules-doc','Rules doc','D5'], ['checklist-doc','Checklist doc','DL'], ['submission-doc','Submission doc','DU']]],
     ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['design-spec','Design system spec','DK'], ['sketches','Sketch gallery'], ['icons','Icons'], ['components','Components'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
     ['build', [['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['strands-journey','Strands, answered'], ['strands-questions','Strands questions','DJ'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
@@ -78,11 +83,11 @@
     'ci':             'view.html?f=docs/13-ci-and-deployment.md',
     'design-spec':    'view.html?f=docs/19-design-system-spec.md',
     'setup-doc':      'view.html?f=docs/14-setup-cascade.md',
-    'vision':         'view.html?f=docs/00-vision.md',
-    'goal':           'view.html?f=docs/06-goal-and-use-case.md',
-    'rules':          'view.html?f=docs/05-rules.md',
-    'checklist':      'view.html?f=docs/15-open-source-checklist.md',
-    'submission':     'view.html?f=docs/18-submission.md',
+    'vision-doc':     'view.html?f=docs/00-vision.md',
+    'goal-doc':       'view.html?f=docs/06-goal-and-use-case.md',
+    'rules-doc':      'view.html?f=docs/05-rules.md',
+    'checklist-doc':  'view.html?f=docs/15-open-source-checklist.md',
+    'submission-doc': 'view.html?f=docs/18-submission.md',
     'decisions':      'view.html?f=docs/12-decisions.md',
     'icp-directions': 'view.html?f=docs/08-icp-directions.md',
     'assessment':     'view.html?f=docs/07-assessment-and-measurement.md',
@@ -100,8 +105,20 @@
     'charter':        'view.html?f=README.md',
     'provenance':     'view.html?f=docs/09-provenance.md'
   };
+  /* PUBLISHED: every surface of this project that exists outside the repo, with its state. AUTHORED;
+     the steward edits it at each checkpoint (docs/17 §1 K2). state: live | gated | public | open | pending */
+  var PUBLISHED = [
+    { k:'hub',    label:'Hub',            url:'https://3pt.pages.dev',                                              state:'gated',   note:'Access · PIN' },
+    { k:'repo',   label:'Repo',           url:'https://github.com/pastarita/3pt',                                   state:'public',  note:'MIT' },
+    { k:'atlas',  label:'Atlas Sandbox',  url:'',                                                                   state:'pending', note:'T1 · cluster' },
+    { k:'demo',   label:'Demo link',      url:'',                                                                   state:'pending', note:'T3 · ungated' },
+    { k:'video',  label:'Video',          url:'',                                                                   state:'pending', note:'T5 · 60 s' },
+    { k:'form',   label:'Submission',     url:'https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit', state:'open',    note:'due 17:00 ET' }
+  ];
+  var PUBSTATE = { live:['●','#3fb886'], public:['●','#3fb886'], gated:['◐','#e0a33a'], open:['◐','#e0a33a'], pending:['○','#6b7684'] };
+
   var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
-  var FRESH = { 'tour':1, 'app':1, 'sim':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1, 'ci':1, 'icons':1, 'components':1, 'setup':1, 'checklist':1, 'submission':1, 'sketches':1, 'strands-journey':1 }; /* retire at next check-in */
+  var FRESH = { 'vision':1, 'goal':1, 'use-case':1, 'rules':1, 'tour':1, 'app':1, 'sim':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1, 'ci':1, 'icons':1, 'components':1, 'setup':1, 'checklist':1, 'submission':1, 'sketches':1, 'strands-journey':1 }; /* retire at next check-in */
 
   /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
   function href(s){
@@ -110,7 +127,7 @@
     return /\/$/.test(d) ? './'+d+'index.html' : './'+d+s+'.html';
   }
 
-  G.TPTNAV = { GROUPS:GROUPS, GLYPH:GLYPH, CLUSTERS:CLUSTERS, ROUTE:ROUTE, PATH:PATH, FRESH:FRESH, href:href };
+  G.TPTNAV = { GROUPS:GROUPS, GLYPH:GLYPH, CLUSTERS:CLUSTERS, ROUTE:ROUTE, PATH:PATH, FRESH:FRESH, PUBLISHED:PUBLISHED, href:href };
   if (typeof document === 'undefined') return;   /* node: registry only */
 
   /* current-page detection: viewer routes match on pathname+search, else on the bare slug */
@@ -153,7 +170,14 @@
    +"#tptnav .nv-wrap{position:absolute;top:48px;left:0;right:0;background:#0b0e12;box-shadow:0 10px 24px rgba(0,0,0,.5);display:none;padding:0 0 12px;z-index:100001;max-height:calc(100vh - 48px);overflow-y:auto}"
    +"#tptnav.open .nv-wrap{display:block}#tptnav .nv-links a{padding:13px 18px;font-size:14px}"
    +"}"
-   +"@media print{#tptnav{display:none!important}body{margin-left:0!important}}";
+   +"#tptpub{position:sticky;top:0;z-index:99999;display:flex;align-items:center;gap:4px;padding:0 14px;height:34px;background:rgba(11,14,18,.92);backdrop-filter:blur(6px);border-bottom:1px solid #1e252e;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:#a3adbb;overflow-x:auto;white-space:nowrap;scrollbar-width:none}"
+   +"#tptpub .pb-t{color:#6b7684;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-right:8px;flex:none}"
+   +"#tptpub a,#tptpub span.pb-i{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:6px;color:#a3adbb;text-decoration:none;flex:none}"
+   +"#tptpub a:hover{background:rgba(255,255,255,.06);color:#fff}#tptpub span.pb-i{opacity:.75}"
+   +"#tptpub i{font-style:normal;font-size:12px;line-height:1}#tptpub b{font-weight:700;color:#e6e9ee}#tptpub span.pb-i b{color:#a3adbb}#tptpub small{font-size:9.5px;color:#6b7684}"
+   +"#tptpub .pb-n{margin-left:auto;color:#4c5663;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;flex:none;padding-left:12px}"
+   +"@media(max-width:900px){#tptpub{top:48px}}"
+   +"@media print{#tptnav,#tptpub{display:none!important}body{margin-left:0!important}}";
 
   function run(){
     if (document.getElementById('tptnav')) return;
@@ -177,6 +201,13 @@
       +'<button class="nv-min" title="Collapse / expand sidebar">⇤⇥</button>'
       +'<div class="nv-ft">Hackathon · Sep 26 2026</div>';
     document.body.insertBefore(nav, document.body.firstChild);
+    /* the Published bar: what exists outside the repo, and its state, on every leaf */
+    var pub=document.createElement('div'); pub.id='tptpub'; pub.setAttribute('role','navigation'); pub.setAttribute('aria-label','Published surfaces');
+    pub.innerHTML='<span class="pb-t">Published</span>'+PUBLISHED.map(function(p){ var st=PUBSTATE[p.state]||PUBSTATE.pending;
+      var inner='<i style="color:'+st[1]+'">'+st[0]+'</i><b>'+p.label+'</b><small>'+p.state+(p.note?' · '+p.note:'')+'</small>';
+      return p.url ? '<a href="'+p.url+'" target="_blank" rel="noopener">'+inner+'</a>' : '<span class="pb-i">'+inner+'</span>'; }).join('')
+      +'<span class="pb-n">authored · nav.js PUBLISHED</span>';
+    nav.parentNode.insertBefore(pub, nav.nextSibling);
     try{ if (localStorage.getItem('tpt_nav')==='min') document.documentElement.classList.add('navmin'); }catch(e){}
     nav.querySelector('.nv-min').addEventListener('click',function(){
       var m=document.documentElement.classList.toggle('navmin');
