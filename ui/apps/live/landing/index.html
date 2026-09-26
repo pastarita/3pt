@@ -19,7 +19,7 @@ img{display:block;max-width:100%}
 .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
 .btn{display:inline-flex;align-items:center;gap:8px;font:650 15px/1 var(--sans);padding:14px 20px;border-radius:10px;text-decoration:none;border:1px solid var(--lineStrong);background:rgba(15,18,22,.55);backdrop-filter:blur(6px);transition:transform .12s,border-color .12s}
 .btn:hover{transform:translateY(-1px);border-color:var(--soft)}
-.btn--primary{background:var(--flag);border-color:var(--flag);color:#fff}
+.btn--primary{background:var(--flag);border-color:var(--flag);color:#0f1216}
 .btn--primary:hover{border-color:#fff}
 :focus-visible{outline:2px solid var(--flag);outline-offset:3px}
 .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
@@ -34,17 +34,53 @@ nav .links a{text-decoration:none}nav .links a:hover{color:var(--ink)}
 nav .btn{padding:10px 14px;font-size:14px}
 
 /* hero */
-.hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 40%}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,18,22,.95) 0%,rgba(15,18,22,.6) 40%,rgba(15,18,22,0) 70%),linear-gradient(0deg,var(--bg) 0%,transparent 35%)}
-.hero .wrap{position:relative;z-index:1;padding-bottom:12vh;width:100%}
-.hero h1{font-size:clamp(44px,7.4vw,92px);line-height:.98;letter-spacing:-.03em;margin:18px 0 22px;max-width:13ch}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:110px 0 70px}
+.hero__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:80% 40%;opacity:.16}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 0%,transparent 25%)}
+.hero .wrap{position:relative;z-index:1;width:100%}
+.hero__grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center}
+.hero h1{font-size:clamp(40px,5.2vw,72px);line-height:1.02;letter-spacing:-.03em;margin:18px 0 22px;max-width:14ch}
 .hero h1 em{font-style:normal;color:var(--flag)}
 .hero p{font-size:clamp(18px,2vw,21px);color:var(--soft);max-width:36em;margin:0 0 32px}
 .ctas{display:flex;flex-wrap:wrap;gap:12px}
 
+
+/* the device: a real site photo with the app's own words on top */
+.device{position:relative;aspect-ratio:4/5;border-radius:26px;overflow:hidden;border:1px solid var(--lineStrong);box-shadow:0 40px 100px rgba(0,0,0,.55);background:var(--card)}
+.device > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.device::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,17,23,.75) 0%,transparent 22%,transparent 45%,rgba(12,17,23,.92) 100%)}
+.device__bar{position:absolute;z-index:1;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;font-size:13px;color:var(--soft)}
+.device__bar b{color:var(--flag);font:800 12px/1 var(--mono);letter-spacing:.1em}
+.device__bar span:last-child{font:700 11px/1 var(--mono);background:rgba(12,17,23,.8);border:1px solid var(--lineStrong);border-radius:99px;padding:6px 9px;color:var(--ink)}
+.device__tag{position:absolute;z-index:1;top:38%;left:18px;font:700 12px/1 var(--mono);background:rgba(12,17,23,.85);border-left:3px solid var(--flag);padding:8px 10px;border-radius:4px}
+.offer{position:absolute;z-index:2;left:14px;right:14px;bottom:14px;background:rgba(21,26,33,.96);border:1px solid var(--lineStrong);border-radius:18px;padding:18px;animation:rise .7s .4s both}
+.offer__k{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--instrument)}
+.offer__k::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--instrument);box-shadow:0 0 0 4px rgba(63,184,134,.25)}
+.offer h3{margin:10px 0 6px;font-size:19px;line-height:1.25}
+.offer p{margin:0 0 14px;font-size:14px;color:var(--soft)}
+.offer__b{display:flex;gap:8px}
+.offer__b span{flex:1;text-align:center;font:650 14px/1 var(--sans);padding:11px;border-radius:10px;border:1px solid var(--lineStrong)}
+.offer__b span:first-child{background:var(--flag);border-color:var(--flag);color:#0f1216}
+.offer__f{margin-top:10px;font:600 11px/1.4 var(--mono);color:var(--soft)}
+.device-wrap{position:relative}
+.float{position:absolute;z-index:3;right:-28px;top:16%;max-width:230px;background:var(--panel);border:1px solid var(--plan);border-radius:14px;padding:12px 14px;font-size:13.5px;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:rise .7s 1s both}
+.float b{display:block;font:800 10.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--plan);margin-bottom:6px}
+
+.hero__grid>*{min-width:0}
+.hero .demo-note{font-size:14px;line-height:1.5;color:var(--soft);margin:18px 0 0}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* how it feels */
+.feel{list-style:none;padding:0;margin:52px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.feel li{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+.feel li:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.feel .n{font:800 13px/1 var(--mono);color:var(--c)}
+.feel b{display:block;font-size:21px;margin:12px 0 6px}
+.feel p{margin:0;color:var(--soft);font-size:15px}
+.feel q{display:block;margin-top:12px;font-size:13.5px;color:var(--ink);font-style:italic;quotes:"“" "”"}
+
 /* sections */
-section{padding:110px 0}
+section{padding:88px 0}
 h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 18px;max-width:18ch}
 .lede{color:var(--soft);font-size:19px;max-width:40em;margin:0}
 
@@ -85,7 +121,7 @@ h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;letter-spacing:-.02em;margi
 .fact + .fact{border-left:1px solid var(--line)}
 .fact b{display:block;font-size:44px;line-height:1;letter-spacing:-.02em}
 .fact span{display:block;margin-top:10px;color:var(--soft);font-size:15px}
-.note{margin:28px 0 0;color:var(--faint);font-size:14.5px;max-width:52em}
+.note{margin:28px 0 0;color:var(--soft);font-size:14.5px;max-width:52em}
 
 /* closing */
 .close{text-align:center;padding:130px 0 120px;background:radial-gradient(ellipse at 50% 0%,rgba(255,107,74,.16),transparent 60%)}
@@ -95,17 +131,6 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--faint);f
 footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
 
 
-/* hero: half the model is a real site photo */
-.hero__photo{position:absolute;top:0;bottom:0;right:0;width:36%;z-index:0;clip-path:polygon(24% 0,100% 0,100% 100%,0 100%)}
-.hero__photo img.wire{left:auto;right:0;width:100vw;max-width:none;object-position:70% 40%;filter:none;mix-blend-mode:screen;opacity:.9;z-index:2}
-.hero__photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.75) contrast(1.08) brightness(.85)}
-.hero__photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(12,17,23,.55),rgba(12,17,23,0) 40%),linear-gradient(0deg,var(--bg),transparent 30%)}
-.chip{position:absolute;z-index:2;font:700 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:7px 9px;border-radius:6px;background:rgba(12,17,23,.85);border:1px solid var(--lineStrong);color:var(--soft)}
-.chip b{color:var(--flag)}
-.chip--model{top:110px;left:calc(64% - 170px)}
-.chip--site{top:110px;right:24px}
-.hero::after{z-index:0}
-.hero > img{z-index:0}
 
 /* versions */
 .versions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding:4px 2px 18px;margin-top:44px;scroll-snap-type:x mandatory}
@@ -114,8 +139,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 .ver__v{font:800 26px/1 var(--sans)}
 .ver__d{font:600 12px/1 var(--mono);color:var(--faint)}
 .ver ul{margin:0;padding-left:18px;font-size:14.5px}
-.ver__why{margin-top:auto;font-size:13px;color:var(--soft);border-top:1px dashed var(--line);padding-top:10px}
-.ver__why::before{content:"Why: ";color:var(--faint);font-weight:700}
+.ver__why{font-size:13.5px;color:var(--soft);border-bottom:1px dashed var(--line);padding-bottom:10px}
+.ver__why::before{content:"Noticed: ";color:var(--build);font-weight:700}
+.ver ul::before{content:"Built:";display:block;margin-left:-18px;color:var(--instrument);font:700 13px/1.6 var(--sans)}
 .ver--now{border-color:var(--instrument);background:linear-gradient(160deg,rgba(63,184,134,.12),var(--panel) 60%)}
 .ver--back{border-style:dashed;opacity:.8}
 .ver--back .ver__v{text-decoration:line-through;color:var(--faint)}
@@ -143,9 +169,10 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 .judge span{color:var(--soft);font-size:14px}
 .judge code{font:12.5px var(--mono);color:var(--faint);margin-top:auto}
 @media (max-width:900px){
-  .hero__photo{width:100%;clip-path:polygon(0 55%,100% 45%,100% 100%,0 100%);opacity:.5}
-  .chip{display:none}
-  .hero > img{opacity:.35}
+  .hero__grid{grid-template-columns:1fr}
+  .device-wrap{max-width:420px}
+  .float{right:8px}
+  .feel{grid-template-columns:1fr 1fr}.feel li:not(:last-child)::after{display:none}
   .atlas,.judge{grid-template-columns:1fr}
 }
 
@@ -159,6 +186,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   section{padding:80px 0}
 }
 @media (max-width:520px){ .hero::after{background:linear-gradient(0deg,rgba(15,18,22,.97) 30%,rgba(15,18,22,.55) 100%)} .points{grid-template-columns:1fr} .wrap{padding:0 16px} }
+@media (max-width:520px){ section{padding:56px 0} .hero{padding:96px 0 48px;min-height:auto} .hero__grid{gap:32px} .close{padding:64px 0}
+  .device{aspect-ratio:auto;padding-top:250px} .offer{position:relative;left:auto;right:auto;bottom:auto;margin:14px} .device__tag{top:190px} .float{top:70px;right:8px} }
 @media (prefers-reduced-motion:reduce){ *{transition:none!important;scroll-behavior:auto!important} }
 </style>
 </head>
@@ -171,7 +200,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
       3PT
     </a>
     <div class="links">
-      <a href="#loop">How it works</a>
+      <a href="#feel">How it works</a>
       <a href="#versions">Versions</a>
       <a href="#atlas">Atlas</a>
       <a href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Code</a>
@@ -181,26 +210,63 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 </nav>
 
 <header class="hero">
-  <img src="/hero-bim.svg" alt="A building model: floors, columns, pipes and ducts, with site photos pinned to units" fetchpriority="high">
-  <div class="hero__photo" aria-hidden="true"><img src="/media-pool/steel/steel-05.jpg" alt=""><img class="wire" src="/hero-bim.svg" alt=""></div>
-  <span class="chip chip--model">Model</span>
-  <span class="chip chip--site">Site photo · <b>L2</b></span>
-  <div class="wrap">
-    <div class="eyebrow">Three Point Harness · Recursive Harnessing</div>
-    <h1>The harness for your <em>construction projects</em></h1>
-    <p>3PT runs a coding agent through Plan, Build and Instrument. After every run it rewrites its own rules, context and tools, and saves each version as a checkpoint in MongoDB Atlas.</p>
-    <div class="ctas">
-      <a class="btn btn--primary" href="/app/">Open the app →</a>
-      <a class="btn" href="/studio/">See the role screens</a>
-      <a class="btn" href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Read the code</a>
+  <img class="hero__bg" src="/hero-bim.svg" alt="" aria-hidden="true">
+  <div class="wrap hero__grid">
+    <div>
+      <div class="eyebrow">Self-improving software · Recursive Harnessing</div>
+      <h1>The harness for your <em>construction projects</em></h1>
+      <p>Your crew takes photos and uses the app. 3PT learns from how they work, proposes the next feature, and asks before it ships. The harness rewrites its own rules and saves every version in MongoDB Atlas, so any earlier version can come back.</p>
+      <div class="ctas">
+        <a class="btn btn--primary" href="/app/">Open the app →</a>
+        <a class="btn" href="#versions">See what it built</a>
+      </div>
+      <p class="demo-note">The demo firm is simulated with a fixed seed. The loop, the checkpoints and the policy rollback are real code.</p>
+    </div>
+    <div class="device-wrap"><div class="device" role="img" aria-label="The app on a site photo of unit 206, offering a new feature built from the team's usage">
+      <img src="/media-pool/plumbing/plumbing-06.jpg" alt="">
+      <div class="device__bar"><b>ACME BUILDERS</b><span>Harness v6</span></div>
+      <div class="device__tag">Unit 206 · plumbing · open wall</div>
+      <div class="offer">
+        <span class="offer__k">New for you</span>
+        <h3>Your Friday owner pack, in one tap</h3>
+        <p>You built it by hand every week: 28 hours a job. I can build it for you from this week's photos.</p>
+        <div class="offer__b"><span>Turn it on</span><span>Not now</span></div>
+        <div class="offer__f">Example proposal from the simulated firm</div>
+      </div>
+    </div>
+    <div class="float" aria-hidden="true"><b>Explore · made for you</b>“Units closing this week”: a new screen for superintendents.</div>
     </div>
   </div>
 </header>
 
 <main>
+<section id="feel">
+  <div class="wrap">
+    <div class="eyebrow">How it feels</div>
+    <h2>Software that notices, then offers.</h2>
+    <p class="lede">No settings screen and no feature requests. People do their job. The app gets better at that job, and they decide what stays.</p>
+    <ol class="feel">
+      <li style="--c:var(--plan)"><span class="n">1 · YOU WORK</span><b>Use it as normal</b><p>Take photos. Search. Build the owner update.</p></li>
+      <li style="--c:var(--build)"><span class="n">2 · IT NOTICES</span><b>It sees the pattern</b><p>The same 3-hour task, every Friday, on every job.</p></li>
+      <li style="--c:var(--instrument)"><span class="n">3 · IT OFFERS</span><b>A new feature, for you</b><p>It builds the tool and asks first.</p><q>Here is something we built for you.</q></li>
+      <li style="--c:var(--flag)"><span class="n">4 · YOU DECIDE</span><b>Keep it or roll it back</b><p>Yes saves a new version. Rollback restores an earlier set of harness rules.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="versions" style="padding-top:40px">
+  <div class="wrap">
+    <div class="eyebrow">Recursive harnessing</div>
+    <h2>Every new feature came from how people used it.</h2>
+    <p class="lede">Ten versions over seven years of a simulated firm. Each card says what the harness noticed, then what it built. One change made answers worse, so it rolled back.</p>
+    <div class="live" id="live"><i></i><span>Simulated firm history (built-in copy)</span></div>
+    <div class="versions" id="versions-list"></div>
+  </div>
+</section>
+
 <section id="loop">
   <div class="wrap">
-    <div class="eyebrow">The loop</div>
+    <div class="eyebrow">Under the hood</div>
     <h2>Three points. One loop. Every turn, a better harness.</h2>
     <p class="lede">The run cannot change its own rules. Only the improver can, and only from what Instrument found. So each new version has a reason you can read.</p>
     <div class="points">
@@ -215,7 +281,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 <section style="padding-top:20px">
   <div class="wrap split">
     <div>
-      <div class="eyebrow">Real output</div>
+      <div class="eyebrow">Real terminal output · dry run</div>
       <h2>Every version is a checkpoint. Any checkpoint comes back.</h2>
       <ul class="checks">
         <li><span><strong>Rules are data.</strong> Rules, context policy and tool grants live in a versioned policy, not in a prompt.</span></li>
@@ -239,33 +305,6 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   </div>
 </section>
 
-<section id="versions" style="padding-top:40px">
-  <div class="wrap">
-    <div class="eyebrow">Recursive harnessing</div>
-    <h2>Ten versions. Each one written by the harness.</h2>
-    <p class="lede">Every change names what it changed and why. One version made answers worse, so it was rolled back. Scroll through the history of a simulated seven-year firm.</p>
-    <div class="live" id="live"><i></i><span>Built-in copy of the history</span></div>
-    <div class="versions" id="versions-list"></div>
-  </div>
-</section>
-
-<section id="workload">
-  <div class="wrap">
-    <div class="eyebrow">The workload</div>
-    <h2>Built on construction site photos.</h2>
-    <p class="lede">Photos are what the harness learns on, not what it sells. A contractor's crew takes thousands of them. The harness learns which unit, which trade, and which walls are still open, and shows each person what they need first.</p>
-    <div class="mosaic">
-      <figure class="m1"><img src="/media-pool/site/site-08.jpg" alt="Piling rig and cranes on an excavation site" loading="lazy"><figcaption>Site</figcaption></figure>
-      <figure class="m2"><img src="/media-pool/steel/steel-05.jpg" alt="Aerial view of a steel frame structure" loading="lazy"><figcaption>Steel</figcaption></figure>
-      <figure class="m3"><img src="/media-pool/exterior/exterior-05.jpg" alt="Scaffolding on a building under construction" loading="lazy"><figcaption>Exterior</figcaption></figure>
-      <figure class="m4"><img src="/media-pool/plumbing/plumbing-06.jpg" alt="Workers fitting pipes inside a metal stud wall" loading="lazy"><figcaption>Plumbing</figcaption></figure>
-      <figure class="m5"><img src="/media-pool/electrical/electrical-03.jpg" alt="An electrician at work in a timber frame" loading="lazy"><figcaption>Electrical</figcaption></figure>
-      <figure class="m6"><img src="/media-pool/insulation/insulation-06.jpg" alt="Spray foam insulation applied under a floor" loading="lazy"><figcaption>Insulation</figcaption></figure>
-      <figure class="m7"><img src="/media-pool/site/site-07.jpg" alt="A large excavation site with cranes and new buildings" loading="lazy"><figcaption>Excavation</figcaption></figure>
-    </div>
-  </div>
-</section>
-
 <section id="atlas" style="padding-top:0">
   <div class="wrap">
     <div class="eyebrow">MongoDB Atlas</div>
@@ -284,10 +323,28 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
     <div class="eyebrow">For the judges</div>
     <h2>Check it in four clicks.</h2>
     <div class="judge">
-      <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/improver" target="_blank" rel="noopener"><span class="w">DEMO · 35</span><b>The loop</b><span>The improver is the only writer of the rules.</span><code>harness/packages/improver</code></a>
+      <a href="/app/"><span class="w">DEMO · 35</span><b>Open the demo</b><span>Tap around as a superintendent. Accept a proposal and watch the version change.</span><code>/app/</code></a>
       <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/core" target="_blank" rel="noopener"><span class="w">DIFFICULTY · 30</span><b>Frozen policy</b><span>Stages get a read-only policy and a store that refuses rule writes.</span><code>harness/packages/core</code></a>
-      <a href="/app/"><span class="w">IMPACT · 20</span><b>The app</b><span>Each role sees the screen the current harness chose for it.</span><code>/app/</code></a>
-      <a href="https://github.com/pastarita/3pt/commits/main" target="_blank" rel="noopener"><span class="w">BUILT TODAY</span><b>Commit log</b><span>Every commit is from Sept 26, 2026.</span><code>git log</code></a>
+      <a href="#feel"><span class="w">IMPACT · 20</span><b>For non-technical crews</b><span>Each role sees the screen the current harness chose for it.</span><code>#feel</code></a>
+      <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/improver" target="_blank" rel="noopener"><span class="w">CREATIVITY · 15</span><b>It changes its own rules</b><span>The improver is the only writer of the rules.</span><code>harness/packages/improver</code></a>
+    </div>
+    <p class="note">Built today: <a href="https://github.com/pastarita/3pt/commits/main" target="_blank" rel="noopener">inspect the commits</a>.</p>
+  </div>
+</section>
+
+<section id="workload">
+  <div class="wrap">
+    <div class="eyebrow">The workload</div>
+    <h2>Construction photos test the harness.</h2>
+    <p class="lede">Photos are the workload, not the product. The simulated firm supplies photos and activity. The demo tests how the harness changes its own rules, context policy and tool access.</p>
+    <div class="mosaic">
+      <figure class="m1"><img src="/media-pool/site/site-08.jpg" alt="Piling rig and cranes on an excavation site"><figcaption>Site</figcaption></figure>
+      <figure class="m2"><img src="/media-pool/steel/steel-05.jpg" alt="Aerial view of a steel frame structure"><figcaption>Steel</figcaption></figure>
+      <figure class="m3"><img src="/media-pool/exterior/exterior-05.jpg" alt="Scaffolding on a building under construction"><figcaption>Exterior</figcaption></figure>
+      <figure class="m4"><img src="/media-pool/plumbing/plumbing-06.jpg" alt="Workers fitting pipes inside a metal stud wall"><figcaption>Plumbing</figcaption></figure>
+      <figure class="m5"><img src="/media-pool/electrical/electrical-03.jpg" alt="An electrician at work in a timber frame"><figcaption>Electrical</figcaption></figure>
+      <figure class="m6"><img src="/media-pool/insulation/insulation-06.jpg" alt="Spray foam insulation applied under a floor"><figcaption>Insulation</figcaption></figure>
+      <figure class="m7"><img src="/media-pool/site/site-07.jpg" alt="A large excavation site with cranes and new buildings"><figcaption>Excavation</figcaption></figure>
     </div>
   </div>
 </section>
@@ -343,15 +400,15 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
     list.innerHTML=vs.map(function(v){
       var now=v.v===cur,back=v.rolledBack;
       return '<article class="ver'+(now?' ver--now':'')+(back?' ver--back':'')+'"><div class="ver__h"><span class="ver__v">v'+v.v+'</span>'+
-        (now?'<span class="pill pill--now">Live</span>':back?'<span class="pill pill--back">Rolled back</span>':'<span class="ver__d">'+esc(v.when)+'</span>')+
-        '</div><ul>'+v.changes.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul><div class="ver__why">'+esc(v.why)+'</div></article>';
+        (now?'<span class="pill pill--now">Current</span>':back?'<span class="pill pill--back">Rolled back</span>':'<span class="ver__d">'+esc(v.when)+'</span>')+
+        '</div><div class="ver__why">'+esc(v.why)+'</div><ul>'+v.changes.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul></article>';
     }).join('');
   }
   draw(V,10);
   fetch('https://3pt-harness.3pt-worker.workers.dev/app/harness').then(function(r){return r.ok?r.json():null}).then(function(j){
     if(!j||!j.versions)return;
     draw(j.versions,j.current);
-    live.classList.add('on');live.lastElementChild.textContent='Live from the harness · current v'+j.current;
+    live.classList.add('on');live.lastElementChild.textContent='Simulated firm history, served by the harness · current v'+j.current;
   }).catch(function(){});
 })();
 </script>
