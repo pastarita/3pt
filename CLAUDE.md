@@ -75,6 +75,25 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
   `scripts/worktree.sh verify HEAD -- <cmd>`. Lane work goes in `scripts/worktree.sh new lane <slug>`.
   Run `scripts/worktree.sh gc` at every checkpoint. Naming and rules: `docs/11-worktrees.md`.
 
+## Atlas connection convention (read this before touching `.env` or a store)
+
+- **One cluster, many doors.** State lives in the Sandbox org's `Cluster0` (M10, AWS us-west-1). Ids, screens and
+  limits: `docs/17-atlas-setup-dossier.md` §7. Nothing judged runs against any other cluster.
+- **`.env` holds parts, not a string.** `ATLAS_HOST`, `ATLAS_DBUSER`, `ATLAS_DBPASS`, `ATLAS_DB`; leave `ATLAS_URI`
+  blank. `atlasUri()` in `@3pt/battery-atlas` composes and URL-encodes the connection string, and treats any value
+  containing `<` as unset. Every app gets its store through it: `atlasStore()` when a connection exists, a file or
+  memory store otherwise. Stages never see a URI.
+- **No inline comment after a real value.** `KEY=value   # note` is fine in `.env.example`; in `.env` the comment
+  becomes part of the value for every loader except the shell.
+- **The Worker gets the string as a Cloudflare secret, never a file:** `make worker-secret` pipes `atlasUri()` into
+  `wrangler secret put ATLAS_URI` from `harness/apps/worker`. Its `/health` says `"store":"atlas"` when it took.
+- **Provision is idempotent:** `pnpm --filter @3pt/battery-atlas run provision` ensures the collections in `COLLECTIONS`,
+  their indexes, and `transcripts_vec`. Run it after any change to `COLLECTIONS` or `INDEXES`.
+- **Doors for people and agents:** `infra/batteries/atlas/sandbox.sh status|uri|scale|autoscale` (Atlas CLI) and the
+  MongoDB MCP Server in `infra/batteries/atlas/mcp.json` (`atlas-*` tools incl. `atlas-upgrade-cluster`). Both need
+  `ATLAS_CLIENT_ID` and `ATLAS_CLIENT_SECRET` from a project-level service account (not created yet).
+- **The box is not the database.** `infra/batteries/box` carries only the client toolbelt; Atlas Local is opt-in and never judged.
+
 ## The hub workspace (`hub/`)
 
 A gated Cloudflare Pages site over the docs of record, built to the hub-workspace pattern and
@@ -184,3 +203,9 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   now gives every heading a slug id (`view.html?f=<doc>#<slug>`, same rule as `scripts/prov.mjs`) and `check-view.mjs`
   fails on any anchor that does not land. Eight gaps listed in docs/18 §5 (no `routes` on `Policy`, `AtlasStorage`
   uncalled, `PolicyFormula`/`harness/evals` unwritten, media tools not `tool()`s). Built on branch `lane/strands-journey`.
+- 2026-09-26 15:10 ET: **the day is on the timeline.** `scripts/prompts.mjs` imported nine more Claude sessions (sessions 6–14,
+  88 segments in all). `scripts/prov.mjs` now reads the session heading's `claude:<id8> · title`, resolves every `commits in
+  window` hash to subject, minute and stage (`STAGE`, authored mapping of commit prefixes), and emits `prompt`/`commits` per
+  segment plus clock spans per session. The Timeline leaf gains the day figure (inline SVG, three stage hues, SDF-style plateau,
+  rim and glow), a spoken/typed filter, commit chips per prompt, and session headings that name their source. Re-run
+  `node scripts/prompts.mjs` at every checkpoint so the rail keeps up with the sessions.

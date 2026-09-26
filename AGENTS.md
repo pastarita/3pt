@@ -73,6 +73,25 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
   `scripts/worktree.sh verify HEAD -- <cmd>`. Lane work goes in `scripts/worktree.sh new lane <slug>`.
   Run `scripts/worktree.sh gc` at every checkpoint. Naming and rules: `docs/11-worktrees.md`.
 
+## Atlas connection convention (read this before touching `.env` or a store)
+
+- **One cluster, many doors.** State lives in the Sandbox org's `Cluster0` (M10, AWS us-west-1). Ids, screens and
+  limits: `docs/17-atlas-setup-dossier.md` §7. Nothing judged runs against any other cluster.
+- **`.env` holds parts, not a string.** `ATLAS_HOST`, `ATLAS_DBUSER`, `ATLAS_DBPASS`, `ATLAS_DB`; leave `ATLAS_URI`
+  blank. `atlasUri()` in `@3pt/battery-atlas` composes and URL-encodes the connection string, and treats any value
+  containing `<` as unset. Every app gets its store through it: `atlasStore()` when a connection exists, a file or
+  memory store otherwise. Stages never see a URI.
+- **No inline comment after a real value.** `KEY=value   # note` is fine in `.env.example`; in `.env` the comment
+  becomes part of the value for every loader except the shell.
+- **The Worker gets the string as a Cloudflare secret, never a file:** `make worker-secret` pipes `atlasUri()` into
+  `wrangler secret put ATLAS_URI` from `harness/apps/worker`. Its `/health` says `"store":"atlas"` when it took.
+- **Provision is idempotent:** `pnpm --filter @3pt/battery-atlas run provision` ensures the collections in `COLLECTIONS`,
+  their indexes, and `transcripts_vec`. Run it after any change to `COLLECTIONS` or `INDEXES`.
+- **Doors for people and agents:** `infra/batteries/atlas/sandbox.sh status|uri|scale|autoscale` (Atlas CLI) and the
+  MongoDB MCP Server in `infra/batteries/atlas/mcp.json` (`atlas-*` tools incl. `atlas-upgrade-cluster`). Both need
+  `ATLAS_CLIENT_ID` and `ATLAS_CLIENT_SECRET` from a project-level service account (not created yet).
+- **The box is not the database.** `infra/batteries/box` carries only the client toolbelt; Atlas Local is opt-in and never judged.
+
 ## The hub workspace (`hub/`)
 
 A gated Cloudflare Pages site over the docs of record, built to the hub-workspace pattern and

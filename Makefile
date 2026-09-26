@@ -5,7 +5,7 @@
 #   make check        everything CI checks: workspace build + typecheck, hub lints, provenance
 #   make box          stand up the sandbox box (Colima VM + Ansible) and run the first workflow in it
 #   make sandbox      create the Atlas Sandbox project + cluster with the Atlas CLI and write ATLAS_URI to .env
-.PHONY: install loop build-all typecheck check plan build instrument rollback provision box box-status box-down sandbox hub-check hub-preview hub-deploy clean
+.PHONY: install loop build-all typecheck check plan build instrument rollback provision box box-status box-down sandbox worker-secret hub-check hub-preview hub-deploy clean
 
 install:          ## bootstrap the machine, then install and build every workspace
 	@bash scripts/bootstrap.sh
@@ -51,6 +51,9 @@ box-down:
 
 sandbox:          ## Atlas CLI: project + cluster + user + access list inside the Sandbox org; writes ATLAS_URI
 	@bash infra/batteries/atlas/sandbox.sh up --write
+
+worker-secret:    ## pipe the composed Atlas connection string from .env into the Worker's ATLAS_URI secret (never printed)
+	@set -a; . ./.env; set +a; node --input-type=module -e "import {atlasUri} from './infra/batteries/atlas/dist/index.js'; const u=atlasUri(); if(!u){console.error('no Atlas connection in .env');process.exit(1)} process.stdout.write(u)" | (cd harness/apps/worker && npx wrangler secret put ATLAS_URI)
 
 hub-check:
 	@$(MAKE) -C hub check
