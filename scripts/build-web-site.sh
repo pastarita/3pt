@@ -13,7 +13,7 @@ OUT=dist/web-site
 pnpm turbo run build --filter "@3pt/live^..." --filter "@3pt/web^..." >/dev/null
 rm -rf "$OUT"; mkdir -p "$OUT"
 ( cd ui/apps/live && VITE_THREEPT_API_URL="$THREEPT_API_URL" npx vite build --base /app/ --outDir "../../../$OUT/app" --emptyOutDir false >/dev/null )
-cp ui/apps/live/landing/index.html "$OUT/index.html"
+cp ui/apps/live/landing/index.html ui/apps/live/landing/hero-bim.svg "$OUT/"
 ( cd ui/apps/web && VITE_THREEPT_API_URL="$THREEPT_API_URL" npx vite build --base /studio/ --outDir "../../../$OUT/studio" --emptyOutDir false >/dev/null )
 mkdir -p "$OUT/media-pool"
 ( cd data/mock/media-pool && find . -name '*.jpg' -exec rsync -R {} "../../../$OUT/media-pool/" \; && cp credits.json "../../../$OUT/media-pool/" )
