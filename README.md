@@ -31,6 +31,7 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `docs/sources/` | Verbatim local copies of external source documents (the hackathon resource guide) |
 | `docs/07-assessment-and-measurement.md` | Theses and hypotheses converged from the transcript, the measurement system (M-*), and the partner-incentive mapping to a requirement set (R-*) |
 | `docs/06-goal-and-use-case.md` | Goal over time, interior-design use case, value props, screen-capture onboarding |
+| `docs/07-direction.html` | Visual direction page: construction demo, stress test, 60-second video plan. Open in a browser |
 | `docs/glossary.md` | Terms |
 
 ## Team
