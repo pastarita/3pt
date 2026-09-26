@@ -191,6 +191,9 @@ importers:
 
   harness/apps/cli:
     dependencies:
+      '@3pt/battery-repo':
+        specifier: workspace:*
+        version: link:../../../infra/batteries/repo
       '@3pt/build':
         specifier: workspace:*
         version: link:../../packages/build

@@ -57,7 +57,7 @@ Minimum viable loop, in order of implementation:
    Runs builder ↔ instrumenter turns until the instrumenter's checks pass or a turn budget is exhausted.
 4. **Instrument.** Runs the standards checks, writes a retrospective, **rewrites `policies`**
    (this is the Recursive Harnessing proof), and tags a checkpoint.
-5. **Rollback.** `3pt rollback <checkpoint>` restores git sha + policy version. Demo this live.
+5. **Rollback.** `3pt rollback <checkpoint>` restores the policy version as a new version and prints the `git checkout` for the code. Demo this live. Snapshot details: `docs/10-architecture.md` §4.7.
 
 The media workload (image indexing, transcription, tiering) is what the loop operates *on*.
 It is the source of hard metrics: storage cost, hot-tier hit rate, transcript reuse rate,

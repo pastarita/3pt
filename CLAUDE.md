@@ -137,3 +137,7 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   9,767 → 3,676 visible words, 27 → 74 figures (362 → 50 words per figure). Direction is a storyboard, the design
   system is specimens rendered from the compile row. Uncommitted; HEAD's Makefile already calls the (untracked)
   metric, so `main` is red until this lands.
+- 2026-09-26 14:35 ET: **checkpoints persist.** `3pt loop` resumes from the newest policy (`.3pt/store/`, gitignored,
+  until Atlas), writes `harness/policies/v<n>.json` + `harness/checkpoints/cp-<i>.md`; `--git` commits those two files
+  and tags `cp/<i>`; `3pt rollback cp/<i>` restores that policy as a new version. Instrument still has no findings,
+  so each version only bumps lineage. Next: measurements and checks. `docs/10-architecture.md` §4.7.

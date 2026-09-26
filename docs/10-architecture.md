@@ -379,9 +379,18 @@ gitGraph
   merge rollback id: "iter 4 · fix sprint from cp/2" tag: "cp/4"
 ```
 
-A checkpoint is the pair (git tag, Atlas document). `3pt rollback cp/2` checks out the tag through
-the repo battery and restores policy v2 through the atlas battery. Both machines pick it up on the
-next install-loop pass.
+A checkpoint is the pair (git tag, Atlas document). `3pt rollback cp/2` restores policy v2 as a new
+version, so the policy lineage stays append-only. It does not check out code. It prints the
+`git checkout cp/2` command for that step. Both machines pick it up on the next install-loop pass.
+
+Built 2026-09-26 (`harness/apps/cli`, `infra/batteries/repo`). Until the atlas battery exists, the
+store is `.3pt/store/*.jsonl` (gitignored), so each run resumes from the newest policy:
+
+| Step | What it writes |
+|---|---|
+| `3pt loop` or `3pt instrument` | `harness/policies/v<n>.json` + `harness/checkpoints/cp-<i>.md` |
+| add `--git` | also commits only those two files and tags `cp/<i>` (off by default: the commit lands on the checked-out branch) |
+| `3pt rollback cp/<i>` | reads the policy at the tag, writes it back as `v<latest+1>` |
 
 ### 4.8 Task graph
 
