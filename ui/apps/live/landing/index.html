@@ -28,6 +28,12 @@ img{display:block;max-width:100%}
 .btn--primary:hover{border-color:#fff}
 :focus-visible{outline:2px solid var(--flag);outline-offset:3px}
 .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
+/* the teacher's mark: the hero line written by hand in neon pencil, with a scrawled underline. System hand fonts only, so the page still makes one fetch. */
+.scrawl{--neon:#d7ff3a;position:relative;display:inline-block;transform:rotate(-2deg);transform-origin:left center;padding-bottom:10px;
+  font:400 clamp(20px,2.3vw,27px)/1.1 "Marker Felt","Bradley Hand","Segoe Print","Ink Free","Chalkboard SE","Comic Sans MS",cursive;
+  color:var(--neon);text-shadow:0 0 6px rgba(215,255,58,.55),0 0 18px rgba(215,255,58,.3)}
+.scrawl svg{position:absolute;left:-2%;bottom:-2px;width:104%;height:14px;overflow:visible;filter:drop-shadow(0 0 4px rgba(215,255,58,.6))}
+.scrawl path{fill:none;stroke:var(--neon);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:20;background:linear-gradient(180deg,rgba(12,17,23,.92),rgba(12,17,23,0));border-bottom:1px solid transparent;transition:background .2s,border-color .2s}
@@ -272,7 +278,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
   <img class="hero__bg" src="/hero-bim.svg" alt="" aria-hidden="true">
   <div class="wrap hero__grid">
     <div>
-      <div class="eyebrow">A self-improving harness for general contractors</div>
+      <div class="scrawl">A self-improving harness for general contractors<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9 C 60 4, 130 11, 200 6 S 280 5, 297 8 M 30 12 C 110 8, 190 13, 270 9"/></svg></div>
       <h1>The harness for your <em>construction projects</em></h1>
       <p>Your supers, PMs and project engineers take photos and use the app. 3PT is a self-improving harness. It learns how each role works, builds the next feature, ships it and scores it. A version that does worse rolls back. Every version is a checkpoint in MongoDB Atlas.</p>
       <div class="ctas">
