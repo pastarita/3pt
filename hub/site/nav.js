@@ -195,7 +195,6 @@
    +"#tptnav .nv-links{display:flex;flex-direction:column}"
    +"#tptnav .nv-links a{color:#a3adbb;text-decoration:none;padding:8px 16px;display:flex;align-items:center;gap:10px;white-space:nowrap;border:0;border-bottom:0;background:transparent;font:600 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}"
    +"#tptnav .nv-links a svg{width:17px;height:17px;flex:none;opacity:.9}"
-   +"#tptnav .nv-links a .id{font:700 9px/1 ui-monospace,Menlo,monospace;color:#6b7684;letter-spacing:.06em;min-width:16px}"
    +"#tptnav .nv-links a:hover{background:rgba(255,255,255,.06);color:#fff}"
    +"#tptnav .nv-links a.on{color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 3px 0 0 #ff6b4a}"
    +"#tptnav .nv-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff6b4a;vertical-align:middle;margin-left:6px}"
@@ -235,8 +234,10 @@
       if (gr[0]) links+='<div class="nv-g" style="color:'+(c.color||'#6b7684')+'">'+(c.label||gr[0])+'</div>';
       var fold=FOLD[gr[0]], inFold={}, folded='', hasOn=false;
       if (fold) fold.slugs.forEach(function(k){ inFold[k]=1; });
-      function row(p){ return '<a class="'+(p[0]===cur?'on':'')+'" href="'+href(p[0])+'">'+(GLYPH[p[0]]||'')
-          +(p[2]?'<span class="id">'+p[2]+'</span>':'')+'<span>'+p[1]+(FRESH[p[0]]?'<i class="nv-dot"></i>':'')+'</span></a>'; }
+      /* p[2] is the document's Register id. It stays in GROUPS as data (the Viewer strip, the index cards and the
+         docs cite it) but the rail no longer prints it: only documents carry one, so the labels fell out of line. */
+      function row(p){ return '<a class="'+(p[0]===cur?'on':'')+'" href="'+href(p[0])+'"'+(p[2]?' data-reg="'+p[2]+'"':'')+'>'+(GLYPH[p[0]]||'')
+          +'<span>'+p[1]+(FRESH[p[0]]?'<i class="nv-dot"></i>':'')+'</span></a>'; }
       links+='<div class="nv-links">';
       gr[1].forEach(function(p){ if (inFold[p[0]]) { folded+=row(p); if (p[0]===cur) hasOn=true; } else links+=row(p); });
       links+='</div>';
