@@ -11,6 +11,7 @@
  *    POST /app/reject        {key}
  *    POST /app/rollback      {v}
  *    GET  /app/harness                            versions, fields, layouts by role, loop status
+ *    GET  /app/news?since=4                        versions shipped after v4 and still live (the surfaces' bulb)
  *    POST /app/reset                              back to the seeded state
  *
  *  State: in memory, and after every change a snapshot in app_state plus each tap in app_events when a host
@@ -265,6 +266,14 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
   if (path === '/app/harness' && method === 'GET') {
     const v = ver();
     return { status: 200, body: { current: v.v, fields: v.fields, layouts: v.layout, versions: S.versions.slice().reverse().map(x => ({ ...x, score: score(x.v) })), events: S.events.length } };
+  }
+  /* the bulb: a version counts as news once build() saved it and it is still live. A rolled-back version drops out,
+     so a failed change never shows up as a feature. The surface keeps "since" (the last version it showed). */
+  if (path === '/app/news' && method === 'GET') {
+    const since = Number(q.get('since') ?? -1);
+    const items = S.versions.filter(v => v.v > 0 && v.v > since && !v.rolledBack).reverse().slice(0, 12)
+      .map(v => ({ v: v.v, when: v.when, by: v.by, changes: v.changes, why: v.why }));
+    return { status: 200, body: { current: S.cur, items } };
   }
   if (path === '/app/reset' && method === 'POST') { await seed(); await snapshot('reset'); return { status: 200, body: { ok: true } }; }
   return { status: 404, body: { error: 'not found' } };

@@ -16,6 +16,8 @@ export interface HarnessVersion { v: number; when: string; by: string; changes: 
 export interface HarnessState { current: number; fields: string[]; layouts: Record<string, string[]>; versions: HarnessVersion[]; events: number }
 export interface FirmProject { id: string; name: string; type: string; neighborhood: string; status: 'live' | 'closed' | 'planned'; phase: string | null; start: string; end: string; photos: number; cover: Photo | null; retro: { facts: [number, string][]; lessons: string[] } | null }
 export interface FirmState { week: number; date: string; max_live: number; harness: { version: number; changes: string[]; why: string }; hours_saved: number; projects: FirmProject[] }
+export interface NewsItem { v: number; when: string; by: string; changes: string[]; why: string }
+export interface News { current: number; items: NewsItem[] }
 export interface AppEvent { role: string; action: 'use' | 'hide' | 'open' | 'fb_up' | 'fb_down' | 'act'; block?: string; q?: string; photo?: string; project?: string; do?: string }
 
 export interface InspectorClient {
@@ -35,6 +37,8 @@ export interface InspectorClient {
   reject(key: string): Promise<{ ok: boolean }>;
   rollback(v: number): Promise<{ version: number; rolled_back: number }>;
   harness(): Promise<HarnessState>;
+  /** Versions the harness shipped after `since` that are still live, newest first. Drives the bulb. */
+  news(since: number): Promise<News>;
   reset(): Promise<{ ok: boolean }>;
   /** Absolute URL for a photo path the API returned (/media-pool/…). */
   media(path: string | null | undefined): string | null;
@@ -59,6 +63,7 @@ export function createClient(baseUrl: string, f: typeof fetch = fetch): Inspecto
     reject: (key) => post('/app/reject', { key }),
     rollback: (v) => post('/app/rollback', { v }),
     harness: () => get('/app/harness'),
+    news: (since) => get('/app/news' + qs({ since })),
     reset: () => post('/app/reset', {}),
     media: (path) => (path ? (path.startsWith('http') ? path : baseUrl + path) : null),
   };

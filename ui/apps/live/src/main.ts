@@ -11,6 +11,7 @@ import { proposalBanner } from './molecules/proposal-banner.js';
 import { homePage } from './pages/home.js';
 import { projectPage } from './pages/project.js';
 import { harnessPage } from './pages/harness.js';
+import { bulb } from './organisms/bulb.js';
 import type { BlockCtx } from './organisms/blocks.js';
 import './styles.css';
 
@@ -18,6 +19,10 @@ const tokens = document.createElement('style'); tokens.textContent = cssVars(); 
 const api = createClient(import.meta.env.VITE_THREEPT_API_URL ?? 'http://127.0.0.1:8787');
 const root = document.getElementById('app')!;
 const modal = h('div', { id: 'modal' }); document.body.append(modal);
+/* the bulb: lights up when the harness ships a version. Rings at once after an approve here; the poll catches
+   versions shipped from another device or by the Worker. */
+const news = bulb(since => api.news(since)); document.body.append(news.el);
+void news.refresh(); setInterval(() => { if (!document.hidden) void news.refresh(); }, 30_000);
 
 let role = getRole(), version: number | null = null, lastScreen: Screen | null = null;
 const ask: BlockCtx['ask'] = { q: null, note: '', photos: [], fb: {} };
@@ -62,7 +67,7 @@ async function render() {
         onFeedback: async (q, id, v) => { ask.fb[id] = v; await api.event({ role, action: v === 'up' ? 'fb_up' : 'fb_down', block: 'ask', q, photo: id, project: r.id }); await render(); },
       };
       const strips = [s.proposal
-        ? proposalBanner({ text: s.proposal.text, why: s.proposal.why, onYes: async () => { const n = await api.approve(s.proposal!.key, role); toast(`Saved harness v${n.version}`); await render(); }, onNo: async () => { await api.reject(s.proposal!.key); await render(); } })
+        ? proposalBanner({ text: s.proposal.text, why: s.proposal.why, onYes: async () => { const n = await api.approve(s.proposal!.key, role); toast(`Saved harness v${n.version}`); void news.refresh(true); await render(); }, onNo: async () => { await api.reject(s.proposal!.key); await render(); } })
         : learnedStrip({ text: s.harness.learned, meta: `Harness v${s.harness.version} · ${s.harness.when}` })];
       shell([{ label: 'Projects', href: '#/' }, { label: s.project.name }], projectPage(s, api, ctx, {
         use: b => { void api.event({ role, action: 'use', block: b, project: r.id }).then(x => { if (x.proposal && !lastScreen?.proposal) void render(); }); },
@@ -72,7 +77,7 @@ async function render() {
     } else {
       const s = await api.harness();
       version = s.current;
-      shell([{ label: 'Projects', href: '#/' }, { label: 'Harness' }], harnessPage(s, async v => { await api.rollback(v); toast(`Rolled back to v${v}`); await render(); }, TITLES));
+      shell([{ label: 'Projects', href: '#/' }, { label: 'Harness' }], harnessPage(s, async v => { await api.rollback(v); toast(`Rolled back to v${v}`); void news.refresh(); await render(); }, TITLES));
     }
   } catch (e) { fail(e); }
 }
