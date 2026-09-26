@@ -1,9 +1,14 @@
 {
+  "_comment": "MongoDB MCP Server over the Sandbox cluster. Data tools always; with an Atlas service account (ATLAS_CLIENT_ID/SECRET) also the atlas-* provisioning tools, including atlas-upgrade-cluster (scaling; docs/17 §4). infra/batteries/box/mcp.json is the same server framed as the provisioning MCP.",
   "mcpServers": {
     "mongodb": {
       "command": "npx",
-      "args": ["-y", "mongodb-mcp-server", "--connectionString", "${ATLAS_URI}", "--readOnly", "false"],
-      "env": { "ATLAS_URI": "${ATLAS_URI}" }
+      "args": ["-y", "mongodb-mcp-server", "--readOnly", "false"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "${ATLAS_URI}",
+        "MDB_MCP_API_CLIENT_ID": "${ATLAS_CLIENT_ID}",
+        "MDB_MCP_API_CLIENT_SECRET": "${ATLAS_CLIENT_SECRET}"
+      }
     }
   }
 }

@@ -3,7 +3,9 @@
 #   make loop         the install loop: merge → download → build → install, polling origin/main
 #   make plan|build|instrument|rollback   run one stage of the harness CLI
 #   make check        everything CI checks: workspace build + typecheck, hub lints, provenance
-.PHONY: install loop build-all typecheck check plan build instrument rollback provision hub-check hub-preview hub-deploy clean
+#   make box          stand up the sandbox box (Colima VM + Ansible) and run the first workflow in it
+#   make sandbox      create the Atlas Sandbox project + cluster with the Atlas CLI and write ATLAS_URI to .env
+.PHONY: install loop build-all typecheck check plan build instrument rollback provision box box-status box-down sandbox hub-check hub-preview hub-deploy clean
 
 install:          ## bootstrap the machine, then install and build every workspace
 	@bash scripts/bootstrap.sh
@@ -39,6 +41,16 @@ rollback:         ## make rollback CP=<checkpoint>
 
 provision:        ## stand up every battery in infra/batteries (idempotent; needs .env)
 	@pnpm turbo run provision
+
+box:              ## Colima VM + Ansible converge + verify (infra/batteries/box/box.sh up)
+	@bash infra/batteries/box/box.sh up
+box-status:
+	@bash infra/batteries/box/box.sh status
+box-down:
+	@bash infra/batteries/box/box.sh down
+
+sandbox:          ## Atlas CLI: project + cluster + user + access list inside the Sandbox org; writes ATLAS_URI
+	@bash infra/batteries/atlas/sandbox.sh up --write
 
 hub-check:
 	@$(MAKE) -C hub check

@@ -23,7 +23,7 @@ If a link stops working, the Google Doc ID is the durable key.
 
 | Partner | Free allotment | How to redeem | Deadline |
 |---|---|---|---|
-| **MongoDB Atlas** | Hackathon Sandbox cluster (**required**) | Email link → create project + cluster inside the sandbox | Before building |
+| **MongoDB Atlas** | Hackathon Sandbox cluster (**required**) plus Atlas credits (amount and code source TO CONFIRM; **not yet applied** to the org as of 15:20 ET: Billing → Available Credits → Apply Code, `docs/17-atlas-setup-dossier.md` §4a) | Email link → create project + cluster inside the sandbox | Before building |
 | **Voyage AI** (MongoDB) | 200M embedding/reranking tokens per participant; top-ups on request from Voyage staff on site | dashboard.voyageai.com → API key → add payment method to unlock Tier 1 rate limits (not charged within allowance) | — |
 | **OpenRouter** | Free credits (amount unstated), one key → 500+ models | Code by email | — |
 | **OpenAI** | 1,250 Codex credits | Code by email | — |

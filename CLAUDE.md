@@ -38,6 +38,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
 | Strands: what we build on, the capability ledger, the handles we speak, what is struck | `docs/12-strands-archaeology.md` |
 | Strands, drawn: ten Mermaid diagrams of its systems, for learning | `docs/13-strands-diagrams.md` |
+| Sandbox provisioning: the box (Colima + Ansible) and the Sandbox cluster (Atlas CLI), the provisioning MCP | `docs/16-sandbox-provisioning.md` |
+| Atlas console, screen by screen: ids, what goes in `.env`, CLI vs MCP doors, tiers and the scaling affordance | `docs/17-atlas-setup-dossier.md` |
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
 | How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -139,8 +141,28 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   9,767 → 3,676 visible words, 27 → 74 figures (362 → 50 words per figure). Direction is a storyboard, the design
   system is specimens rendered from the compile row. Uncommitted; HEAD's Makefile already calls the (untracked)
   metric, so `main` is red until this lands.
+- 2026-09-26 14:30 ET: **sandbox provisioning.** New battery `infra/batteries/box` (Colima VM + Ansible playbook: base,
+  node, atlas_tools, atlas_local, workload; `box.sh up|play|exec|status|down`). Atlas battery gains the real driver
+  (`provision.ts`, `atlasStore()`), `sandbox.sh` (Atlas CLI: project, M0 cluster, user, access list, `ATLAS_URI`), and
+  service-account MCP wiring. `apps/worker` has a `main.ts` (`--watch`), `apps/cli` injects `atlasStore` when `ATLAS_URI`
+  is set. `make box` · `make sandbox`. Doc of record `docs/16-sandbox-provisioning.md`. Sandbox org id and credentials
+  still missing on this machine; `BOX_PROFILE=default` reuses the Colima profile already on disk (host disk ≈ 3 GB free).
+- 2026-09-26 15:10 ET: Atlas cluster exists (Patrick's Org → Project 0 → 3PT-Cluster, Free, sample data loaded); org and
+  project ids, screens, and what goes in `.env` are in `docs/17-atlas-setup-dossier.md` (15 screenshots under
+  `docs/assets/atlas/`). Service account not yet created (the one console step left). `sandbox.sh scale|autoscale` and the
+  `atlas.scale` grant added; the MCP's `atlas-upgrade-cluster` is the agent-side equivalent. Box VM stopped: too heavy for
+  this laptop today.
 - 2026-09-26 14:15 ET: **term 2 opened.** L1–L7 closed; six lanes with a gate each (T1 loop on Atlas · T2 photos through
   the loop · T3 the judges' surface · T4 the difficulty story · T5 demo, video, pitch · T6 green main and hygiene) plus a
   steward, mapped to terminals and judging weights in `docs/17-term-2-lanes.md`. Lane board reads it. Facts at 14:15: no
   `.env`, no Sandbox cluster, nothing writes to Atlas; Yash's two commits on `origin/main` (Acme Builders, 117 licensed
   construction photos) settle the workload as construction; freeze at 16:45, submit 17:00.
+- 2026-09-26 15:25 ET: **eligibility risk.** The only MongoDB email received is the generic Atlas welcome mail; no Sandbox
+  join link or credit code has been found. Whether Patrick's Org is the hackathon Sandbox org is unconfirmed; Atlas credits
+  are not applied (Billing → Available Credits is empty). Resolve with MongoDB staff before building further on 3PT-Cluster.
+- 2026-09-26 15:30 ET: Sandbox org identified: an Atlas invitation to "Harness Engineering & Model Wrangling Hackathon
+  (.local NYC)" for patrickastarita@gmail.com. Accept it, then create project + cluster there (`make sandbox` with the new
+  `ATLAS_ORG_ID`); Patrick's Org / 3PT-Cluster is personal and not eligible.
+- 2026-09-26 15:40 ET: **Sandbox live.** Org `69ef9daf03d2ce35c2657862`, project `6ab80ef67d3d0c27d97a4b0e`, `Cluster0` = M10 dedicated
+  (AWS us-west-1) provisioned by the org template. Ids in `.env`; current IP on the access list. Left for Patrick: database
+  user and a project-level service account, then `pnpm --filter @3pt/battery-atlas run provision`. `docs/17` §7.

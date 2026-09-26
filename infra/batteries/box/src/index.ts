@@ -1,4 +1,4 @@
-/** @3pt/battery-box — the machine the workload runs on. docs/14-sandbox-provisioning.md.
+/** @3pt/battery-box — the machine the workload runs on. docs/16-sandbox-provisioning.md.
  *  A box is a Colima VM (Ubuntu, Docker runtime) that `box.sh` starts and `ansible/site.yml` converges.
  *  Stages never see a box; they see the tool grants below, which Instrument may hand to Build. */
 

@@ -29,10 +29,5 @@
     "turbo": "^2.5.6",
     "typescript": "^5.9.2",
     "@types/node": "^22.18.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

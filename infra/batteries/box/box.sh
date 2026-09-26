@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 3PT · battery-box · the deterministic flow. docs/14-sandbox-provisioning.md §2
+# 3PT · battery-box · the deterministic flow. docs/16-sandbox-provisioning.md §2
 #   box.sh up             guard → vm → ping → play (every role) → verify
 #   box.sh vm             start the Colima profile (create it on first run)
 #   box.sh ping           Ansible ping over the generated inventory
@@ -84,7 +84,7 @@ verify(){
   say "verify: toolbelt"
   box_exec 'for t in node pnpm mongosh atlas mongoimport docker; do printf "  %-12s %s\n" "$t" "$(command -v $t >/dev/null && ($t --version 2>/dev/null | head -1) || echo MISSING)"; done'
   say "verify: workload"
-  box_exec 'ls /opt/3pt/harness/apps/worker/dist/main.js >/dev/null && echo "  worker built" || echo "  worker NOT built"; systemctl is-active 3pt-worker 2>/dev/null | sed "s/^/  3pt-worker: /" || true'
+  box_exec 'ls /opt/3pt/harness/apps/worker/dist/main.js >/dev/null && echo "  worker built" || echo "  worker NOT built"; systemctl is-active 3pt-worker 2>/dev/null | sed "s/^/  3pt-worker: /" || true; sudo journalctl -u 3pt-worker -n 3 -o cat --no-pager 2>/dev/null | sed "s/^/    /"'
   say "verify: atlas"
   box_exec 'if [ -n "${ATLAS_URI:-}" ]; then mongosh "$ATLAS_URI" --quiet --eval "const r=db.runCommand({ping:1}); print(\"  ping ok=\"+r.ok+\" host=\"+db.getMongo().getURI().replace(/\\/\\/.*@/,\"//…@\"))"; else echo "  ATLAS_URI unset — no cluster to ping (infra/batteries/atlas/sandbox.sh)"; fi'
 }

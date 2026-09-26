@@ -28,3 +28,6 @@
 | **Segment** | One thought's worth of transcript, marked `<!-- sN.NN who -->` in `brainstorming.md`. The unit of provenance (`docs/09-provenance.md`). |
 | **Cite** | `@sN.NN` in any comment: this text came from that segment. `@sN.NN:slug` names the idea. |
 | **Bake** | `node scripts/prov.mjs --bake`: copy every cite the transcript does not yet list into its segment marker, so the transcript stays the complete record of where its ideas went. |
+| **Box** | The machine the workload runs on: a Colima VM converged by the box battery's Ansible playbook (node, mongosh, Atlas CLI, MCP server, the repo at `/opt/3pt`, the worker as a service). Disposable; state is in Atlas. `docs/16-sandbox-provisioning.md`. |
+| **Sandbox** | The MongoDB Atlas Hackathon Sandbox org from the registration email. Finalist eligibility requires the project and cluster to be created inside it (`sandbox.sh`, Atlas CLI). |
+| **Atlas Local** | `mongodb/mongodb-atlas-local` run by `atlas deployments setup --type local` inside the box: Search and Vector Search offline, same driver calls. Opt-in (`BOX_ATLAS_LOCAL=1`), never the judged path. |

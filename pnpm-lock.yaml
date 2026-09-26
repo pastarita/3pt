@@ -191,6 +191,9 @@ importers:
 
   harness/apps/cli:
     dependencies:
+      '@3pt/battery-atlas':
+        specifier: workspace:*
+        version: link:../../../infra/batteries/atlas
       '@3pt/build':
         specifier: workspace:*
         version: link:../../packages/build
@@ -213,6 +216,9 @@ importers:
 
   harness/apps/worker:
     dependencies:
+      '@3pt/battery-atlas':
+        specifier: workspace:*
+        version: link:../../../infra/batteries/atlas
       '@3pt/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -318,6 +324,19 @@ importers:
         version: 5.9.3
 
   infra/batteries/blob:
+    dependencies:
+      '@3pt/core':
+        specifier: workspace:*
+        version: link:../../../harness/packages/core
+    devDependencies:
+      '@types/node':
+        specifier: ^22.18.0
+        version: 22.20.4
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
+  infra/batteries/box:
     dependencies:
       '@3pt/core':
         specifier: workspace:*

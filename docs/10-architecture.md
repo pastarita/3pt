@@ -14,7 +14,7 @@ Three top-level lanes, and only three. Each lane owns one question.
 |---|---|---|
 | `ui/` | How does a human see harness state? | `apps/` (pwa, web, macos) + `packages/` (design-system, inspector-client) |
 | `harness/` | What does the running pipeline do? | `apps/` (cli, api, worker) + `packages/` (core, plan, build, instrument, media) + `policies/`, `checkpoints/` as data |
-| `infra/` | What does the pipeline run on, and how is it stood up? | `batteries/` (atlas, blob, artifacts, repo, tracing), one package each |
+| `infra/` | What does the pipeline run on, and how is it stood up? | `batteries/` (atlas, blob, artifacts, repo, tracing, box), one package each |
 
 **Turborepo, not Bazel.** Bazel would give hermetic polyglot builds we do not need today and would
 cost the afternoon. Turborepo runs any workspace with a `package.json`, so the Swift app is driven
@@ -446,6 +446,7 @@ store (Atlas). Those are the product.
 | Blob backend | **Decided default:** GridFS inside the Sandbox (eligibility). R2 and fs are one env var away. |
 | Worker runtime | **Open:** node locally today; Cloudflare Worker deploy (`wrangler`) when the jobs collection is live. |
 | Web inspector host | **Open:** a second Pages project, or v0 if the afternoon runs short. Never inside `hub/`. |
-| Atlas driver in the atlas battery | **Open (lane 4):** `provision.ts` prints its plan until `mongodb` is added and `ATLAS_URI` exists. |
+| Atlas driver in the atlas battery | **Decided 14:30:** `mongodb` driver in; `provision.ts` creates collections, indexes, the vector index; `atlasStore()` is injected into `apps/cli` and `apps/worker` when `ATLAS_URI` is set. |
+| The machine the worker runs on | **Decided 14:30:** the box battery, a Colima VM converged by Ansible; the Sandbox cluster via the Atlas CLI (`sandbox.sh`). `docs/16-sandbox-provisioning.md`. |
 | Mermaid in the hub Viewer | **Decided:** no. Leaves are self-contained (no CDN). The hub carries the SVG leaf instead. |
 | Harness runtime | **Decided 13:00:** built on AWS Strands (`createHarness`, `ModelRouter`, `Storage`, steering, evals, optimizer). 3PT compiles a Policy into harness options. See `docs/12-strands-archaeology.md`. `@3pt/strands` excluded from the workspace until the disk is freed. |

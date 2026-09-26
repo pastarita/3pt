@@ -42,5 +42,10 @@ docs/generated/
 __pycache__/
 .venv/
 
+# Box battery: generated per machine by box.sh (ssh config, inventory, vars)
+infra/batteries/box/ansible/.inventory.ini
+infra/batteries/box/ansible/.ssh_config
+infra/batteries/box/ansible/.vars.json
+
 # Worktrees (docs/11-worktrees.md) — Claude Code's and ours
 .claude/worktrees/
