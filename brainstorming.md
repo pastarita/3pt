@@ -296,6 +296,7 @@ term install loop
 doc docs/00-vision.md
 doc docs/12-decisions.md
 doc docs/10-architecture.md
+doc docs/pr-descriptions/PR_DESCRIPTION_CI_HERALDRY.md
 -->
 Predications: some of the predictions are that Yash and I are in a respective hackathon. There are several lanes, and we want to distribute workloads with respect to the utilization of our own coding agents on our shared repo:
 1. Setting up the repo
