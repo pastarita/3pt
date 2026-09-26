@@ -316,12 +316,10 @@ function topbar(): string {
 /* ---------- render ---------- */
 
 const app = document.getElementById('app')!;
-/** Photo credits. Two photos are CC BY, so their authors must show on screen (THIRD_PARTY.md). */
+/** Photo note. The bundled photos are public domain or CC0 (no credit needed). Live photos from the API
+ *  come from data/mock/media-pool, where some are CC BY / CC BY-SA, so the link to the credits stays. */
 function credits(): string {
-  return `<footer class="credits" data-region="credits">Photos: Wikimedia Commons and openly licensed archives (CC0, public domain, CC BY, CC BY-SA).
-    Cable entry (electrical-3) by Michael Bemmerl, <a href="https://creativecommons.org/licenses/by/3.0/de/deed.en" target="_blank" rel="noopener">CC BY 3.0 DE</a>.
-    Steel frame building (exterior-5) by Dwight Burdette, <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>.
-    <a href="https://github.com/pastarita/3pt/blob/main/THIRD_PARTY.md" target="_blank" rel="noopener">All credits</a> · Buildings: NYC Open Data.</footer>`;
+  return `<footer class="credits" data-region="credits">Photos: openly licensed. <a href="https://github.com/pastarita/3pt/blob/main/THIRD_PARTY.md" target="_blank" rel="noopener">Credits</a> · Buildings: NYC Open Data.</footer>`;
 }
 
 function render() {
