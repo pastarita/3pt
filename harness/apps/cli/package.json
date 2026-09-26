@@ -1,0 +1,17 @@
+{
+  "name": "@3pt/cli",
+  "version": "0.0.1",
+  "private": true,
+  "description": "The 3pt command: plan · build · instrument · loop · rollback.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": { "@3pt/core": "workspace:*", "@3pt/plan": "workspace:*", "@3pt/build": "workspace:*", "@3pt/instrument": "workspace:*" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}

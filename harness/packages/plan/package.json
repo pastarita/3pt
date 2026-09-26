@@ -1,0 +1,17 @@
+{
+  "name": "@3pt/plan",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Plan stage: reads the latest checkpoint and measurements, selects a sprint mode, emits a spec and an evaluation plan.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": { "@3pt/core": "workspace:*" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}

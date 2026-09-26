@@ -1,0 +1,17 @@
+{
+  "name": "@3pt/core",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Harness runtime: stage contract, iteration runner, and the shared record types (policy, checkpoint, measurement, plan) that every stage and every battery agree on.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {  },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}

@@ -1,0 +1,16 @@
+{
+  "version": 0,
+  "createdAt": "2026-09-26T13:00:00-04:00",
+  "rules": [
+    "Atlas is the only state store; nothing stateful lives in process memory across iterations.",
+    "Read an image once, store the transcript, re-read only deliberately.",
+    "The harness is the product; the UI is an inspector."
+  ],
+  "contextPolicy": { "maxTokensPerStage": { "plan": 40000, "build": 120000, "instrument": 60000 }, "readOnceTranscripts": true, "hotTierBudgetMB": 512 },
+  "toolGrants": {
+    "plan": ["atlas.find", "atlas.latest"],
+    "build": ["atlas.find", "atlas.insert", "blob.get", "repo.worktree"],
+    "instrument": ["atlas.*", "repo.tag", "tracing.read", "policy.write"]
+  },
+  "provenance": { "reason": "seed" }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@3pt/strands", "version": "0.0.1", "private": true, "type": "module",
+  "description": "3PT on Strands: compiles a 3PT Policy document into a Strands harness (createHarness), a ModelRouter, an Atlas-backed Storage, and a measurement plugin. The meta-harness is configuration over Strands, not a second agent loop.",
+  "main": "./dist/index.js", "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "clean": "rm -rf dist" },
+  "dependencies": { "@3pt/core": "workspace:*", "@strands-agents/harness": "^0.1.1", "@strands-agents/sdk": "^1.19.0", "zod": "^4.1.12" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}
