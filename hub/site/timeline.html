@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Timeline</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<script src="./prov-data.js"></script>
+<style>
+  /* the rail: one row per segment, monogram(s) on the left, the record on the right */
+  .rail{position:relative;margin:14px 0 0;padding-left:54px}
+  .rail::before{content:"";position:absolute;left:21px;top:0;bottom:0;width:2px;background:var(--line)}
+  .seg{position:relative;margin:0 0 12px;scroll-margin-top:20px}
+  .seg .who{position:absolute;left:-54px;top:8px;display:flex;flex-direction:column;gap:3px;align-items:center;width:44px}
+  .seg .who i{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--pine-soft);border:2px solid var(--line-strong);font:800 11px/1 var(--mono);color:var(--ink);font-style:normal}
+  .seg .who i.P{border-color:var(--ink)} .seg .who i.Y{border-color:var(--soft);border-style:double} .seg .who i.X{border-color:var(--faint);border-style:dashed} .seg .who i.q{color:var(--faint)}
+  .seg .rec{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:11px 14px 10px}
+  .seg:target .rec{border-color:var(--flag);box-shadow:0 0 0 2px color-mix(in srgb,var(--flag) 35%,transparent)}
+  .seg .hd{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font:700 11px/1 var(--mono);color:var(--faint);letter-spacing:.06em}
+  .seg .hd .id{color:var(--flag);font-size:12px} .seg .hd a{color:var(--faint);text-decoration:none} .seg .hd a:hover{color:var(--ink)}
+  .seg .say{font:italic 400 14px/1.5 var(--serif);color:var(--ink);margin:7px 0 6px;max-width:80ch}
+  .ops{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}
+  .op{font:700 10.5px/1 var(--mono);padding:4px 8px;border-radius:99px;border:1px solid var(--line);color:var(--soft);background:var(--sand);white-space:nowrap;cursor:default}
+  .op.idea{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)} .op.pivot{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)} .op.drop{color:var(--alert);border-color:color-mix(in srgb,var(--alert) 45%,transparent);text-decoration:line-through}
+  .op b{font-weight:800;margin-right:3px}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:7px;font:600 11.5px/1.5 var(--sans);color:var(--soft)}
+  .meta span b{font:700 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-right:5px}
+  .meta a{color:var(--cyan);text-decoration:none} .meta a:hover{text-decoration:underline}
+  .meta a.sg{font-family:var(--mono);font-size:11px}
+  .q{margin-top:8px;padding:7px 10px;border-left:3px solid var(--line-strong);background:var(--panel);border-radius:0 6px 6px 0;font-size:12.8px;line-height:1.5}
+  .q.open{border-left-color:var(--flag)} .q b{color:var(--ink)} .q .r{color:var(--soft)} .q .open{color:var(--flag);font:800 9.5px/1 var(--mono);letter-spacing:.1em;margin-left:6px}
+  .note{margin-top:6px;font:italic 12.5px/1.45 var(--serif);color:var(--faint)}
+  .words{display:none;margin-top:9px;padding:10px 12px;background:var(--sand);border:1px solid var(--line);border-radius:8px;white-space:pre-wrap;font:13px/1.55 var(--sans);color:var(--soft);max-width:90ch}
+  .seg.open .words{display:block}
+  .seg .hd button{font-size:10px;padding:3px 8px;margin-left:auto}
+  .ideas .row{display:grid;grid-template-columns:230px 70px 1fr;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.8px;align-items:start}
+  .ideas .row:last-child{border-bottom:0}.ideas .row code{font-size:12px}.ideas .row .g{color:var(--soft)}.ideas .row .h{font:11px/1.6 var(--mono);color:var(--faint)}
+  .ideas{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin:12px 0}
+  .ideas h3{margin:0;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12.5px;display:flex;gap:8px;align-items:baseline}
+  .ideas h3 span{font:600 11px/1 var(--mono);color:var(--faint)}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font:600 11px/1.6 var(--sans);color:var(--faint);margin:8px 0 0}
+  .legend i{display:inline-flex;width:16px;height:16px;border-radius:50%;border:2px solid var(--line-strong);margin-right:4px;vertical-align:middle;font:800 8px/12px var(--mono);align-items:center;justify-content:center;font-style:normal;color:var(--ink)}
+  @media(max-width:760px){.ideas .row{grid-template-columns:1fr;gap:4px}.rail{padding-left:44px}.seg .who{left:-44px;width:36px}.seg .who i{width:22px;height:22px;font-size:10px}.rail::before{left:17px}}
+  @media print{.bar,.seg .hd button{display:none!important}.words{display:block!important}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Record · derived · from <code>brainstorming.md</code> via <code>scripts/prov.mjs</code></p>
+    <h1>Timeline</h1>
+    <p class="lede">The brainstorm as it happened: who spoke, what was born there, what it grew out of, where it landed in the docs, and what is still undecided. The words are the transcript's; the structure is the segment markers described in the <a href="./view.html?f=docs/09-provenance.md">Provenance DSL</a>.</p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+  <p style="margin:6px 0 0;font-size:12px;color:var(--faint)"><span class="pv d">DERIVED</span> everything on this page is computed from <code>prov-data.js</code>, which <code>node scripts/prov.mjs</code> regenerates from the transcript. Generated <span id="gen"></span>.</p>
+
+  <div class="bar" id="bar">
+    <button data-view="rail" class="on">Chronology</button>
+    <button data-view="ideas">Ideas</button>
+    <button data-view="questions">Questions</button>
+    <span style="width:10px"></span>
+    <button data-who="" class="on">Everyone</button>
+    <button data-who="P">Patrick</button>
+    <button data-who="Y">Yash</button>
+    <button data-who="X">Guest</button>
+    <span style="width:10px"></span>
+    <button id="words">Show the words</button>
+  </div>
+  <p class="legend"><i>P</i>Patrick <i style="border-style:double">Y</i>Yash <i style="border-style:dashed">X</i>guest or mentor <i style="color:var(--faint)">?</i>uncertain &nbsp;·&nbsp; <span class="op idea" style="padding:2px 7px"><b>●</b>born</span> <span class="op" style="padding:2px 7px"><b>＋</b>grown</span> <span class="op pivot" style="padding:2px 7px"><b>↻</b>pivoted</span> <span class="op drop" style="padding:2px 7px"><b>✕</b>dropped</span></p>
+
+  <div id="out"></div>
+
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Every idea has a birthplace. This is the map back to it.</p></footer>
+</div>
+<script>
+(function(){
+  var T = window.T, P = window.PROV, esc = T.esc;
+  var state = T.load('timeline_v1', { view:'rail', who:'', words:false });
+  var GL = { idea:'●', grow:'＋', pivot:'↻', drop:'✕' };
+  var lanes = {}; T.LANES.forEach(function(l){ lanes[l.n] = l.name; });
+  var segById = {}; P.segments.forEach(function(s){ segById[s.id] = s; });
+  document.getElementById('gen').textContent = P.generated;
+
+  /* DERIVED tiles */
+  var openQ = P.questions.filter(function(q){ return q.open; }).length;
+  var docs = P.docs.filter(function(d){ return d.landed.length; }).length;
+  document.getElementById('stats').innerHTML = [
+    [P.segments.length, 'segments across ' + P.sessions.length + ' session' + (P.sessions.length===1?'':'s')],
+    [P.ideas.length, 'ideas born · ' + P.ideas.filter(function(i){ return i.status==='dropped'; }).length + ' dropped'],
+    [openQ + ' / ' + P.questions.length, 'questions still open'],
+    [docs, 'documents the ideas landed in']
+  ].map(function(t){ return '<div class="stat"><div class="n">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>'; }).join('');
+
+  var segLink = function(id){ return '<a class="sg" href="#'+id+'">'+id+'</a>'; };
+  var docLink = function(p){ var path = p.split('#')[0]; var href = /\.html$/.test(path) ? './'+path.replace(/^hub\/site\//,'') : './view.html?f='+path; return '<a href="'+href+'" title="'+esc(p)+'">'+esc(path.replace(/^docs\//,'').replace(/^hub\/site\//,'hub/'))+'</a>'; };
+  var whoDots = function(who){ return who.split('').map(function(c){ return '<i class="'+(c==='?'?'q':c)+'">'+c+'</i>'; }).join(''); };
+  var visible = function(s){ return !state.who || s.who.indexOf(state.who) >= 0; };
+
+  function rail(){
+    var bySession = {};
+    P.segments.filter(visible).forEach(function(s){ (bySession[s.session] = bySession[s.session] || []).push(s); });
+    return P.sessions.map(function(ss){
+      var segs = bySession[ss.n] || [];
+      return '<h2>Session '+ss.n+' <span>'+ss.date+' · '+segs.length+(state.who?' of '+ss.segments:'')+' segments</span></h2><div class="rail">'
+        + segs.map(function(s){
+          var landed = []; var add = function(p){ p = p.split('#')[0]; if (landed.indexOf(p)<0) landed.push(p); };
+          s.docs.concat(s.code).forEach(add); s.ops.forEach(function(o){ o.docs.concat(o.code).forEach(add); });
+          return '<div class="seg'+(state.words?' open':'')+'" id="'+s.id+'"><div class="who">'+whoDots(s.who)+'</div><div class="rec">'
+            + '<div class="hd"><span class="id">'+s.id+'</span>'+(s.time?'<span>'+s.time+'</span>':'')+'<span>'+s.words+' words</span>'
+            + (s.lanes.length?'<span>lane '+s.lanes.map(function(n){ return n+(lanes[n]?' '+esc(lanes[n]):''); }).join(' · ')+'</span>':'')
+            + '<a href="./view.html?f=brainstorming.md#'+s.id+'">open in Viewer ↗</a><button data-toggle="'+s.id+'">'+(state.words?'hide':'read')+'</button></div>'
+            + '<p class="say">'+esc(s.excerpt)+'</p>'
+            + (s.ops.length?'<div class="ops">'+s.ops.map(function(o){ return '<span class="op '+o.op+'" title="'+esc(o.gloss||'')+'"><b>'+GL[o.op]+'</b>'+esc(o.slug)+'</span>'; }).join('')+'</div>':'')
+            + '<div class="meta">'
+            + (s.from.length?'<span><b>from</b>'+s.from.map(segLink).join(' ')+'</span>':'')
+            + (s.to.length?'<span><b>to</b>'+s.to.map(segLink).join(' ')+'</span>':'')
+            + (landed.length?'<span><b>landed</b>'+landed.map(docLink).join(' · ')+'</span>':'')
+            + (s.citedBy.length?'<span><b>cited by</b>'+s.citedBy.map(docLink).join(' · ')+'</span>':'')
+            + (s.terms.length?'<span><b>coined</b>'+s.terms.map(esc).join(' · ')+'</span>':'')
+            + '</div>'
+            + s.qs.map(function(q){ return '<div class="q'+(q.a?'':' open')+'"><b>'+esc(q.q)+'</b>'+(q.a?'<div class="r">→ '+esc(q.a)+'</div>':'<span class="open">OPEN</span>')+'</div>'; }).join('')
+            + s.notes.map(function(n){ return '<p class="note">'+esc(n)+'</p>'; }).join('')
+            + '<div class="words">'+esc(s.body)+'</div>'
+            + '</div></div>';
+        }).join('') + '</div>';
+    }).join('');
+  }
+
+  function ideas(){
+    var groups = [['live','Live'],['pivoted','Pivoted'],['dropped','Dropped']];
+    var list = P.ideas.filter(function(i){ return !state.who || segById[i.born].who.indexOf(state.who) >= 0; });
+    return groups.map(function(g){
+      var rows = list.filter(function(i){ return i.status===g[0]; });
+      if (!rows.length) return '';
+      return '<div class="ideas"><h3>'+g[1]+' <span>'+rows.length+'</span></h3>' + rows.map(function(i){
+        var hist = i.history.filter(function(h){ return h.op!=='idea'; }).map(function(h){ return GL[h.op]+' '+segLink(h.seg); }).join('  ');
+        return '<div class="row"><div><code>'+esc(i.slug)+'</code><div class="h">born '+segLink(i.born)+' · '+esc(i.who)+(hist?'<br>'+hist:'')+'</div></div>'
+          + '<div class="h">'+i.docs.map(docLink).join('<br>')+'</div><div class="g">'+esc(i.gloss)+'</div></div>';
+      }).join('') + '</div>';
+    }).join('');
+  }
+
+  function questions(){
+    var qs = P.questions.filter(function(q){ return !state.who || q.who.indexOf(state.who) >= 0; });
+    var open = qs.filter(function(q){ return q.open; }), done = qs.filter(function(q){ return !q.open; });
+    var block = function(q){ return '<div class="q'+(q.open?' open':'')+'"><b>'+esc(q.q)+'</b> <span style="font:11px var(--mono);color:var(--faint)">'+segLink(q.seg)+' · '+esc(q.who)+'</span>'+(q.a?'<div class="r">→ '+esc(q.a)+'</div>':'<span class="open">OPEN</span>')+'</div>'; };
+    return '<h2>Open <span>'+open.length+' · the annealing worklist</span></h2>' + (open.length?open.map(block).join(''):'<p style="color:var(--faint)">Nothing open.</p>')
+      + '<h2>Resolved <span>'+done.length+' · where each answer landed</span></h2>' + done.map(block).join('');
+  }
+
+  function draw(){
+    document.getElementById('out').innerHTML = state.view==='ideas' ? ideas() : state.view==='questions' ? questions() : rail();
+    document.querySelectorAll('#bar [data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===state.view); });
+    document.querySelectorAll('#bar [data-who]').forEach(function(b){ b.classList.toggle('on', b.dataset.who===state.who); });
+    document.getElementById('words').textContent = state.words ? 'Hide the words' : 'Show the words';
+    T.save('timeline_v1', state);
+    if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ block:'start' }); }
+  }
+  document.getElementById('bar').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.view !== undefined) state.view = b.dataset.view;
+    else if (b.dataset.who !== undefined) state.who = b.dataset.who;
+    else if (b.id === 'words') state.words = !state.words;
+    draw();
+  });
+  document.getElementById('out').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-toggle]'); if (!b) return;
+    var seg = document.getElementById(b.dataset.toggle); var open = seg.classList.toggle('open'); b.textContent = open ? 'hide' : 'read';
+  });
+  window.addEventListener('hashchange', function(){ if (state.view!=='rail') { state.view='rail'; draw(); } var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ block:'start' }); });
+  if (location.hash && state.view!=='rail') state.view = 'rail';
+  draw();
+})();
+</script>
+</body>
+</html>

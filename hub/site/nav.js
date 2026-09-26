@@ -27,6 +27,8 @@
     'brainstorming':  g('<path d="M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3Z"/><path d="M9.5 19h5M10.5 21.5h3"/><path d="M10 9.5c.5-1.5 3.5-1.5 4 0"/>'),
     'sources':        g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h8"/><path d="M3 8v13h12" stroke-dasharray="2 2"/>'),
     'changelog':      g('<path d="M4 4h16v16H4Z"/><path d="M8 9h8M8 12.5h8M8 16h5"/><path d="M12 2v4"/>'),
+    'timeline':       g('<path d="M12 3v18"/><circle cx="12" cy="6.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="17.5" r="1.8" fill="currentColor"/><path d="M14.5 6.5h5M4.5 12h5M14.5 17.5h5"/>'),
+    'provenance':     g('<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M7.6 16.4L16.4 7.6M8.2 18h7.6"/><path d="M6 15.8V9a3 3 0 0 1 3-3h6.8"/>'),
     'glossary':       g('<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M5 18a2 2 0 0 1 2-2h11"/><path d="M9 8h5M9 11h5"/>'),
     'charter':        g('<path d="M6 3h9l4 4v14H6Z"/><path d="M15 3v4h4"/><path d="M9 11h7M9 14.5h7M9 18h4"/>'),
     'direction':      g('<path d="M4 19.5l8-14 8 14Z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>'),
@@ -49,7 +51,7 @@
     ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5']]],
     ['decide', [['direction','Direction'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
     ['build',  [['lanes','Lane board'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['resources','Resources & credits','D4']]],
-    ['record', [['changelog','Changelog'], ['brainstorming','Brainstorming','DB'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
+    ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
   ];
   /* ROUTE: slugs that are not their own .html file. Documents route through the Viewer. */
   var ROUTE = {
@@ -65,10 +67,11 @@
     'workflow':       'view.html?f=docs/03-workflow.md',
     'resources':      'view.html?f=docs/04-resources.md',
     'glossary':       'view.html?f=docs/glossary.md',
-    'charter':        'view.html?f=README.md'
+    'charter':        'view.html?f=README.md',
+    'provenance':     'view.html?f=docs/09-provenance.md'
   };
   var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
-  var FRESH = { 'direction':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1 }; /* retire at next check-in */
+  var FRESH = { 'direction':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1 }; /* retire at next check-in */
 
   /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
   function href(s){

@@ -54,6 +54,8 @@
       epigram:'The official partner resource guide, pulled 2026-09-26. Upstream is the Google Doc.' },
     { id:'DG', slug:'glossary',       name:'Glossary',             verb:'Naming',    cluster:'record', temp:'cold', doc:'docs/glossary.md',
       epigram:'Install loop, backfeed, furnace, left and right sides of the triangle.' },
+    { id:'D9', slug:'provenance',     name:'Provenance DSL',       verb:'Tracing',   cluster:'record', temp:'warm', doc:'docs/09-provenance.md',
+      epigram:'Segment markers in the transcript, @cites everywhere else, one tool that refuses broken pointers.' },
     { id:'DR', slug:'charter',        name:'README',               verb:'Entering',  cluster:'record', temp:'cold', doc:'README.md',
       epigram:'The repo front door.' }
   ];
