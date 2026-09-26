@@ -7,7 +7,7 @@
 //   node scripts/replay-data.mjs --cli <path/to/cli/dist/index.js>   # use a CLI built elsewhere
 //
 // It also verifies: the recounted grants, revokes, keeps and sprint modes must equal the replay's own
-// summary line, or it exits 1 and writes nothing.
+// summary line, and RUNS separate replays must print the same bytes, or it exits 1 and writes nothing.
 import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -17,7 +17,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const i = process.argv.indexOf('--cli');
 const cli = i > 0 ? process.argv[i + 1] : join(root, 'harness/apps/cli/dist/index.js');
 // The CLI joins the data path to its own repo root, so it stays relative.
-const out = execFileSync('node', [cli, 'replay', 'data/mock/acme-builders'], { cwd: root, encoding: 'utf8' });
+const RUNS = 3;   // the Results leaf shows this count; each run is a fresh process with a fresh memory store
+const outs = Array.from({ length: RUNS }, () => execFileSync('node', [cli, 'replay', 'data/mock/acme-builders'], { cwd: root, encoding: 'utf8' }));
+if (outs.some(o => o !== outs[0])) { console.error(`FAIL replay-data: ${RUNS} replays did not print the same output`); process.exit(1); }
+const out = outs[0];
 const lines = out.split('\n');
 
 const head = out.match(/\[replay\] (\d+) projects, (\d+) months \((\d{4}-\d{2}) → (\d{4}-\d{2})\)/);
@@ -64,6 +67,7 @@ const expected = lines.map(l => l.match(/^ {2}(\d+)\s+(\w+)\s+(\d{4}-\d{2})\s+(\
 const data = {
   projects: +projects, first, last: months.at(-1).month, months, expected,
   final: { version: +finalLine[1], grants: finalLine[2].split(', '), rulesLearned: +finalLine[3] },
+  runs: RUNS,   // replays run and found byte-identical
   said,   // the replay's own summary; `confirmed` and `failedEffect` count every effect check, not only changes
 };
 const file = join(root, 'hub/site/replay-data.js');

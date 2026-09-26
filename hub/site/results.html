@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Results</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./replay-data.js"></script>
+<style>
+  /* Showcase of `3pt replay`. Every number and mark comes from replay-data.js; colors from 3pt.css tokens. */
+  :root{--m-feature:var(--build);--m-improvement:var(--instrument);--m-fix:var(--alert)}
+  /* change kinds: who acts on a grant */
+  :root{--k-suggest:var(--violet);--k-automate:var(--cyan);--k-improve:var(--instrument)}
+  .kinds{display:grid;grid-template-columns:3fr 7fr;gap:14px}
+  .kind{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--card)}
+  .kind h3{margin:0 0 2px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+  .kind h3 b{font:800 30px/1 var(--sans)}
+  .kind h3 small{flex-basis:100%;font:600 11px/1.3 var(--mono);color:var(--faint)}
+  .kind ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+  .kind li{display:grid;grid-template-columns:84px 1fr;align-items:center;gap:8px;font-size:13px;font-weight:600}
+  .kind li .pill{justify-self:start}
+  .kind li s{text-decoration:line-through;color:var(--faint)}
+  .kind li em{display:block;font:500 10.5px/1.4 var(--mono);font-style:normal;color:var(--faint)}
+  .pill{font:800 9px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+  .suggest{color:var(--k-suggest)}.automate{color:var(--k-automate)}.improve{color:var(--k-improve)}
+  .kind.people{border-color:color-mix(in srgb,var(--k-suggest) 55%,transparent)}
+  .kind.app{border-color:color-mix(in srgb,var(--k-automate) 55%,transparent)}
+  .kind.app ul{grid-template-columns:1fr 1fr}
+  @media (max-width:760px){.kinds,.kind.app ul{grid-template-columns:1fr}}
+  .hero h1{font-size:44px;line-height:1.05;margin:6px 0 10px;letter-spacing:-.02em}
+  .hero h1 em{font-style:normal;color:var(--flag)}
+  .stats{grid-template-columns:repeat(5,1fr)}
+  .stat .n{font-size:34px}
+  .stat.hot{border-color:var(--flag)}
+  .stat.hot .n{color:var(--flag)}
+  figure{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 12px;margin:18px 0}
+  figure h2{margin:0 0 12px;font-size:19px}
+  figure h2 i{font:700 12px/1 var(--mono);color:var(--faint);font-style:normal;margin-right:6px}
+  figcaption{font-size:12px;color:var(--faint);margin:10px 0 0}
+  figcaption code{font-size:11px}
+  svg.d{width:100%;height:auto;display:block;font-family:var(--mono);font-size:11px;overflow:visible}
+  svg.d text{fill:var(--ink)}
+  svg.d .s{fill:var(--soft);font-size:10px}
+  svg.d .t{font-family:var(--sans);font-weight:700;font-size:12.5px}
+  svg.d .big{font-family:var(--sans);font-weight:800;font-size:26px}
+  svg.d .lead{fill:var(--ink);font-weight:700;font-size:11px}
+  .mf{fill:var(--m-feature)}.mi{fill:var(--m-improvement)}.mx{fill:var(--m-fix)}
+  .keyrow{display:flex;flex-wrap:wrap;gap:14px;font:600 11.5px/1.3 var(--mono);color:var(--soft);margin-top:8px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.two>figure{min-width:0}
+  @media (max-width:760px){.two{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:32px}}
+  .run{font:600 12.5px/1.5 var(--mono);color:var(--soft);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;margin:18px 0 0}
+  .run code{color:var(--ink)}
+  @media print{figure{break-inside:avoid;background:#fff;border-color:#ccc}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top hero">
+    <p class="eyebrow">Showcase · <code>3pt replay</code> · Acme Builders, <span id="span"></span></p>
+    <h1>The harness rewrote itself <em id="hv"></em> times.</h1>
+    <p class="lede">One loop per month over seven years of simulated job-site photo work. No person edited the policy.</p>
+  </header>
+
+  <div class="stats" id="tiles"></div>
+
+  <!-- 1 · two kinds of change -->
+  <figure id="f0">
+    <h2><i>1</i>Two kinds of change: it asks people, or it changes the app.</h2>
+    <div class="kinds">
+      <div class="kind people"><h3><b id="nS"></b>Suggestions to people<small>a person acts</small></h3><ul id="lS"></ul></div>
+      <div class="kind app"><h3><b id="nA"></b>Changes in the app<small><span id="nAu"></span> automations · <span id="nIm"></span> improvements</small></h3><ul id="lA"></ul></div>
+    </div>
+    <figcaption><span class="pv a">AUTHORED</span>kind per grant, read from each check's note in <code>PROJECT_CHECKS</code>, <code>harness/packages/instrument/src/index.ts</code>. <span class="pv d">DERIVED</span>counts and held or revoked.</figcaption>
+  </figure>
+
+  <!-- 2 · found before the plan -->
+  <figure id="f1">
+    <h2><i>2</i>It found every fix. Most of them years early.</h2>
+    <svg class="d" id="early" viewBox="0 0 960 340" role="img" aria-label="Loop first try versus hand-written plan, per capability"></svg>
+    <div class="keyrow"><span style="color:var(--slate)">◇ hand-written plan</span><span style="color:var(--build)">● loop first try</span><span style="color:var(--build)">▬ held until today</span><span class="suggest">SUGGEST</span><span class="automate">AUTOMATE</span><span class="improve">IMPROVE</span></div>
+    <figcaption><span class="pv d">DERIVED</span>loop dates from <code>3pt replay</code>, plan dates from <code>data/mock/acme-builders/expected/harness-versions.json</code>. <span class="pv a">AUTHORED</span>row names.</figcaption>
+  </figure>
+
+  <div class="two">
+    <!-- 2 · it measures -->
+    <figure id="f2">
+      <h2><i>3</i>It checks its own work.</h2>
+      <svg class="d" id="drop" viewBox="0 0 460 300" role="img" aria-label="Problem size at grant and at the last passed check"></svg>
+      <figcaption><span class="pv d">DERIVED</span>the last passed effect check per grant still held. Bar color is the kind.</figcaption>
+    </figure>
+
+    <!-- 3 · it undoes -->
+    <figure id="f3">
+      <h2><i>4</i>It undoes its own mistakes.</h2>
+      <svg class="d" id="undo" viewBox="0 0 460 300" role="img" aria-label="Grants, effect checks, revokes and keeps">
+        <g id="undoG"></g>
+      </svg>
+      <figcaption><span class="pv d">DERIVED</span>the replay's own totals, recounted by <code>scripts/replay-data.mjs</code>.</figcaption>
+    </figure>
+  </div>
+
+  <!-- 4 · growth -->
+  <figure id="f4">
+    <h2><i>5</i>Ninety-two months, one policy line.</h2>
+    <svg class="d" id="grow" viewBox="0 0 960 200" role="img" aria-label="Grants held per month, with the sprint type of each month"></svg>
+    <div class="keyrow"><span style="color:var(--build)">■ feature sprint</span><span style="color:var(--instrument)">■ check sprint</span><span style="color:var(--alert)">■ fix sprint</span><span style="color:var(--alert)">▼ revoke</span></div>
+    <figcaption><span class="pv d">DERIVED</span>grants held each month, rebuilt from every grant and revoke in the replay.</figcaption>
+  </figure>
+
+  <p class="run">Run it yourself, no keys: <code>node harness/apps/cli/dist/index.js replay</code> · refresh this page: <code>node scripts/replay-data.mjs</code> · the mechanism: <a href="./how-it-works.html">How it works</a></p>
+</div>
+
+<script>
+(function(){
+  var R = globalThis.REPLAY; if (!R) return;
+  var NS = 'http://www.w3.org/2000/svg', $ = function(id){ return document.getElementById(id); };
+  function el(p, tag, a, text){ var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (text != null) e.textContent = text; p.appendChild(e); return e; }
+  function tip(e, s){ el(e, 'title', {}, s); return e; }
+  var N = R.months.length;
+  var idx = function(month){ return R.months.findIndex(function(m){ return m.month === month; }); };
+
+  /* AUTHORED: plain names for the ten hand-written capabilities */
+  var NAME = { fields:'Tag unit, floor, trade', remind:'Shoot walls before drywall', wall:'Tag open or closed wall', wide:'20 photos per question',
+               issue:'Flag leaks on arrival', pack:'Auto owner photo pack', screens:'One screen per role', closeout:'Closeout photo set',
+               bursts:'Drop duplicate bursts', hazard:'Flag fall hazards' };
+  var byGrant = {}; R.expected.forEach(function(x){ byGrant[x.grant] = x; });
+  /* AUTHORED: who acts on each grant, from the check notes in PROJECT_CHECKS.
+     suggest = the app tells a person to do something; automate = the app does a task people did by hand;
+     improve = the app answers better, nobody's task changes. */
+  var KIND = { fields:['automate','tags every photo at upload'], remind:['suggest','the super'], wall:['automate','tags open or closed wall'],
+               wide:['improve','more photos per answer'], issue:['suggest','the super'], pack:['automate','builds the OAC pack'],
+               screens:['improve','a screen per role'], closeout:['automate','builds the turnover set'], bursts:['automate','drops duplicates'],
+               hazard:['suggest','the safety manager'] };
+  var kindOf = function(x){ return (KIND[x.capability] || ['improve'])[0]; };
+  var COLOR = { suggest:'var(--k-suggest)', automate:'var(--k-automate)', improve:'var(--k-improve)' };
+
+  /* events: grants held per month, revokes, last passed check per grant */
+  var held = {}, heldN = [], revokes = [], lastOk = {};
+  R.months.forEach(function(m, k){
+    m.events.forEach(function(e){
+      if (e.k === '+') held[e.grant] = 1;
+      if (e.k === '-'){ delete held[e.grant]; revokes.push(k); }
+      if (e.k === '✓'){ var p = e.note.match(/worked: ([\d.]+) at grant \(cp\/\d+\), ([\d.]+) now/); if (p) lastOk[e.grant] = [+p[1], +p[2]]; }
+    });
+    heldN.push(Object.keys(held).length);
+  });
+
+  /* header + tiles */
+  var early = R.expected.filter(function(x){ return x.firstTry && idx(x.firstTry) < idx(x.expected); }).length;
+  var found = R.expected.filter(function(x){ return x.firstTry; }).length;
+  var kept = R.expected.filter(function(x){ return x.now && x.now !== 'revoked'; }).length;
+  $('hv').textContent = R.final.version;
+  $('span').textContent = R.projects + ' projects, ' + R.first.slice(0,4) + ' to ' + R.last.slice(0,4);
+  var tiles = [[found + '/' + R.expected.length, 'fixes found that people planned', 1], [early, 'found before the plan'],
+               [kept, 'still held today'], [R.said.revoked, 'bad changes undone'], [(R.runs || 1) + '/' + (R.runs || 1), 'runs, same result']];
+  $('tiles').innerHTML = tiles.map(function(t){ return '<div class="stat' + (t[2] ? ' hot' : '') + '"><div class="n">' + t[0] + '</div><div class="l">' + t[1] + ' <span class="pv d">DERIVED</span></div></div>'; }).join('');
+
+  /* 1 · kinds */
+  (function(){
+    var li = function(x){ var k = KIND[x.capability] || ['improve', ''], held = x.now && x.now !== 'revoked';
+      var name = NAME[x.capability] || x.capability;
+      return '<li><span class="pill ' + k[0] + '">' + k[0] + '</span><div>' + (held ? name : '<s>' + name + '</s>') +
+             '<em>' + (k[0] === 'suggest' ? 'to ' : '') + k[1] + (held ? '' : ' · revoked') + '</em></div></li>'; };
+    var rows = R.expected.slice().sort(function(a, b){ return a.v - b.v; });
+    var sug = rows.filter(function(x){ return kindOf(x) === 'suggest'; }), app = rows.filter(function(x){ return kindOf(x) !== 'suggest'; });
+    app.sort(function(a, b){ return (kindOf(a) === 'automate' ? 0 : 1) - (kindOf(b) === 'automate' ? 0 : 1) || a.v - b.v; });
+    $('nS').textContent = sug.length; $('nA').textContent = app.length;
+    $('nAu').textContent = app.filter(function(x){ return kindOf(x) === 'automate'; }).length;
+    $('nIm').textContent = app.filter(function(x){ return kindOf(x) === 'improve'; }).length;
+    $('lS').innerHTML = sug.map(li).join(''); $('lA').innerHTML = app.map(li).join('');
+  })();
+
+  /* 2 · early: one row per capability */
+  (function(){
+    var s = $('early'), X0 = 270, X1 = 850, W = (X1 - X0) / N, X = function(k){ return X0 + (k + .5) * W; }, Y = function(r){ return 34 + r * 30; };
+    var rows = R.expected.slice().sort(function(a, b){ return a.v - b.v; });
+    s.setAttribute('viewBox', '0 0 960 ' + (Y(rows.length) + 4));
+    R.months.forEach(function(m, k){
+      if (m.month.slice(5) === '01'){ el(s, 'path', { d: 'M' + (X0 + k*W) + ' 16V' + Y(rows.length), style: 'stroke:var(--line)' }); el(s, 'text', { x: X0 + k*W + 3, y: 12, 'class': 's' }, m.month.slice(0,4)); }
+    });
+    el(s, 'text', { x: X1 + 12, y: 12, 'class': 's' }, 'lead');
+    rows.forEach(function(x, r){
+      var y = Y(r) + 12, e = idx(x.expected), f = idx(x.firstTry);
+      var k = kindOf(x);
+      el(s, 'rect', { x: 0, y: y - 8, width: 64, height: 16, rx: 8, style: 'fill:none;stroke:' + COLOR[k] });
+      el(s, 'text', { x: 32, y: y + 3.5, 'text-anchor': 'middle', style: 'fill:' + COLOR[k] + ';font:800 8.5px var(--sans);letter-spacing:.08em' }, k.toUpperCase());
+      el(s, 'text', { x: 76, y: y + 4, 'class': 't' }, NAME[x.capability] || x.capability);
+      if (x.now !== 'revoked') tip(el(s, 'rect', { x: X(idx(x.now)), y: y - 4, width: X1 - X(idx(x.now)), height: 8, rx: 3, style: 'fill:var(--amber-soft);stroke:var(--build)' }), 'held since ' + x.now);
+      else el(s, 'text', { x: X1 - 4, y: y + 4, 'class': 's', 'text-anchor': 'end' }, 'revoked, still open');
+      if (f < e) el(s, 'path', { d: 'M' + X(f) + ' ' + y + 'H' + X(e), style: 'stroke:var(--instrument);stroke-width:2;stroke-dasharray:3 3' });
+      tip(el(s, 'path', { d: 'M' + X(e) + ' ' + (y-7) + 'l7 7-7 7-7-7z', style: 'fill:var(--bg);stroke:var(--slate);stroke-width:1.6' }), 'plan: ' + x.expected);
+      tip(el(s, 'circle', { cx: X(f), cy: y, r: 5.5, style: 'fill:var(--build)' }), 'loop first try: ' + x.firstTry);
+      var lead = e - f;
+      el(s, 'text', { x: X1 + 12, y: y + 4, 'class': 'lead' }, lead > 0 ? (lead >= 12 ? (lead / 12).toFixed(1) + ' yr' : lead + ' mo') + ' early' : 'same month');
+    });
+  })();
+
+  /* 3 · drop: problem size at grant vs at the last passed check, grants held at the end */
+  (function(){
+    var s = $('drop'), rows = R.final.grants.filter(function(g){ return lastOk[g]; })
+      .map(function(g){ var v = lastOk[g]; return { g: g, a: v[0], b: v[1], cut: 1 - v[1] / v[0] }; })
+      .sort(function(p, q){ return q.cut - p.cut; });
+    var X0 = 190, W = 170, Y = function(r){ return 14 + r * 32; };
+    s.setAttribute('viewBox', '0 0 460 ' + (Y(rows.length) + 4));
+    rows.forEach(function(p, r){
+      var y = Y(r), name = byGrant[p.g] ? NAME[byGrant[p.g].capability] : p.g;
+      el(s, 'text', { x: 0, y: y + 12, 'class': 't' }, name);
+      tip(el(s, 'rect', { x: X0, y: y, width: W, height: 8, rx: 2, style: 'fill:var(--line-strong)' }), 'at grant: ' + p.a);
+      tip(el(s, 'rect', { x: X0, y: y + 10, width: Math.max(W * p.b / p.a, 2), height: 8, rx: 2, style: 'fill:' + (byGrant[p.g] ? COLOR[kindOf(byGrant[p.g])] : 'var(--instrument)') }), 'now: ' + p.b);
+      el(s, 'text', { x: X0 + W + 10, y: y + 13, 'class': 'lead' }, '−' + Math.round(p.cut * 100) + '%');
+      el(s, 'text', { x: 460, y: y + 13, 'class': 's', 'text-anchor': 'end' }, p.a + ' → ' + p.b);
+    });
+  })();
+
+  /* 4 · undo: grants → checks → fails → revoke or keep */
+  (function(){
+    var g = $('undoG'), S = R.said;
+    function box(x, y, w, n, label, cls){ el(g, 'rect', { x: x, y: y, width: w, height: 56, rx: 8, style: cls }); el(g, 'text', { x: x + 12, y: y + 30, 'class': 'big' }, n); el(g, 'text', { x: x + 12, y: y + 47, 'class': 's' }, label); }
+    function arrow(d){ el(g, 'path', { d: d, style: 'fill:none;stroke:var(--soft);stroke-width:1.4', 'marker-end': 'url(#ahU)' }); }
+    var defs = el(g, 'defs', {}), mk = el(defs, 'marker', { id: 'ahU', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto' });
+    el(mk, 'path', { d: 'M0 0L10 5L0 10z', style: 'fill:var(--soft)' });
+    var amber = 'fill:var(--amber-soft);stroke:var(--build)', green = 'fill:color-mix(in srgb,var(--instrument) 15%,var(--bg));stroke:var(--instrument)',
+        red = 'fill:color-mix(in srgb,var(--alert) 14%,var(--bg));stroke:var(--alert)', grey = 'fill:var(--card);stroke:var(--line-strong)';
+    box(0, 10, 200, S.granted, 'changes it made', amber);
+    box(250, 10, 210, S.confirmed, 'checks passed later', green);
+    box(250, 100, 210, S.failedEffect, 'checks failed', red);
+    box(0, 200, 200, S.revoked, 'revoked: problem stayed', red);
+    box(250, 200, 210, S.kept, 'kept: it was noise', grey);
+    arrow('M200 38H246'); arrow('M150 66Q150 128 246 128'); arrow('M300 156V196'); arrow('M260 156Q120 170 110 196');
+  })();
+
+  /* 5 · grow: sprint strip + grants held */
+  (function(){
+    var s = $('grow'), X0 = 30, W = (952 - X0) / N, X = function(k){ return X0 + k * W; };
+    var top = 40, H = 120, max = Math.max.apply(null, heldN), Y = function(v){ return top + H - v / max * H; };
+    var MC = { feature:'mf', improvement:'mi', fix:'mx' };
+    R.months.forEach(function(m, k){
+      tip(el(s, 'rect', { x: X(k), y: 6, width: Math.max(W - .8, 1), height: 14, 'class': MC[m.mode] }), m.month + ' · ' + m.mode);
+      if (m.month.slice(5) === '01'){ el(s, 'path', { d: 'M' + X(k) + ' 24V' + (top + H), style: 'stroke:var(--line)' }); el(s, 'text', { x: X(k) + 3, y: top + H + 16, 'class': 's' }, m.month.slice(0,4)); }
+    });
+    for (var v = 0; v <= max; v += Math.ceil(max / 3)) el(s, 'text', { x: 0, y: Y(v) + 4, 'class': 's' }, v);
+    var d = 'M' + X(0) + ' ' + Y(0);
+    heldN.forEach(function(v, k){ d += 'V' + Y(v) + 'H' + X(k + 1); });
+    el(s, 'path', { d: d + 'V' + Y(0) + 'Z', style: 'fill:var(--amber-soft);stroke:none' });
+    el(s, 'path', { d: d, style: 'fill:none;stroke:var(--build);stroke-width:2' });
+    revokes.forEach(function(k){ el(s, 'text', { x: X(k) + W/2, y: top - 4, 'text-anchor': 'middle', style: 'fill:var(--alert);font-size:10px' }, '▼'); });
+    el(s, 'text', { x: 952, y: Y(heldN[N-1]) - 6, 'text-anchor': 'end', 'class': 't' }, heldN[N-1] + ' grants held · v' + R.final.version + ' · ' + R.final.rulesLearned + ' rules learned');
+  })();
+})();
+</script>
+</body>
+</html>
