@@ -6,7 +6,7 @@
  */
 import {
   COLLECTIONS, freezePolicy, runIteration, seedPolicy, stageStore,
-  type Checkpoint, type Finding, type HarnessKind, type Policy, type Stage, type Store,
+  type Checkpoint, type Finding, type HarnessKind, type Policy, type Secrets, type Stage, type Store,
 } from '@3pt/core';
 
 /** The backfeed: derive the next policy version from failed checks. Pure. */
@@ -55,6 +55,7 @@ export interface CycleOptions {
   stages: [Stage, Stage, Stage];
   iteration: number;
   harness: HarnessKind;
+  secrets: Secrets;                // injected by the caller (readSecrets at the edge)
   gitSha: string;
   log: (line: string) => void;
 }
@@ -66,6 +67,7 @@ export async function cycle(o: CycleOptions): Promise<Checkpoint> {
     iteration: o.iteration,
     policy: freezePolicy(policy),
     store: stageStore(o.store),
+    secrets: o.secrets,
     harness: o.harness,
     log: o.log,
   });

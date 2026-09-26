@@ -7,8 +7,6 @@ packages:
   - ui/packages/*
   - harness/apps/*
   - harness/packages/*
-  # @3pt/strands is written but excluded until the machine has disk for its deps (docs/12 §6).
-  - '!harness/packages/strands'
   - infra/batteries/*
 # pnpm 12: build scripts must be allowed here (package.json `pnpm.onlyBuiltDependencies` is no longer read).
 # Without it `pnpm install` exits 1 with ERR_PNPM_IGNORED_BUILDS on a fresh machine (the box, CI).

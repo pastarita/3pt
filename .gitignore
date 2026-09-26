@@ -52,3 +52,5 @@ infra/batteries/box/ansible/.vars.json
 
 # Local harness store until the atlas battery is wired (harness/apps/cli/src/store.ts)
 .3pt/
+# Strands session + memory files, written where the harness runs
+.agent/

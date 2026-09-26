@@ -2,7 +2,7 @@
 /** 3pt · plan | build | instrument | improve | loop [--git] | rollback <tag>. See root Makefile. */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { COLLECTIONS, freezePolicy, runIteration, seedPolicy, stageStore, type Checkpoint, type HarnessKind, type Policy, type StageContext } from '@3pt/core';
+import { COLLECTIONS, freezePolicy, readSecrets, runIteration, seedPolicy, stageStore, type Checkpoint, type HarnessKind, type Policy, type StageContext } from '@3pt/core';
 import { planStage } from '@3pt/plan';
 import { buildStage } from '@3pt/build';
 import { instrumentStage } from '@3pt/instrument';
@@ -16,6 +16,10 @@ const gitSnapshot = argv.includes('--git');           // opt-in: commits land on
 const [cmd = 'help', arg] = argv.filter(a => !a.startsWith('--'));
 
 const root = repoRoot() ?? process.cwd();
+// Key injector: .env (if present) → process.env → readSecrets() → ctx.secrets. Values already in the
+// shell win over .env, so CI and the box can inject their own. Stages never read process.env.
+if (existsSync(join(root, '.env'))) process.loadEnvFile(join(root, '.env'));
+const secrets = readSecrets(process.env);
 const POLICIES = 'harness/policies';
 const CHECKPOINTS = 'harness/checkpoints';
 const uri = atlasUri();
@@ -103,6 +107,7 @@ const ctx: StageContext = {
   iteration,
   policy: freezePolicy(policy),
   store: stageStore(store),
+  secrets,
   harness: (process.env.THREEPT_HARNESS as HarnessKind) ?? 'claude-code',
   log: (l) => console.log(l),
 };

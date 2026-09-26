@@ -4,6 +4,6 @@
   "main": "./dist/index.js", "types": "./dist/index.d.ts",
   "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
   "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "clean": "rm -rf dist" },
-  "dependencies": { "@3pt/core": "workspace:*", "@strands-agents/harness": "^0.1.1", "@strands-agents/sdk": "^1.19.0", "zod": "^4.1.12" },
+  "dependencies": { "@3pt/core": "workspace:*", "@strands-agents/harness": "^0.1.1", "@strands-agents/sdk": "^1.19.0", "openai": "^6.45.0", "zod": "^4.1.12" },
   "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
 }

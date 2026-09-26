@@ -126,10 +126,37 @@ export type FrozenPolicy = DeepReadonly<Policy>;
 /** Collections only the improver may write. Stages read them; a write from a stage throws. */
 export const LOOP_OWNED: readonly CollectionName[] = [COLLECTIONS.policies, COLLECTIONS.checkpoints];
 
+/**
+ * Keys a stage may use, injected at the edge like the Store. Stages never read process.env: an app
+ * (cli, worker) calls readSecrets() once and hands the result in. A missing key means that feature
+ * runs dry. Atlas is not here: its URI goes to the atlas battery, which builds the Store.
+ */
+export interface Secrets {
+  readonly openrouter?: string;    // OPENROUTER_API_KEY: every model call (@3pt/strands routes)
+  readonly voyage?: string;        // VOYAGE_API_KEY: embeddings
+  readonly langsmith?: string;     // LANGSMITH_API_KEY: traces
+  readonly github?: string;        // GITHUB_TOKEN: repo battery
+}
+
+/** The one place a secret name maps to its env var. Blank and `<placeholder>` values count as missing. */
+export function readSecrets(env: Readonly<Record<string, string | undefined>>): Secrets {
+  const get = (name: string) => {
+    const v = env[name]?.trim();
+    return v && !v.includes('<') ? v : undefined;
+  };
+  return Object.freeze({
+    openrouter: get('OPENROUTER_API_KEY'),
+    voyage: get('VOYAGE_API_KEY'),
+    langsmith: get('LANGSMITH_API_KEY'),
+    github: get('GITHUB_TOKEN'),
+  });
+}
+
 export interface StageContext {
   iteration: number;
   policy: FrozenPolicy;
   store: Store;                    // guarded: see stageStore()
+  secrets: Secrets;                // injected at the edge: see readSecrets()
   harness: HarnessKind;
   log: (line: string) => void;
 }

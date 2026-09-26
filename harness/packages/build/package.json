@@ -2,7 +2,7 @@
   "name": "@3pt/build",
   "version": "0.0.1",
   "private": true,
-  "description": "Build stage: harness adapters (claude-code, kiro, codex) run the latest plan under the current policy.",
+  "description": "Build stage: a Strands harness, compiled from the current policy by @3pt/strands, runs the latest plan. Dry run without OPENROUTER_API_KEY.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,6 +12,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist"
   },
-  "dependencies": { "@3pt/core": "workspace:*" },
+  "dependencies": { "@3pt/core": "workspace:*", "@3pt/strands": "workspace:*", "@strands-agents/harness": "^0.1.1" },
   "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
 }
