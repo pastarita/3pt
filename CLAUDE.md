@@ -212,3 +212,14 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   segment plus clock spans per session. The Timeline leaf gains the day figure (inline SVG, three stage hues, SDF-style plateau,
   rim and glow), a spoken/typed filter, commit chips per prompt, and session headings that name their source. Re-run
   `node scripts/prompts.mjs` at every checkpoint so the rail keeps up with the sessions.
+- 2026-09-26 16:30 ET: **the loop improves itself on project data.** Instrument runs ten project checks over `demo_outcomes`,
+  `demo_activity` and `demo_photos` (3-iteration window); a failed check names a Build grant (`Finding.answer`). Plan picks the
+  sprint: mostly feature, improvement every 4th iteration (effect checks judge each grant), fix after a failed effect (keep if
+  it was noise, else revoke with `Finding.revoke`, 12-iteration wait). Suggestions use trade words (supers, PMs, PEs, MEP
+  rough-in, OAC photo pack, turnover package, fall protection). `node harness/apps/cli/dist/index.js replay` is the dry run:
+  92 months, 20 projects, memory store, no keys; 57 feature · 23 improvement · 12 fix sprints, 10 of 10 hand-written
+  capabilities found, 9 held. Tuning values are demo settings (docs/10 §4.2). Atlas: keys in the Keychain (`3pt keys status`),
+  provisioned and seeded (`seed-demo`: 20 projects, 4,308 photos, 11 `harness_versions` labelled demo replay); Worker
+  `/health` says `"store":"atlas"` after `0.0.0.0/0` was added. Box VM: `3pt-worker` exited 1 because systemd kept `.env`
+  inline comments in values; the unit now sources `.env` through bash. After the hackathon: rotate the db password and
+  remove `0.0.0.0/0`.

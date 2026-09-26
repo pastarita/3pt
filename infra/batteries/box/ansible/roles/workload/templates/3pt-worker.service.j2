@@ -6,8 +6,9 @@ Wants=network-online.target
 [Service]
 User={{ box_user }}
 WorkingDirectory={{ box_root }}
-EnvironmentFile={{ box_root }}/.env
-ExecStart=/usr/bin/node {{ box_root }}/harness/apps/worker/dist/main.js --watch
+# Not EnvironmentFile=: systemd keeps an inline "# note" as part of the value (ATLAS_HOST="# cluster SRV host…"),
+# which makes atlasUri() compose a broken URI and the worker exit 1. Bash reads .env the way box.sh exec does.
+ExecStart=/bin/bash -c 'set -a; . ./.env; set +a; exec /usr/bin/node {{ box_root }}/harness/apps/worker/dist/main.js --watch'
 Restart=on-failure
 RestartSec=10
 [Install]
