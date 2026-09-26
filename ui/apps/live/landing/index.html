@@ -65,6 +65,25 @@ nav .btn{padding:10px 14px;font-size:14px}
 /* the device: a real site photo with the app's own words on top */
 .device{position:relative;aspect-ratio:4/5;border-radius:26px;overflow:hidden;border:1px solid var(--lineStrong);box-shadow:0 40px 100px rgba(0,0,0,.55);background:var(--card)}
 .device > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* the carousel: new photos come in as the faces of a block turning on its vertical axis. The photo that is
+   there turns out into perspective as the next one turns in; nothing else on the card moves. */
+.device__stage{position:absolute;inset:0;perspective:1400px;perspective-origin:50% 50%;overflow:hidden;background:#0c1117}
+.device__block{position:absolute;inset:0;transform-style:preserve-3d;transform:translateZ(calc(var(--hw) * -1)) rotateY(0deg);will-change:transform}
+.device__block.is-turning{transition:transform 1.15s cubic-bezier(.65,0,.2,1)}
+.device__face{position:absolute;inset:0;backface-visibility:hidden;background-size:cover;background-position:center;background-color:#0c1117}
+.device__face--a{transform:rotateY(0deg) translateZ(var(--hw))}
+.device__face--b{transform:rotateY(90deg) translateZ(var(--hw))}
+.device__face::after{content:"";position:absolute;inset:0;background:rgba(6,9,13,var(--shade,0));transition:background 1.15s}
+/* the tag reads the new photo: a hairline fills while the fields resolve one at a time */
+.device__tag{transition:opacity .25s,transform .25s}
+.device__tag.is-reading{opacity:.55}
+.device__tag i{font-style:normal;color:var(--soft)}
+.device__tag em{font-style:normal;color:var(--instrument)}
+.device__read{position:absolute;z-index:1;left:0;top:0;height:2px;width:0;background:var(--instrument);box-shadow:0 0 8px var(--instrument);opacity:0}
+.device__read.is-on{opacity:1;width:100%;transition:width .9s linear}
+.device__in{position:absolute;z-index:1;right:18px;top:52px;font:700 10.5px/1 var(--mono);letter-spacing:.08em;color:var(--instrument);opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s}
+.device__in.is-on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.device__block.is-turning{transition:none}.device__face{transition:opacity .6s}}
 .device::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,17,23,.75) 0%,transparent 22%,transparent 45%,rgba(12,17,23,.92) 100%)}
 .device__bar{position:absolute;z-index:1;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;font-size:13px;color:var(--soft)}
 .device__bar b{color:var(--flag);font:800 12px/1 var(--mono);letter-spacing:.1em}
@@ -292,9 +311,11 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
       <p class="demo-note">The demo firm is simulated with a fixed seed. The loop, the checkpoints and the policy rollback are real code.</p>
     </div>
     <div class="device-wrap"><div class="device" role="group" aria-label="The app on a site photo of unit 206, showing a new feature the harness built from the team's usage and shipped">
-      <img src="/media-pool/plumbing/plumbing-06.jpg" alt="">
+      <div class="device__stage" id="stage" aria-hidden="true"><div class="device__block" id="block"><div class="device__face device__face--a" style="background-image:url(/media-pool/plumbing/plumbing-06.jpg)"></div><div class="device__face device__face--b"></div></div></div>
+      <div class="device__read" id="read"></div>
       <div class="device__bar"><b>ACME BUILDERS</b><span id="offer-v">Harness v6</span></div>
-      <div class="device__tag">Unit 206 · plumbing · open wall</div>
+      <div class="device__in" id="photo-in">+1 photo · indexed</div>
+      <div class="device__tag" id="tag" aria-live="polite">Unit 206 · plumbing · open wall</div>
       <div class="offer" id="offer" aria-live="polite">
         <span class="offer__k">New for you</span>
         <h3>Your OAC photo pack, in one tap</h3>
@@ -523,6 +544,46 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
       off={k:'Rolled back',h:'Back on v5. The photo pack is off.',p:'Your team builds the Friday pack by hand again. I keep v6 as a checkpoint, so Redo turns it back on.'};
   undo.onclick=function(){var u=offer.classList.toggle('is-undone'),t=u?off:on;
     ok.textContent=t.k;oh.textContent=t.h;op.textContent=t.p;ov.textContent='Harness v'+(u?5:6);undo.textContent=u?'Redo':'Undo'};
+  // the carousel: photos come in as faces of a turning block; when one lands, the tag reads it field by field
+  (function(){
+    var stage=document.getElementById('stage'),block=document.getElementById('block'),tag=document.getElementById('tag'),read=document.getElementById('read'),note=document.getElementById('photo-in');
+    if(!stage||!block) return;
+    var faces=[block.children[0],block.children[1]];
+    var PHOTOS=[
+      ['/media-pool/plumbing/plumbing-06.jpg',   'Unit 206','plumbing',  'open wall'],
+      ['/media-pool/electrical/electrical-03.jpg','Unit 312','electrical','rough-in'],
+      ['/media-pool/framing/framing-04.jpg',     'Level 4', 'framing',   'open wall'],
+      ['/media-pool/insulation/insulation-06.jpg','Unit 118','insulation','pre-drywall'],
+      ['/media-pool/drywall/drywall-02.jpg',     'Unit 206','drywall',   'closed wall'],
+      ['/media-pool/plumbing/plumbing-02.jpg',   'Unit 401','plumbing',  'rough-in']
+    ];
+    PHOTOS.forEach(function(p){ var i=new Image(); i.src=p[0]; });
+    var i=0,turning=false,timer=null,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function size(){ stage.style.setProperty('--hw',(stage.clientWidth/2)+'px'); }
+    size(); addEventListener('resize',size);
+    function reading(p){
+      // the fields resolve one at a time, the way the index fills in: unit, then trade, then wall state
+      tag.classList.add('is-reading'); tag.innerHTML='<i>reading…</i>';
+      read.classList.remove('is-on'); void read.offsetWidth; read.classList.add('is-on');
+      setTimeout(function(){ tag.innerHTML='<em>'+p[1]+'</em> · <i>…</i>'; },300);
+      setTimeout(function(){ tag.innerHTML='<em>'+p[1]+'</em> · <em>'+p[2]+'</em> · <i>…</i>'; },600);
+      setTimeout(function(){ tag.classList.remove('is-reading'); tag.textContent=p[1]+' · '+p[2]+' · '+p[3]; read.classList.remove('is-on'); note.classList.add('is-on'); setTimeout(function(){ note.classList.remove('is-on'); },1400); },950);
+    }
+    function turn(){
+      if(turning||document.hidden) return; turning=true;
+      var n=(i+1)%PHOTOS.length,p=PHOTOS[n];
+      faces[1].style.backgroundImage='url('+p[0]+')';
+      if(reduced){ faces[0].style.backgroundImage='url('+p[0]+')'; i=n; turning=false; reading(p); return; }
+      faces[0].style.setProperty('--shade','.55'); faces[1].style.setProperty('--shade','0');
+      block.classList.add('is-turning'); block.style.transform='translateZ(calc(var(--hw) * -1)) rotateY(-90deg)';
+      block.addEventListener('transitionend',function done(e){ if(e.propertyName!=='transform') return; block.removeEventListener('transitionend',done);
+        // the landed face becomes the front; the block snaps back to zero without a transition
+        block.classList.remove('is-turning'); faces[0].style.backgroundImage='url('+p[0]+')'; faces[0].style.setProperty('--shade','0');
+        block.style.transform='translateZ(calc(var(--hw) * -1)) rotateY(0deg)'; i=n; turning=false; reading(p); });
+    }
+    function schedule(){ clearInterval(timer); timer=setInterval(turn,5200); }
+    schedule(); document.addEventListener('visibilitychange',function(){ if(!document.hidden) schedule(); });
+  })();
   // nav: solid once the hero scrolls away; the link for the section in view is marked
   var nav=document.querySelector('nav'),links=[].slice.call(nav.querySelectorAll('.links a[href^="#"]'));
   function navState(){nav.classList.toggle('is-stuck',scrollY>40)}
