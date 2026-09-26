@@ -21,15 +21,6 @@ dated today.
 | **Why Atlas** | Every stateful thing lives in one Sandbox cluster: policies, checkpoints, plans, findings, measurements, the media index, transcripts and jobs. Long-term memory is the database, not the context window. |
 | **Why it gets better** | The run cannot change the rules. The improver can, and only from findings. Each version is scored on hard metrics against the previous one, so improvement is caused, not drifted. |
 
-## For the judges: sixty seconds
-
-| Criterion | Weight | Where to look | What you will see |
-|---|---|---|---|
-| Technical demo | 35% | `3pt loop` then `3pt rollback cp/1` | A policy version bumps, a checkpoint tags, the earlier policy comes back as a new version. |
-| Implementation difficulty | 30% | `harness/packages/core`, `improver`, `strands` | A frozen policy and a stage store that refuses policy writes; the improver as the only writer; a Policy → Strands compiler. |
-| Impact potential | 20% | `data/mock/acme-builders`, `ui/apps/web` | A general contractor's site photos through the loop; role screens for the people who take them. |
-| Creativity | 15% | `docs/assets/lineage.svg`, `docs/07` | The harness as a lineage over one corpus, graded by its own evals; measurement as the fourth point. |
-
 ```sh
 pnpm install && pnpm build          # 20 workspaces, Turborepo
 pnpm 3pt loop                       # Plan → Build → Instrument → improver → checkpoint cp/1
