@@ -30,17 +30,19 @@
   .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
   .pc{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:2px solid var(--line);padding:0;cursor:pointer;text-align:left;background:var(--card)}
   .pc.planned{opacity:.35}.pc.live{border-color:var(--flag)}.pc.closed{border-color:var(--line-strong)}
-  .pc .ov{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:10px;background:linear-gradient(0deg,color-mix(in srgb,var(--pine) 94%,transparent),transparent);display:flex;flex-direction:column;gap:2px}
-  .pc .ov b{font-size:14px;color:var(--ink)}.pc .ov span{font-size:11.5px;color:var(--soft)}
+  .pc .cov{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+  .pc .ov{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:34px 10px 10px;background:linear-gradient(0deg,var(--pine) 0%,color-mix(in srgb,var(--pine) 85%,transparent) 45%,transparent);display:flex;flex-direction:column;gap:2px}
+  .pc .ov b{font-size:14px;line-height:1.2;color:var(--ink);text-shadow:0 1px 2px rgba(0,0,0,.6)}.pc .ov span{font-size:11.5px;color:var(--soft);text-shadow:0 1px 2px rgba(0,0,0,.6)}
   .pc .chipx{position:absolute;left:8px;top:8px;z-index:3;font:800 9px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:var(--pine);color:var(--soft)}
   .pc.live .chipx{background:var(--flag);color:#fff}
   .pc .les{position:absolute;right:8px;top:8px;z-index:3;font:700 11px/1 var(--mono);padding:4px 7px;border-radius:6px;background:var(--pine);color:var(--instrument)}
-  .pc .strip{position:absolute;right:6px;top:30px;z-index:3;display:flex;flex-direction:column;gap:4px}
+  .pc .strip{position:absolute;right:6px;top:32px;z-index:3;display:flex;flex-direction:column;gap:4px}
   .pc .strip i{display:block;width:34px;height:26px;border-radius:4px;border:1px solid var(--pine)}
   .pc .strip i.new{animation:pop .6s ease-out}
   @keyframes pop{from{transform:scale(1.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .pc .bar{position:absolute;left:0;right:0;top:0;height:4px;z-index:4;background:var(--pine)}
-  .pc .bar i{display:block;height:100%;background:var(--flag)}
+  .pc .prog{position:relative;display:block;height:6px;margin:7px 34px 1px 0;border-radius:99px;background:color-mix(in srgb,var(--soft) 28%,transparent)}
+  .pc .prog i{display:block;height:100%;border-radius:99px;background:var(--flag)}
+  .pc .prog em{position:absolute;right:-34px;top:50%;transform:translateY(-50%);font:700 10.5px/1 var(--mono);font-style:normal;color:var(--ink)}
   .rail{display:flex;flex-direction:column;gap:12px;position:sticky;top:96px}
   .card2{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
   .hv{display:flex;align-items:baseline;gap:10px}
@@ -159,16 +161,19 @@
 
   /* a real photo when the pool has one, the drawn stand-in otherwise */
   function bg(x){ return x&&x.file ? ' style="background:url(media-pool/'+x.file+') center/cover"' : ''; }
-  function coverPhoto(p){ var ps=S.photosUpTo(p,Math.min(w,p.endWeek)); if(!ps.length) return null; var pref=ps.filter(function(x){return x.trade==='exterior'||x.trade==='finishes';}); return (pref.length?pref:ps)[ (pref.length?pref:ps).length-1 ]; }
+  function coverPhoto(p){ var ps=S.photosUpTo(p,Math.min(w,p.endWeek)); if(!ps.length) return null; var pref=ps.filter(function(x){return x.trade==='exterior'||x.trade==='finishes';}); var pool=pref.length?pref:ps, h=0; for (var i=0;i<p.id.length;i++) h=(h*31+p.id.charCodeAt(i))>>>0; return pool[h%pool.length]; }   /* spread covers: one photo per project, not the same last photo */
   function card(p){
     var st=S.status(p,w), ph=S.phaseAt(p,w), photos=S.photosUpTo(p,w), last=photos.slice(-3).reverse();
     var cp = st==='live' ? last[0] : coverPhoto(p), cover = cp ? cp.trade : p.cover;
     var prog = st==='live' ? Math.round(100*(w-p.startWeek)/(p.endWeek-p.startWeek)) : (st==='closed'?100:0);
     var sub = st==='planned' ? 'Starts '+fmt(S.weekDate(p.startWeek)) : st==='live' ? ph.name+' · '+S.statsUpTo(p,w).photos.toLocaleString()+' photos' : 'Closed · '+p.retro.photos.toLocaleString()+' photos';
     var strip = st==='live' ? '<span class="strip">'+last.map(function(x){ var n=!shown[x.id]; shown[x.id]=1; return '<i class="shot k-'+x.trade+(n?' new':'')+'"'+bg(x)+'></i>'; }).join('')+'</span>' : '';
-    return '<button class="pc '+st+'" data-p="'+p.id+'"><div class="shot k-'+cover+'" style="position:absolute;inset:0;'+(cp&&cp.file?'background:url(media-pool/'+cp.file+') center/cover':'')+'"></div><span class="bar"><i style="width:'+prog+'%"></i></span>'+
+    /* the drawn stand-in stays underneath, so a photo still loading (or missing) never leaves a blank card */
+    return '<button class="pc '+st+'" data-p="'+p.id+'"><div class="shot k-'+cover+'" style="position:absolute;inset:0"></div>'+(cp&&cp.file?'<img class="cov" alt="" decoding="async" src="media-pool/'+cp.file+'" onerror="this.remove()">':'')+
       '<span class="chipx">'+(st==='live'?'live':st==='closed'?'closed':'planned')+'</span>'+(st==='closed'?'<span class="les">'+p.retro.lessons.length+' lessons</span>':'')+strip+
-      '<span class="ov"><b>'+esc(p.name)+'</b><span>'+esc(sub)+'</span></span></button>';
+      '<span class="ov"><b>'+esc(p.name)+'</b><span>'+esc(sub)+'</span>'+
+      /* progress only where it means something: a live project, as a track under its name */
+      (st==='live'?'<span class="prog" role="progressbar" aria-valuenow="'+prog+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+prog+'%"></i><em>'+prog+'%</em></span>':'')+'</span></button>';
   }
 
   function chart(){
