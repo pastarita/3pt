@@ -50,8 +50,8 @@ Status at last pass · 2026-09-26 14:00 ET
 | id | Item | Status | Where it comes from |
 |---|---|---|---|
 | C-01 | [ ] Public repo link | DERIVED | https://github.com/pastarita/3pt |
-| C-02 | [ ] 1-minute demo video **with audio** | AUTHORED | Plan in `hub/site/direction.html`; record the live loop, not slides |
-| C-03 | [ ] Description: what, problem statement, Atlas role, what was built today | AUTHORED | Lift the README lede; name Statement 1; name the Sandbox cluster |
+| C-02 | [ ] 1-minute demo video **with audio** | AUTHORED | Tool, cut and gate in `docs/18-submission.md` §2–3; shot list in `hub/site/direction.html`; record the live loop, not slides |
+| C-03 | [ ] Description: what, problem statement, Atlas role, what was built today | AUTHORED | Text ready in `docs/18-submission.md` §6; fill the cluster name from T1 |
 | C-04 | [ ] Both members added | TO CONFIRM | A-08 |
 | C-05 | [ ] Demo link accessible to judges | TO CONFIRM | The hub is behind Access by design; the demo runs locally or on a public preview. Do not send judges a gated link |
 

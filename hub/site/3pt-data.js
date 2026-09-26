@@ -38,6 +38,8 @@
       epigram:'Banned: image analyzers, dashboards as the feature, basic RAG. Due 5:00 PM.' },
     { id:'DL', slug:'checklist',      name:'Open-source checklist', verb:'Clearing',  cluster:'orient', temp:'hot',  doc:'docs/15-open-source-checklist.md',
       epigram:'Admissibility, hygiene, the submission package. Every row wears a status and names the command that checks it.' },
+    { id:'DU', slug:'submission',     name:'Submission',           verb:'Filing',    cluster:'orient', temp:'hot',  doc:'docs/18-submission.md',
+      epigram:'What the platform asks, the filming tool, the artifacts, the claims with their evidence, the priority order to 5 PM.' },
     { id:'DQ', slug:'decisions',      name:'Group decisions',      verb:'Deciding',  cluster:'decide', temp:'hot',  doc:'docs/12-decisions.md',
       epigram:'Nine domains, a few questions each, a default if time runs out, and a blank line for the answer.' },
     { id:'D8', slug:'icp-directions', name:'ICP directions',       verb:'Exploring', cluster:'decide', temp:'warm', doc:'docs/08-icp-directions.md',
