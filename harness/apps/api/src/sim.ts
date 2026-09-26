@@ -19,7 +19,7 @@ interface Sim {
   statsUpTo(p: any, w: number): Record<string, number>; hoursSavedUpTo(w: number): number;
 }
 
-const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
+export const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
 let base: Sim | null = null;
 async function model(): Promise<Sim> {
   if (!base) {
@@ -32,7 +32,7 @@ async function model(): Promise<Sim> {
 }
 
 const cache = new Map<string, Sim>();
-async function firm(q: URLSearchParams): Promise<Sim> {
+export async function firm(q: URLSearchParams): Promise<Sim> {
   const S = await model();
   const cfg: Cfg = { ...S.DEFAULTS };
   for (const k of Object.keys(S.DEFAULTS)) { const v = q.get(k); if (v != null && v !== '') cfg[k] = k === 'today' ? v : Number(v); }
@@ -40,7 +40,7 @@ async function firm(q: URLSearchParams): Promise<Sim> {
   if (!cache.has(key)) { if (cache.size > 20) cache.clear(); cache.set(key, S.build(cfg)); }
   return cache.get(key)!;
 }
-const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
+export const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 const weekOf = (S: Sim, q: URLSearchParams) => Math.max(0, Math.min(S.NWEEKS - 1, Number(q.get('week') ?? S.TODAY_WEEK)));
 const photo = (x: any) => ({ id: x.id, week: x.w, trade: x.trade, level: x.level, unit: x.unit, wall: x.wall, water: !!x.water, hazard: x.hazard ?? null, file: x.file ? '/media-pool/' + x.file : null });
 

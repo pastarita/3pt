@@ -16,6 +16,12 @@ export const COLLECTIONS = {
   media_index: 'media_index',    // asset id, tier, location, transcript ref
   transcripts: 'transcripts',    // read-once extraction + embedding
   jobs: 'jobs',                  // worker queue: index | transcribe | tier | migrate
+  /* the demo firm (data/mock/acme-builders), seeded by infra/batteries/atlas seed-demo */
+  demo_projects: 'demo_projects',        // one document per project: building, phases, dates
+  demo_photos: 'demo_photos',            // weekly photo drops, one document per photo
+  demo_activity: 'demo_activity',        // searches, taps, owner packs built by hand
+  demo_outcomes: 'demo_outcomes',        // walls reopened, water stains, missing photos
+  harness_versions: 'harness_versions',  // every harness version: changes, why, layouts by role, fields
 } as const;
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
 
