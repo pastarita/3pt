@@ -1,0 +1,56 @@
+{
+  "id": "p04",
+  "name": "Morningside Ave Offices",
+  "type": "Office building",
+  "street": "Morningside Ave",
+  "neighborhood": "Morningside Heights",
+  "borough": "Manhattan",
+  "levels": 8,
+  "units": 32,
+  "start": "2020-03-30",
+  "end": "2021-03-15",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "103019421",
+    "stories": 8,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2020-03-30",
+      "end": "2020-04-24"
+    },
+    {
+      "name": "Structure",
+      "start": "2020-04-27",
+      "end": "2020-07-17"
+    },
+    {
+      "name": "Framing",
+      "start": "2020-07-20",
+      "end": "2020-08-28"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2020-08-31",
+      "end": "2020-10-30"
+    },
+    {
+      "name": "Close-in",
+      "start": "2020-11-02",
+      "end": "2020-12-25"
+    },
+    {
+      "name": "Finishes",
+      "start": "2020-12-28",
+      "end": "2021-02-19"
+    },
+    {
+      "name": "Closeout",
+      "start": "2021-02-22",
+      "end": "2021-03-19"
+    }
+  ]
+}

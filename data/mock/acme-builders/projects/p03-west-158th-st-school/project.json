@@ -1,0 +1,56 @@
+{
+  "id": "p03",
+  "name": "West 158th St School",
+  "type": "School",
+  "street": "West 158th St",
+  "neighborhood": "Washington Heights (South)",
+  "borough": "Manhattan",
+  "levels": 6,
+  "units": 72,
+  "start": "2019-11-11",
+  "end": "2021-02-15",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "103880374",
+    "stories": 6,
+    "zoning_sqft": 210835
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2019-11-11",
+      "end": "2019-12-13"
+    },
+    {
+      "name": "Structure",
+      "start": "2019-12-16",
+      "end": "2020-04-03"
+    },
+    {
+      "name": "Framing",
+      "start": "2020-04-06",
+      "end": "2020-05-29"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2020-06-01",
+      "end": "2020-08-21"
+    },
+    {
+      "name": "Close-in",
+      "start": "2020-08-24",
+      "end": "2020-10-30"
+    },
+    {
+      "name": "Finishes",
+      "start": "2020-11-02",
+      "end": "2021-01-15"
+    },
+    {
+      "name": "Closeout",
+      "start": "2021-01-18",
+      "end": "2021-02-19"
+    }
+  ]
+}

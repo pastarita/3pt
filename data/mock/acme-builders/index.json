@@ -1,0 +1,202 @@
+[
+  {
+    "id": "p01",
+    "folder": "projects/p01-broadway-residences",
+    "name": "Broadway Residences",
+    "status": "closed",
+    "photo_drops": 86,
+    "photos_sampled": 344,
+    "activity": 619,
+    "outcomes": 19
+  },
+  {
+    "id": "p02",
+    "folder": "projects/p02-e-26-st-health-center",
+    "name": "E 26 St Health Center",
+    "status": "closed",
+    "photo_drops": 59,
+    "photos_sampled": 236,
+    "activity": 434,
+    "outcomes": 24
+  },
+  {
+    "id": "p03",
+    "folder": "projects/p03-west-158th-st-school",
+    "name": "West 158th St School",
+    "status": "closed",
+    "photo_drops": 67,
+    "photos_sampled": 268,
+    "activity": 507,
+    "outcomes": 8
+  },
+  {
+    "id": "p04",
+    "folder": "projects/p04-morningside-ave-offices",
+    "name": "Morningside Ave Offices",
+    "status": "closed",
+    "photo_drops": 51,
+    "photos_sampled": 204,
+    "activity": 385,
+    "outcomes": 5
+  },
+  {
+    "id": "p05",
+    "folder": "projects/p05-east-broadway-retail",
+    "name": "East Broadway Retail",
+    "status": "closed",
+    "photo_drops": 33,
+    "photos_sampled": 132,
+    "activity": 243,
+    "outcomes": 5
+  },
+  {
+    "id": "p06",
+    "folder": "projects/p06-greenwich-st-hotel",
+    "name": "Greenwich St Hotel",
+    "status": "closed",
+    "photo_drops": 60,
+    "photos_sampled": 240,
+    "activity": 390,
+    "outcomes": 1
+  },
+  {
+    "id": "p07",
+    "folder": "projects/p07-west-145th-st-warehouse",
+    "name": "West 145th St Warehouse",
+    "status": "closed",
+    "photo_drops": 45,
+    "photos_sampled": 180,
+    "activity": 289,
+    "outcomes": 5
+  },
+  {
+    "id": "p08",
+    "folder": "projects/p08-elizabeth-st-garage",
+    "name": "Elizabeth St Garage",
+    "status": "closed",
+    "photo_drops": 51,
+    "photos_sampled": 204,
+    "activity": 336,
+    "outcomes": 6
+  },
+  {
+    "id": "p09",
+    "folder": "projects/p09-third-ave-residences",
+    "name": "Third Ave Residences",
+    "status": "closed",
+    "photo_drops": 72,
+    "photos_sampled": 288,
+    "activity": 450,
+    "outcomes": 9
+  },
+  {
+    "id": "p10",
+    "folder": "projects/p10-wadsworth-ave-health-center",
+    "name": "Wadsworth Ave Health Center",
+    "status": "closed",
+    "photo_drops": 51,
+    "photos_sampled": 204,
+    "activity": 350,
+    "outcomes": 6
+  },
+  {
+    "id": "p11",
+    "folder": "projects/p11-east-15th-st-school",
+    "name": "East 15th St School",
+    "status": "closed",
+    "photo_drops": 58,
+    "photos_sampled": 232,
+    "activity": 349,
+    "outcomes": 5
+  },
+  {
+    "id": "p12",
+    "folder": "projects/p12-st-nicholas-ave-offices",
+    "name": "St Nicholas Ave Offices",
+    "status": "closed",
+    "photo_drops": 49,
+    "photos_sampled": 196,
+    "activity": 321,
+    "outcomes": 4
+  },
+  {
+    "id": "p13",
+    "folder": "projects/p13-east-117th-st-retail",
+    "name": "East 117th St Retail",
+    "status": "closed",
+    "photo_drops": 33,
+    "photos_sampled": 132,
+    "activity": 222,
+    "outcomes": 0
+  },
+  {
+    "id": "p14",
+    "folder": "projects/p14-west-28th-st-hotel",
+    "name": "West 28th St Hotel",
+    "status": "closed",
+    "photo_drops": 93,
+    "photos_sampled": 372,
+    "activity": 642,
+    "outcomes": 7
+  },
+  {
+    "id": "p15",
+    "folder": "projects/p15-west-109th-st-residences",
+    "name": "West 109th St Residences",
+    "status": "closed",
+    "photo_drops": 64,
+    "photos_sampled": 256,
+    "activity": 417,
+    "outcomes": 4
+  },
+  {
+    "id": "p16",
+    "folder": "projects/p16-west-41st-st-health-center",
+    "name": "West 41st St Health Center",
+    "status": "closed",
+    "photo_drops": 54,
+    "photos_sampled": 216,
+    "activity": 344,
+    "outcomes": 7
+  },
+  {
+    "id": "p17",
+    "folder": "projects/p17-10th-ave-school",
+    "name": "10th Ave School",
+    "status": "live",
+    "photo_drops": 55,
+    "photos_sampled": 220,
+    "activity": 369,
+    "outcomes": 5
+  },
+  {
+    "id": "p18",
+    "folder": "projects/p18-delancy-st-residences",
+    "name": "Delancy St Residences",
+    "status": "live",
+    "photo_drops": 69,
+    "photos_sampled": 276,
+    "activity": 445,
+    "outcomes": 0
+  },
+  {
+    "id": "p19",
+    "folder": "projects/p19-park-ave-offices",
+    "name": "Park Ave Offices",
+    "status": "live",
+    "photo_drops": 24,
+    "photos_sampled": 96,
+    "activity": 170,
+    "outcomes": 0
+  },
+  {
+    "id": "p20",
+    "folder": "projects/p20-sullivan-st-residences",
+    "name": "Sullivan St Residences",
+    "status": "live",
+    "photo_drops": 3,
+    "photos_sampled": 12,
+    "activity": 24,
+    "outcomes": 0
+  }
+]

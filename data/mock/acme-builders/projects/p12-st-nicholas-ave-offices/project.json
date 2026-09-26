@@ -1,0 +1,56 @@
+{
+  "id": "p12",
+  "name": "St Nicholas Ave Offices",
+  "type": "Office building",
+  "street": "St Nicholas Ave",
+  "neighborhood": "Washington Heights (South)",
+  "borough": "Manhattan",
+  "levels": 6,
+  "units": 24,
+  "start": "2023-03-06",
+  "end": "2024-02-05",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "103986616",
+    "stories": 6,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2023-03-06",
+      "end": "2023-03-31"
+    },
+    {
+      "name": "Structure",
+      "start": "2023-04-03",
+      "end": "2023-06-23"
+    },
+    {
+      "name": "Framing",
+      "start": "2023-06-26",
+      "end": "2023-08-04"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2023-08-07",
+      "end": "2023-10-06"
+    },
+    {
+      "name": "Close-in",
+      "start": "2023-10-09",
+      "end": "2023-11-24"
+    },
+    {
+      "name": "Finishes",
+      "start": "2023-11-27",
+      "end": "2024-01-19"
+    },
+    {
+      "name": "Closeout",
+      "start": "2024-01-22",
+      "end": "2024-02-09"
+    }
+  ]
+}

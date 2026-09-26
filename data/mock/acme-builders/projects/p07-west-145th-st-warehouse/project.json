@@ -1,0 +1,56 @@
+{
+  "id": "p07",
+  "name": "West 145th St Warehouse",
+  "type": "Warehouse",
+  "street": "West 145th St",
+  "neighborhood": "Central Harlem North-Polo Grounds",
+  "borough": "Manhattan",
+  "levels": 6,
+  "units": 60,
+  "start": "2021-05-10",
+  "end": "2022-03-14",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "121188696",
+    "stories": 6,
+    "zoning_sqft": 77762
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2021-05-10",
+      "end": "2021-06-04"
+    },
+    {
+      "name": "Structure",
+      "start": "2021-06-07",
+      "end": "2021-08-20"
+    },
+    {
+      "name": "Framing",
+      "start": "2021-08-23",
+      "end": "2021-09-24"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2021-09-27",
+      "end": "2021-11-19"
+    },
+    {
+      "name": "Close-in",
+      "start": "2021-11-22",
+      "end": "2022-01-07"
+    },
+    {
+      "name": "Finishes",
+      "start": "2022-01-10",
+      "end": "2022-02-25"
+    },
+    {
+      "name": "Closeout",
+      "start": "2022-02-28",
+      "end": "2022-03-18"
+    }
+  ]
+}

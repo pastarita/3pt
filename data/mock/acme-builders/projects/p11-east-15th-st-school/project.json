@@ -1,0 +1,56 @@
+{
+  "id": "p11",
+  "name": "East 15th St School",
+  "type": "School",
+  "street": "East 15th St",
+  "neighborhood": "Hudson Yards-Chelsea-Flatiron-Union Square",
+  "borough": "Manhattan",
+  "levels": 8,
+  "units": 96,
+  "start": "2022-10-31",
+  "end": "2023-12-04",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "103890461",
+    "stories": 8,
+    "zoning_sqft": 92800
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2022-10-31",
+      "end": "2022-12-02"
+    },
+    {
+      "name": "Structure",
+      "start": "2022-12-05",
+      "end": "2023-03-10"
+    },
+    {
+      "name": "Framing",
+      "start": "2023-03-13",
+      "end": "2023-04-28"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2023-05-01",
+      "end": "2023-07-07"
+    },
+    {
+      "name": "Close-in",
+      "start": "2023-07-10",
+      "end": "2023-09-08"
+    },
+    {
+      "name": "Finishes",
+      "start": "2023-09-11",
+      "end": "2023-11-10"
+    },
+    {
+      "name": "Closeout",
+      "start": "2023-11-13",
+      "end": "2023-12-08"
+    }
+  ]
+}

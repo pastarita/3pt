@@ -1,0 +1,116 @@
+[
+  {
+    "v": 0,
+    "date": "2019-01-07",
+    "capability": null,
+    "why": "Install",
+    "changes": [
+      "Generic start: describe each image, its date and its source"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 1,
+    "date": "2019-12-16",
+    "capability": "fields",
+    "why": "15,000 photos filed with only a date and a description",
+    "changes": [
+      "Added fields: unit, level, trade"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 2,
+    "date": "2020-03-23",
+    "capability": "remind",
+    "why": "6 walls reopened to find a pipe",
+    "changes": [
+      "Wrote a tool: find units with no open-wall photo",
+      "Reminder before drywall starts in a unit"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 3,
+    "date": "2020-05-04",
+    "capability": "wall",
+    "why": "300 searches for \"before drywall\" came back wrong",
+    "changes": [
+      "Added field: open or closed wall",
+      "Read older photos again, once"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 4,
+    "date": "2020-06-29",
+    "capability": "wide",
+    "why": "Answers were slow to improve",
+    "changes": [
+      "Tried: send 20 photos to the model per question instead of 8"
+    ],
+    "rolled_back": "2020-07-20"
+  },
+  {
+    "v": 5,
+    "date": "2020-11-23",
+    "capability": "issue",
+    "why": "8 water problems found only at closeout",
+    "changes": [
+      "Added field: issue (water stain, crack, damage)",
+      "Flag water photos the day they arrive"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 6,
+    "date": "2021-01-04",
+    "capability": "pack",
+    "why": "200 hours spent building owner packs by hand",
+    "changes": [
+      "Automated the Friday owner photo pack"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 7,
+    "date": "2024-01-08",
+    "capability": "screens",
+    "why": "700 project-weeks of use, by role",
+    "changes": [
+      "Learned a screen for 4 roles: superintendent, PM, owner, engineer"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 8,
+    "date": "2024-02-12",
+    "capability": "closeout",
+    "why": "12 closeouts built by hand",
+    "changes": [
+      "Automated the closeout photo set per unit"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 9,
+    "date": "2025-05-26",
+    "capability": "bursts",
+    "why": "150,000 photos stored, 18% near duplicates",
+    "changes": [
+      "Stopped keeping duplicate burst photos after 24 hours"
+    ],
+    "rolled_back": null
+  },
+  {
+    "v": 10,
+    "date": "2025-08-11",
+    "capability": "hazard",
+    "why": "Safety manager joined in June 2025 and asked 30 hazard questions",
+    "changes": [
+      "Added flag: open edge, missing rail",
+      "Learned a screen for the safety manager"
+    ],
+    "rolled_back": null
+  }
+]

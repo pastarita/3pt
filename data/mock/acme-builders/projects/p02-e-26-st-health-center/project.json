@@ -1,0 +1,56 @@
+{
+  "id": "p02",
+  "name": "E 26 St Health Center",
+  "type": "Health center",
+  "street": "E 26 St",
+  "neighborhood": "Murray Hill-Kips Bay",
+  "borough": "Manhattan",
+  "levels": 14,
+  "units": 140,
+  "start": "2019-06-10",
+  "end": "2020-07-20",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "102996670",
+    "stories": 14,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2019-06-10",
+      "end": "2019-07-12"
+    },
+    {
+      "name": "Structure",
+      "start": "2019-07-15",
+      "end": "2019-10-18"
+    },
+    {
+      "name": "Framing",
+      "start": "2019-10-21",
+      "end": "2019-12-06"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2019-12-09",
+      "end": "2020-02-21"
+    },
+    {
+      "name": "Close-in",
+      "start": "2020-02-24",
+      "end": "2020-04-24"
+    },
+    {
+      "name": "Finishes",
+      "start": "2020-04-27",
+      "end": "2020-06-26"
+    },
+    {
+      "name": "Closeout",
+      "start": "2020-06-29",
+      "end": "2020-07-24"
+    }
+  ]
+}

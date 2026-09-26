@@ -1,0 +1,42 @@
+{
+  "firm": "Acme Builders",
+  "note": "Example general contractor. At most 4 live projects at once.",
+  "demo_today": "2026-09-26",
+  "roles": [
+    {
+      "id": "super",
+      "name": "Superintendent",
+      "where": "on site, phone"
+    },
+    {
+      "id": "pm",
+      "name": "Project manager",
+      "where": "office, laptop"
+    },
+    {
+      "id": "owner",
+      "name": "Owner / executive",
+      "where": "weekly, any device"
+    },
+    {
+      "id": "pe",
+      "name": "Project engineer",
+      "where": "office, laptop"
+    },
+    {
+      "id": "trade",
+      "name": "Plumbing foreman",
+      "where": "on site, phone",
+      "trade": "plumbing"
+    },
+    {
+      "id": "safety",
+      "name": "Safety manager",
+      "where": "on site, tablet"
+    }
+  ],
+  "sources": {
+    "buildings": "NYC Open Data, DOB Job Application Filings (ic3t-wcy2). Street, neighborhood, building class, stories, floor area and job number only. House numbers and personal names dropped. Dates are authored.",
+    "photos": "Openly licensed photos, see ../media-pool/CREDITS.md. Each photo in a weekly drop points at one pool file."
+  }
+}

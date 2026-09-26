@@ -1,0 +1,56 @@
+{
+  "id": "p10",
+  "name": "Wadsworth Ave Health Center",
+  "type": "Health center",
+  "street": "Wadsworth Ave",
+  "neighborhood": "Washington Heights (South)",
+  "borough": "Manhattan",
+  "levels": 9,
+  "units": 90,
+  "start": "2022-06-13",
+  "end": "2023-05-29",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "120015713",
+    "stories": 9,
+    "zoning_sqft": 32500
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2022-06-13",
+      "end": "2022-07-08"
+    },
+    {
+      "name": "Structure",
+      "start": "2022-07-11",
+      "end": "2022-09-30"
+    },
+    {
+      "name": "Framing",
+      "start": "2022-10-03",
+      "end": "2022-11-11"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2022-11-14",
+      "end": "2023-01-13"
+    },
+    {
+      "name": "Close-in",
+      "start": "2023-01-16",
+      "end": "2023-03-10"
+    },
+    {
+      "name": "Finishes",
+      "start": "2023-03-13",
+      "end": "2023-05-05"
+    },
+    {
+      "name": "Closeout",
+      "start": "2023-05-08",
+      "end": "2023-06-02"
+    }
+  ]
+}

@@ -1,0 +1,390 @@
+{"at":"2020-12-21","role":"super","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2020-12-25","role":"pe","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2020-12-22","role":"pe","action":"search","query":"utility markout","result":"yes"}
+{"at":"2020-12-24","role":"super","action":"search","query":"utility markout","result":"yes"}
+{"at":"2020-12-23","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2020-12-22","role":"pe","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2020-12-25","role":"pm","action":"owner_pack_by_hand","minutes":45}
+{"at":"2020-12-28","role":"super","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2020-12-31","role":"pm","action":"search","query":"utility markout","result":"yes"}
+{"at":"2020-12-29","role":"super","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2020-12-30","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-01","role":"pm","action":"owner_pack_by_hand","minutes":45}
+{"at":"2021-01-06","role":"pm","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-08","role":"pm","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-04","role":"pe","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-05","role":"pe","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-05","role":"pe","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-11","role":"super","action":"search","query":"utility markout","result":"no"}
+{"at":"2021-01-12","role":"pm","action":"search","query":"utility markout","result":"yes"}
+{"at":"2021-01-13","role":"super","action":"search","query":"utility markout","result":"yes"}
+{"at":"2021-01-15","role":"pm","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-15","role":"pe","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-11","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-14","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-11","role":"pm","action":"search","query":"excavation depth north side","result":"yes"}
+{"at":"2021-01-15","role":"pm","action":"search","query":"utility markout","result":"yes"}
+{"at":"2021-01-20","role":"super","action":"search","query":"utility markout","result":"yes"}
+{"at":"2021-01-19","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-21","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-18","role":"pe","action":"search","query":"utility markout","result":"yes"}
+{"at":"2021-01-22","role":"super","action":"search","query":"site fence photos","result":"yes"}
+{"at":"2021-01-27","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-01-26","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-01-28","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-01-26","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-01-27","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-03","role":"super","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-04","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-05","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-01","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-02-12","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-11","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-02-12","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-12","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-09","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-02-16","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-02-16","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-19","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-16","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-15","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-18","role":"pm","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-24","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-25","role":"pm","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-22","role":"super","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-02-25","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-23","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-02-22","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-02-24","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-01","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-01","role":"pm","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-05","role":"pm","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-02","role":"super","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-02","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-10","role":"pm","action":"search","query":"rebar before pour","result":"no"}
+{"at":"2021-03-09","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-12","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-08","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-08","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-10","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-09","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-09","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-12","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-16","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-15","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-17","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-15","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-16","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-18","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-23","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-25","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-24","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-26","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-23","role":"pm","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-23","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-30","role":"pm","action":"search","query":"formwork stripped","result":"no"}
+{"at":"2021-03-31","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-30","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-31","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-30","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-02","role":"super","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-03-29","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-03-29","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-03-30","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-05","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-05","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-07","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-09","role":"pm","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-04-07","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-09","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-04-07","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-08","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-16","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-04-14","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-16","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-04-14","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-16","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-13","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-13","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-12","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-20","role":"super","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-19","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-20","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-23","role":"pe","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-21","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-22","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-28","role":"pm","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-04-29","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-28","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-27","role":"pe","action":"search","query":"formwork stripped","result":"yes"}
+{"at":"2021-04-29","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-26","role":"pm","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-29","role":"pe","action":"search","query":"rebar before pour","result":"yes"}
+{"at":"2021-04-26","role":"super","action":"search","query":"slab pour level 3","result":"yes"}
+{"at":"2021-05-05","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-06","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-07","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-04","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-06","role":"pe","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-04","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-13","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-10","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-14","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-13","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-20","role":"pe","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-20","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-20","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-18","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-21","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-21","role":"pe","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-20","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-20","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-26","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-25","role":"pe","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-27","role":"super","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-28","role":"super","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-05-26","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-28","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-25","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-25","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-02","role":"pm","action":"search","query":"studs level 2 east wing","result":"no"}
+{"at":"2021-06-04","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-01","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-04","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-31","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-01","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-05-31","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-04","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-04","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-10","role":"super","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-10","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-08","role":"super","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-10","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-17","role":"pm","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-16","role":"pe","action":"search","query":"framing inspection photos","result":"yes"}
+{"at":"2021-06-16","role":"pe","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-15","role":"pe","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-14","role":"pm","action":"search","query":"studs level 2 east wing","result":"yes"}
+{"at":"2021-06-22","role":"super","action":"search","query":"duct run above ceiling","result":"no"}
+{"at":"2021-06-23","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-06-21","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-06-22","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-06-24","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-06-24","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-06-24","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-06-21","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-06-23","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-02","role":"pe","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-06-28","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-06-29","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-06-28","role":"pe","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-01","role":"pe","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-01","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-07","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-07","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-09","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-06","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-06","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-05","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-16","role":"pm","action":"search","query":"duct run above ceiling","result":"no"}
+{"at":"2021-07-15","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-13","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-14","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-15","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-12","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-13","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-15","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-15","role":"pe","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-22","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-19","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-20","role":"pm","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-22","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-30","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-26","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-29","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-27","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-07-27","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-30","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-07-29","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-07-27","role":"pm","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-05","role":"super","action":"search","query":"plumbing before drywall","result":"no"}
+{"at":"2021-08-04","role":"pe","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-02","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-02","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-05","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-03","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-04","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-05","role":"pe","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-02","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-09","role":"super","action":"search","query":"plumbing before drywall","result":"no"}
+{"at":"2021-08-11","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-10","role":"pe","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-10","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-12","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-12","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-09","role":"pe","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-10","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-10","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-20","role":"pm","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-18","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-18","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-16","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-20","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-17","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-26","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-24","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-23","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-27","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-25","role":"super","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-08-23","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-23","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-23","role":"super","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-09-01","role":"pe","action":"search","query":"duct run above ceiling","result":"no"}
+{"at":"2021-09-02","role":"pe","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-09-03","role":"pm","action":"search","query":"electrical rough-in unit","result":"yes"}
+{"at":"2021-09-02","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-01","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-03","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-03","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-08-31","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-08-31","role":"pm","action":"search","query":"duct run above ceiling","result":"yes"}
+{"at":"2021-09-07","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-10","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-08","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-07","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-10","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-08","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-10","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-07","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-17","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-15","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-14","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-17","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-21","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-22","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-21","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-23","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-23","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-24","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-23","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-22","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-30","role":"pe","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-30","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-27","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-09-27","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-27","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-09-29","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-01","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-09-30","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-05","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-08","role":"pe","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-10-05","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-06","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-10-11","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-14","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-13","role":"pe","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-15","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-12","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-10-12","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-10-19","role":"pe","action":"search","query":"plumbing before drywall","result":"no"}
+{"at":"2021-10-20","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-20","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-21","role":"pe","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-10-20","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-18","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-19","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-10-19","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-20","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-26","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-26","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-29","role":"pm","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-10-26","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-29","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-10-27","role":"super","action":"search","query":"plumbing before drywall","result":"yes"}
+{"at":"2021-11-01","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-02","role":"pe","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-11-03","role":"pm","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-11-01","role":"super","action":"search","query":"insulation before board","result":"yes"}
+{"at":"2021-11-03","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-09","role":"pe","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-10","role":"pe","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-11-08","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-12","role":"pm","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-11-12","role":"super","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-11-08","role":"pe","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-11-12","role":"pm","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-11-08","role":"pe","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-18","role":"pm","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-17","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-17","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-17","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-18","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-17","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-16","role":"pm","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-25","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-22","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-25","role":"pm","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-22","role":"pm","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-02","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-03","role":"pm","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-11-29","role":"pm","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-02","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-11-29","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-09","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-10","role":"pe","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-07","role":"pm","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-07","role":"super","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-06","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-06","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-06","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-06","role":"pe","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-16","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-14","role":"pe","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-15","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-14","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-14","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-13","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-20","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-21","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-23","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-21","role":"super","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-23","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-27","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-28","role":"super","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-28","role":"pm","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-31","role":"pm","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-27","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2021-12-30","role":"pm","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2021-12-27","role":"pe","action":"search","query":"water near windows","result":"yes"}
+{"at":"2021-12-28","role":"pe","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2022-01-04","role":"pm","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2022-01-07","role":"pe","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2022-01-03","role":"pe","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2022-01-07","role":"super","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2022-01-14","role":"super","action":"search","query":"punch list photos","result":"yes"}
+{"at":"2022-01-12","role":"super","action":"search","query":"water near windows","result":"yes"}
+{"at":"2022-01-14","role":"pe","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2022-01-14","role":"super","action":"search","query":"tile finish unit","result":"yes"}
+{"at":"2022-01-20","role":"pe","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-21","role":"super","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-19","role":"pm","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-18","role":"pe","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-01-27","role":"pe","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-28","role":"super","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-26","role":"pm","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-27","role":"pe","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-01-25","role":"pe","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-02-01","role":"super","action":"search","query":"final exterior photos","result":"no"}
+{"at":"2022-02-01","role":"pe","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-03","role":"super","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-01-31","role":"super","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-02","role":"pm","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-02-03","role":"super","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-01-31","role":"pm","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-04","role":"pm","action":"search","query":"closeout photos per unit","result":"yes"}
+{"at":"2022-02-02","role":"super","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-09","role":"pm","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-08","role":"super","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-08","role":"pm","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-10","role":"pm","action":"search","query":"final exterior photos","result":"yes"}
+{"at":"2022-02-08","role":"pm","action":"search","query":"final exterior photos","result":"yes"}

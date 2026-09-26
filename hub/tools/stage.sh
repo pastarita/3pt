@@ -10,6 +10,8 @@ rm -rf "$OUT"
 mkdir -p "$OUT/docs"
 rsync -a --exclude '.DS_Store' "$HUB/site/"  "$OUT/"
 rsync -a --exclude '.DS_Store' "$REPO/docs/" "$OUT/docs/"
+# openly licensed demo photos (data/mock/media-pool), served at /media-pool/ for the app and the simulator
+if [ -d "$REPO/data/mock/media-pool" ]; then rsync -a --exclude '.DS_Store' --exclude '*.md' "$REPO/data/mock/media-pool/" "$OUT/media-pool/"; fi
 cp "$REPO/README.md"        "$OUT/README.md"
 cp "$REPO/brainstorming.md" "$OUT/brainstorming.md"
 cp "$REPO/3Pt_MOTTO.md"     "$OUT/3Pt_MOTTO.md"      # cited by the provenance index

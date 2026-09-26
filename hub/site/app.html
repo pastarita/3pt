@@ -7,6 +7,8 @@
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="stylesheet" href="./3pt.css">
 <script src="./3pt-data.js"></script>
+<script src="./media-pool/media-pool.js"></script>
+<script src="./sim-data.js"></script>
 <style>
   /* Role-based app prototype. Colors come from 3pt.css tokens only. State: localStorage tpt_app_v1. */
   .appbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;margin:0 0 12px}
@@ -160,6 +162,7 @@
   .pcard .cover{height:240px;position:relative;overflow:hidden}
   .pcard .ov b{font-size:22px}.pcard .ov span{color:var(--ink);font-size:13.5px;font-weight:600;opacity:.9}
   .pcard.new .cover{flex-direction:column;font-size:44px}
+  .pcards.small{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.pcards.small .cover{height:160px}.pcards.small .ov b{font-size:16px}
   .banner{position:relative;height:190px;border-radius:14px;overflow:hidden;margin:0 0 14px}
   .banner .ov b{font-size:34px;line-height:1.05}.banner .ov span{color:var(--soft);font-size:14px}
   .banner .who{position:absolute;right:12px;top:12px;z-index:2;background:var(--pine);border:1px solid var(--line-strong);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700}
@@ -170,7 +173,7 @@
 <body>
 <script src="./nav.js"></script>
 <div class="page">
-  <p class="eyebrow">Build · prototype · state persists in this browser under <code>tpt_app_v1</code></p>
+  <p class="eyebrow">Build · prototype · state persists in this browser under <code>tpt_app_v2</code></p>
   <p class="proto"><span class="pv a">AUTHORED</span> Every project, photo, person and hour on this page is example data. The layout rules and the learning loop run for real in this browser. Nothing talks to MongoDB yet.</p>
   <div class="appbar" id="appbar"></div>
   <div id="learned"></div>
@@ -180,51 +183,68 @@
 <script>
 (function(){
   var T = window.T;
-  var KEY = 'app_v1';
+  var KEY = 'app_v2';
 
-  /* ---------- seed data (AUTHORED examples) ---------- */
-  var ROLES_SEED = [
-    {id:'super',  name:'Superintendent',   where:'on site, phone',  trade:null},
-    {id:'pm',     name:'Project manager',  where:'office, laptop',  trade:null},
-    {id:'owner',  name:'Owner / executive',where:'weekly, any device', trade:null},
-    {id:'pe',     name:'Project engineer', where:'office, laptop',  trade:null},
-    {id:'trade',  name:'Plumbing foreman', where:'on site, phone',  trade:'plumbing'},
-    {id:'safety', name:'Safety manager',   where:'on site, tablet', trade:null}
-  ];
-  var PROJECTS_SEED = [
-    {id:'towera', name:'Tower A', type:'Residential tower', year:2024, status:'closed', photos:9800, cover:'exterior',
-     retro:{facts:[[38,'owner reports built by hand'],[14,'units closed with no open-wall photo'],[3,'walls reopened later to find a pipe'],[22,'searches that found nothing useful']],
-            lessons:['Take the open-wall photo before drywall in every unit','Build the owner photo pack every Friday','Tag window units for water checks']}},
-    {id:'clinic', name:'Riverside Clinic', type:'Medical office', year:2025, status:'closed', photos:6200, cover:'concrete',
-     retro:{facts:[[21,'owner reports built by hand'],[4,'units closed with no open-wall photo'],[1,'wall reopened later'],[9,'searches that found nothing useful']],
-            lessons:['Sort photos by open or closed wall','Drop duplicate burst photos after 24 hours']}},
-    {id:'towerb', name:'Tower B', type:'Residential tower', year:2026, status:'live', week:14, phase:'Fit-out, level 2', cover:'framing'}
-  ];
-  var OPPS_SEED = [
-    {id:'ownerpack', title:'Build the Friday owner photo pack', kind:'automate', hours:28, from:'Tower A', status:'on', roles:['pm','owner']},
-    {id:'openwall',  title:'Open-wall photo before drywall', kind:'remind', hours:12, from:'Tower A', status:'on', roles:['super','pm','trade']},
-    {id:'wallstate', title:'Search photos by open or closed wall', kind:'harness change', hours:9, from:'Clinic', status:'on', roles:['pm','pe','super']},
-    {id:'water',     title:'Flag water stains near windows', kind:'feature', hours:6, from:'Tower A', status:'open', roles:['pm','super','pe','safety']},
-    {id:'closeout',  title:'Closeout photo set per unit, built automatically', kind:'automate', hours:16, from:'Clinic', status:'open', roles:['pe','pm']},
-    {id:'hazard',    title:'Flag open edges and missing rails in photos', kind:'feature', hours:5, from:'Clinic', status:'open', roles:['safety','super']}
-  ];
+  /* ---------- data: the Acme Builders model in sim-data.js, seen on demo day ---------- */
+  var SIM = window.SIM, MEDIA = window.MEDIA || {};
+  var TW = SIM.TODAY_WEEK, DEMO = 'p18';
+  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function mon(w){ var d=new Date(SIM.weekDate(w)); return MON[d.getUTCMonth()]+' '+d.getUTCFullYear(); }
+  function day(w){ var d=new Date(SIM.weekDate(w)); return d.getUTCDate()+' '+MON[d.getUTCMonth()]+' '+d.getUTCFullYear(); }
+  function fileFor(trade,i){ var pool=MEDIA[trade]; return pool&&pool.length ? pool[i%pool.length] : null; }
+  var ROLES_SEED = SIM.ROLES.map(function(r){ return {id:r.id, name:r.name, where:r.where, trade:r.trade||null}; });
 
-  /* photos for the live project: level 2, units 201–208, weeks 9–14 */
+  function coverOf(p){
+    var ps=SIM.photosUpTo(p, Math.min(TW,p.endWeek)); if(!ps.length) return {trade:p.cover, file:fileFor(p.cover,p.n)};
+    var pref=ps.filter(function(x){return x.trade==='exterior'||x.trade==='finishes';}), x=(pref.length?pref:ps).slice(-1)[0];
+    return {trade:x.trade, file:x.file||null};
+  }
+  var PROJECTS_SEED = SIM.projects.map(function(p){
+    var st=SIM.status(p,TW), ph=SIM.phaseAt(p,TW), c=coverOf(p);
+    var o={id:p.id, name:p.name, type:p.typeLabel, where:p.neighborhood, status:st, year:new Date(SIM.weekDate(st==='closed'?p.endWeek:p.startWeek)).getUTCFullYear(),
+           week:TW-p.startWeek+1, phase:ph?ph.name:'', cover:c.trade, coverFile:c.file, photos:SIM.statsUpTo(p,TW).photos, levels:p.levels, unitsPerLevel:Math.min(8,p.unitsPerLevel)};
+    if(st==='closed') o.retro={facts:p.retro.facts, lessons:p.retro.lessons.filter(function(l){return l.indexOf('No new lessons')<0;})};
+    return o;
+  }).sort(function(a,b){ var r={live:0,planned:1,closed:2}; return (a.id===DEMO?-1:0)-(b.id===DEMO?-1:0) || r[a.status]-r[b.status] || b.year-a.year; });
+
+  /* the level each live job is working on, with one photo record per unit (AUTHORED detail for demo day) */
+  function focusLevel(p){ return Math.max(1,Math.ceil(p.levels/2)); }
   function seedPhotos(){
-    var out=[], n=0, units=[201,202,203,204,205,206,207,208];
-    units.forEach(function(u){
-      out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'framing',  wall:'open',   week:9+(u%2)});
-      if (u!==206) out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'plumbing', wall:'open', week:11+(u%3)});
-      out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'electrical', wall:'open', week:12});
-      if (u<=206) out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'drywall', wall:'closed', week:u===206?14:13+(u%2)});
+    var out=[], n=0;
+    SIM.projects.forEach(function(sp){
+      if(SIM.status(sp,TW)!=='live') return;
+      SIM.photosUpTo(sp,TW).slice(-60).forEach(function(x){ out.push({id:x.id, project:sp.id, unit:x.unit, level:x.level, trade:x.trade, wall:x.wall, week:x.w, water:x.water, hazard:x.hazard, file:x.file||null}); });
+      var ph=SIM.phaseAt(sp,TW).name, L=focusLevel(sp), k=Math.min(8,sp.unitsPerLevel);
+      if(['Rough-in','Close-in','Finishes','Closeout'].indexOf(ph)<0) return;
+      for (var i=1;i<=k;i++){
+        var u=L*100+i, add=function(trade,wall,wk,extra){ var o={id:'IMG_'+(80000+(n++)), project:sp.id, unit:u, level:L, trade:trade, wall:wall, week:wk, focus:true, file:fileFor(trade,n)}; if(extra) for(var e in extra) o[e]=extra[e]; out.push(o); };
+        add('framing','open',TW-6);
+        if (!(ph==='Close-in' && i===6)) add('plumbing','open',TW-4);
+        add('electrical','open',TW-3);
+        if (ph!=='Rough-in' && (ph!=='Close-in' || i<=6)) add('drywall','closed', ph==='Close-in' && i===6 ? TW : TW-1);
+      }
+      if (ph==='Close-in'){ out.push({id:'IMG_'+(80000+(n++)), project:sp.id, unit:L*100+3, level:L, trade:'drywall', wall:'closed', week:TW, water:true, file:fileFor('drywall',n)});
+                            out.push({id:'IMG_'+(80000+(n++)), project:sp.id, unit:L*100+5, level:L, trade:'drywall', wall:'closed', week:TW, water:true, file:fileFor('drywall',n+3)}); }
+      if (ph==='Rough-in' || ph==='Close-in') out.push({id:'IMG_'+(80000+(n++)), project:sp.id, unit:L*100+7, level:L, trade:'framing', wall:'open', week:TW, hazard:'open edge, no rail', file:fileFor('framing',n)});
+      out.push({id:'IMG_'+(80000+(n++)), project:sp.id, unit:null, level:null, trade:'exterior', wall:null, week:TW, file:fileFor('exterior',n)});
     });
-    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:203, trade:'drywall', wall:'closed', week:14, water:true});
-    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:205, trade:'drywall', wall:'closed', week:14, water:true});
-    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:207, trade:'framing', wall:'open', week:14, hazard:'open edge, no rail'});
-    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:null, trade:'exterior', wall:null, week:14});
-    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:208, trade:'plumbing', wall:'open', week:14});
     return out;
   }
+
+  /* time savers: the ones the harness learned are on; two are still waiting */
+  function liveProjectAt(w){ var best=null; SIM.projects.forEach(function(p){ if(p.startWeek<=w&&p.endWeek>=w&&(!best||p.startWeek<best.startWeek)) best=p; }); return best?best.name:'—'; }
+  function learnedAt(cap){ return SIM.versions.filter(function(v){return v.cap===cap;})[0]; }
+  function opp(id,cap,title,kind,hours,roles){ var v=cap&&learnedAt(cap); return {id:id, title:title, kind:kind, hours:hours, roles:roles, status:v&&v.w<=TW?'on':'open', from:v?liveProjectAt(v.w):'this year'}; }
+  var OPPS_SEED = [
+    opp('ownerpack','pack','Build the Friday owner photo pack','automate',28,['pm','owner']),
+    opp('openwall','remind','Open-wall photo before drywall','remind',12,['super','pm','trade']),
+    opp('wallstate','wall','Search photos by open or closed wall','harness change',9,['pm','pe','super']),
+    opp('water','issue','Flag water stains the day they arrive','feature',6,['pm','super','pe','safety']),
+    opp('closeout','closeout','Closeout photo set per unit','automate',16,['pe','pm']),
+    opp('hazard','hazard','Flag open edges and missing rails','feature',5,['safety','super']),
+    opp('inspect',null,'Inspection photo pack per floor before close-in','automate',10,['pe','super','pm']),
+    opp('punch',null,'Punch list photos grouped by unit','automate',8,['pm','pe','super'])
+  ];
 
   var LAYOUT_V5 = {
     super: ['beforeclose','needs','photos_week','ask'],
@@ -234,22 +254,32 @@
   };
   var BASE_LAYOUT = ['needs','photos_week','ask'];
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
-  var VERSIONS_SEED = [
-    {v:0, when:'Mar 2024 · Tower A starts', by:'install', changes:['Generic start: describe each image, its date and its source'], layout:{}, fields:['description','date','source'], score:0.41},
-    {v:1, when:'May 2024 · Tower A', by:'Project manager', changes:['Added fields: unit, level, trade','New block for everyone: "Needs you"'], layout:{}, fields:['description','date','source','unit','level','trade'], score:0.58},
-    {v:2, when:'Sep 2024 · Tower A', by:'Superintendent', changes:['Added field: open or closed wall, after 38 "no" taps on one search'], layout:{}, fields:['description','date','source','unit','level','trade','wall'], score:0.64},
-    {v:3, when:'Nov 2024 · Tower A', by:'harness', changes:['Tried: send 20 photos to the model per question instead of 8'], layout:{}, fields:['description','date','source','unit','level','trade','wall'], score:0.52, rolledBack:true},
-    {v:4, when:'Feb 2025 · Clinic', by:'Project manager', changes:['Wrote a tool: find units with no open-wall photo','Turned on the Friday owner photo pack'], layout:{}, fields:['description','date','source','unit','level','trade','wall'], score:0.74},
-    {v:5, when:'Jan 2026 · Tower B starts', by:'harness', changes:['Learned screens for 4 roles from 2 years of use','Tower B started with 5 lessons from Tower A and Clinic'], layout:LAYOUT_V5, fields:['description','date','source','unit','level','trade','wall'], score:0.81}
-  ];
+  /* harness versions replayed from sim-data.js: what each one changed, cumulative */
+  function seedVersions(){
+    var layout={}, fields=['description','date','source'], out=[];
+    SIM.versionsUpTo(TW).forEach(function(v,i){
+      var rb = v.rolledBackWeek!=null && v.rolledBackWeek<=TW;
+      if(!rb){
+        if(v.cap==='fields') fields=fields.concat(['unit','level','trade']);
+        if(v.cap==='wall') fields=fields.concat(['wall']);
+        if(v.cap==='issue') fields=fields.concat(['issue']);
+        if(v.cap==='screens') layout=clone(LAYOUT_V5);
+        if(v.cap==='hazard') layout.safety=['hazards','needs','photos_week'];
+      }
+      out.push({v:v.v, when:mon(v.w)+' · '+liveProjectAt(v.w), by:v.v===0?'install':'harness', changes:v.changes, why:v.why, layout:clone(layout), fields:fields.slice(), score:Math.round((0.41+0.045*i-(rb?0.12:0))*100)/100, rolledBack:rb});
+    });
+    return out;
+  }
 
+  var KEY_VERSIONS=seedVersions();
   function fresh(){
     return { role:'super', roles:clone(ROLES_SEED), projects:clone(PROJECTS_SEED), photos:seedPhotos(), opps:clone(OPPS_SEED),
-             versions:clone(VERSIONS_SEED), cur:5, events:[], hidden:{}, rejected:{}, reviewed:{}, toast:null };
+             versions:clone(KEY_VERSIONS), cur:KEY_VERSIONS.filter(function(v){return !v.rolledBack;}).slice(-1)[0].v, events:[], hidden:{}, rejected:{}, reviewed:{}, toast:null };
   }
   var S = T.load(KEY, null) || fresh();
   if(!S.role) S.role='super';
   function save(){ T.save(KEY, S); }
+  var CP = DEMO;   /* the project on screen; home counts use each card's own project */
 
   /* ---------- helpers ---------- */
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -259,22 +289,25 @@
   function layoutFor(rid){ var l = ver().layout[rid]; return l ? l.slice() : BASE_LAYOUT.slice(); }
   function learnedLayout(rid){ return !!ver().layout[rid]; }
   function log(action, block, extra){ var e={t:Date.now(), role:S.role, v:S.cur, action:action, block:block||null}; if(extra) for(var k in extra) e[k]=extra[k]; S.events.push(e); save(); }
+  function bgs(p){ return p&&p.file ? 'background:url(media-pool/'+p.file+') center/cover;' : ''; }
   function photoEl(p, cap, extra){
     var f = p.water ? '<span class="fl">water?</span>' : (p.hazard ? '<span class="fl">hazard?</span>' : '');
-    return '<button class="ph k-'+p.trade+' '+(extra||'')+'" data-photo="'+p.id+'" aria-label="'+esc(p.id)+'">'+f+(cap!==false?'<span class="cap">'+(p.unit||'site')+' · '+p.trade.slice(0,5)+'</span>':'')+'</button>';
+    return '<button class="ph k-'+p.trade+' '+(extra||'')+'" style="'+bgs(p)+'" data-photo="'+p.id+'" aria-label="'+esc(p.id)+'">'+f+(cap!==false?'<span class="cap">'+(p.unit||'site')+' · '+p.trade.slice(0,5)+'</span>':'')+'</button>';
   }
   function toast(msg){ var d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(function(){ d.remove(); }, 2600); }
 
   /* ---------- derived facts ---------- */
-  function livePhotos(){ return S.photos.filter(function(p){return p.project==='towerb';}); }
-  function missingOpenWall(){
-    var units={}; livePhotos().forEach(function(p){ if(!p.unit) return; units[p.unit]=units[p.unit]||{}; units[p.unit][p.trade+'_'+p.wall]=true; });
-    return Object.keys(units).filter(function(u){ return units[u]['drywall_closed'] && !units[u]['plumbing_open']; }).map(Number);
+  function simP(pid){ return SIM.projects.filter(function(p){return p.id===(pid||CP);})[0]; }
+  function livePhotos(pid){ pid=pid||CP; return S.photos.filter(function(p){return p.project===pid;}); }
+  function focusUnits(pid){ var sp=simP(pid), L=focusLevel(sp), out=[]; for (var i=1;i<=Math.min(8,sp.unitsPerLevel);i++) out.push(L*100+i); return out; }
+  function missingOpenWall(pid){
+    var units={}; livePhotos(pid).forEach(function(p){ if(!p.unit || !p.focus) return; units[p.unit]=units[p.unit]||{}; units[p.unit][p.trade+'_'+p.wall]=true; });
+    return focusUnits(pid).filter(function(u){ return units[u] && units[u]['drywall_closed'] && !units[u]['plumbing_open']; });
   }
-  function unitStatus(){
-    var st={}, miss=missingOpenWall();
-    [201,202,203,204,205,206,207,208].forEach(function(u){
-      var has=livePhotos().filter(function(p){return p.unit===u;});
+  function unitStatus(pid){
+    var st={}, miss=missingOpenWall(pid);
+    focusUnits(pid).forEach(function(u){
+      var has=livePhotos(pid).filter(function(p){return p.unit===u && p.focus;});
       var dry=has.some(function(p){return p.trade==='drywall';});
       st[u]={n:has.length, miss:miss.indexOf(u)>=0, closed:dry};
     });
@@ -282,16 +315,16 @@
   }
   function hoursSaved(){ return S.opps.filter(function(o){return o.status==='on';}).reduce(function(a,o){return a+o.hours;},0); }
   function lessonsCount(){ return S.projects.filter(function(p){return p.retro;}).reduce(function(a,p){return a+p.retro.lessons.length;},0); }
-  function todosFor(rid){
+  function todosFor(rid, pid){
     var r = S.roles.filter(function(x){return x.id===rid;})[0]||{};
     var t=[];
-    missingOpenWall().forEach(function(u){ if(['super','pm','trade','pe'].indexOf(rid)>=0 || !r.trade) t.push({id:'miss'+u, short:'Unit '+u+' · open-wall photo', text:'Unit '+u+': open-wall photo missing', sub:'Drywall started. Take it before the wall closes.', act:'Take photo', do:'take:'+u}); });
-    var water=livePhotos().filter(function(p){return p.water && !S.reviewed[p.id];});
+    missingOpenWall(pid).forEach(function(u){ if(['super','pm','trade','pe'].indexOf(rid)>=0) t.push({id:'miss'+u, short:'Unit '+u+' · open-wall photo', text:'Unit '+u+': open-wall photo missing', sub:'Drywall started. Take it before the wall closes.', act:'Take photo', do:'take:'+u}); });
+    var water=livePhotos(pid).filter(function(p){return p.water && p.week===TW && !S.reviewed[p.id];});
     if (water.length && ['super','pm','pe','safety'].indexOf(rid)>=0) t.push({id:'water', short:water.length+' possible water stains', text:water.length+' photos may show water stains', sub:'Units '+water.map(function(p){return p.unit;}).join(', '), act:'Look', do:'look:water'});
-    var hz=livePhotos().filter(function(p){return p.hazard && !S.reviewed[p.id];});
+    var hz=livePhotos(pid).filter(function(p){return p.hazard && p.week===TW && !S.reviewed[p.id];});
     if (hz.length && ['super','safety'].indexOf(rid)>=0) t.push({id:'hazard', short:'Possible hazard · unit '+hz[0].unit, text:'Possible hazard in a photo', sub:hz[0].hazard+' · unit '+hz[0].unit, act:'Look', do:'look:hazard'});
     var pack=S.opps.filter(function(o){return o.id==='ownerpack' && o.status==='on';})[0];
-    if (pack && ['pm','owner'].indexOf(rid)>=0 && !S.reviewed.pack) t.push({id:'pack', short:'Owner pack · week 14', text:'Owner photo pack for week 14 is ready', sub:'Built by the harness last night', act:'Send', do:'send:pack'});
+    if (pack && ['pm','owner'].indexOf(rid)>=0 && !S.reviewed['pack'+(pid||CP)]) t.push({id:'pack', short:'Owner pack · this week', text:'Owner photo pack for this week is ready', sub:'Built by the harness last night', act:'Send', do:'send:pack'});
     return t;
   }
 
@@ -308,7 +341,7 @@
     stack:ic('<path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 13 9 5 9-5"/>')
   };
   function shot(p, cls, over){
-    return '<div class="shot k-'+(p?p.trade:'concrete')+' '+(cls||'')+'"'+(p?' data-photo="'+p.id+'"':'')+'>'+(over||'')+'</div>';
+    return '<div class="shot k-'+(p?p.trade:'concrete')+' '+(cls||'')+'" style="'+bgs(p)+'"'+(p?' data-photo="'+p.id+'"':'')+'>'+(over||'')+'</div>';
   }
   function photoFor(pred){ return livePhotos().filter(pred)[0]; }
 
@@ -325,7 +358,7 @@
         return '<div class="tcard">'+shot(ph,'tall','<span class="badge">'+icon+'</span><span class="over"><b>'+esc(x.short)+'</b></span>')+'<button class="primary big" data-do="'+x.do+'">'+x.act+'</button></div>';
       }).join('')+'</div>';
     }},
-    beforeclose:{title:'Level 2', icon:'stack', when:'live', wide:true, render:function(){
+    beforeclose:{title:'Units closing', icon:'stack', when:'live', wide:true, render:function(){
       var st=unitStatus();
       return '<div class="plan">'+Object.keys(st).map(function(u){ var s=st[u];
         var ph=photoFor(function(p){return p.unit===+u && p.trade===(s.closed?'drywall':'plumbing');}) || photoFor(function(p){return p.unit===+u;});
@@ -333,12 +366,12 @@
         '<div class="legend"><span class="lg miss"></span>photo missing <span class="lg ok"></span>closed, complete <span class="lg"></span>walls open</div>';
     }},
     photos_week:{title:'This week', icon:'cam', when:'live', wide:true, render:function(){
-      var r=role(), ps=livePhotos().filter(function(p){return p.week===14 && (!r.trade || p.trade===r.trade);});
+      var r=role(), ps=livePhotos().filter(function(p){return p.week===TW && (!r.trade || p.trade===r.trade);});
       return ps.length ? '<div class="mason">'+ps.map(function(p,i){return photoEl(p, true, i===0?'feat':'');}).join('')+'</div>' : '<div class="calm">'+I.cam+'<b>No photos yet</b></div>';
     }},
     ask:{title:'Ask your photos', icon:'bulb', when:'any', wide:true, render:function(){
       var q=S.q||'';
-      var chips=[['plumb','Plumbing before drywall','plumbing'],['water','Water near windows','drywall'],['u204','Unit 204','electrical'],['week','This week','exterior']];
+      var chips=[['plumb','Plumbing before drywall','plumbing'],['water','Water near windows','drywall'],['unit','One unit','electrical'],['week','This week','exterior']];
       var html='<div class="qrow">'+chips.map(function(c){ var ph=photoFor(function(p){return p.trade===c[2];});
         return '<button class="qcard '+(q===c[0]?'on':'')+'" data-do="ask:'+c[0]+'">'+shot(ph,'fill')+'<span>'+c[1]+'</span></button>';}).join('')+'</div>';
       if(!q) return html;
@@ -359,11 +392,11 @@
     progress:{title:'Progress', icon:'stack', when:'live', wide:true, render:function(){
       var st=unitStatus(), closed=Object.keys(st).filter(function(u){return st[u].closed;}).length;
       var ext=photoFor(function(p){return p.trade==='exterior';});
-      return shot(ext,'hero','<span class="over big"><b>'+closed+' of 8</b><small>units closed on level 2</small></span><span class="over right"><b>'+livePhotos().filter(function(p){return p.week===14;}).length+'</b><small>photos this week</small></span>');
+      return shot(ext,'hero','<span class="over big"><b>'+closed+' of '+Object.keys(st).length+'</b><small>units closed on level '+focusLevel(simP())+'</small></span><span class="over right"><b>'+livePhotos().filter(function(p){return p.week===TW;}).length+'</b><small>photos this week</small></span>');
     }},
     portfolio:{title:'All projects', icon:'stack', when:'any', wide:true, render:function(){
       return '<div class="row">'+S.projects.map(function(p){
-        return '<a class="mini" href="#/p/'+p.id+'"><div class="shot k-'+(p.cover||'concrete')+' mid"><span class="over"><b>'+esc(p.name)+'</b></span></div></a>'; }).join('')+
+        return '<a class="mini" href="#/p/'+p.id+'"><div class="shot k-'+(p.cover||'concrete')+' mid" style="'+bgs({file:p.coverFile})+'"><span class="over"><b>'+esc(p.name)+'</b></span></div></a>'; }).join('')+
         '<div class="bign">'+I.clock+'<b>'+hoursSaved()+' h</b><small>saved per job</small></div><div class="bign">'+I.bulb+'<b>'+lessonsCount()+'</b><small>lessons reused</small></div></div>';
     }},
     closeout:{title:'Closeout', icon:'check', when:'any', render:function(){
@@ -398,8 +431,8 @@
       if(hasIssue) return {list:ps.filter(function(p){return p.water;}), note:'Using the "issue" field the harness added in v'+fields._v+'.'};
       return {list:ps.filter(function(p){return p.trade==='drywall';}), note:'No field for water yet. These are all drywall photos. Tap 👎 on the wrong ones.'};
     }
-    if(q==='u204') return {list:ps.filter(function(p){return p.unit===204;}), note:'All photos for unit 204.'};
-    return {list:ps.filter(function(p){return p.week===14;}), note:'Everything filed in week 14.'};
+    if(q==='unit'){ var fu=focusUnits()[3]; return {list:ps.filter(function(p){return p.unit===fu;}), note:'All photos for unit '+fu+'.'}; }
+    return {list:ps.filter(function(p){return p.week===TW;}), note:'Everything filed this week.'};
   }
 
   /* ---------- the loop: Plan (find a signal) → Build (new version) → Instrument (score) ---------- */
@@ -429,7 +462,7 @@
     return null;
   }
   function build(p){
-    var base=ver(), nv={v:S.versions.length, when:'Today · Tower B', by:role().name, changes:[], layout:clone(base.layout), fields:base.fields.slice(), score:null, parent:base.v};
+    var base=ver(), nv={v:S.versions.length, when:'Today · '+proj(CP).name, by:role().name, changes:[], layout:clone(base.layout), fields:base.fields.slice(), score:null, parent:base.v};
     p.apply(nv);
     var prev = score(base.v); nv.prevScore = prev===null?base.score:prev;
     S.versions.push(nv); S.cur=nv.v; save();
@@ -476,12 +509,14 @@
     if(p.status==='planned') return 'Starts with '+lessonsCount()+' lessons';
     if(p.status==='closed') return p.retro.lessons.length+' lessons · '+p.photos.toLocaleString()+' photos';
     var r=S.role;
-    if(r==='owner') return hoursSaved()+' h saved per job · '+missingOpenWall().length+' open issue';
-    var n=todosFor(r).length; return n+' thing'+(n===1?'':'s')+' need you today';
+    if(r==='owner') return p.phase+' · '+todosFor('pm',p.id).length+' open items';
+    var n=todosFor(r,p.id).length; return n+' thing'+(n===1?'':'s')+' need you today';
   }
+  function pcard(p){ return '<a class="pcard" href="#/p/'+p.id+'"><div class="cover k-'+p.cover+'" style="'+bgs({file:p.coverFile})+'"><span class="tag '+(p.status==='live'?'live':'closed')+'">'+(p.status==='live'?'live · wk '+p.week:p.status==='planned'?'next':p.year)+'</span><span class="ov"><b>'+esc(p.name)+'</b><span>'+esc(roleLine(p))+'</span></span></div></a>'; }
   function viewHome(){
-    return '<h1 class="big">Projects</h1><div class="pcards">'+
-      S.projects.map(function(p){ return '<a class="pcard" href="#/p/'+p.id+'"><div class="cover k-'+p.cover+'"><span class="tag '+(p.status==='live'?'live':'closed')+'">'+(p.status==='live'?'live · wk '+p.week:p.status==='planned'?'next':p.year)+'</span><span class="ov"><b>'+esc(p.name)+'</b><span>'+esc(roleLine(p))+'</span></span></div></a>'; }).join('')+
+    var live=S.projects.filter(function(p){return p.status!=='closed';}), past=S.projects.filter(function(p){return p.status==='closed';});
+    return '<h1 class="big">Live and next <span style="font-size:15px;color:var(--faint)">'+live.filter(function(p){return p.status==="live";}).length+' of 4 slots in use</span></h1><div class="pcards">'+live.map(pcard).join('')+'</div>'+
+      '<h2>Past projects <span>'+past.length+' closed · each one left lessons for the next</span></h2><div class="pcards small">'+past.map(pcard).join('')+
       '<button class="pcard new" data-do="newproject"><div class="cover">+<span class="ov"><b>New project</b><span>starts with '+lessonsCount()+' lessons</span></span></div></button></div>';
   }
 
@@ -495,7 +530,7 @@
     var fits=function(b){ var w=BLOCKS[b]&&BLOCKS[b].when; if(p.status==='planned') return b==='lessons'||b==='timesavers'||b==='portfolio'; return w==='any' || w===p.status; };
     var shown = (p.status==='closed'?['retro','playbook']:[]).concat(p.status==='planned'?['lessons']:[]).concat(lay.filter(fits)).filter(function(b,i,a){return a.indexOf(b)===i && !sess[b];});
     var more = Object.keys(BLOCKS).filter(function(b){return shown.indexOf(b)<0 && fits(b) && b!=='retro' && b!=='playbook';});
-    var head='<div class="banner k-'+(p.cover||'concrete')+'"><span class="ov"><b>'+esc(p.name)+'</b><span>'+(p.status==='live'?'Week '+p.week+' · '+esc(p.phase):p.status==='planned'?'Next job':'Closed · '+p.year)+'</span></span><span class="who">'+esc(role().name)+'</span></div>';
+    var head='<div class="banner k-'+(p.cover||'concrete')+'" style="'+bgs({file:p.coverFile})+'"><span class="ov"><b>'+esc(p.name)+'</b><span>'+(p.status==='live'?'Week '+p.week+' · '+esc(p.phase):p.status==='planned'?'Next job':'Closed · '+p.year)+'</span></span><span class="who">'+esc(role().name)+'</span></div>';
     return head+'<div class="blocks">'+shown.map(function(b,i){return blockHTML(b,p,i+1);}).join('')+'</div>'+
       (more.length?'<div class="tray"><div class="label" style="font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Add to my screen</div><div class="chips">'+more.map(function(b){return '<button data-do="open:'+b+'">'+esc(BLOCKS[b].title)+'</button>';}).join('')+'</div></div>':'');
   }
@@ -525,11 +560,11 @@
   function openPhoto(id){
     var p=S.photos.filter(function(x){return x.id===id;})[0]; if(!p) return;
     var fields=ver().fields;
-    var rows=[['photo',p.id],['project',proj(p.project).name],['unit',p.unit||'site'],['trade',p.trade],['week',p.week]];
+    var rows=[['photo',p.id],['project',proj(p.project).name],['unit',p.unit||'site'],['trade',p.trade],['taken','week of '+day(p.week)]];
     if(fields.indexOf('wall')>=0 && p.wall) rows.push(['wall',p.wall]);
     if(fields.indexOf('issue')>=0) rows.push(['issue',p.water?'water stain':(p.hazard?p.hazard:'none')]);
     else if(p.hazard) rows.push(['flag',p.hazard]);
-    openModal('<div class="ph k-'+p.trade+'"></div><dl>'+rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>';}).join('')+'</dl><p style="margin:0;font-size:12px;color:var(--faint)">Read once by harness v'+S.cur+'. Fields come from the current version.</p><div class="bar">'+((p.water||p.hazard)&&!S.reviewed[p.id]?'<button class="primary" id="mrev">Mark as checked</button>':'')+'<button id="mclose">Close</button></div>', function(){
+    openModal('<div class="ph k-'+p.trade+'" style="'+bgs(p)+'"></div><dl>'+rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>';}).join('')+'</dl><p style="margin:0;font-size:12px;color:var(--faint)">Read once by harness v'+S.cur+'. Fields come from the current version.</p><div class="bar">'+((p.water||p.hazard)&&!S.reviewed[p.id]?'<button class="primary" id="mrev">Mark as checked</button>':'')+'<button id="mclose">Close</button></div>', function(){
       document.getElementById('mclose').onclick=closeModal;
       var r=document.getElementById('mrev'); if(r) r.onclick=function(){ S.reviewed[p.id]=true; log('act','needs'); closeModal(); render(); toast('Marked as checked'); };
     });
@@ -539,16 +574,16 @@
   function doAction(a, blockEl){
     var parts=a.split(':'), k=parts[0];
     if(blockEl) log('use', blockEl);
-    if(k==='newproject'){ var n=S.projects.filter(function(p){return p.status==='planned';}).length; var id='towerc'+(n||''); S.projects.push({id:id,name:'Tower C'+(n?' '+(n+1):''),type:'Residential tower',year:2027,status:'planned',cover:'concrete'}); log('act',null); save(); location.hash='#/p/'+id; toast('New project starts with '+lessonsCount()+' lessons'); return; }
-    if(k==='take'){ var u=+parts[1]; S.photos.push({id:'IMG_'+(3000+S.photos.length), project:'towerb', unit:u, trade:'plumbing', wall:'open', week:14}); log('act','needs'); save(); render(); toast('Photo filed: unit '+u+' · plumbing · open wall'); return; }
+    if(k==='newproject'){ var n=S.projects.filter(function(p){return p.status==='planned';}).length; var id='towerc'+(n||''); S.projects.push({id:id,name:'Next job'+(n?' '+(n+1):''),type:'Waits for a free slot (4 max)',year:2027,status:'planned',cover:'site',coverFile:fileFor('site',n)}); log('act',null); save(); location.hash='#/p/'+id; toast('New project starts with '+lessonsCount()+' lessons'); return; }
+    if(k==='take'){ var u=+parts[1]; S.photos.push({id:'IMG_'+(90000+S.photos.length), project:CP, unit:u, level:Math.floor(u/100), trade:'plumbing', wall:'open', week:TW, focus:true, file:fileFor('plumbing',u)}); log('act','needs'); save(); render(); toast('Photo filed: unit '+u+' · plumbing · open wall'); return; }
     if(k==='look'){ var f=parts[1], ph=livePhotos().filter(function(p){return f==='water'?p.water:p.hazard;}).filter(function(p){return !S.reviewed[p.id];})[0]; if(ph) openPhoto(ph.id); return; }
-    if(k==='send'){ S.reviewed.pack=true; log('act','needs'); save(); render(); toast('Owner photo pack sent'); return; }
-    if(k==='unit'){ S.q='u'+parts[1]; if(parts[1]!=='204'){ var up=livePhotos().filter(function(p){return p.unit===+parts[1];})[0]; if(up) openPhoto(up.id); return; } save(); render(); return; }
+    if(k==='send'){ S.reviewed['pack'+CP]=true; log('act','needs'); save(); render(); toast('Owner photo pack sent'); return; }
+    if(k==='unit'){ var up=livePhotos().filter(function(p){return p.unit===+parts[1];}).slice(-1)[0]; if(up) openPhoto(up.id); return; }
     if(k==='ask'){ S.q=parts[1]; save(); render(); return; }
     if(k==='fb'){ S.fb=S.fb||{}; S.fb[parts[1]+'|'+parts[2]]=parts[3]; log(parts[3]==='up'?'fb_up':'fb_down','ask',{q:parts[1]}); render(); return; }
     if(k==='opp'){ var o=S.opps.filter(function(x){return x.id===parts[1];})[0]; if(o){ o.status='on'; var nv=build({apply:function(v){ v.changes=['Turned on: '+o.title+' ('+o.kind+')']; }}); log('act','timesavers'); toast('Turned on. Saved harness v'+nv.v); render(); } return; }
     if(k==='hide'){ S.hidden[S.role]=S.hidden[S.role]||{}; S.hidden[S.role][parts[1]]=true; log('hide',parts[1]); save(); render(); return; }
-    if(k==='open'){ S.hidden[S.role]=S.hidden[S.role]||{}; delete S.hidden[S.role][parts[1]]; var lay=layoutFor(S.role); if(lay.indexOf(parts[1])<0){ S.extra=S.extra||{}; } log('use',parts[1]); openModal('<h3 style="margin:0">'+esc(BLOCKS[parts[1]].title)+'</h3>'+BLOCKS[parts[1]].render(proj(route().id)||proj('towerb'))+'<div class="bar"><button id="mclose">Close</button></div>',function(){ document.getElementById('mclose').onclick=function(){ closeModal(); render(); }; }); return; }
+    if(k==='open'){ S.hidden[S.role]=S.hidden[S.role]||{}; delete S.hidden[S.role][parts[1]]; var lay=layoutFor(S.role); if(lay.indexOf(parts[1])<0){ S.extra=S.extra||{}; } log('use',parts[1]); openModal('<h3 style="margin:0">'+esc(BLOCKS[parts[1]].title)+'</h3>'+BLOCKS[parts[1]].render(proj(CP))+'<div class="bar"><button id="mclose">Close</button></div>',function(){ document.getElementById('mclose').onclick=function(){ closeModal(); render(); }; }); return; }
     if(k==='rollback'){ var to=+parts[1], from=S.cur; S.versions.forEach(function(x){ if(x.v===from) x.rolledBack=true; }); S.cur=to; log('rollback',null,{from:from}); save(); render(); toast('Rolled back to v'+to+'. v'+from+' kept as a snapshot.'); return; }
   }
 
@@ -563,7 +598,7 @@
   function render(){
     var r=route(); renderBar(r); renderLearned(r);
     var v=document.getElementById('view');
-    if(r.name==='p') v.innerHTML=viewProject(r.id);
+    if(r.name==='p'){ CP=r.id; v.innerHTML=viewProject(r.id); }
     else if(r.name==='harness') v.innerHTML=viewHarness();
     else v.innerHTML=viewHome();
   }

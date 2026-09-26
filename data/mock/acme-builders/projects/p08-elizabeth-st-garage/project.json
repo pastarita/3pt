@@ -1,0 +1,56 @@
+{
+  "id": "p08",
+  "name": "Elizabeth St Garage",
+  "type": "Parking garage",
+  "street": "Elizabeth St",
+  "neighborhood": "SoHo-Little Italy-Hudson Square",
+  "borough": "Manhattan",
+  "levels": 4,
+  "units": 24,
+  "start": "2021-09-27",
+  "end": "2022-09-12",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "103299048",
+    "stories": 4,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2021-09-27",
+      "end": "2021-10-22"
+    },
+    {
+      "name": "Structure",
+      "start": "2021-10-25",
+      "end": "2022-01-14"
+    },
+    {
+      "name": "Framing",
+      "start": "2022-01-17",
+      "end": "2022-02-25"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2022-02-28",
+      "end": "2022-04-29"
+    },
+    {
+      "name": "Close-in",
+      "start": "2022-05-02",
+      "end": "2022-06-24"
+    },
+    {
+      "name": "Finishes",
+      "start": "2022-06-27",
+      "end": "2022-08-19"
+    },
+    {
+      "name": "Closeout",
+      "start": "2022-08-22",
+      "end": "2022-09-16"
+    }
+  ]
+}

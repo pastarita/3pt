@@ -1,0 +1,56 @@
+{
+  "id": "p05",
+  "name": "East Broadway Retail",
+  "type": "Retail",
+  "street": "East Broadway",
+  "neighborhood": "Chinatown-Two Bridges",
+  "borough": "Manhattan",
+  "levels": 2,
+  "units": 12,
+  "start": "2020-07-27",
+  "end": "2021-03-08",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "102481244",
+    "stories": 2,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2020-07-27",
+      "end": "2020-08-14"
+    },
+    {
+      "name": "Structure",
+      "start": "2020-08-17",
+      "end": "2020-10-09"
+    },
+    {
+      "name": "Framing",
+      "start": "2020-10-12",
+      "end": "2020-11-06"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2020-11-09",
+      "end": "2020-12-18"
+    },
+    {
+      "name": "Close-in",
+      "start": "2020-12-21",
+      "end": "2021-01-22"
+    },
+    {
+      "name": "Finishes",
+      "start": "2021-01-25",
+      "end": "2021-02-26"
+    },
+    {
+      "name": "Closeout",
+      "start": "2021-03-01",
+      "end": "2021-03-12"
+    }
+  ]
+}

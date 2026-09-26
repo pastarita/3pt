@@ -1,0 +1,56 @@
+{
+  "id": "p18",
+  "name": "Delancy St Residences",
+  "type": "Residential building",
+  "street": "Delancy St",
+  "neighborhood": "Chinatown",
+  "borough": "Manhattan",
+  "levels": 17,
+  "units": 136,
+  "start": "2025-06-02",
+  "end": "2027-04-26",
+  "status_on_demo_day": "live",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "102491590",
+    "stories": 17,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2025-06-02",
+      "end": "2025-07-25"
+    },
+    {
+      "name": "Structure",
+      "start": "2025-07-28",
+      "end": "2026-01-09"
+    },
+    {
+      "name": "Framing",
+      "start": "2026-01-12",
+      "end": "2026-04-03"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2026-04-06",
+      "end": "2026-08-07"
+    },
+    {
+      "name": "Close-in",
+      "start": "2026-08-10",
+      "end": "2026-11-20"
+    },
+    {
+      "name": "Finishes",
+      "start": "2026-11-23",
+      "end": "2027-03-12"
+    },
+    {
+      "name": "Closeout",
+      "start": "2027-03-15",
+      "end": "2027-04-30"
+    }
+  ]
+}

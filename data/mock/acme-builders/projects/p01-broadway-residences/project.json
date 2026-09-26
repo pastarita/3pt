@@ -1,0 +1,56 @@
+{
+  "id": "p01",
+  "name": "Broadway Residences",
+  "type": "Residential building",
+  "street": "Broadway",
+  "neighborhood": "SoHo-TriBeCa-Civic Center-Little Italy",
+  "borough": "Manhattan",
+  "levels": 14,
+  "units": 112,
+  "start": "2019-02-04",
+  "end": "2020-09-21",
+  "status_on_demo_day": "closed",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "102284430",
+    "stories": 14,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2019-02-04",
+      "end": "2019-03-22"
+    },
+    {
+      "name": "Structure",
+      "start": "2019-03-25",
+      "end": "2019-08-16"
+    },
+    {
+      "name": "Framing",
+      "start": "2019-08-19",
+      "end": "2019-10-25"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2019-10-28",
+      "end": "2020-02-07"
+    },
+    {
+      "name": "Close-in",
+      "start": "2020-02-10",
+      "end": "2020-05-08"
+    },
+    {
+      "name": "Finishes",
+      "start": "2020-05-11",
+      "end": "2020-08-14"
+    },
+    {
+      "name": "Closeout",
+      "start": "2020-08-17",
+      "end": "2020-09-25"
+    }
+  ]
+}

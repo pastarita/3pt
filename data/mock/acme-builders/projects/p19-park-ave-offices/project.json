@@ -1,0 +1,56 @@
+{
+  "id": "p19",
+  "name": "Park Ave Offices",
+  "type": "Office building",
+  "street": "Park Ave",
+  "neighborhood": "East Harlem (North)",
+  "borough": "Manhattan",
+  "levels": 4,
+  "units": 16,
+  "start": "2026-04-13",
+  "end": "2027-02-15",
+  "status_on_demo_day": "live",
+  "source_record": {
+    "dataset": "NYC DOB Job Application Filings",
+    "job": "104138443",
+    "stories": 4,
+    "zoning_sqft": 0
+  },
+  "phases": [
+    {
+      "name": "Site work",
+      "start": "2026-04-13",
+      "end": "2026-05-08"
+    },
+    {
+      "name": "Structure",
+      "start": "2026-05-11",
+      "end": "2026-07-24"
+    },
+    {
+      "name": "Framing",
+      "start": "2026-07-27",
+      "end": "2026-08-28"
+    },
+    {
+      "name": "Rough-in",
+      "start": "2026-08-31",
+      "end": "2026-10-23"
+    },
+    {
+      "name": "Close-in",
+      "start": "2026-10-26",
+      "end": "2026-12-11"
+    },
+    {
+      "name": "Finishes",
+      "start": "2026-12-14",
+      "end": "2027-01-29"
+    },
+    {
+      "name": "Closeout",
+      "start": "2027-02-01",
+      "end": "2027-02-19"
+    }
+  ]
+}
