@@ -1,0 +1,8 @@
+{
+  "name": "@3pt/battery-blob", "version": "0.0.1", "private": true, "description": "Battery: image bytes. gridfs (inside the Sandbox), r2 (Cloudflare), or fs (local). Tier metadata lives in Atlas, bytes live here.", "type": "module",
+  "main": "./dist/index.js", "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "provision": "node dist/provision.js", "clean": "rm -rf dist" },
+  "dependencies": { "@3pt/core": "workspace:*" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}
