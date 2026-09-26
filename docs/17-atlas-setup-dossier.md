@@ -173,7 +173,7 @@ about Patrick's Org now applies here, with these values.*
 | Your role in it | Organization Project Creator: no Billing view, no org-level service accounts | 24, 25 |
 | Project | patrickastarita@gmail.com's Sandbox Project · `ATLAS_PROJECT_ID=6ab80ef67d3d0c27d97a4b0e` | 18 |
 | Cluster | `Cluster0` · **M10 dedicated**, 2 GB RAM, 10 GB, 2 vCPU · AWS us-west-1 · MongoDB 8.0.32 · backups on · auto-scaling off | 19, 20 |
-| Access list | current IP added by this session (216.158.150.90/32) | 22 |
+| Access list | current IP (216.158.150.90/32) and, since 16:20 ET, `0.0.0.0/0` commented "Cloudflare Worker (no fixed egress IP)": the Worker's egress IPs change, so the open range is the only entry that lets it connect. An org resource policy hides the console's "Allow access from anywhere" button; typing the CIDR by hand still works. Only the db user's password guards the cluster now: delete the row after the hackathon | 22 |
 | Database users | **none yet**: Security → Database & Network Access → Add New Database User; then `ATLAS_DBUSER`, `ATLAS_DBPASS`, `ATLAS_URI` | 21 |
 | Service account | **none yet**, and project-level creation is available: Project Identity & Access → Applications → Create service account; then `ATLAS_CLIENT_ID`, `ATLAS_CLIENT_SECRET` | 23 |
 | Credits | invisible at this role; the org owner pays. The M10 is already running, so scaling to M20 is `sandbox.sh scale M20` and auto-scaling is `sandbox.sh autoscale on M10 M20` once the service account exists |

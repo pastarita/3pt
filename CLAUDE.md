@@ -212,6 +212,10 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   segment plus clock spans per session. The Timeline leaf gains the day figure (inline SVG, three stage hues, SDF-style plateau,
   rim and glow), a spoken/typed filter, commit chips per prompt, and session headings that name their source. Re-run
   `node scripts/prompts.mjs` at every checkpoint so the rail keeps up with the sessions.
+- 2026-09-26 16:20 ET: **the Worker reaches Atlas.** `/health` timed out because Cloudflare Workers egress from changing IPs and only the Mac's IP was
+  on the access list. Added `0.0.0.0/0` in the console (no Atlas CLI on the host, no service account; an org resource policy hides the
+  "Allow access from anywhere" button, typing the CIDR works). `/health` now says `"store":"atlas"`; `3pt-web.pages.dev/app/` loads. Delete
+  the row after the hackathon. `docs/17` §7.
 - 2026-09-26 16:30 ET: **the loop improves itself on project data.** Instrument runs ten project checks over `demo_outcomes`,
   `demo_activity` and `demo_photos` (3-iteration window); a failed check names a Build grant (`Finding.answer`). Plan picks the
   sprint: mostly feature, improvement every 4th iteration (effect checks judge each grant), fix after a failed effect (keep if
