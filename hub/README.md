@@ -120,7 +120,7 @@ and `make check` fails when any leaf is over budget:
 | Measure | Budget | Why |
 |---|---|---|
 | visible prose words | ≤ 900 | one screenful of reading per leaf |
-| words per figure | ≤ 120 | every ~120 words earns a picture; no figure at all fails |
+| words per figure | ≤ 120 | every ~120 words earns a picture; under 120 words no figure is owed |
 | longest `<p>` | ≤ 55 words | one breath |
 | `.lede` | ≤ 30 words | the italic line under the h1 is a sentence |
 

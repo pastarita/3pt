@@ -43,6 +43,7 @@ jobs:
       - run: node tools/check-nav.mjs
       - run: node tools/check-view.mjs
       - run: node ../scripts/prov.mjs --check
+      - run: node tools/tersity.mjs --check
 
   deploy:
     name: Deploy

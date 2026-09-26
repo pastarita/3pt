@@ -94,6 +94,10 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   the Access assertion's signature/issuer/audience/expiry and fails closed. No `DISABLE_GATE`.
   No password or token ever appears in the repo; local copies live in `~/.config/3pt/`.
 - **Provenance:** every figure on a leaf wears DERIVED, AUTHORED, or TO CONFIRM. Tallies are never typed.
+- **Tersity:** a leaf is a page, not a paper. `make -C hub tersity` prints words, figures, words per figure and
+  longest paragraph per leaf; `make -C hub check` fails any leaf over budget (≤900 words, ≤120 words per
+  figure, no paragraph over 55 words, lede ≤30). Over budget means: turn the paragraph into a labelled
+  figure. Documents under `docs/` are exempt; the Viewer renders them.
 - **Harness code never goes in `hub/`.** The hub renders the repo; it is not the repo.
 - **No HTML under `docs/`.** Documents are markdown, rendered by the Viewer. Anything HTML is a leaf
   and lives in `hub/site/` with the Shell and tokens. Relative links in a doc resolve from that
@@ -129,3 +133,7 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   not yet compiled: disk full, package excluded in `pnpm-workspace.yaml`). Archaeology with 21 cited
   sources and a graded ledger: `docs/12-strands-archaeology.md`; handles in `harness/packages/strands/topology.json`.
   Struck: own loop, own router, own sessions, `HarnessAdapter` as the harness.
+- 2026-09-26 14:10 ET: tersity pass over every HTML leaf. `hub/tools/tersity.mjs` gates `make -C hub check` and CI;
+  9,767 → 3,676 visible words, 27 → 74 figures (362 → 50 words per figure). Direction is a storyboard, the design
+  system is specimens rendered from the compile row. Uncommitted; HEAD's Makefile already calls the (untracked)
+  metric, so `main` is red until this lands.
