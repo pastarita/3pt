@@ -1,5 +1,12 @@
 # hub-workspace
 
+![hub-workspace: hub, shell, model, viewer, diagrams, gate, rails, lints, and the three moves](assets/banner.svg)
+
+**Live demo:** https://hub-workspace.pages.dev is this pattern applied to itself: the skill's own
+documents rendered through its Viewer, inside its Shell, with the diagram reader drawing the
+mermaid in them. The demo runs with the Access gate switched off so the link works for everyone;
+a banner on the site says so. A real deployment sits behind Cloudflare Access with One-time PIN.
+
 A skill for coding agents (Claude Code, and anything else that reads a `SKILL.md`) that builds
 and maintains a **hub workspace**: a flat-HTML project site that humans and agents co-author
 safely. One grouped index, one shared collapsible sidebar, one data layer, custom glyphs per

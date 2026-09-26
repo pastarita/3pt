@@ -52,7 +52,9 @@ for (const d of docs) {
   try { html = kind === 'markdown' ? V.md(text) : kind === 'csv' ? V.csv(text) : V.json(text); }
   catch (e) { errs.push(`${d}: renderer threw ${e.message}`); continue; }
   ok(!html.includes(NUL), `${d}: NUL in output`);
-  ok(!/\bundefined\b/.test(html.replace(/<code[\s\S]*?<\/code>/g, '')), `${d}: "undefined" in output`);
+  // a template failure renders `undefined` as a whole value (>undefined<, "undefined", =undefined);
+  // the word in ordinary prose ("when document is undefined") is not a defect
+  ok(!/(>|"|=)undefined(<|"|$)/m.test(html.replace(/<code[\s\S]*?<\/code>/g, '')), `${d}: "undefined" rendered as a value`);
   ok(!/<p><\/p>/.test(html), `${d}: empty paragraph`);
   n++;
 }
@@ -63,7 +65,8 @@ for (const d of docs) {
 let links = 0;
 for (const d of docs) {
   if (!/\.md$/.test(d)) continue;
-  const text = readFileSync(join(ROOT, d), 'utf8');
+  // fenced code is not prose: example links inside ``` blocks are not links
+  const text = readFileSync(join(ROOT, d), 'utf8').replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '');
   for (const m of text.matchAll(/\[[^\]]*\]\(([^)\s]+)\)/g)) {
     const h = m[1];
     if (/^(https?:|mailto:|#)/.test(h)) continue;

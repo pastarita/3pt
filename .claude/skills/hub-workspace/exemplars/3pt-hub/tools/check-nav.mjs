@@ -1,6 +1,6 @@
 // check-nav.mjs — the Register's consistency checker. Run from hub/: tools/stage.sh && node tools/check-nav.mjs
 // The type-check for the IA. Runs against the STAGED artifact (hub/_site/) — what actually ships.
-// Validates nav.js (single source of IA) + 3pt-data.js against disk:
+// Validates nav.js (single source of IA) + hub-data.js against disk:
 //   1. slugs unique; every sidebar entry has a minted glyph; ids unique and match T.DOCS
 //   2. every cluster key in GROUPS exists in nav CLUSTERS AND in T.CLUSTERS (one namespace)
 //   3. the EMITTED href (from the real href() in nav.js) resolves literally on disk,
@@ -16,12 +16,12 @@ import { fileURLToPath } from 'node:url';
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ROOT = join(REPO, '_site');
 if (!existsSync(ROOT)) { console.error('FAIL: _site/ missing — run tools/stage.sh first'); process.exit(1); }
-await import(join(ROOT, '3pt-data.js'));
+await import(join(ROOT, 'hub-data.js'));
 await import(join(ROOT, 'nav.js'));
 const T = globalThis.T, N = globalThis.TPTNAV;
 const errs = [], warns = [];
 const bad = m => errs.push(m);
-if (!T) bad('3pt-data.js did not define globalThis.T');
+if (!T) bad('hub-data.js did not define globalThis.T');
 if (!N) bad('nav.js did not define globalThis.TPTNAV');
 if (errs.length) { errs.forEach(e => console.error('FAIL:', e)); process.exit(1); }
 
@@ -95,7 +95,7 @@ for (const leaf of leaves) {
   const hasShell = /<script src="(\.\/|(\.\.\/)+)?nav\.js"><\/script>/.test(src);
   const exempt = SHELL_EXEMPT.includes(leaf);
   if (!hasShell && !exempt) bad(`${leaf}: leaf missing the shell (<script src="./nav.js">)`);
-  if (!/3pt\.css/.test(src) && !exempt) bad(`${leaf}: leaf does not link 3pt.css (tokens)`);
+  if (!/hub\.css/.test(src) && !exempt) bad(`${leaf}: leaf does not link hub.css (tokens)`);
   if (/<(script|link)[^>]+(src|href)="https?:\/\//.test(src)) bad(`${leaf}: external dependency — leaves are self-contained`);
   const reachable = leaf === 'index.html' || emittedPaths.has(leaf) || hubHrefs.has(leaf) || DECLARED.includes(leaf);
   if (!reachable) bad(`${leaf}: unreachable — not in the Register, not carded, not declared`);

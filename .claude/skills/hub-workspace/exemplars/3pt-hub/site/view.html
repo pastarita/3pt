@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>3PT · Viewer</title>
+<title>hub-workspace · Viewer</title>
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<link rel="stylesheet" href="./3pt.css">
-<script src="./3pt-data.js"></script>
+<link rel="stylesheet" href="./hub.css">
+<script src="./hub-data.js"></script>
 <script src="./diagram.js"></script>
 <script src="./view-render.js"></script>
 <style>
@@ -47,7 +47,7 @@
   var f = new URLSearchParams(location.search).get('f') || '';
   var out = document.getElementById('out');
   document.getElementById('path').textContent = f || '(no ?f= given)';
-  document.title = '3PT · ' + (f.split('/').pop() || 'Viewer');
+  document.title = 'hub-workspace · ' + (f.split('/').pop() || 'Viewer');
   document.getElementById('copy').onclick = function(e){ navigator.clipboard.writeText(f); e.target.textContent='copied ✓'; setTimeout(function(){ e.target.textContent='copy path'; },1200); };
   if (!f) { out.innerHTML = '<div class="warn">No document requested. Add <code>?f=path</code>.</div>'; return; }
   if (/^[a-z]+:/i.test(f) || f.indexOf('..')>=0 || f.charAt(0)==='/') { out.innerHTML = '<div class="warn">The Viewer reads paths inside this workspace only.</div>'; return; }
@@ -56,7 +56,7 @@
   var raw = document.getElementById('raw'); raw.href = './' + f; raw.style.display = '';
   fetch('./' + f).then(function(r){ if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.text(); }).then(function(text){
     out.innerHTML = kind==='markdown' ? V.md(text, f.slice(0, f.lastIndexOf('/')+1)) : kind==='csv' ? V.csv(text) : kind==='json' ? V.json(text) : kind==='jsonl' ? V.jsonl(text) : '<pre><code>'+V.esc(text)+'</code></pre>';
-    var h1 = out.querySelector('h1'); if (h1) document.title = '3PT · ' + h1.textContent;
+    var h1 = out.querySelector('h1'); if (h1) document.title = 'hub-workspace · ' + h1.textContent;
     if (location.hash) { var tgt = document.getElementById(location.hash.slice(1)); if (tgt) tgt.scrollIntoView({ block:'start' }); }  /* the document arrives after load, so honour #sN.NN here */
   }).catch(function(err){
     out.innerHTML = '<div class="warn"><b>Cannot read this file from here.</b><br>Opening the workspace from <code>file://</code> blocks <code>fetch()</code>, so the Viewer needs it served:<br><br><code>make -C hub preview</code> &nbsp;then open <code>http://127.0.0.1:8000/</code><br><br>The path is above with a copy button. <span style="opacity:.7">('+V.esc(err.message)+')</span></div>';

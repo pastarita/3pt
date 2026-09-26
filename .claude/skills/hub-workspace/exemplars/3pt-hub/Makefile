@@ -1,35 +1,13 @@
-# 3PT · hub workspace targets. The harness's own targets (plan/build/instrument) land here later.
-.PHONY: stage check tersity preview deploy verify
-
-stage:            ## build _site/ = hub/ + docs/ + README.md
+# hub-workspace exemplar · targets. Deploys UNGATED (from inside _site/, so functions/ is not
+# compiled): this is the public demo. A real instance deploys from this directory so the gate ships.
+.PHONY: stage check preview deploy
+stage:            ## build _site/ = site/ + docs/ + the skill's own documents
 	@bash tools/stage.sh
-
-check: stage      ## lint the IA, the Viewer, the provenance pointers, and the tersity budget of every leaf
+check: stage      ## lint the IA, the Viewer, the diagrams
 	@node tools/check-nav.mjs
 	@node tools/check-view.mjs
 	@node tools/check-diagram.mjs
-	@node ../scripts/prov.mjs --check
-	@node tools/tersity.mjs --check
-
-tersity:          ## words, figures, words-per-figure and longest paragraph for every leaf (site/*.html)
-	@node tools/tersity.mjs
-
-prov:             ## rebuild docs/provenance-index.md + site/prov-data.js from brainstorming.md (repo root)
-	@node ../scripts/prov.mjs
-
 preview: stage    ## serve _site/ with Pages-style routing at http://127.0.0.1:8000/
 	@python3 tools/serve.py 8000
-
-deploy: check     ## deploy _site/ to Cloudflare Pages production (run from repo root: compiles functions/)
-	@npx wrangler pages deploy _site --project-name=3pt --branch=main
-
-access:           ## Tier 1: create/update the Cloudflare Access app + policy, write TEAM_DOMAIN/AUD to Pages (needs ~/.config/3pt/CF_API_TOKEN)
-	@bash tools/access-setup.sh
-
-verify:           ## after any gate-touching deploy. With Access in front: anon → 302 to <team>.cloudflareaccess.com; forged header → still 302
-	@printf 'anon          '; curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://3pt.pages.dev/
-	@printf 'forged header '; curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' -H 'Cf-Access-Authenticated-User-Email: patrick@factorita.com' https://3pt.pages.dev/
-	@printf 'preview anon  '; curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://main.3pt.pages.dev/
-	@echo '(Tier 0 door, only reachable on a hostname Access does not front:)'
-	@printf 'valid basic   '; curl -s -o /dev/null -w '%{http_code}\n' -u "patrick@factorita.com:$${ACCESS_PASS:-$$(cat ~/.config/3pt/ACCESS_PASS 2>/dev/null)}" https://3pt.pages.dev/
-	@printf 'wrong-domain  '; curl -s -o /dev/null -w '%{http_code}\n' -u "x@elsewhere.com:$${ACCESS_PASS:-$$(cat ~/.config/3pt/ACCESS_PASS 2>/dev/null)}" https://3pt.pages.dev/
+deploy: check     ## public demo: no gate
+	@cd _site && npx wrangler pages deploy . --project-name=hub-workspace --branch=main --commit-dirty=true

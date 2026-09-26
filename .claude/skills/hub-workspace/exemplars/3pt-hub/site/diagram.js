@@ -444,7 +444,7 @@
     });
     return g;
   }
-  var CREL = /^([A-Za-z0-9_]+)\s*(<\|\.\.|<\|--|\*--|o--|--\*|--o|\.\.>|-->|\.\.|--)\s*([A-Za-z0-9_]+)\s*(?::\s*(.*))?$/;
+  var CREL = /^([A-Za-z0-9_]+)\s*(<\|\.\.|<\|--|--\|>|\.\.\|>|\*--|o--|--\*|--o|\.\.>|-->|\.\.|--)\s*([A-Za-z0-9_]+)\s*(?::\s*(.*))?$/;
   function parseClass(ls) {
     var g = flowGraph('TB'), cur = null, m;
     ls.forEach(function (raw) {
@@ -454,8 +454,8 @@
       if ((m = /^class\s+([A-Za-z0-9_]+)\s*(\{)?$/.exec(s))) { var n = ensure(g, m[1], m[1], 'class'); if (m[2]) cur = n; return; }
       if ((m = CREL.exec(s))) {
         var op = m[2], A = ensure(g, m[1], m[1], 'class').id, B = ensure(g, m[3], m[3], 'class').id, lab = m[4] ? m[4].trim() : '';
-        var dotted = op.indexOf('..') >= 0, toA = op.indexOf('<|') === 0 || op === '*--' || op === 'o--';
-        g.edges.push({ from: toA ? B : A, to: toA ? A : B, kind: dotted ? 'dotted' : 'solid', arrow: op !== '--' && op !== '..', head: op.indexOf('<|') === 0 ? 'tri' : 'arrow', label: lab }); return;
+        var dotted = op.indexOf('..') >= 0, toA = op.indexOf('<|') === 0 || op === '*--' || op === 'o--', tri = op.indexOf('<|') === 0 || /\|>$/.test(op);
+        g.edges.push({ from: toA ? B : A, to: toA ? A : B, kind: dotted ? 'dotted' : 'solid', arrow: op !== '--' && op !== '..', head: tri ? 'tri' : 'arrow', label: lab }); return;
       }
       throw new Error('cannot read: ' + s);
     });

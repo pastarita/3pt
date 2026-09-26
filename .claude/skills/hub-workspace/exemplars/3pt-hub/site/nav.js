@@ -1,108 +1,75 @@
-/* 3PT · shared nav shell — the single source of IA.
+/* hub-workspace exemplar · shared nav shell — the single source of IA.
    Desktop (>900px): fixed left rail grouped by phase, custom SVG glyph per leaf, collapsible
-   (persisted as tpt_nav). Mobile (≤900px): sticky header + hamburger. Hidden on print.
+   (persisted as hw_nav). Mobile (≤900px): sticky header + hamburger. Hidden on print.
    Adding a page = ONE entry in GROUPS below (+ a glyph, + a hub card).
-   Hrefs ALWAYS carry .html and NEVER branch on the page's own location (see skill → Link resolution).
+   Hrefs ALWAYS carry .html and NEVER branch on the page's own location (see SKILL.md → Link resolution).
    Node-safe: exports globalThis.TPTNAV and returns before any DOM work when `document` is absent,
-   so tools/check-nav.mjs can import it. */
+   so tools/check-nav.mjs can import it.
+
+   NOTICE: this public demo runs with the gate OFF so the link works for everyone. A real
+   deployment of this pattern sits behind Cloudflare Access (One-time PIN) with the Basic-auth
+   door beside it — see references/access-runbook.md. The band below says so, once, per browser. */
 (function(){
   var G = (typeof globalThis!=='undefined'?globalThis:window);
   if (G.TPTNAV) return;
 
+  var NOTICE = 'Public demo: the Cloudflare Access gate is switched off here so this link works for everyone. A real deployment of this pattern sits behind Access with One-time PIN, and the middleware verifies the assertion.';
+
   function g(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';}
-  /* one unique hand-drawn glyph per leaf — this IS the project's iconography */
   var GLYPH = {
-    'index':          g('<path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="3.5" r="1.4" fill="currentColor"/><circle cx="20.5" cy="18.5" r="1.4" fill="currentColor"/><circle cx="3.5" cy="18.5" r="1.4" fill="currentColor"/>'),
-    'vision':         g('<path d="M3 12s3.5-6.5 9-6.5 9 6.5 9 6.5-3.5 6.5-9 6.5S3 12 3 12Z"/><path d="M12 3v2.5M12 18.5V21"/><circle cx="12" cy="12" r="2.4"/>'),
-    'goal':           g('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3.5v3M20.5 12h-3"/>'),
-    'rules':          g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
-    'decisions':      g('<path d="M12 4v16"/><path d="M5 8l7-4 7 4"/><path d="M4 14h5l1.5 3h3L15 14h5"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/>'),
-    'icp-explorer':   g('<path d="M4 20V10M9 20V5M14 20v-8M19 20V7"/><path d="M2.5 20h19"/><circle cx="9" cy="5" r="1.3" fill="currentColor"/>'),
-    'icp-directions': g('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v4M12 16.5v4M3.5 12h4M16.5 12h4"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'),
-    'icp':            g('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-4 3-6 6-6s5.5 2 6 6"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15 18.5c.3-2.5 1.4-4 3.5-4 1.2 0 2.1.5 2.7 1.3"/>'),
-    'lanes':          g('<path d="M4 4v16M10 4v16M16 4v16M22 4v16"/><path d="M6 8h2M12 12h2M18 16h2" stroke-width="2.4"/>'),
-    'lanes-doc':      g('<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="7" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5"/><circle cx="17" cy="18" r="1.5"/>'),
-    'workflow':       g('<path d="M4 6h5v5H4ZM15 6h5v5h-5ZM9.5 15h5v5h-5Z"/><path d="M9 8.5h6M6.5 11v2.5a1.5 1.5 0 0 0 1.5 1.5h1.5M17.5 11v2.5a1.5 1.5 0 0 1-1.5 1.5h-1.5"/>'),
-    'resources':      g('<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9Z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>'),
-    'assessment':     g('<path d="M4 20h16"/><path d="M6 16l4-5 3 3 5-7"/><circle cx="18" cy="7" r="1.4" fill="currentColor"/><path d="M4 4v16"/>'),
-    'brainstorming':  g('<path d="M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3Z"/><path d="M9.5 19h5M10.5 21.5h3"/><path d="M10 9.5c.5-1.5 3.5-1.5 4 0"/>'),
-    'sources':        g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h8"/><path d="M3 8v13h12" stroke-dasharray="2 2"/>'),
-    'changelog':      g('<path d="M4 4h16v16H4Z"/><path d="M8 9h8M8 12.5h8M8 16h5"/><path d="M12 2v4"/>'),
-    'timeline':       g('<path d="M12 3v18"/><circle cx="12" cy="6.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="17.5" r="1.8" fill="currentColor"/><path d="M14.5 6.5h5M4.5 12h5M14.5 17.5h5"/>'),
-    'provenance':     g('<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M7.6 16.4L16.4 7.6M8.2 18h7.6"/><path d="M6 15.8V9a3 3 0 0 1 3-3h6.8"/>'),
-    'glossary':       g('<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M5 18a2 2 0 0 1 2-2h11"/><path d="M9 8h5M9 11h5"/>'),
-    'charter':        g('<path d="M6 3h9l4 4v14H6Z"/><path d="M15 3v4h4"/><path d="M9 11h7M9 14.5h7M9 18h4"/>'),
-    'direction':      g('<path d="M4 19.5l8-14 8 14Z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>'),
-    'architecture':   g('<path d="M3 6h5v5H3ZM9.5 3h5v5h-5ZM16 6h5v5h-5Z"/><path d="M5.5 11v3.5h13V11"/><path d="M12 8v6.5"/><path d="M8 18h8M6 21h12" stroke-dasharray="2 2"/>'),
-    'architecture-doc': g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h3v3H8ZM13 12h3v3h-3Z"/><path d="M11 13.5h2"/>'),
-    'setup':          g('<path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="13" r="2.6"/><path d="M12 10.4V3.5M13.8 14.6l6.7 3.9M10.2 14.6l-6.7 3.9"/>'),
-    'setup-doc':      g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h5"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/>'),
-    'icons':          g('<path d="M4 4h6v6H4ZM14 4h6v6h-6ZM4 14h6v6H4Z"/><circle cx="17" cy="17" r="3"/><path d="M7 7h0M17 7h0" stroke-width="2.4"/>'),
-    'design-system':  g('<path d="M4 4h7v7H4ZM13 4h7v7h-7ZM4 13h7v7H4Z"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="M6 8.5l2-2 2 2M15 6.5h3"/>'),
-    'app':            g('<rect x="3" y="4" width="18" height="15" rx="2"/><path d="M3 8h18"/><rect x="6" y="11" width="5" height="5"/><path d="M14 12h4M14 15h3"/>'),
-    'ci':             g('<path d="M4 6h6v6H4ZM14 6h6v6h-6ZM9 15h6v6H9Z"/><path d="M10 9h4M7 12v3h5M17 12v3h-5"/><circle cx="12" cy="18" r="1" fill="currentColor"/>'),
-    'view':           g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>')
+    'index':         g('<path d="M4 4h6v6H4ZM14 4h6v6h-6ZM4 14h6v6H4ZM14 14h6v6h-6Z"/>'),
+    'readme':        g('<path d="M6 3h9l4 4v14H6Z"/><path d="M15 3v4h4"/><path d="M9 11h7M9 14.5h7M9 18h4"/>'),
+    'skill':         g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
+    'templates':     g('<path d="M4 5h16v14H4Z"/><path d="M4 10h16M10 10v9"/>'),
+    'access':        g('<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor"/>'),
+    'collaborators': g('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-4 3-6 6-6s5.5 2 6 6"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15 18.5c.3-2.5 1.4-4 3.5-4 1.2 0 2.1.5 2.7 1.3"/>'),
+    'viewer-ref':    g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>'),
+    'derived':       g('<path d="M4 20V10M9 20V5M14 20v-8M19 20V7"/><path d="M2.5 20h19"/>'),
+    'symbols':       g('<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="7" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5"/><circle cx="17" cy="18" r="1.5"/>'),
+    'estate':        g('<path d="M3 10l9-5 9 5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 18h18"/>'),
+    'diagrams':      g('<path d="M4 6h5v5H4ZM15 6h5v5h-5ZM9.5 15h5v5h-5Z"/><path d="M9 8.5h6M6.5 11v2.5a1.5 1.5 0 0 0 1.5 1.5h1.5M17.5 11v2.5a1.5 1.5 0 0 1-1.5 1.5h-1.5"/>'),
+    'viewer-demo':   g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h8"/>'),
+    'review':        g('<path d="M4 4h16v16H4Z"/><path d="M8 9h8M8 12.5h8M8 16h5"/><path d="M12 2v4"/>'),
+    'view':          g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>')
   };
-
-  /* Cluster registry — mirrors T.CLUSTERS keys in 3pt-data.js. The Shell keeps its own copy
-     so it can render before the Model loads; keys MUST match (checked by tools/check-nav.mjs). */
   var CLUSTERS = {
-    orient: { label:'Orient', color:'#8b7cf6' },
-    decide: { label:'Decide', color:'#3aa6d9' },
-    build:  { label:'Build',  color:'#e0a33a' },
-    record: { label:'Record', color:'#7d8a99' }
+    orient:    { label:'Orient',    color:'#8b7cf6' },
+    reference: { label:'Reference', color:'#3aa6d9' },
+    demo:      { label:'Demo',      color:'#e0a33a' },
+    record:    { label:'Record',    color:'#7d8a99' }
   };
-
-  /* Sidebar entries: [slug, label, id?]. id is the spoken ordinal rendered in the row.
-     REGISTERING A LEAF = ONE ENTRY HERE. */
   var GROUPS = [
-    ['',       [['index','Hub']]],
-    ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5']]],
-    ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['icons','Icons'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
-    ['build',  [['app','App prototype'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['resources','Resources & credits','D4']]],
-    ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
+    ['',          [['index','Hub']]],
+    ['orient',    [['readme','README','R0'], ['skill','SKILL.md','S0']]],
+    ['reference', [['templates','Templates','T1'], ['access','Access runbook','T2'], ['collaborators','Collaborator access','T3'], ['viewer-ref','Polyglot viewer','T4'], ['derived','Derived layer','T5'], ['symbols','Symbolic system','T6'], ['estate','Estate','T7']]],
+    ['demo',      [['diagrams','Diagram reader','D1'], ['viewer-demo','Viewer','D2']]],
+    ['record',    [['review','Build review','V1']]]
   ];
-  /* ROUTE: slugs that are not their own .html file. Documents route through the Viewer. */
   var ROUTE = {
-    'ci':             'view.html?f=docs/13-ci-and-deployment.md',
-    'setup-doc':      'view.html?f=docs/14-setup-cascade.md',
-    'vision':         'view.html?f=docs/00-vision.md',
-    'goal':           'view.html?f=docs/06-goal-and-use-case.md',
-    'rules':          'view.html?f=docs/05-rules.md',
-    'decisions':      'view.html?f=docs/12-decisions.md',
-    'icp-directions': 'view.html?f=docs/08-icp-directions.md',
-    'assessment':     'view.html?f=docs/07-assessment-and-measurement.md',
-    'brainstorming':  'view.html?f=brainstorming.md',
-    'sources':        'view.html?f=docs/sources/hackathon-resource-guide.md',
-    'icp':            'view.html?f=docs/01-icp.md',
-    'lanes-doc':      'view.html?f=docs/02-lanes.md',
-    'workflow':       'view.html?f=docs/03-workflow.md',
-    'architecture-doc': 'view.html?f=docs/10-architecture.md',
-    'resources':      'view.html?f=docs/04-resources.md',
-    'glossary':       'view.html?f=docs/glossary.md',
-    'charter':        'view.html?f=README.md',
-    'provenance':     'view.html?f=docs/09-provenance.md'
+    'readme':        'view.html?f=README.md',
+    'skill':         'view.html?f=SKILL.md',
+    'templates':     'view.html?f=references/templates.md',
+    'access':        'view.html?f=references/access-runbook.md',
+    'collaborators': 'view.html?f=references/collaborator-access.md',
+    'viewer-ref':    'view.html?f=references/polyglot-viewer.md',
+    'derived':       'view.html?f=references/derived-layer.md',
+    'symbols':       'view.html?f=references/symbolic-system.md',
+    'estate':        'view.html?f=references/estate.md',
+    'diagrams':      'view.html?f=docs/diagrams.md',
+    'viewer-demo':   'view.html?f=docs/viewer.md',
+    'review':        'view.html?f=reviews/2026-09-02-rsccs-build.md'
   };
-  var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
-  var FRESH = { 'app':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1, 'ci':1, 'icons':1, 'setup':1 }; /* retire at next check-in */
+  var PATH = {};
+  var FRESH = { 'diagrams':1, 'access':1 };
 
-  /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
-  function href(s){
-    if (ROUTE[s]) return './'+ROUTE[s];
-    var d = PATH[s]||'';
-    return /\/$/.test(d) ? './'+d+'index.html' : './'+d+s+'.html';
-  }
+  function href(s){ if (ROUTE[s]) return './'+ROUTE[s]; var d = PATH[s]||''; return /\/$/.test(d) ? './'+d+'index.html' : './'+d+s+'.html'; }
 
-  G.TPTNAV = { GROUPS:GROUPS, GLYPH:GLYPH, CLUSTERS:CLUSTERS, ROUTE:ROUTE, PATH:PATH, FRESH:FRESH, href:href };
-  if (typeof document === 'undefined') return;   /* node: registry only */
+  G.TPTNAV = { GROUPS:GROUPS, GLYPH:GLYPH, CLUSTERS:CLUSTERS, ROUTE:ROUTE, PATH:PATH, FRESH:FRESH, NOTICE:NOTICE, href:href };
+  if (typeof document === 'undefined') return;
 
-  /* current-page detection: viewer routes match on pathname+search, else on the bare slug */
   var file = (location.pathname.split('/').pop()||'index.html');
   var cur = file.replace(/\.html$/,'')||'index';
-  if (cur==='view') {
-    var q = new URLSearchParams(location.search).get('f')||'';
-    for (var k in ROUTE) if (ROUTE[k]==='view.html?f='+q) cur = k;
-  }
+  if (cur==='view') { var q = new URLSearchParams(location.search).get('f')||''; for (var k in ROUTE) if (ROUTE[k]==='view.html?f='+q) cur = k; }
   var TITLE = {}; GROUPS.forEach(function(gr){ gr[1].forEach(function(p){ TITLE[p[0]]=p[1]; }); });
 
   var css =
@@ -126,6 +93,9 @@
    +"#tptnav .nv-min:hover{color:#fff}html.navmin #tptnav .nv-min{text-align:center;padding:10px 0}"
    +"#tptnav .nv-ft{font-size:9.5px;color:#4c5663;padding:12px 16px;border-top:1px solid #1e252e;letter-spacing:.08em;text-transform:uppercase}"
    +"#tptnav .nv-burger,#tptnav .nv-cur{display:none}"
+   +"#hw-notice{position:sticky;top:0;z-index:99999;background:#1f262f;color:#e6e9ee;border-bottom:1px solid #3a4552;font:500 12.5px/1.45 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;padding:9px 44px 9px 16px}"
+   +"#hw-notice b{color:#ff6b4a;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:10.5px;margin-right:8px}"
+   +"#hw-notice button{position:absolute;right:10px;top:6px;border:0;background:none;color:#a3adbb;font-size:16px;cursor:pointer;padding:2px 6px}#hw-notice button:hover{color:#fff}"
    +"@media(max-width:900px){"
    +"#tptnav{position:sticky;top:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 4px 0 14px;overflow:visible;border-right:0;border-bottom:1px solid #1e252e}"
    +"body{margin-left:0!important}"
@@ -136,7 +106,7 @@
    +"#tptnav .nv-wrap{position:absolute;top:48px;left:0;right:0;background:#0b0e12;box-shadow:0 10px 24px rgba(0,0,0,.5);display:none;padding:0 0 12px;z-index:100001;max-height:calc(100vh - 48px);overflow-y:auto}"
    +"#tptnav.open .nv-wrap{display:block}#tptnav .nv-links a{padding:13px 18px;font-size:14px}"
    +"}"
-   +"@media print{#tptnav{display:none!important}body{margin-left:0!important}}";
+   +"@media print{#tptnav,#hw-notice{display:none!important}body{margin-left:0!important}}";
 
   function run(){
     if (document.getElementById('tptnav')) return;
@@ -147,24 +117,26 @@
       var c=CLUSTERS[gr[0]]||{};
       if (gr[0]) links+='<div class="nv-g" style="color:'+(c.color||'#6b7684')+'">'+(c.label||gr[0])+'</div>';
       links+='<div class="nv-links">';
-      gr[1].forEach(function(p){
-        links+='<a class="'+(p[0]===cur?'on':'')+'" href="'+href(p[0])+'">'+(GLYPH[p[0]]||'')
-          +(p[2]?'<span class="id">'+p[2]+'</span>':'')+'<span>'+p[1]+(FRESH[p[0]]?'<i class="nv-dot"></i>':'')+'</span></a>';
-      });
+      gr[1].forEach(function(p){ links+='<a class="'+(p[0]===cur?'on':'')+'" href="'+href(p[0])+'">'+(GLYPH[p[0]]||'')+(p[2]?'<span class="id">'+p[2]+'</span>':'')+'<span>'+p[1]+(FRESH[p[0]]?'<i class="nv-dot"></i>':'')+'</span></a>'; });
       links+='</div>';
     });
-    nav.innerHTML='<div class="nv-b">3PT</div><div class="nv-sub">Three Point Harness</div>'
+    nav.innerHTML='<div class="nv-b">hub-workspace</div><div class="nv-sub">the exemplar</div>'
       +'<span class="nv-cur">'+(TITLE[cur]||cur)+'</span>'
       +'<button class="nv-burger" aria-label="Menu" aria-expanded="false">☰</button>'
       +'<div class="nv-wrap">'+links+'</div><div class="nv-sp"></div>'
       +'<button class="nv-min" title="Collapse / expand sidebar">⇤⇥</button>'
-      +'<div class="nv-ft">Hackathon · Sep 26 2026</div>';
+      +'<div class="nv-ft">MIT · pastarita</div>';
     document.body.insertBefore(nav, document.body.firstChild);
-    try{ if (localStorage.getItem('tpt_nav')==='min') document.documentElement.classList.add('navmin'); }catch(e){}
-    nav.querySelector('.nv-min').addEventListener('click',function(){
-      var m=document.documentElement.classList.toggle('navmin');
-      try{ m?localStorage.setItem('tpt_nav','min'):localStorage.removeItem('tpt_nav'); }catch(e){}
-    });
+    /* the demo notice — dismissible, remembered per browser */
+    var dismissed=false; try{ dismissed = localStorage.getItem('hw_notice')==='x'; }catch(e){}
+    if (NOTICE && !dismissed) {
+      var band=document.createElement('div'); band.id='hw-notice';
+      band.innerHTML='<b>Demo</b>'+NOTICE+'<button aria-label="Dismiss" title="Dismiss">✕</button>';
+      document.body.insertBefore(band, nav.nextSibling);
+      band.querySelector('button').onclick=function(){ band.remove(); try{ localStorage.setItem('hw_notice','x'); }catch(e){} };
+    }
+    try{ if (localStorage.getItem('hw_nav')==='min') document.documentElement.classList.add('navmin'); }catch(e){}
+    nav.querySelector('.nv-min').addEventListener('click',function(){ var m=document.documentElement.classList.toggle('navmin'); try{ m?localStorage.setItem('hw_nav','min'):localStorage.removeItem('hw_nav'); }catch(e){} });
     var burger=nav.querySelector('.nv-burger');
     burger.addEventListener('click',function(e){ e.stopPropagation(); var o=nav.classList.toggle('open'); burger.setAttribute('aria-expanded',o); burger.textContent=o?'✕':'☰'; });
     document.addEventListener('click',function(e){ if(nav.classList.contains('open')&&!nav.contains(e.target)){ nav.classList.remove('open'); burger.textContent='☰'; burger.setAttribute('aria-expanded','false'); } });
