@@ -13,7 +13,7 @@ Diagrams are Mermaid (GitHub renders them; the hub Viewer shows them as code by 
 | Monorepo build in CI | None until this PR. The skeleton (`package.json`, `turbo.json`, `ui/ harness/ infra/`) was committed in `0fd66df` while this was written; `ci.yml` still gates the workspace build on `package.json` being present so it degrades to a notice, never a red, if the tree is ever reshaped. |
 | Monorepo installability | **Green since 2026-09-26 14:25 ET.** The root `.gitignore` rule `build/` hid `harness/packages/build`, so the package never reached origin. The rule is now `ui/apps/macos/build/`. `@3pt/build` is a dry-run stage until `@3pt/strands` compiles. The lockfile is regenerated. |
 | Branching | No protection on `main`; commits land directly. Worktree policy (`docs/11-worktrees.md`) already assumes `lane/<slug>` branches. |
-| Deploy of `api`, `worker`, `web`, `pwa` | Nothing deployed. `docs/10-architecture.md` names Cloudflare for the worker and "a second Pages project" for web; both are open. |
+| Deploy of `api`, `worker`, `web`, `pwa` | **`web` and the Worker are live since 2026-09-26 15:00 ET**, from Yash's Cloudflare account (not the hub's). Public, no login: https://3pt-web.pages.dev (`ui/apps/live` at `/`, `ui/apps/web` at `/studio/`) and https://3pt-harness.3pt-worker.workers.dev. Deployed by hand with `scripts/build-web-site.sh` and `wrangler`; CI does not deploy them yet. State is in memory per Worker instance until Atlas lands. `pwa` is not deployed. |
 | Atlas | Sandbox project not yet created. The atlas battery prints its plan until `ATLAS_URI` exists. |
 | Secrets in GitHub | None set (`CLOUDFLARE_*` pending). |
 
@@ -58,7 +58,7 @@ command, one health URL, recorded once in `infra/targets.json`.
 | Service | Host | Why this host | Status |
 |---|---|---|---|
 | `hub` | Cloudflare Pages project `3pt`, gated | exists, works, previews per PR | live |
-| `web` (judges' inspector) | Cloudflare Pages project `3pt-web`, public | same toolchain as the hub, previews per PR, no login for judges (a submission requirement) | planned |
+| `web` (judges' demo link) | Cloudflare Pages project `3pt-web`, public: `/` live app, `/studio/` role screens | same toolchain as the hub, no login for judges (a submission requirement) | live, https://3pt-web.pages.dev |
 | `pwa` | same Pages project as `web`, `/app` path, or its own project `3pt-app` | installable from the same origin; decide when `web` deploys | planned |
 | `api` + `worker` | **one** Cloudflare Worker `3pt-harness`: `fetch()` serves the API, `scheduled()` runs the worker `tick()` | the Node driver works on Workers since the 2025-01 `nodejs_compat` TCP support (compat date ≥ 2024-09-23); one deploy instead of two; cron replaces a long-lived change stream, which a Worker cannot hold | planned, driver-on-Workers is TO CONFIRM by a smoke test |
 | `macos` | the two machines, via the install loop | no partner support for Swift; ad-hoc builds only | live locally |
