@@ -1,0 +1,9 @@
+// 3PT harness Worker: @3pt/api over fetch(). Deploy: npx wrangler deploy (from this directory).
+// Target record: infra/targets.json "harness". Photos live on the Pages project 3pt-web.
+{
+  "name": "3pt-harness",
+  "main": "src/edge.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": { "PAGES_ORIGIN": "https://3pt-web.pages.dev" }
+}
