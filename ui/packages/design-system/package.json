@@ -1,0 +1,8 @@
+{
+  "name": "@3pt/design-system", "version": "0.0.1", "private": true, "description": "Tokens and the three-point palette shared by every surface. Mirrors hub/site/3pt.css; the hub stays the visual source of truth.", "type": "module",
+  "main": "./dist/index.js", "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "clean": "rm -rf dist" },
+  "dependencies": {  },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}

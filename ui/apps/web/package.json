@@ -1,0 +1,6 @@
+{
+  "name": "@3pt/web", "version": "0.0.1", "private": true, "description": "Public web companion for judges: the same inspector without install, deployable to Pages. Secondary by rule.", "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build", "typecheck": "tsc -p tsconfig.json --noEmit", "preview": "vite preview", "clean": "rm -rf dist" },
+  "dependencies": { "@3pt/design-system": "workspace:*", "@3pt/inspector-client": "workspace:*", "@3pt/core": "workspace:*" },
+  "devDependencies": { "vite": "^7.1.5", "typescript": "^5.9.2" }
+}

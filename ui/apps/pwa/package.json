@@ -1,0 +1,6 @@
+{
+  "name": "@3pt/pwa", "version": "0.0.1", "private": true, "description": "Installable inspector over harness state. Local-first, offline-tolerant, reads @3pt/api. Secondary by rule.", "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build", "typecheck": "tsc -p tsconfig.json --noEmit", "preview": "vite preview", "clean": "rm -rf dist" },
+  "dependencies": { "@3pt/design-system": "workspace:*", "@3pt/inspector-client": "workspace:*", "@3pt/core": "workspace:*" },
+  "devDependencies": { "vite": "^7.1.5", "typescript": "^5.9.2" }
+}

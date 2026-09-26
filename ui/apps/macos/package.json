@@ -1,0 +1,8 @@
+{
+  "name": "@3pt/macos", "version": "0.0.1", "private": true,
+  "description": "SwiftUI macOS inspector. Not a JS package: this manifest lets Turborepo drive xcodegen + xcodebuild so `turbo build` covers the whole polyglot tree. Skips itself where Xcode is absent.",
+  "scripts": {
+    "build": "command -v xcodegen >/dev/null && command -v xcodebuild >/dev/null && (xcodegen generate -q && xcodebuild -quiet -scheme 3PT -configuration Release -derivedDataPath .build build) || echo '@3pt/macos: no Xcode toolchain here, skipped'",
+    "clean": "rm -rf .build 3PT.xcodeproj"
+  }
+}

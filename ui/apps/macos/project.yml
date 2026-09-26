@@ -1,0 +1,29 @@
+# 3PT · macOS inspector. Generated project; never commit 3PT.xcodeproj.
+#   xcodegen generate && xcodebuild -scheme 3PT -configuration Release build
+name: 3PT
+options:
+  bundleIdPrefix: com.factorita
+  deploymentTarget: { macOS: "14.0" }
+  xcodeVersion: "16.2"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGNING_REQUIRED: "NO"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+targets:
+  3PT:
+    type: application
+    platform: macOS
+    sources: [Sources/3PT]
+    info:
+      path: Sources/3PT/Info.plist
+      properties:
+        CFBundleName: 3PT
+        CFBundleDisplayName: 3PT
+        LSMinimumSystemVersion: "14.0"
+        NSAppTransportSecurity: { NSAllowsLocalNetworking: true }
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.factorita.3pt
+        GENERATE_INFOPLIST_FILE: NO
