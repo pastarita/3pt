@@ -23,3 +23,6 @@
 | **Lane** | One of five parallel work streams (`docs/02-lanes.md`). |
 | **ICP** | Ideal customer profile (`docs/01-icp.md`). |
 | **Statement 1 / Statement 2** | Hackathon problem statements: Recursive Harnessing / Long Horizon Engineering. |
+| **Segment** | One thought's worth of transcript, marked `<!-- sN.NN who -->` in `brainstorming.md`. The unit of provenance (`docs/09-provenance.md`). |
+| **Cite** | `@sN.NN` in any comment: this text came from that segment. `@sN.NN:slug` names the idea. |
+| **Bake** | `node scripts/prov.mjs --bake`: copy every cite the transcript does not yet list into its segment marker, so the transcript stays the complete record of where its ideas went. |
