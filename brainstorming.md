@@ -544,3 +544,181 @@ doc docs/12-decisions.md
 * the example company type that this harness particularly targets and scopes for its messaging around its design system and communications on the lander and explainers
 Those communications inculcate the patterns and value propositions for those respective users. You want to go a little bit exploratively and then we'll do some parallel estimations and outcome-specificity assessments that are plausible with respect to a fully instantiated app that fulfills these respective criteria and meets the needs contemplated for thos
 e different directions and the theme space for our tentative ICP.
+
+## Session 2 (2026-09-26) · claude:c1b624fa · Hackathon docs registration
+
+*Prompts typed into Claude Code session c1b624fa-d9ad-4636-be66-1c3f47f7eb7d by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 13:08. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s2.01 P 12:09
+note prompt 8d1543ed-ad26-45d3-a45e-c98ac4fe2c99 claude c1b624fa
+note commits in window 4f44bf6
+-->
+
+register the docs for this hackathon: https://docs.google.com/document/u/0/d/13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8/mobilebasic
+
+<!-- s2.02 P 12:10
+note prompt 16abe5cd-112e-49ba-8796-dd786a04a83d claude c1b624fa
+-->
+
+pull down the file as md with links
+
+<!-- s2.03 P 12:11
+note prompt 705ce548-b848-4109-84f0-ae3e8502b6a0 claude c1b624fa
+note commits in window 81a1cf1 3ea05e0 12942eb
+note 1 pasted block(s) unwrapped
+-->
+
+Once that's done, let's go ahead and pull from origin. There is a transcript block, and then we are going to build a parallel respective assessment against the transcript block as we converge on the respective thesis and hypothesis of the respective buildout here for this 3PT harness system for media workflows and the measurement system. The measurement system is for the way in which the recursive feedback loop for the improvement will be measured, which we then want to map to the accessible respective products and incentives that are provided from this respective hackathon.
+
+What are the opportunities? By having a table for each, which maps to our respective major canonical theses and the potential features that we could incorporate in a requirement set, we might be able to use a set infrastructure that is indicative of what is being provided as an incentive in the hackathon.
+
+<!-- s2.04 P 12:15
+note prompt 86933527-fe8c-4774-ac40-5b6dcc5fdce0 claude c1b624fa
+-->
+
+open it up
+
+<!-- s2.05 P 12:16
+note prompt f552b01f-9169-44ca-a76d-029d59ff074b claude c1b624fa
+-->
+
+agian
+
+<!-- s2.06 P 12:18
+note prompt 358ef283-8fc7-45a5-83da-6d10dd7eadda claude c1b624fa
+-->
+
+okay, comit and push all this
+
+## Session 3 (2026-09-26) · claude:d566ee7f · Brainstorming.md indexing DSL
+
+*Prompts typed into Claude Code session d566ee7f-a22d-45a5-a400-6a0be671fde4 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 13:08. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s3.01 P 12:14
+note prompt 94556de4-234f-4c02-abbf-5dcde3725480 claude d566ee7f
+note commits in window b8f0fbf 1b21453 954fca0 44eded7 6c900ce 81a1cf1
+-->
+
+We're going to build a respective indexing system for brainstorming.md, which is the transcript log, almost verbatim, of the conversation between Yash and me, who are partners in this respective hackathon. We are going to build a DSL that works in Markdown, particularly to keep the raw transcript logs and then build an index by which we can then map to the respective chronology of the development of our respective idea collaboratively. We can then map to the provenance of the respective ideas and the connections with respect to the tasks which are invoked.
+
+We have an external document with pointers in the respective comment system in the comment box, indicative of the brainstorm.md. This may be a respective pattern or a multiplicatively documented pattern which extends and then cleans up that respective file. That then moves towards the way in which the providential elements are downstream of that respective brainstorming.md. This is mappable over and traceable through our comment block system that we utilize in this codebase, particularly for the initial instantiation of the codebase.
+
+We want to come up with a terse, respective system that gives us that providential mapping. We will be improving and then continually annealing over and using respective question and discussion tools by which to refine the respective decision space and move towards a definitive basis as we move towards soon building our requirement set. For the instantiation thereof, there are several contemplatable lineages of the definition of the convergence of the idea space, which is an epidemic of the respective structure of the brainstorm. We should actually be able to build this into a first-class representative timeline indicative of that, which should also be an artifact which we will have as a derivative. Again, we are utilizing that DSL, which has the pointers from within a comment block in the respective brainstorming file, so we can continue to just transcribe directly into that file accordingly. We can again assert and improve on the respective providential mappings that are downstream of that, which we are going to bake back into that file accordingly as we create more downstream documentation and instantiated features eventually.
+
+<!-- s3.02 P 12:40
+note prompt 6ea6b2ca-f55f-46ca-a060-9984d6826b3b claude d566ee7f
+-->
+
+okay, do we have a firstclass representation for this in the hub workspace?
+
+<!-- s3.03 P 12:43
+note prompt d49a45f7-1322-4fb7-aa47-6084f7df6f9b claude d566ee7f
+note commits in window b5d86ac 96892ef 8bd74a2 d15c458 6a969f8 922ed36 af47216
+-->
+
+commit up well segmented with descriptive commits and push
+
+<!-- s3.04 P 12:51
+note prompt f00eab02-58e0-457e-8e10-f82dda3ba217 claude d566ee7f
+note commits in window 1a4d53d c12d666 fe22e61 fb140d9
+-->
+
+Let's make sure the project setting has that, and we have some type of direction with respect to the worktree management, the naming convention therefor, and the maintenance of the respective deprecated worktrees.
+
+<!-- s3.05 P 12:55
+note prompt 034a530c-84dc-4487-9d43-6e0a917ffa44 claude d566ee7f
+note commits in window a902f5b dd95c84
+-->
+
+Make. There are a couple of things in the hub now that require group decisioning. Make, at the top of the hub, a respective group decisioning overview document that will be terse and help us walk through all the decisioning with the proper questioning, segmented by the domains of concern (which we need to manage and have a conversation about). We will do voice transcription about each of those respective areas and be able to walk through that one document, and then we will push that up to the hub.
+
+<!-- s3.06 P 13:04
+note prompt dca6fdd7-906d-4c34-8e19-94131b407078 claude d566ee7f
+note commits in window 7ba6603
+-->
+
+Okay, we have a bunch of Claude sessions going, which are in this repository. Within those respective sessions, we should be able to grab the direct transcripts accordingly and append them to brainstorm.md from the respective system application files for the respective Claude instances. We can find out deterministically using the respective input prompt selector that is available from the API. The API doesn't exist. Neither do the respective scripts, but that should exist right now.
+
+We search the web for how people do that. We just want to keep pending those transcripts and put them in brainstorm accordingly. We can also segment, given we are in implementation mode. What we do want to do is grab the respective prompts and make sure that we have those commits in CodeBase accordingly.
+
+## Session 4 (2026-09-26) · claude:ae92d983 · Polyglot monorepo architecture setup
+
+*Prompts typed into Claude Code session ae92d983-923b-4118-9c90-1185d8a117b9 by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 13:08. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s4.01 P 12:26
+note prompt d2724401-49ae-4034-b87e-3a24d524d330 claude ae92d983
+-->
+
+/clear
+
+<!-- s4.02 P 12:28
+note prompt d32038ac-4fc3-47a7-8226-e3c5c819b2b8 claude ae92d983
+note commits in window 1a4d53d c12d666 fe22e61 fb140d9 b5d86ac 96892ef 8bd74a2 d15c458 6a969f8 922ed36 af47216 b8f0fbf 1b21453 954fca0 44eded7
+-->
+
+Okay, let's set up the respective repo. We're going to go with a polyglot mono repo, expecting a TypeScript PWA and a Swift app locally, as well as some type of deployed worker system and a backend accordingly.
+
+Yash and I both agreed that we want the top-level organizations of the respective codebase architecture that we will be working off of as UI, Harness, and infra. This UI, Harness, and infra architecture will be managed with respect to how the batteries will come included with infra, according to the specifics for which we are adapting and being flexible with respect to instanciable artifacts. These are going to be mostly skills in MTP related to how the actual Harness code will, given the productization thereof, use the "batteries" for being able to set up and instantiate their respective repositories, as well as their respective blob storage, artifact storage, and other polyglot data sources that are part of the respective running pipeline inside of the Harness.
+
+With that, the Harness maintains the code for the running pipeline, whereby the Harness code will be managed with respect to that. We will have a number of respective UI layers where we need to now contemplate, respectively, how those different surfaces (i.e., the Swift app, the PWA, and the web app) might be managed with respect to this top tertiary triplet of the respective mono repo configuration and management system. This is for considering how we might use Basil or Turbo repo particularly, whereby we're more affine to the respective Turbo repo convention of using the apps/ convention. We will make a respective plurality of architectural diagrams utilizing both:
+- first-class diagrams with SVGs natively in HTML
+- a plurality of respective design system layer Mermaid diagrams that contemplate this respective architecture and give us several perspicacious modalities by which we can extend this codebase
+
+<!-- s4.03 P 12:55
+note prompt ca1a51ff-5e00-4316-8754-b6741030d331 claude ae92d983
+note commits in window a902f5b dd95c84
+-->
+
+Give me some respective Bash shell tree structures of the overall proposed layouts and open them up in code.
+
+<!-- s4.04 P 12:59
+note prompt a05188dc-f997-4d73-9895-ecd4dbd5469f claude ae92d983
+note commits in window 7ba6603
+-->
+
+But if you are just building off of strands  In the harness, we need a model router. What else do we need? We have strands, so we build off the AWS strands. We need to do an Archaeologization app utilizing the respective Archaeologization skill, so that we can then get some type of topology with respect to how to semantically invoke the respective available options and methods within that characterization. Don't rebuild stuff. Just see your strands and build on top of strands. Yes, we're just going to build on top of strands. That will be our primary harness capability, which we're iterating on. We want to get to a semantically referencable basis by which both Yash and I can communicate with that respective harness and the affordances thereof, which we're utilizing. Go ahead and research strands. It's part of this respectiv hackathon, and we want to see how we can build on that respectiv topology accordingly.
+
+## Session 5 (2026-09-26) · claude:195bf2ed · Design-system.html proposals
+
+*Prompts typed into Claude Code session 195bf2ed-3599-45dd-910d-e618f8fa66ca by P, cwd `/Users/Patmac/Documents/Code/3pt_dev/3pt`, branch `main`. Imported verbatim by `scripts/prompts.mjs` on 2026-09-26 13:08. The agent's replies and tool calls are not transcript; they are in the session file.*
+
+<!-- s5.01 P 12:31
+note prompt f09e063b-0447-4300-ac17-012d2f2dc5f5 claude 195bf2ed
+note commits in window b5d86ac 96892ef 8bd74a2 d15c458 6a969f8 922ed36 af47216 b8f0fbf 1b21453
+-->
+
+Let's go ahead and work on a number of respective proposals for design-system.html That will decide:
+- design tokens
+- motifs
+- naming conventions for our respective color schema
+- accessible respective patterns for dark/light mode
+- considerations with respect to consistency of the design system across a plurality of surfaces, be it the respective progressive web app, a local Swift app, and a web app generally
+- considerations with respect to building our own component library and some examples thereof
+- some of the respective callouts as far as what is acceptable and what are the bases by which we will follow, whereby we can assess the respective dialing in the ICP file for motifs regarding those respective industries
+- building up a number of respective pieces-driven approaches to the design system that we can then decide upon with three canonical respective directions that we will have as major directives
+That will then have a decision and qualification base to build a promenade of decisioning between Yash and me to determine which is the right direction. We will be able to then modularly compile decisions with respect to how the design motifs drive the overall design system, which we will then adopt for the entire respective monorepo.
+
+<!-- s5.02 P 12:52
+note prompt 0fed62ce-8aa7-4d3a-9bed-a42e0a06020e claude 195bf2ed
+note commits in window a902f5b dd95c84 1a4d53d c12d666 fe22e61 fb140d9
+-->
+
+push this
+
+<!-- s5.03 P 13:03
+note prompt 2b1638fe-26e6-47ad-88be-64f148676eee claude 195bf2ed
+note commits in window 7ba6603
+note 1 pasted block(s) unwrapped
+-->
+
+Let's discuss CI. We want to look up MongoDB Atlas and contemplate a bunch of respective directions we can go in, against our typical respective framework patterning for our CI. Given that we're going to be deploying multiple respective apps and we are going to also have the hub invocation within our CI.yaml running on GitHub, we want to automate that accordingly and have invocable resolvers for where our respective compute services are run. We want to utilize as much of the MongoDB Atlas system as possible.
+Let's go ahead and build a contemplation document with respect to:
+- our deployment infrastructure
+- our build infrastructure
+- our deployment topology
+- how we can use the AWS credits or the MongoDB credits accordingly, with respect to the available context for this hackathon that we can use for our deployment surfaces
+Let's get a couple of diagrams with respect to that deployment topology, and ensure that we are utilizing those resources accordingly as we go to set up the CI for the automatic builds and deployments.
+Right now, with the test invocation for ensuring that the first thing that is handled is the branching mechanism, we are going to instantiate a system for PR heraldry. Go get the PR heraldry system, and then we'll have:
+- a six-section formatic template for our PR description system
+- a filing system for our actual PR descriptions, which will be Markdown with first-class representations using diagrammatic representations that are highly reviewable
+We will make one, which is first an example standard of an exemplary specification of the completeness and the completeness degree tracker for our respective PR descriptions for PR reviewability. Given this is a hackathon, we want to stay pretty terse and not put too many tokens into the PR reviewability, but we do want that respective structure with respect to the providence of the code and the codebase, especially with respect to this being a harness in and of itself, indicatively. We want to have a pretty solid structure again, with this focus on utilizing those resources accordingly.

@@ -118,6 +118,35 @@ node scripts/prov.mjs --bake    # append doc lines for un-baked cites, then re-r
 node scripts/prov.mjs --json    # the model on stdout
 ```
 
+## Importing the prompts typed into Claude Code
+
+Every agent session in this repo leaves a transcript on disk at
+`~/.claude/projects/<sanitized cwd>/<session>.jsonl`; a typed prompt is a `user` record with string
+content, a `promptId`, a `sessionId`, a timestamp, the cwd, and the branch. Those prompts are part of
+the brainstorm: they are what a principal actually asked for, in order, and they belong beside the
+spoken transcript. `scripts/prompts.mjs` appends them:
+
+```sh
+node scripts/prompts.mjs --dry      # show what would be appended
+node scripts/prompts.mjs            # append, then rebuild the index
+node scripts/prompts.mjs --who Y    # on Yash's machine
+```
+
+- One transcript session per Claude Code session per import, headed
+  `## Session N (date) · claude:<id8> · <title>`, numbered after the last session in the file.
+- One segment per prompt, `<!-- sN.NN P hh:mm -->` in local time, with `note prompt <id> claude <id8>`
+  (the idempotency key: a prompt already present is never appended twice) and `note commits in window`
+  listing the commits that landed between that prompt and the next in the same session, on any branch.
+- Prompt text is verbatim except that system-reminder and local-command-output blocks are dropped,
+  pasted-content wrappers are unwrapped, slash commands are rendered as their name, and strings that
+  look like keys or connection strings are replaced with `[redacted]` (off with `--no-redact`).
+- Only typed prompts: tool results, subagent sidechains, and meta records are not prompts.
+- Each machine imports its own sessions; Yash's prompts arrive when Yash runs it. Sessions from
+  worktrees of the repo are found by directory prefix.
+
+The agent's replies are deliberately not imported. They are derivable from the session file and
+they are not what anyone said in the room.
+
 ## What the checker refuses
 
 Errors stop the build. Each names the segment and line.

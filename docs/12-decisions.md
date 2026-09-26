@@ -6,15 +6,16 @@ decided. Written 2026-09-26 13:50 ET against everything the hub holds. Submissio
 
 ## How to use this document
 
-1. **Transcribe as you go.** Open `brainstorming.md`, add `## Session 2 (2026-09-26)`, and before
-   each domain say its number and drop a marker: `<!-- s2.01 PY -->` for domain 1, `<!-- s2.02 PY -->`
-   for domain 2, and so on. Speak; do not clean up.
+1. **Transcribe as you go.** Open `brainstorming.md`, add `## Session N (2026-09-26)` with the next
+   free session number (agent-prompt imports also take numbers), and before each domain say its
+   number and drop a marker: `<!-- sN.01 PY -->` for domain 1, `<!-- sN.02 PY -->` for domain 2, and
+   so on. Speak; do not clean up.
 2. **Answer the questions in order.** Each domain has a few questions, a default that applies if
    you run out of time, and a blank decision line.
 3. **Record the decision** on the domain's `Decided:` line in one sentence, then cite the segment
-   it came from with `<!-- @s2.NN -->` under the heading. Skip a question only by saying "default".
+   it came from with `<!-- @sN.NN -->` under the heading. Skip a question only by saying "default".
 4. **After the walk:** `node scripts/prov.mjs --bake && node scripts/prov.mjs`, commit, push. The
-   Timeline shows the decisions as a second session; the open-question count on the hub drops.
+   Timeline shows the decisions as their own session; the open-question count on the hub drops.
 
 Domains are ordered so that each decision narrows the next. Do not skip ahead.
 

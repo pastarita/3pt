@@ -44,6 +44,7 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `infra/` | Batteries: atlas, blob, artifacts, repo, tracing. Provisioners + skills + MCP wiring. See `infra/README.md` |
 | `brainstorming.md` | The transcript, verbatim and append-only, with provenance markers between the lines |
 | `scripts/prov.mjs` | `node scripts/prov.mjs` builds the provenance index; `--check` in CI; `--bake` pulls doc cites back into the transcript |
+| `scripts/prompts.mjs` | Appends the prompts typed into this repo's Claude Code sessions to `brainstorming.md` as provenance-marked sessions; idempotent, redacts secrets |
 | `hub/` | The gated hub workspace, fully self-contained: site, gate, tools, deploy config. See `hub/README.md`. |
 
 ## Hub workspace
