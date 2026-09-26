@@ -21,7 +21,7 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 | `functions/_middleware.js` | The Gate: Tier 0 Basic auth at the edge. |
 | `tools/stage.sh` | Builds `_site/` = `site/` + `../docs/` + `../README.md` + `../brainstorming.md`. |
 | `tools/check-nav.mjs`, `tools/check-view.mjs` | Lints, run against `_site/`. The type-check for the IA. |
-| `tools/tersity.mjs` | The tersity metric: words, figures, words per figure, longest paragraph, per leaf. Gates `make check`. |
+| `tools/tersity.mjs` | The tersity metric: words, figures, words per figure, longest paragraph, per leaf. Reported by `make check`; `make tersity-check` gates. |
 | `tools/serve.py` | Pages-faithful preview server for `_site/`. |
 | `wrangler.jsonc`, `Makefile` | Deploy config and targets. |
 | `_site/` | Generated. Gitignored. |
@@ -31,8 +31,8 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 ```sh
 cd hub
 make preview   # stage + serve at http://127.0.0.1:8000/
-make check     # stage + both lints + provenance + tersity budget
-make tersity   # the tersity table for every leaf
+make check     # stage + both lints + provenance + tersity table (advisory)
+make tersity-check  # fail on any leaf over the tersity budget
 make deploy    # stage + lints + production deploy (from hub/, so functions/ compiles)
 make verify    # anon 401 · valid 200 · wrong-domain 401   (needs ACCESS_PASS in the environment)
 ```
@@ -114,8 +114,9 @@ and `CLOUDFLARE_ACCOUNT_ID` secrets. Until then, deploy by hand with `make deplo
 
 ## Tersity
 
-A leaf is a page, not a paper. `tools/tersity.mjs` measures every `site/*.html` except the Viewer
-and `make check` fails when any leaf is over budget:
+A leaf is a page, not a paper. `tools/tersity.mjs` measures every `site/*.html` except the Viewer.
+`make check` and CI print the table (advisory, decision 2026-09-26); `make tersity-check` fails
+when any leaf is over budget:
 
 | Measure | Budget | Why |
 |---|---|---|
