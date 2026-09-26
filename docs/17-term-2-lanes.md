@@ -108,3 +108,10 @@ Paste the Lane board export under a time heading. Note any gate that slipped.
 
 ### 14:15
 Term 2 opened. Board reset to T1–T6. T1 blocked on the Sandbox org credentials; everything else open or active as in §2.
+
+### 15:15
+K1 `make -C hub check` green on the merged tree; `make check` for the workspace not run this checkpoint. K2 board unchanged: T1 blocked on Sandbox
+credentials, T4 and T6 active, T2, T3, T5 open. K3 T1's 15:15 gate has slipped: no `.env`, no cluster on Patrick's machine. K4 one lane worktree
+(`lane/strands-journey`) still open. K5 not met on either machine. Landed since 14:15: Yash's live app package on real harness data with an Atlas seed,
+the improver package owning the policy rewrite, the licence audit (B-05, B-06 ticked), the Product tour and Simulator leaves; the hub gained the
+Published bar and the six orient leaves in the banner's language. Next gate: T1 by 15:45 or the demo narrates Atlas from the checkpoint doc.
