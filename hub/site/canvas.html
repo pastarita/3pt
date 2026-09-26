@@ -20,8 +20,8 @@
       background-image:radial-gradient(circle,var(--line) 1px,transparent 1.2px);background-size:24px 24px}
   .vp.drag{cursor:grabbing}
   .world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;display:flex;gap:56px;padding:40px}
-  .col{display:flex;flex-direction:column;gap:18px;min-width:340px}
-  .col>h3{margin:0 0 4px;font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;gap:8px;align-items:center}
+  .col{display:grid;grid-template-columns:repeat(var(--n,1),340px);grid-auto-rows:max-content;gap:18px;align-content:start}
+  .col>h3{grid-column:1/-1;margin:0 0 4px;font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;gap:8px;align-items:center}
   .col>h3 i{width:8px;height:8px;border-radius:50%;background:var(--faint)}
   .col[data-cluster=orient]>h3 i{background:var(--plan)}.col[data-cluster=decide]>h3 i{background:var(--cyan,#3aa6d9)}.col[data-cluster=build]>h3 i{background:var(--build)}.col[data-cluster=record]>h3 i{background:var(--instrument)}
   .tile{width:340px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .15s,box-shadow .15s}
@@ -55,7 +55,7 @@
 <script src="./nav.js"></script>
 <div class="page">
   <header class="top">
-    <p class="eyebrow">Orient · hot · navigation utility · the board to drive while talking</p>
+    <p class="eyebrow">Orient · hot · navigation utility</p>
     <h1>Canvas: every surface of the hub on one board</h1>
     <p class="lede">Live thumbnails of every leaf and document, grouped by cluster. Drag to pan, wheel to zoom, follow the numbered path through the talk.</p>
   </header>
@@ -103,6 +103,7 @@
   /* ---------- build the board from GROUPS (one Register, never retyped) ---------- */
   N.GROUPS.forEach(function(gr){
     var col = document.createElement('div'); col.className = 'col'; col.setAttribute('data-cluster', gr[0]);
+    var n = gr[1].length; col.style.setProperty('--n', n <= 4 ? 1 : n <= 10 ? 2 : 3);   /* wrap big clusters so the board stays squarish */
     col.innerHTML = '<h3><i></i>' + CLUSTER_NAME[gr[0]] + '</h3>';
     gr[1].forEach(function(p){
       var slug = p[0], name = p[1], id = p[2] || '';
