@@ -11,7 +11,7 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 
 | Path | What |
 |---|---|
-| `site/index.html` | The hub: grouped cards + DERIVED tallies. Navigation only, never content. |
+| `site/index.html` | The hub: the loop figure, the Judges' cut (twelve doors in four beats, ranked in `docs/20-judges-cut.md`), the four clusters folded, the day figures folded. Navigation only, never content. |
 | `site/nav.js` | The Shell: single source of IA (`GROUPS`, `ROUTE`, glyphs, cluster registry, `FOLD` for a group's accordion). Only the link list scrolls; brand and footer are pinned, the offset survives a leaf change, the current leaf is brought into view. |
 | `site/3pt-data.js` | The Model: doc Register, lanes, ICP directions, criteria, presets, helpers. |
 | `site/strands-data.js` | The Strands questions register: every pointer behind `strands-journey.html`, tallied DERIVED. Source of record `docs/18-strands-questions.md`. |
@@ -31,7 +31,7 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 
 ## The Published bar and the orient leaves
 
-Every leaf carries a second strip under the Shell, **Published**: each surface of this project that
+Every leaf carries the **Published** strip as its outermost bar, fixed across the full width above the rail: each surface of this project that
 exists outside the repo (hub, repo, Atlas Sandbox, demo link, video, submission form) with its state
 (`live` · `public` · `gated` · `open` · `pending`). It is AUTHORED in `site/nav.js` `PUBLISHED` and the
 steward updates it at each checkpoint (`docs/17-term-2-lanes.md` §1 K2). Leaves fetch nothing, so the

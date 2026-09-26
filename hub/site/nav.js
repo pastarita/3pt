@@ -3,7 +3,9 @@
    (persisted as tpt_nav). The brand block and the footer are pinned; only the link list (.nv-scroll)
    scrolls, with a thin themed scrollbar, edge fades that appear only when there is more, the scroll
    offset remembered across leaves (tpt_nav_scroll, per tab) and the current leaf brought into view.
-   Mobile (≤900px): sticky header + hamburger. Hidden on print.
+   The Published bar (#tptpub) is the outermost strip: fixed across the full viewport width, above the rail
+   and the page, on every leaf; the rail and body are offset by its height.
+   Mobile (≤900px): sticky header + hamburger under the strip. Hidden on print.
    Adding a page = ONE entry in GROUPS below (+ a glyph, + a hub card).
    Hrefs ALWAYS carry .html and NEVER branch on the page's own location (see skill → Link resolution).
    Node-safe: exports globalThis.TPTNAV and returns before any DOM work when `document` is absent,
@@ -59,6 +61,7 @@
     'ci':             g('<path d="M4 6h6v6H4ZM14 6h6v6h-6ZM9 15h6v6H9Z"/><path d="M10 9h4M7 12v3h5M17 12v3h-5"/><circle cx="12" cy="18" r="1" fill="currentColor"/>'),
     'sim':            g('<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5Z"/>'),
     'view':           g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>'),
+    'judges-cut':     g('<path d="M4 6h16M4 12h11M4 18h7"/><path d="M17 15l2 2 3-3"/><circle cx="20" cy="6" r="1.4" fill="currentColor"/>'),
     'fold':           g('<path d="M7 3h8l4 4v6"/><path d="M15 3v4h4"/><path d="M5 9h8l3 3v9H5Z"/><path d="M8 15h6M8 18h4"/>')
   };
 
@@ -78,7 +81,7 @@
 
   var GROUPS = [
     ['',       [['index','Hub']]],
-    ['orient', [['charter','README','DR'], ['vision','Vision'], ['goal','Goal'], ['use-case','Use case'], ['rules','Rules & judging'], ['checklist','Open-source checklist'], ['submission','Submission'],
+    ['orient', [['charter','README','DR'], ['judges-cut','Judges\u2019 cut','DX'], ['vision','Vision'], ['goal','Goal'], ['use-case','Use case'], ['rules','Rules & judging'], ['checklist','Open-source checklist'], ['submission','Submission'],
                 ['vision-doc','Vision doc','D0'], ['goal-doc','Goal doc','D6'], ['rules-doc','Rules doc','D5'], ['checklist-doc','Checklist doc','DL'], ['submission-doc','Submission doc','DU']]],
     ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['design-spec','Design system spec','DK'], ['sketches','Sketch gallery'], ['icons','Icons'], ['components','Components'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
     ['build', [['results','Results'], ['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['how-it-works','How it works'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['strands-journey','Strands, answered'], ['strands-questions','Strands questions','DJ'], ['resources','Resources & credits','D4']]],
@@ -109,6 +112,7 @@
     'resources':      'view.html?f=docs/04-resources.md',
     'glossary':       'view.html?f=docs/glossary.md',
     'charter':        'view.html?f=README.md',
+    'judges-cut':     'view.html?f=docs/20-judges-cut.md',
     'provenance':     'view.html?f=docs/09-provenance.md'
   };
   /* PUBLISHED: every surface of this project that exists outside the repo, with its state. AUTHORED;
@@ -116,11 +120,11 @@
   var PUBLISHED = [
     { k:'hub',    label:'Hub',            url:'https://3pt.pages.dev',                                              state:'gated',   note:'Access · PIN' },
     { k:'repo',   label:'Repo',           url:'https://github.com/pastarita/3pt',                                   state:'public',  note:'MIT' },
-    { k:'atlas',  label:'Atlas Sandbox',  url:'',                                                                   state:'live',    note:'Cluster0 · M10 · user pending' },
+    { k:'atlas',  label:'Atlas Sandbox',  url:'',                                                                   state:'live',    note:'Cluster0 · M10' },
     { k:'demo',   label:'Demo link',      url:'https://3pt-web.pages.dev',                                          state:'public',  note:'ungated' },
     { k:'api',    label:'Harness API',    url:'https://3pt-harness.3pt-worker.workers.dev',                                        state:'public',  note:'Worker' },
-    { k:'video',  label:'Video',          url:'',                                                                   state:'pending', note:'T5 · 60 s' },
-    { k:'form',   label:'Submission',     url:'https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit', state:'open',    note:'due 17:00 ET' }
+    { k:'video',  label:'Video',          url:'https://youtu.be/MxAMXWKRcvc',                                       state:'public',  note:'60 s' },
+    { k:'form',   label:'Submission',     url:'https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit', state:'open',    note:'17:00 ET' }
   ];
   var PUBSTATE = { live:['●','#3fb886'], public:['●','#3fb886'], gated:['◐','#e0a33a'], open:['◐','#e0a33a'], pending:['○','#6b7684'] };
 
@@ -155,8 +159,8 @@
   var TITLE = {}; GROUPS.forEach(function(gr){ gr[1].forEach(function(p){ TITLE[p[0]]=p[1]; }); });
 
   var css =
-    "#tptnav{position:fixed;left:0;top:0;bottom:0;width:206px;transition:width .15s;background:#0b0e12;border-right:1px solid #1e252e;z-index:100000;display:flex;flex-direction:column;font:600 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;overflow:hidden}"
-   +"body{margin-left:206px!important;transition:margin-left .15s}"
+    "#tptnav{position:fixed;left:0;top:34px;bottom:0;width:206px;transition:width .15s;background:#0b0e12;border-right:1px solid #1e252e;z-index:100000;display:flex;flex-direction:column;font:600 12.5px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;overflow:hidden}"
+   +"body{margin-left:206px!important;padding-top:34px!important;transition:margin-left .15s}"
    +"html.navmin #tptnav{width:52px}html.navmin body{margin-left:52px!important}"
    +"html.navmin #tptnav .nv-b,html.navmin #tptnav .nv-sub,html.navmin #tptnav .nv-g,html.navmin #tptnav .nv-links a span,html.navmin #tptnav .nv-ft{display:none}"
    +"html.navmin #tptnav .nv-links a{justify-content:center;padding:11px 0}"
@@ -197,7 +201,7 @@
    +"#tptnav .nv-ft{font-size:9.5px;color:#4c5663;padding:12px 16px;border-top:1px solid #1e252e;letter-spacing:.08em;text-transform:uppercase}"
    +"#tptnav .nv-burger,#tptnav .nv-cur{display:none}"
    +"@media(max-width:900px){"
-   +"#tptnav{position:sticky;top:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 4px 0 14px;overflow:visible;border-right:0;border-bottom:1px solid #1e252e}"
+   +"#tptnav{position:sticky;top:30px;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 4px 0 14px;overflow:visible;border-right:0;border-bottom:1px solid #1e252e}"
    +"body{margin-left:0!important}"
    +"#tptnav .nv-b{padding:0;font-size:10.5px}#tptnav .nv-sub,#tptnav .nv-min,#tptnav .nv-ft{display:none}"
    +"#tptnav .nv-g{padding:12px 18px 4px}"
@@ -207,14 +211,15 @@
    +"#tptnav .nv-wrap{position:absolute;top:48px;left:0;right:0;background:#0b0e12;box-shadow:0 10px 24px rgba(0,0,0,.5);display:none;padding:0 0 12px;z-index:100001;max-height:calc(100vh - 48px);overflow-y:auto;flex:none}"
    +"#tptnav.open .nv-wrap{display:block}#tptnav .nv-links a{padding:13px 18px;font-size:14px}"
    +"}"
-   +"#tptpub{position:sticky;top:0;z-index:99999;display:flex;align-items:center;gap:4px;padding:0 14px;height:34px;background:rgba(11,14,18,.92);backdrop-filter:blur(6px);border-bottom:1px solid #1e252e;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:#a3adbb;overflow-x:auto;white-space:nowrap;scrollbar-width:none}"
-   +"#tptpub .pb-t{color:#6b7684;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-right:8px;flex:none}"
+   +"#tptpub{position:fixed;top:0;left:0;right:0;z-index:100001;display:flex;align-items:center;gap:4px;padding:0 14px;height:34px;background:rgba(11,14,18,.96);backdrop-filter:blur(6px);border-bottom:1px solid #1e252e;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:#a3adbb;overflow-x:auto;white-space:nowrap;scrollbar-width:none}"
+   +"#tptpub .pb-b{color:#ff6b4a;font-weight:800;font-size:10px;letter-spacing:.18em;margin-right:6px;flex:none}"
++"#tptpub .pb-t{color:#6b7684;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-right:8px;flex:none}"
    +"#tptpub a,#tptpub span.pb-i{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:6px;color:#a3adbb;text-decoration:none;flex:none}"
    +"#tptpub a:hover{background:rgba(255,255,255,.06);color:#fff}#tptpub span.pb-i{opacity:.75}"
    +"#tptpub i{font-style:normal;font-size:12px;line-height:1}#tptpub b{font-weight:700;color:#e6e9ee}#tptpub span.pb-i b{color:#a3adbb}#tptpub small{font-size:9.5px;color:#6b7684}"
    +"#tptpub .pb-n{margin-left:auto;color:#4c5663;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;flex:none;padding-left:12px}"
-   +"@media(max-width:900px){#tptpub{top:48px}}"
-   +"@media print{#tptnav,#tptpub{display:none!important}body{margin-left:0!important}}";
+   +"@media(max-width:900px){#tptpub{height:30px}#tptnav{top:30px}body{padding-top:30px!important}}"
+   +"@media print{#tptnav,#tptpub{display:none!important}body{margin-left:0!important;padding-top:0!important}}";
 
   function run(){
     if (document.getElementById('tptnav')) return;
@@ -248,11 +253,11 @@
     document.body.insertBefore(nav, document.body.firstChild);
     /* the Published bar: what exists outside the repo, and its state, on every leaf */
     var pub=document.createElement('div'); pub.id='tptpub'; pub.setAttribute('role','navigation'); pub.setAttribute('aria-label','Published surfaces');
-    pub.innerHTML='<span class="pb-t">Published</span>'+PUBLISHED.map(function(p){ var st=PUBSTATE[p.state]||PUBSTATE.pending;
+    pub.innerHTML='<span class="pb-b">3PT</span><span class="pb-t">Published</span>'+PUBLISHED.map(function(p){ var st=PUBSTATE[p.state]||PUBSTATE.pending;
       var inner='<i style="color:'+st[1]+'">'+st[0]+'</i><b>'+p.label+'</b><small>'+p.state+(p.note?' · '+p.note:'')+'</small>';
       return p.url ? '<a href="'+p.url+'" target="_blank" rel="noopener">'+inner+'</a>' : '<span class="pb-i">'+inner+'</span>'; }).join('')
       +'<span class="pb-n">authored · nav.js PUBLISHED</span>';
-    nav.parentNode.insertBefore(pub, nav.nextSibling);
+    document.body.insertBefore(pub, document.body.firstChild);
     try{ if (localStorage.getItem('tpt_nav')==='min') document.documentElement.classList.add('navmin'); }catch(e){}
     nav.querySelector('.nv-min').addEventListener('click',function(){
       var m=document.documentElement.classList.toggle('navmin');

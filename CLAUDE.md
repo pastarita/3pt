@@ -227,3 +227,8 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   `/health` says `"store":"atlas"` after `0.0.0.0/0` was added. Box VM: `3pt-worker` exited 1 because systemd kept `.env`
   inline comments in values; the unit now sources `.env` through bash. After the hackathon: rotate the db password and
   remove `0.0.0.0/0`.
+- 2026-09-26 17:50 ET: **sculpted for the room.** Video posted (https://youtu.be/MxAMXWKRcvc, public) and registered in the Published strip,
+  which is now the outermost bar on every leaf (fixed, full width, above the rail). `docs/20-judges-cut.md` (DX) ranks every hub asset on
+  evidence, legibility, narrative and uniqueness; the index shows the loop figure, then twelve doors in four beats (architecture, design,
+  process, corpus), then the clusters and the day figures folded. `scripts/treemap.mjs` draws the tree (`docs/assets/treemap.svg`): hub 47%,
+  docs 15%, harness 3.4% of tracked lines. Dedupe ledger in docs/20 §6; first typed asset to build is `design/tokens.json` (T1).

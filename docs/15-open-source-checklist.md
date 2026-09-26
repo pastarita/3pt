@@ -50,7 +50,7 @@ Status at last pass · 2026-09-26 14:00 ET
 | id | Item | Status | Where it comes from |
 |---|---|---|---|
 | C-01 | [ ] Public repo link | DERIVED | https://github.com/pastarita/3pt |
-| C-02 | [ ] 1-minute demo video **with audio** | AUTHORED | Tool, cut and gate in `docs/18-submission.md` §2–3; shot list in `hub/site/direction.html`; record the live loop, not slides |
+| C-02 | [x] 1-minute demo video **with audio** | AUTHORED | Posted: https://youtu.be/MxAMXWKRcvc (public, 60 s; the link is the `video` row of `PUBLISHED` in `hub/site/nav.js`). Tool, cut and gate in `docs/18-submission.md` §2–3 |
 | C-03 | [ ] Description: what, problem statement, Atlas role, what was built today | AUTHORED | Text ready in `docs/18-submission.md` §6; fill the cluster name from T1 |
 | C-04 | [ ] Both members added | TO CONFIRM | A-08 |
 | C-05 | [x] Demo link accessible to judges | DERIVED | https://3pt-web.pages.dev, `/studio/` and the Worker's `/health` return 200 with no login (`curl`, 2026-09-26 15:05 ET). The hub stays gated; never send judges the hub link |

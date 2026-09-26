@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 490" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" role="img" aria-label="Treemap of the 3PT tree: lines of tracked source per workspace, grouped by lane">
+<rect width="1000" height="490" fill="#0f1216"/>
+<text x="0" y="18" font-size="13" font-weight="700" fill="#a3adbb" letter-spacing=".08em">3PT · THE TREE · 37,609 LINES IN 265 FILES · DERIVED 2026-09-26 21:54Z</text>
+<clipPath id="c0"><rect x="0" y="30" width="138.4774920896594" height="163.93241167434718"/></clipPath>
+<g clip-path="url(#c0)"><rect x="1" y="31" width="136.4774920896594" height="161.93241167434718" fill="#e0a33a" fill-opacity=".10" stroke="#e0a33a" stroke-width="1.5"/>
+<text x="8" y="44" font-size="11" font-weight="700" fill="#e0a33a" letter-spacing=".1em">HARNESS · 1,856</text>
+<rect x="5" y="49" width="81.48224326094537" height="66.36615088193233" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="10" y="63" font-size="9" font-weight="600" fill="#e6e9ee">api</text><text x="10" y="76" font-size="9" fill="#a3adbb">572</text>
+<rect x="88.48224326094537" y="49" width="44.995248828714" height="66.36615088193233" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="93.48224326094537" y="63" font-size="9" font-weight="600" fill="#e6e9ee">cli</text><text x="93.48224326094537" y="76" font-size="9" fill="#a3adbb">322</text>
+<rect x="5" y="117.36615088193233" width="55.37211970262571" height="39.91363794556023" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="10" y="131.36615088193233" font-size="9" font-weight="600" fill="#e6e9ee">core</text><text x="10" y="144.36615088193233" font-size="9" fill="#a3adbb">241</text>
+<rect x="5" y="159.27978882749255" width="55.37211970262571" height="29.652622846854616" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="10" y="173.27978882749255" font-size="9" font-weight="600" fill="#e6e9ee">instrument</text>
+<rect x="62.37211970262571" y="117.36615088193233" width="45.31911376324362" height="35.53380652674228" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="67.37211970262571" y="131.36615088193233" font-size="9" font-weight="600" fill="#e6e9ee">strands</text><text x="67.37211970262571" y="144.36615088193233" font-size="9" fill="#a3adbb">178</text>
+<rect x="109.69123346586933" y="117.36615088193233" width="23.78625862379006" height="35.53380652674228" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="62.37211970262571" y="154.8999574086746" width="22.09154317299975" height="34.03245426567257" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="86.46366287562546" y="154.8999574086746" width="25.13760035579282" height="16.75158334233981" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="86.46366287562546" y="173.6515407510144" width="25.13760035579282" height="15.280870923332763" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="113.60126323141827" y="154.8999574086746" width="19.876228858241113" height="11.227103464614004" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="113.60126323141827" y="168.1270608732886" width="19.876228858241113" height="9.402675400529315" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="113.60126323141827" y="179.52973627381792" width="13.75088477793369" height="9.402675400529251" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="129.35214800935196" y="179.52973627381792" width="4.125344080307423" height="9.40267540052948" rx="3" fill="#e0a33a" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+</g>
+<clipPath id="c1"><rect x="0" y="193.93241167434718" width="138.4774920896594" height="296.0675883256528"/></clipPath>
+<g clip-path="url(#c1)"><rect x="1" y="194.93241167434718" width="136.4774920896594" height="294.0675883256528" fill="#8b7cf6" fill-opacity=".10" stroke="#8b7cf6" stroke-width="1.5"/>
+<text x="8" y="207.93241167434718" font-size="11" font-weight="700" fill="#8b7cf6" letter-spacing=".1em">UI · 3,352</text>
+<rect x="5" y="212.93241167434718" width="128.4774920896594" height="142.22888598044497" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="10" y="226.93241167434718" font-size="11" font-weight="600" fill="#e6e9ee">web</text><text x="10" y="239.93241167434718" font-size="9" fill="#a3adbb">1,764</text>
+<rect x="5" y="357.1612976547922" width="107.03251385577961" height="127.83870234520785" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="10" y="371.1612976547922" font-size="11" font-weight="600" fill="#e6e9ee">live</text><text x="10" y="384.1612976547922" font-size="9" fill="#a3adbb">1,327</text>
+<rect x="114.03251385577961" y="357.1612976547922" width="19.44497823387978" height="36.30490452329888" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="114.03251385577961" y="395.46620217809107" width="19.44497823387978" height="31.33024159819513" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="114.03251385577961" y="428.7964437762862" width="19.44497823387978" height="30.335309013174374" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="114.03251385577961" y="461.13175278946056" width="19.44497823387978" height="15.411320237863126" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="114.03251385577961" y="478.5430730273237" width="19.444978233879894" height="6.456926972676332" rx="3" fill="#8b7cf6" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+</g>
+<clipPath id="c2"><rect x="138.4774920896594" y="30" width="26.05759259751655" height="460"/></clipPath>
+<g clip-path="url(#c2)"><rect x="139.4774920896594" y="31" width="24.05759259751655" height="458" fill="#3aa6d9" fill-opacity=".10" stroke="#3aa6d9" stroke-width="1.5"/>
+<rect x="143.4774920896594" y="49" width="16.05759259751655" height="187.05510204081634" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="143.4774920896594" y="238.05510204081634" width="16.05759259751655" height="168.28367346938774" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="143.4774920896594" y="408.3387755102041" width="16.05759259751655" height="22.58163265306122" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="143.4774920896594" y="432.9204081632653" width="16.05759259751655" height="20.793877551020408" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="143.4774920896594" y="455.71428571428567" width="16.05759259751655" height="8.726530612244899" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="143.4774920896594" y="466.4408163265306" width="8.396795737964073" height="12.748979591836736" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="153.87428782762348" y="466.4408163265306" width="5.660796859552474" height="12.748979591836736" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="143.4774920896594" y="481.18979591836734" width="16.05759259751652" height="3.810204081632662" rx="3" fill="#3aa6d9" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+</g>
+<clipPath id="c3"><rect x="164.53508468717595" y="30" width="473.2377888271425" height="460"/></clipPath>
+<g clip-path="url(#c3)"><rect x="165.53508468717595" y="31" width="471.2377888271425" height="458" fill="#7d8a99" fill-opacity=".10" stroke="#7d8a99" stroke-width="1.5"/>
+<text x="172.53508468717595" y="44" font-size="11" font-weight="700" fill="#7d8a99" letter-spacing=".1em">HUB · 17,798</text>
+<rect x="169.53508468717595" y="49" width="224.03164175684353" height="436" rx="3" fill="#7d8a99" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="174.53508468717595" y="63" font-size="11" font-weight="600" fill="#e6e9ee">site</text><text x="174.53508468717595" y="76" font-size="9" fill="#a3adbb">8,647</text>
+<rect x="395.5667264440195" y="49" width="237.20614707029895" height="397.37405748005676" rx="3" fill="#7d8a99" fill-opacity="0.18" stroke="#0f1216" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="400.5667264440195" y="63" font-size="11" font-weight="600" fill="#e6e9ee">site</text><text x="400.5667264440195" y="76" font-size="9" fill="#a3adbb">8,344 · gen</text>
+<rect x="395.5667264440195" y="448.37405748005676" width="159.54566313917312" height="36.62594251994324" rx="3" fill="#7d8a99" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="400.5667264440195" y="462.37405748005676" font-size="11" font-weight="600" fill="#e6e9ee">tools</text><text x="400.5667264440195" y="475.37405748005676" font-size="9" fill="#a3adbb">545</text>
+<rect x="557.1123895831926" y="448.37405748005676" width="48.686804397795605" height="36.62594251994324" rx="3" fill="#7d8a99" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="562.1123895831926" y="462.37405748005676" font-size="9" font-weight="600" fill="#e6e9ee">hub</text><text x="562.1123895831926" y="475.37405748005676" font-size="9" fill="#a3adbb">171</text>
+<rect x="607.7991939809882" y="448.37405748005676" width="24.973679533330234" height="36.625942519942654" rx="3" fill="#7d8a99" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+</g>
+<clipPath id="c4"><rect x="637.7728735143185" y="30" width="362.22712648568165" height="189.29457535051014"/></clipPath>
+<g clip-path="url(#c4)"><rect x="638.7728735143185" y="31" width="360.22712648568165" height="187.29457535051014" fill="#3fb886" fill-opacity=".10" stroke="#3fb886" stroke-width="1.5"/>
+<text x="645.7728735143185" y="44" font-size="11" font-weight="700" fill="#3fb886" letter-spacing=".1em">DOCS · 5,606</text>
+<rect x="642.7728735143185" y="49" width="285.31194151451916" height="165.29457535051014" rx="3" fill="#3fb886" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="647.7728735143185" y="63" font-size="11" font-weight="600" fill="#e6e9ee">docs</text><text x="647.7728735143185" y="76" font-size="9" fill="#a3adbb">4,547</text>
+<rect x="930.0848150288376" y="49" width="64.91518497116249" height="69.24632056948072" rx="3" fill="#3fb886" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="935.0848150288376" y="63" font-size="9" font-weight="600" fill="#e6e9ee">sources</text><text x="935.0848150288376" y="76" font-size="9" fill="#a3adbb">451</text>
+<rect x="930.0848150288376" y="120.24632056948072" width="64.91518497116249" height="47.919816629613976" rx="3" fill="#3fb886" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="935.0848150288376" y="134.2463205694807" font-size="9" font-weight="600" fill="#e6e9ee">pr-descriptions</text><text x="935.0848150288376" y="147.2463205694807" font-size="9" fill="#a3adbb">316</text>
+<rect x="930.0848150288376" y="170.1661371990947" width="64.91518497116247" height="44.12843815141545" rx="3" fill="#3fb886" fill-opacity="0.18" stroke="#0f1216" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="935.0848150288376" y="184.1661371990947" font-size="9" font-weight="600" fill="#e6e9ee">docs</text><text x="935.0848150288376" y="197.1661371990947" font-size="9" fill="#a3adbb">292 · gen</text>
+</g>
+<clipPath id="c5"><rect x="637.7728735143185" y="219.29457535051014" width="9.081658029639767" height="270.7054246494898"/></clipPath>
+<g clip-path="url(#c5)"><rect x="638.7728735143185" y="220.29457535051014" width="7.081658029639767" height="268.7054246494898" fill="#c98a5a" fill-opacity=".10" stroke="#c98a5a" stroke-width="1.5"/>
+</g>
+<clipPath id="c6"><rect x="646.8545315439583" y="219.29457535051014" width="353.14546845604184" height="270.7054246494898"/></clipPath>
+<g clip-path="url(#c6)"><rect x="647.8545315439583" y="220.29457535051014" width="351.14546845604184" height="268.7054246494898" fill="#5c6673" fill-opacity=".10" stroke="#5c6673" stroke-width="1.5"/>
+<text x="654.8545315439583" y="233.29457535051014" font-size="11" font-weight="700" fill="#5c6673" letter-spacing=".1em">META · 7,816</text>
+<rect x="651.8545315439583" y="238.29457535051014" width="174.98861790836946" height="246.70542464948983" rx="3" fill="#5c6673" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="656.8545315439583" y="252.29457535051014" font-size="11" font-weight="600" fill="#e6e9ee">skills</text><text x="656.8545315439583" y="265.2945753505102" font-size="9" fill="#a3adbb">4,008</text>
+<rect x="828.8431494523277" y="238.29457535051014" width="166.15685054767238" height="122.87520271266402" rx="3" fill="#5c6673" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="833.8431494523277" y="252.29457535051014" font-size="11" font-weight="600" fill="#e6e9ee">root</text><text x="833.8431494523277" y="265.2945753505102" font-size="9" fill="#a3adbb">1,912</text>
+<rect x="828.8431494523277" y="363.16977806317414" width="140.61403780625378" height="121.83022193682581" rx="3" fill="#5c6673" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+<text x="833.8431494523277" y="377.16977806317414" font-size="11" font-weight="600" fill="#e6e9ee">scripts</text><text x="833.8431494523277" y="390.16977806317414" font-size="9" fill="#a3adbb">1,608</text>
+<rect x="971.4571872585815" y="363.16977806317414" width="23.5428127414186" height="115.81069725934118" rx="3" fill="#5c6673" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+<rect x="971.4571872585815" y="480.9804753225153" width="23.542812741418434" height="4.019524677484625" rx="3" fill="#5c6673" fill-opacity="0.42" stroke="#0f1216" stroke-width="1"/>
+
+</g>
+</svg>

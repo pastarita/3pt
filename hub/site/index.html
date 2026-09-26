@@ -79,6 +79,25 @@
   @media (max-width:900px){.bulb{top:94px;right:14px}}
   @media (prefers-reduced-motion:reduce){.bulb__blob,.bulb__halo,.bulb__n,.bulb__panel,.bulb__item,.bulb--ping .bulb__blob,.bulb--ping .bulb__blob::before,.bulb--ping .bulb__blob::after{animation:none}.bulb__blob:hover{transform:none}}
     .bulb__panel .pv{margin-right:4px}
+  /* the judges' cut: four beats, three doors each, rank on the card */
+  .cut{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:12px}
+  .beat h3{font:800 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px;display:flex;align-items:baseline;gap:8px}
+  .beat h3 small{font:italic 12px/1 var(--serif);color:var(--soft);letter-spacing:0;text-transform:none}
+  .beat .cards{grid-template-columns:1fr;gap:10px}
+  .beat .card{border-left:3px solid var(--accent)}
+  .beat .card .rk{position:absolute;bottom:12px;right:13px;font:800 11px/1 var(--mono);color:var(--accent)}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  /* folds: a cluster or the day figures, shut by default; the count is derived at load */
+  details.fold{margin-top:18px;border-top:1px solid var(--line)}
+  details.fold summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:10px;padding:14px 0 10px;font:800 14px/1 var(--sans);color:var(--ink)}
+  details.fold summary::-webkit-details-marker{display:none}
+  details.fold summary::before{content:"▸";color:var(--accent,var(--faint));font-size:12px;transition:transform .12s}
+  details.fold[open] summary::before{transform:rotate(90deg)}
+  details.fold summary span{font:600 11px/1 var(--mono);color:var(--faint);letter-spacing:.08em;text-transform:uppercase}
+  details.fold summary .n-cards{margin-left:auto}
+  details.fold summary:hover{color:var(--accent,var(--ink))}
+  @media(max-width:1100px){.cut{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.cut{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -110,7 +129,8 @@
       </div>
     </div>
     <p class="lede" style="margin-top:14px">A self-improving harness for media-heavy work. Nobody drives it. It rewrites itself, and users see better insights, screens and suggestions. The record is in <code>docs/</code>.</p>
-  </header>
+    <div class="cta"><a class="btn primary" href="https://youtu.be/MxAMXWKRcvc" target="_blank" rel="noopener">Watch the video · 60 s</a><a class="btn" href="https://3pt-web.pages.dev/app/" target="_blank" rel="noopener">Open the app</a><a class="btn" href="./view.html?f=docs/20-judges-cut.md">The ranking · DX</a></div>
+</header>
 
   <!-- @s1.02 @s1.04 the product in one picture: the loop, the backfeed, the checkpoint store -->
   <figure class="fig" id="loop">
@@ -154,6 +174,39 @@
     <figcaption><span class="pv a">AUTHORED</span>Instrument rewrites the harness that ran it; checkpoints land in Atlas.</figcaption>
   </figure>
 
+
+  <!-- the judges' cut: twelve doors in four beats, ranked in docs/20-judges-cut.md (DX) -->
+  <h2 data-cluster="orient" id="cut">Judges&rsquo; cut <span>twelve doors · four beats · <a href="./view.html?f=docs/20-judges-cut.md">the ranking</a></span></h2>
+  <div class="cut">
+    <div class="beat" data-cluster="build"><h3>Architecture <small>the loop is the product</small></h3><div class="cards">
+    <a class="card" href="./how-it-works.html"><svg data-g="how-it-works"></svg><i class="rk">1</i><b>How it works</b><span>Eight figures drawn from the harness code.</span><em>step through →</em></a>
+    <a class="card" href="./results.html"><svg data-g="results"></svg><i class="rk">2</i><b>Results</b><span>92 months replayed: kept, undone.</span><em>see →</em></a>
+    <a class="card" href="./architecture.html"><svg data-g="architecture"></svg><i class="rk">3</i><b>Architecture</b><span>The three lanes, drawn.</span><em>see →</em></a>
+    </div></div>
+    <div class="beat" data-cluster="decide"><h3>Design <small>one source, three surfaces</small></h3><div class="cards">
+    <a class="card" href="./app.html"><svg data-g="app"></svg><i class="rk">1</i><b>App, live</b><span>Screens the harness composed; store: atlas.</span><em>try →</em></a>
+    <a class="card" href="./design-system.html"><svg data-g="design-system"></svg><i class="id">DD</i><i class="rk">2</i><b>Design system</b><span>Tokens, three directions, the ballot.</span><em>decide →</em></a>
+    <a class="card" href="./components.html"><svg data-g="components"></svg><i class="rk">3</i><b>Components</b><span>Every app part, live.</span><em>browse →</em></a>
+    </div></div>
+    <div class="beat" data-cluster="record"><h3>Process <small>spoken, typed, committed</small></h3><div class="cards">
+    <a class="card" href="./timeline.html"><svg data-g="timeline"></svg><i class="rk">1</i><b>Timeline</b><span>The day as a rail.</span><em>trace →</em></a>
+    <a class="card" href="./changelog.html"><svg data-g="changelog"></svg><i class="rk">2</i><b>Changelog</b><span>What shipped, by wave, with shas.</span><em>read →</em></a>
+    <a class="card" href="./checklist.html"><svg data-g="checklist"></svg><i class="rk">3</i><b>Open-source checklist</b><span>One check per row.</span><em>clear →</em></a>
+    </div></div>
+    <div class="beat" data-cluster="orient"><h3>Corpus <small>one tree, a record</small></h3><div class="cards">
+    <a class="card" href="./view.html?f=README.md"><svg data-g="charter"></svg><i class="id">DR</i><i class="rk">1</i><b>README</b><span>The front door, the video&rsquo;s script.</span><em>read →</em></a>
+    <a class="card" href="./tour.html"><svg data-g="tour"></svg><i class="rk">2</i><b>Product tour &amp; demo</b><span>The 64-second player.</span><em>play →</em></a>
+    <a class="card" href="./view.html?f=docs/20-judges-cut.md"><svg data-g="judges-cut"></svg><i class="id">DX</i><i class="rk">3</i><b>Judges&rsquo; cut &amp; the tree</b><span>The ranking; the corpus as a treemap.</span><em>read →</em></a>
+    </div></div>
+  </div>
+
+  <!-- the corpus as one figure: DERIVED by scripts/treemap.mjs from git ls-files -->
+  <figure class="fig" id="tree" style="padding:8px 8px 6px">
+    <img src="./docs/assets/treemap.svg" alt="Treemap of the 3PT tree: lines of tracked source per workspace, grouped by lane" style="width:100%;height:auto;display:block;border-radius:6px">
+    <figcaption><span class="pv d">DERIVED</span>The tree by lane, <code>node scripts/treemap.mjs</code>. Small core, large record: the harness is a few percent of the lines and <a href="./how-it-works.html">How it works</a> is drawn from them.</figcaption>
+  </figure>
+
+  <details class="fold" id="day"><summary>The day <span>who drives · the rail · decisions · tallies</span></summary>
   <!-- who drives: the harness improves itself; the user only sees the result -->
   <figure class="fig" id="driver">
     <svg viewBox="0 0 1000 330" role="img" aria-label="Left: the harness drives itself in a loop of watch, find, rewrite, approve and ship. Right: the user approves and edits nothing and sees insights, screens, opportunities and suggestions get better with each version.">
@@ -214,8 +267,10 @@
     <figcaption><span class="pv d">DERIVED</span>from <code>3pt-data.js</code> and this browser's lane board.</figcaption>
   </figure>
 
-  <h2 data-cluster="orient">Orient <span>warm</span></h2>
-  <div class="cards" data-cluster="orient">
+  </details>
+
+  <details class="fold" data-cluster="orient"><summary>Orient <span>warm</span><span class="n-cards"></span></summary>
+  <div class="cards">
     <a class="card" href="./view.html?f=README.md"><svg id="g-charter"></svg><i class="id">DR</i><b>README</b><span>The front door: what 3PT is and is not, who it serves, sixty seconds for the judges, built · due · simulated, the loop, the lanes, the lineage. Four generated figures.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./vision.html"><svg id="g-vision"></svg><b>Vision</b><span>Harness as product.</span><em>orient →</em><i class="temp">warm</i></a>
     <a class="card" href="./goal.html"><svg id="g-goal"></svg><b>Goal</b><span>Why value compounds.</span><em>orient →</em><i class="temp">warm</i></a>
@@ -228,10 +283,10 @@
     <a class="card" href="./view.html?f=docs/05-rules.md"><svg id="g-rules-doc"></svg><i class="id">D5</i><b>Rules doc</b><span>Source of record.</span><em>read →</em></a>
     <a class="card" href="./view.html?f=docs/15-open-source-checklist.md"><svg id="g-checklist-doc"></svg><i class="id">DL</i><b>Checklist doc</b><span>The ledgers.</span><em>read →</em></a>
     <a class="card" href="./view.html?f=docs/18-submission.md"><svg id="g-submission-doc"></svg><i class="id">DU</i><b>Submission doc</b><span>Source of record.</span><em>read →</em></a>
-  </div>
+  </div></details>
 
-  <h2 data-cluster="decide">Decide <span>hot</span></h2>
-  <div class="cards" data-cluster="decide">
+  <details class="fold" data-cluster="decide"><summary>Decide <span>hot</span><span class="n-cards"></span></summary>
+  <div class="cards">
     <a class="card" href="./direction.html"><svg id="g-direction"></svg><b>Direction</b><span>Shown on construction photos.</span><em>review →</em><i class="temp">hot</i></a>
     <a class="card" href="./design-system.html"><svg id="g-design-system"></svg><i class="id">DD</i><b>Design system</b><span>Tokens, themes, three directions, the ballot.</span><em>decide →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/19-design-system-spec.md"><svg id="g-design-spec"></svg><i class="id">DK</i><b>Design system spec</b><span>Tables behind the leaf.</span><em>read →</em><i class="temp">hot</i></a>
@@ -243,10 +298,10 @@
     <a class="card" href="./view.html?f=docs/08-icp-directions.md"><svg id="g-icp-directions"></svg><i class="id">D8</i><b>ICP directions</b><span>Focus, use case, messaging, rule risk.</span><em>read →</em><i class="temp">warm</i></a>
     <a class="card" href="./view.html?f=docs/07-assessment-and-measurement.md"><svg id="g-assessment"></svg><i class="id">D7</i><b>Assessment &amp; measurement</b><span>Theses, hypotheses, metrics, requirements.</span><em>read →</em><i class="temp">warm</i></a>
     <a class="card" href="./view.html?f=docs/01-icp.md"><svg id="g-icp"></svg><i class="id">D1</i><b>ICPs</b><span>Three profiles, re-ranked.</span><em>read →</em><i class="temp">warm</i></a>
-  </div>
+  </div></details>
 
-  <h2 data-cluster="build">Build <span>hot</span></h2>
-  <div class="cards" data-cluster="build">
+  <details class="fold" data-cluster="build"><summary>Build <span>hot</span><span class="n-cards"></span></summary>
+  <div class="cards">
     <a class="card" href="./results.html"><svg id="g-results"></svg><b>Results</b><span>92 months replayed: what the loop found, kept and undid.</span><em>see →</em><i class="temp">hot</i></a>
     <a class="card" href="./sim.html"><svg id="g-sim"></svg><b>Simulator</b><span>Acme Builders, version by version.</span><em>play →</em><i class="temp">hot</i></a>
     <a class="card" href="./tour.html"><svg id="g-tour"></svg><b>Product tour &amp; demo</b><span>Final demo, first-run tour.</span><em>play →</em><i class="temp">hot</i></a>
@@ -267,17 +322,17 @@
     <a class="card" href="./strands-journey.html"><svg id="g-strands-journey"></svg><b>Strands, answered</b><span>Four stations; every claim a chip into docs, code, Strands.</span><em>travel →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/18-strands-questions.md"><svg id="g-strands-questions"></svg><i class="id">DJ</i><b>Strands questions</b><span>The record behind the journey: answers, pointers, gaps.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/04-resources.md"><svg id="g-resources"></svg><i class="id">D4</i><b>Resources &amp; credits</b><span>Every partner, credit and 3PT slot.</span><em>read →</em><i class="temp">warm</i></a>
-  </div>
+  </div></details>
 
-  <h2 data-cluster="record">Record <span>cold</span></h2>
-  <div class="cards" data-cluster="record">
+  <details class="fold" data-cluster="record"><summary>Record <span>cold</span><span class="n-cards"></span></summary>
+  <div class="cards">
     <a class="card" href="./changelog.html"><svg id="g-changelog"></svg><b>Changelog</b><span>What shipped, by wave, with shas.</span><em>read →</em><i class="temp">cold</i></a>
-    <a class="card" href="./timeline.html"><svg id="g-timeline"></svg><b>Timeline</b><span>The brainstorm as a rail.</span><em>trace →</em><i class="temp">warm</i></a>
+    <a class="card" href="./timeline.html"><svg id="g-timeline"></svg><b>Timeline</b><span>The day as a rail: spoken, typed, committed.</span><em>trace →</em><i class="temp">warm</i></a>
     <a class="card" href="./view.html?f=docs/09-provenance.md"><svg id="g-provenance"></svg><i class="id">D9</i><b>Provenance DSL</b><span>Cite the transcript without editing it.</span><em>read →</em><i class="temp">warm</i></a>
     <a class="card" href="./view.html?f=brainstorming.md"><svg id="g-brainstorming"></svg><i class="id">DB</i><b>Brainstorming transcript</b><span>Raw session notes, as spoken, append-only.</span><em>read →</em><i class="temp">cold</i></a>
     <a class="card" href="./view.html?f=docs/sources/hackathon-resource-guide.md"><svg id="g-sources"></svg><i class="id">DS</i><b>Resource guide (verbatim)</b><span>Partner guide, verbatim. Never edit.</span><em>read →</em><i class="temp">cold</i></a>
     <a class="card" href="./view.html?f=docs/glossary.md"><svg id="g-glossary"></svg><i class="id">DG</i><b>Glossary</b><span>The words we use.</span><em>read →</em><i class="temp">cold</i></a>
-  </div>
+  </div></details>
 
   <footer>
     <hr class="rule">
@@ -291,10 +346,13 @@
   var N = window.TPTNAV, T = window.T;
   /* depth experiment: the SDF field, fixed behind the page, reading the hub tokens */
   if (window.SDF) window.SDF.mount(document.body, { fixed:true, intensity:0.32, speed:0.8, scale:1.15, vars:{ bg:['--bg'], a:['--plan'], b:['--build'], c:['--instrument'] } });
-  document.querySelectorAll('svg[id^="g-"]').forEach(function(el){
-    var slug = el.id.slice(2), src = N.GLYPH[slug];
+  document.querySelectorAll('svg[id^="g-"],svg[data-g]').forEach(function(el){
+    var slug = el.getAttribute('data-g') || el.id.slice(2), src = N.GLYPH[slug];
     if (src) el.outerHTML = src.replace('<svg', '<svg class="card-glyph"');
   });
+
+  /* fold counts — DERIVED from the cards inside each fold */
+  document.querySelectorAll('details.fold[data-cluster]').forEach(function(d){ d.querySelector('.n-cards').textContent = d.querySelectorAll('.cards a').length + ' cards'; });
 
   /* day rail — DERIVED from T.EVENT; the now-marker from the browser's time */
   var X0 = 60, X1 = 940, t0 = +new Date(T.EVENT.hacking), t1 = +new Date(T.EVENT.top6);

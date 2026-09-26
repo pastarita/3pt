@@ -83,7 +83,9 @@
     { id:'D9', slug:'provenance',     name:'Provenance DSL',       verb:'Tracing',   cluster:'record', temp:'warm', doc:'docs/09-provenance.md',
       epigram:'Segment markers in the transcript, @cites everywhere else, one tool that refuses broken pointers.' },
     { id:'DR', slug:'charter',        name:'README',               verb:'Entering',  cluster:'orient', temp:'hot',  doc:'README.md',
-      epigram:'The front door: what 3PT is and is not, who it serves, sixty seconds for the judges, built · due · simulated, the loop, the lanes, the lineage. Four generated figures.' }
+      epigram:'The front door: what 3PT is and is not, who it serves, sixty seconds for the judges, built · due · simulated, the loop, the lanes, the lineage. Four generated figures.' },
+    { id:'DX', slug:'judges-cut',     name:'Judges\u2019 cut',      verb:'Ranking',   cluster:'orient', temp:'hot',  doc:'docs/20-judges-cut.md',
+      epigram:'Every hub asset ranked for the room; twelve doors in four beats; the tree as one figure; the same fact carried twice, and its typed source.' },
   ];
 
   /* Lanes — AUTHORED defaults from docs/17-term-2-lanes.md §5 (term 2, opened 14:15 ET). The lane board overlays
