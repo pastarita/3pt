@@ -7,6 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="stylesheet" href="./3pt.css">
 <script src="./3pt-data.js"></script>
+<script src="./sim-data.js"></script>
 <style>
   .page{position:relative;z-index:1}
   .brand{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
@@ -32,12 +33,73 @@
   .stats-fig{margin-top:10px}.stats-fig .stats{margin:0}
   .rail-fig .big{font:800 15px/1 var(--mono);color:var(--flag);font-style:normal}
   .rail-fig.past .big{color:var(--faint)}
+  /* the bulb: same blob as ui/apps/live (organisms/bulb.ts); here it reads sim-data.js versions */
+  .bulb{position:fixed;top:46px;right:18px;z-index:99998;display:flex;flex-direction:column;align-items:flex-end}
+  .bulb__blob{position:relative;width:40px;height:40px;border:0;padding:0;cursor:pointer;display:grid;place-items:center;color:#3a2206;
+    background:radial-gradient(circle at 34% 28%,#fff6d6 0,#ffd27a 28%,var(--warn) 62%,var(--flag) 100%);
+    border-radius:48% 52% 44% 56%/55% 45% 55% 45%;box-shadow:0 0 0 1px rgba(255,220,150,.35) inset,0 6px 18px rgba(0,0,0,.35);
+    animation:bulb-morph 7s ease-in-out infinite;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s}
+  .bulb__blob svg{width:20px;height:20px;position:relative;z-index:1;transition:filter .25s,transform .25s}
+  .bulb__halo{position:absolute;inset:-10px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,color-mix(in srgb,var(--warn) 55%,transparent) 0,transparent 68%);filter:blur(4px);animation:bulb-breathe 2.6s ease-in-out infinite}
+  .bulb__n{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--flag);color:#fff;font:800 10.5px/18px var(--mono);border:2px solid var(--bg);z-index:2;animation:bulb-pop .45s cubic-bezier(.34,1.56,.64,1)}
+  .bulb__n:empty{display:none}
+  /* hover: it leans in, wobbles once, the filament flares, a label slides out to the left */
+  .bulb__blob:hover,.bulb__blob:focus-visible{transform:scale(1.14) rotate(-4deg);animation:bulb-morph 2.4s ease-in-out infinite,bulb-wiggle .5s ease-in-out}
+  .bulb__blob:hover svg,.bulb__blob:focus-visible svg{filter:drop-shadow(0 0 3px #fff6d6) drop-shadow(0 0 8px #ffd27a);transform:translateY(-1px)}
+  .bulb__blob:hover .bulb__halo{inset:-16px;animation-duration:1.2s}
+  .bulb__blob:active{transform:scale(.92)}
+  .bulb__tip{position:absolute;right:50px;top:9px;white-space:nowrap;font:700 11px/1 var(--mono);letter-spacing:.04em;color:var(--ink);background:var(--panel);border:1px solid color-mix(in srgb,var(--warn) 50%,transparent);border-radius:99px;padding:6px 10px;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}
+  .bulb:hover .bulb__tip,.bulb:focus-within .bulb__tip{opacity:1;transform:none}
+  .bulb--open .bulb__tip{opacity:0!important}
+  /* nothing new: dim, slow, no breathing */
+  .bulb--quiet .bulb__blob{filter:saturate(.55) brightness(.8)}
+  .bulb--quiet .bulb__halo{animation:none;opacity:.25}
+  .bulb--quiet .bulb__blob:hover{filter:none}
+  /* a version just shipped: two rings go out, the blob jumps */
+  .bulb--ping .bulb__blob{animation:bulb-morph 7s ease-in-out infinite,bulb-jump .6s cubic-bezier(.34,1.56,.64,1)}
+  .bulb--ping .bulb__blob::before,.bulb--ping .bulb__blob::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid var(--warn);animation:bulb-ring 1.4s ease-out 2;pointer-events:none}
+  .bulb--ping .bulb__blob::after{animation-delay:.35s}
+  .bulb__panel{margin-top:10px;width:min(340px,calc(100vw - 28px));max-height:calc(100vh - 90px);overflow-y:auto;background:var(--panel);border:1px solid color-mix(in srgb,var(--warn) 60%,transparent);border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px rgba(0,0,0,.2),0 18px 40px rgba(0,0,0,.45),0 0 40px color-mix(in srgb,var(--warn) 14%,transparent);transform-origin:top right;animation:bulb-open .28s cubic-bezier(.34,1.56,.64,1)}
+  .bulb__panel[hidden]{display:none}
+  .bulb__title{display:block;font-size:14px}.bulb__sub{margin:2px 0 8px;font-size:12.5px;color:var(--soft)}
+  .bulb__list{list-style:none;margin:0;padding:0}
+  .bulb__item{border-top:1px solid var(--line);padding:9px 0;display:flex;flex-direction:column;gap:3px;animation:bulb-in .35s ease-out both;animation-delay:calc(var(--i) * 45ms)}
+  .bulb__item small{font:700 10.5px/1 var(--mono);color:var(--faint);letter-spacing:.05em}
+  .bulb__item--new small{color:var(--flag)}
+  .bulb__item b{font-size:13px;line-height:1.35}.bulb__item span{font-size:12px;color:var(--soft)}
+  .bulb__more{display:block;margin-top:6px;font:700 12px/1 var(--mono);color:var(--warn);text-decoration:none}
+  @keyframes bulb-morph{0%,100%{border-radius:48% 52% 44% 56%/55% 45% 55% 45%}33%{border-radius:58% 42% 52% 48%/45% 58% 42% 55%}66%{border-radius:42% 58% 60% 40%/52% 42% 58% 48%}}
+  @keyframes bulb-breathe{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+  @keyframes bulb-wiggle{0%,100%{rotate:0deg}25%{rotate:-9deg}50%{rotate:7deg}75%{rotate:-3deg}}
+  @keyframes bulb-jump{0%{translate:0 0}35%{translate:0 -7px}70%{translate:0 1px}100%{translate:0 0}}
+  @keyframes bulb-ring{from{transform:scale(1);opacity:.9}to{transform:scale(2.4);opacity:0}}
+  @keyframes bulb-pop{from{transform:scale(0)}to{transform:scale(1)}}
+  @keyframes bulb-open{from{opacity:0;transform:scale(.85) translateY(-6px)}to{opacity:1;transform:none}}
+  @keyframes bulb-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (max-width:900px){.bulb{top:94px;right:14px}}
+  @media (prefers-reduced-motion:reduce){.bulb__blob,.bulb__halo,.bulb__n,.bulb__panel,.bulb__item,.bulb--ping .bulb__blob,.bulb--ping .bulb__blob::before,.bulb--ping .bulb__blob::after{animation:none}.bulb__blob:hover{transform:none}}
+    .bulb__panel .pv{margin-right:4px}
 </style>
 </head>
 <body>
 <script src="./nav.js"></script>
 <script src="./sdf-depth.js"></script>
 <div class="page">
+  <!-- the bulb: new improvements the harness made on its own. DERIVED from sim-data.js versions -->
+  <div class="bulb bulb--quiet" id="bulb">
+    <span class="bulb__tip" id="bulb-tip" aria-hidden="true"></span>
+    <button class="bulb__blob" id="bulb-btn" aria-expanded="false" aria-controls="bulb-pop" aria-label="What the harness improved">
+      <span class="bulb__halo" aria-hidden="true"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3Z"/></svg>
+      <span class="bulb__n" id="bulb-n" aria-hidden="true"></span>
+    </button>
+    <figure class="bulb__panel" id="bulb-pop" hidden>
+      <b class="bulb__title">New from the harness</b>
+      <p class="bulb__sub">The harness proposed these from how people use the app, then shipped them.</p>
+      <ol class="bulb__list" id="bulb-list"></ol>
+      <p class="bulb__sub" style="margin-top:8px"><span class="pv d">DERIVED</span>from <code>sim-data.js</code> · Acme Builders, simulated · <a href="./sim.html">Simulator</a></p>
+    </figure>
+  </div>
   <header class="top">
     <div class="brand">
       <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--soft)"><path d="M12 4.5l7.5 13h-15Z"/><circle cx="12" cy="4.5" r="2" fill="var(--plan)" stroke="none"/><circle cx="19.5" cy="17.5" r="2" fill="var(--build)" stroke="none"/><circle cx="4.5" cy="17.5" r="2" fill="var(--instrument)" stroke="none"/></svg>
@@ -47,7 +109,7 @@
         <div class="tri"><span><i style="background:var(--plan)"></i>Plan</span><span><i style="background:var(--build)"></i>Build</span><span><i style="background:var(--instrument)"></i>Instrument</span></div>
       </div>
     </div>
-    <p class="lede" style="margin-top:14px">A self-improving harness for media-heavy work. The harness is the product; images are the workload. The record is in <code>docs/</code>.</p>
+    <p class="lede" style="margin-top:14px">A self-improving harness for media-heavy work. Nobody drives it. It rewrites itself, and users see better insights, screens and suggestions. The record is in <code>docs/</code>.</p>
   </header>
 
   <!-- @s1.02 @s1.04 the product in one picture: the loop, the backfeed, the checkpoint store -->
@@ -90,6 +152,37 @@
       <text x="640" y="345" font-size="17" class="s">sha · policy vN · metrics</text>
     </svg>
     <figcaption><span class="pv a">AUTHORED</span>Instrument rewrites the harness that ran it; checkpoints land in Atlas.</figcaption>
+  </figure>
+
+  <!-- who drives: the harness improves itself; the user only sees the result -->
+  <figure class="fig" id="driver">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Left: the harness drives itself in a loop of watch, find, rewrite, save. Right: the user edits nothing and sees insights, screens, opportunities and suggestions get better with each version.">
+      <defs>
+        <marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--instrument)"/></marker>
+        <marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--warn)"/></marker>
+      </defs>
+      <text x="20" y="26" class="k" font-size="17" fill="var(--instrument)">The harness · drives itself</text>
+      <rect x="10" y="40" width="430" height="280" rx="12" fill="none" stroke="var(--instrument)" stroke-width="2"/>
+      <g font-size="18">
+        <rect x="80" y="58" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="84">1 · watches how people use it</text>
+        <rect x="80" y="122" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="148">2 · finds a gap or a waste</text>
+        <rect x="80" y="186" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="212" textLength="306" lengthAdjust="spacingAndGlyphs">3 · rewrites its rules, context, tools</text>
+        <rect x="80" y="250" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="276">4 · saves version vN to Atlas</text>
+      </g>
+      <path d="M250 98v22M250 162v22M250 226v22" stroke="var(--instrument)" stroke-width="2.5" marker-end="url(#ahd)"/>
+      <path d="M80 270C30 270 30 78 78 78" fill="none" stroke="var(--instrument)" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ahd)"/>
+      <!-- the glass: versions go out, nothing comes back from the user as a setting -->
+      <line x1="500" y1="40" x2="500" y2="320" stroke="var(--line-strong)" stroke-width="2" stroke-dasharray="4 6"/>
+      <path d="M446 175H552" stroke="var(--warn)" stroke-width="3" marker-end="url(#ahw)"/>
+      <text x="500" y="162" text-anchor="middle" font-size="16" font-weight="700" fill="var(--warn)">ships vN</text>
+      <text x="500" y="202" text-anchor="middle" font-size="14" class="s">user edits</text>
+      <text x="500" y="220" text-anchor="middle" font-size="14" class="s">nothing</text>
+      <text x="570" y="26" class="k" font-size="17" fill="var(--warn)">The user · sees the result</text>
+      <rect x="560" y="40" width="430" height="280" rx="12" fill="none" stroke="var(--warn)" stroke-width="2"/>
+      <g font-size="14" class="s" text-anchor="middle"><text x="805" y="66">v1</text><text x="850" y="66">v2</text><text x="895" y="66">v3</text><text x="940" y="66">v4</text></g>
+      <g id="driver-rows"></g>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span>The user never tunes the harness. Each version shows up as better insights, screens, opportunities and suggestions. The bulb, top right, lists what changed.</figcaption>
   </figure>
 
   <figure class="fig rail-fig" id="clock">
@@ -249,6 +342,39 @@
   var read = T.load('changelog_v1', {}); var c = Object.keys(read).filter(function(k){ return read[k]; }).length;
   document.getElementById('meter').textContent = c ? 'changelog ' + c + (CHG_TOTAL ? '/' + CHG_TOTAL : '') + ' read in this browser' : 'nothing read in this browser yet';
   document.getElementById('meter-bar').setAttribute('width', CHG_TOTAL ? Math.round(1000 * Math.min(c, CHG_TOTAL) / CHG_TOTAL) : 0);
+
+  /* who drives: four rows on the user side, each square brighter per version (AUTHORED examples) */
+  var ROWS = [['Insights','water flagged same day'],['Screens','one per role'],['Opportunities','hours saved on packs'],['Suggestions','photo before drywall']];
+  document.getElementById('driver-rows').innerHTML = ROWS.map(function(r, i){
+    var y = 96 + i * 58, sq = [.15, .35, .6, 1].map(function(o, j){ return '<rect x="'+(790 + j*45)+'" y="'+(y-22)+'" width="30" height="30" rx="6" fill="var(--warn)" fill-opacity="'+o+'"/>'; }).join('');
+    return '<text x="580" y="'+(y-4)+'" font-size="19" font-weight="700">'+r[0]+'</text><text x="580" y="'+(y+16)+'" font-size="13.5" class="s">'+r[1]+'</text>' + sq;
+  }).join('');
+
+  /* the bulb — DERIVED from SIM.versions; "new" = versions this browser has not opened yet */
+  var S = window.SIM, wrap = document.getElementById('bulb'), btn = document.getElementById('bulb-btn'), pop = document.getElementById('bulb-pop');
+  if (S && wrap) {
+    var vs = S.versions.filter(function(v){ return v.v > 0; }).slice(-6).reverse();
+    var top = vs.length ? vs[0].v : 0, seen = T.load('bulb_seen', 0);
+    var fresh = vs.filter(function(v){ return v.v > seen; }).length;
+    var ym = function(ms){ return new Date(ms).toISOString().slice(0, 7); };
+    document.getElementById('bulb-n').textContent = fresh || '';
+    document.getElementById('bulb-tip').textContent = fresh ? fresh + ' new from the harness' : 'Nothing new';
+    wrap.classList.toggle('bulb--quiet', !fresh);
+    if (fresh) setTimeout(function(){ wrap.classList.add('bulb--ping'); setTimeout(function(){ wrap.classList.remove('bulb--ping'); }, 3200); }, 600);
+    document.getElementById('bulb-list').innerHTML = vs.map(function(v, i){
+      var nw = v.v > seen, back = v.rolledBackWeek != null ? ' · rolled back' : '';
+      return '<li class="bulb__item'+(nw ? ' bulb__item--new' : '')+'" style="--i:'+i+'"><small>v'+v.v+' · '+ym(v.date)+back+(nw ? ' · new' : '')+'</small><b>'+v.changes.join('. ')+'</b><span>Why: '+v.why+'</span></li>';
+    }).join('');
+    var close = function(){ pop.hidden = true; btn.setAttribute('aria-expanded', 'false'); wrap.classList.remove('bulb--open'); };
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (!pop.hidden) return close();
+      pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); wrap.classList.add('bulb--open', 'bulb--quiet');
+      T.save('bulb_seen', top); document.getElementById('bulb-n').textContent = '';
+    });
+    document.addEventListener('click', function(e){ if (!pop.hidden && !wrap.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !pop.hidden) { close(); btn.focus(); } });
+  }
 })();
 </script>
 </body>
