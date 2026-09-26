@@ -70,10 +70,10 @@
     <h2><small>0</small>The route</h2>
     <div class="sk"><svg viewBox="0 0 1000 160" role="img" aria-label="Four stations on a rail: configure, tune, self-improve, media workflow; under each the Strands layer it touches and a count of pointers">
       <line x1="60" y1="70" x2="940" y2="70" class="rail"/>
-      <g id="map-q1"><circle cx="140" cy="70" r="12" class="box flag"/><text x="140" y="38" text-anchor="middle" class="t">1 · configure</text><text x="140" y="100" text-anchor="middle" class="s">createHarness · ModelRouter · AgentConfig</text><text x="140" y="118" text-anchor="middle" class="k" data-cnt="0">— pointers</text></g>
-      <g id="map-q2"><circle cx="380" cy="70" r="12" class="box flag"/><text x="380" y="38" text-anchor="middle" class="t">2 · tune</text><text x="380" y="100" text-anchor="middle" class="s">Formula · Trainer · evals · steering</text><text x="380" y="118" text-anchor="middle" class="k" data-cnt="1">— pointers</text></g>
-      <g id="map-q3"><circle cx="620" cy="70" r="12" class="box flag"/><text x="620" y="38" text-anchor="middle" class="t">3 · self-improve</text><text x="620" y="100" text-anchor="middle" class="s">hooks · Storage · checkpoint · rewritePolicy</text><text x="620" y="118" text-anchor="middle" class="k" data-cnt="2">— pointers</text></g>
-      <g id="map-q4"><circle cx="860" cy="70" r="12" class="box flag"/><text x="860" y="38" text-anchor="middle" class="t">4 · media workflow</text><text x="860" y="100" text-anchor="middle" class="s">left side · jobs · M-5 … M-10</text><text x="860" y="118" text-anchor="middle" class="k" data-cnt="3">— pointers</text></g>
+      <g id="map-q1"><circle cx="140" cy="70" r="12" class="box flag"/><text x="140" y="38" text-anchor="middle" class="t">1 · configure</text><text x="140" y="100" text-anchor="middle" class="s">createHarness · router · AgentConfig</text><text x="140" y="118" text-anchor="middle" class="k" data-cnt="0">— pointers</text></g>
+      <g id="map-q2"><circle cx="380" cy="70" r="12" class="box flag"/><text x="380" y="38" text-anchor="middle" class="t">2 · tune</text><text x="380" y="100" text-anchor="middle" class="s">Formula · Trainer · evals</text><text x="380" y="118" text-anchor="middle" class="k" data-cnt="1">— pointers</text></g>
+      <g id="map-q3"><circle cx="620" cy="70" r="12" class="box flag"/><text x="620" y="38" text-anchor="middle" class="t">3 · self-improve</text><text x="620" y="100" text-anchor="middle" class="s">hooks · Storage · rewritePolicy</text><text x="620" y="118" text-anchor="middle" class="k" data-cnt="2">— pointers</text></g>
+      <g id="map-q4"><circle cx="860" cy="70" r="12" class="box flag"/><text x="860" y="38" text-anchor="middle" class="t">4 · media workflow</text><text x="860" y="100" text-anchor="middle" class="s">left side · jobs · M-5…M-10</text><text x="860" y="118" text-anchor="middle" class="k" data-cnt="3">— pointers</text></g>
       <text x="60" y="150" class="k" id="map-total">— pointers · — files · — segments</text>
     </svg></div>
     <figcaption class="cap"><span class="pv d">DERIVED</span> Counts from the register. Each station: the answer, a figure, then every pointer as a chip. Gaps the pointers expose close the page.</figcaption>
@@ -90,13 +90,13 @@
         <text x="36" y="212" class="k">@3pt/core · policies/v0.json</text>
         <path d="M230 150 L 300 150" class="e"/>
         <rect x="300" y="50" width="230" height="200" rx="8" class="box flag"/><text x="415" y="75" text-anchor="middle" class="t">@3pt/strands · the compiler</text>
-        <text x="316" y="102" class="s">harnessOptions(policy, stage)</text><text x="316" y="120" class="s">grants(policy, stage)</text><text x="316" y="138" class="s">routerSpec(stage)</text><text x="316" y="156" class="s f">routerFor() · a comment until installed</text>
+        <text x="316" y="102" class="s">harnessOptions(policy, stage)</text><text x="316" y="120" class="s">grants(policy, stage)</text><text x="316" y="138" class="s">routerSpec(stage)</text><text x="316" y="156" class="s f">routerFor() · comment until installed</text>
         <text x="316" y="190" class="k">index.ts L41 · L28 · L70 · L64</text><text x="316" y="208" class="k">docs/12 §3 · topology.json</text>
         <path d="M530 100 L 600 80" class="e"/><path d="M530 150 L 600 165" class="e"/><path d="M530 200 L 600 245" class="e"/>
-        <rect x="600" y="40" width="380" height="82" rx="8" class="box surface"/><text x="790" y="62" text-anchor="middle" class="t">createHarness(options) · S2 S4 · L1 L3 L4 L5 L20</text>
+        <rect x="600" y="40" width="380" height="82" rx="8" class="box surface"/><text x="790" y="62" text-anchor="middle" class="t">createHarness(options) · S2 S4 · L1 L3–L5 L20</text>
         <text x="616" y="84" class="s">instructions · builtinTools · interventions · session</text><text x="616" y="99" class="s">memory · skills · plugins · mcpServers · subagent</text><text x="616" y="114" class="s">contextManager · caching · effort · model</text>
-        <rect x="600" y="136" width="380" height="60" rx="8" class="box surface"/><text x="790" y="158" text-anchor="middle" class="t">model: ModelRouter(candidates, {strategy, maxSwitches}) · S5 · L2</text>
-        <text x="616" y="182" class="s">FallbackStrategy · ClassifierStrategy · 'provider/name' · effort auto … max</text>
+        <rect x="600" y="136" width="380" height="60" rx="8" class="box surface"/><text x="790" y="158" text-anchor="middle" class="t">model: ModelRouter · S5 · L2</text>
+        <text x="616" y="182" class="s">ModelRouter(candidates, {strategy, maxSwitches}) · Fallback | Classifier · 'provider/name' · effort</text>
         <rect x="600" y="210" width="380" height="72" rx="8" class="box surface"/><text x="790" y="232" text-anchor="middle" class="t">AgentConfig passthrough · S6 · L7 L11</text>
         <text x="616" y="254" class="s">storage · sessionManager · memoryManager · checkpointing</text><text x="616" y="269" class="s">conversationManager · retryStrategy · structuredOutputSchema</text>
         <text x="20" y="292" class="s">by hand first: strands CLI → /export a project → diff it against harnessOptions() · S18 L17</text>
@@ -124,7 +124,7 @@
         <text x="740" y="130" class="s">reward signal</text><text x="466" y="172" class="s f">update_params</text><text x="368" y="134" class="s">next rollout builds from it</text>
         <text x="260" y="236" class="s f">today: rewritePolicy(prev, findings, tag) appends findings as rules · instrument/src/index.ts L4</text>
         <rect x="20" y="254" width="960" height="56" rx="8" class="box surface"/><text x="36" y="274" class="k">dials without training · S4 S5 S13 S17 · L2 L5 L13</text>
-        <text x="36" y="296" class="s">effort auto … max · caching auto · contextManager auto | agentic · ClassifierStrategy · steering Proceed | Guide (100% pass, 66% fewer input tokens, 600 runs)</text>
+        <text x="36" y="296" class="s">effort auto…max · caching auto · contextManager auto | agentic · ClassifierStrategy · steering Proceed | Guide (100% pass, 66% fewer input tokens)</text>
       </svg></div>
       <figcaption class="cap"><span class="pv a">AUTHORED</span> From docs/13 §9 and the optimizer and evals blogs (S14, S15). Strands' own numbers: AppWorld 72.6 → 95.8 tuning the system prompt alone.</figcaption>
     </figure>
@@ -170,7 +170,7 @@
         <text x="30" y="24" class="k">left side · media context</text><text x="600" y="24" class="k">right side · the harness</text>
         <rect x="110" y="30" width="400" height="64" rx="8" class="box atlas"/><text x="310" y="52" text-anchor="middle" class="t">Atlas · media_index · transcripts · jobs</text><text x="310" y="74" text-anchor="middle" class="s">MediaAsset{tier, location, transcriptId, lastRead} · Job{kind, status}</text>
         <ellipse cx="60" cy="42" rx="22" ry="8" class="box atlas"/><path d="M38 42v26c0 4.4 9.8 8 22 8s22-3.6 22-8V42" class="box atlas"/>
-        <rect x="110" y="124" width="400" height="64" rx="8" class="box surface"/><text x="310" y="146" text-anchor="middle" class="t">apps/worker · tick()</text><text x="310" y="168" text-anchor="middle" class="s">jobFor(asset): transcribe if no transcript, else tier if chooseTier() disagrees · migrate: no derivation yet</text>
+        <rect x="110" y="124" width="400" height="64" rx="8" class="box surface"/><text x="310" y="146" text-anchor="middle" class="t">apps/worker · tick()</text><text x="310" y="168" text-anchor="middle" class="s">jobFor(asset): transcribe if no transcript, else tier if chooseTier() disagrees · migrate: none yet</text>
         <rect x="110" y="218" width="190" height="56" rx="8" class="box battery"/><text x="205" y="240" text-anchor="middle" class="t">blob battery</text><text x="205" y="260" text-anchor="middle" class="s">GridFS · R2 · fs</text>
         <rect x="320" y="218" width="190" height="56" rx="8" class="box build"/><text x="415" y="240" text-anchor="middle" class="t">@3pt/media</text><text x="415" y="260" text-anchor="middle" class="s">chooseTier · needsTranscript · jobFor</text>
         <path d="M310 124 L 310 94" class="e d"/><path d="M205 188 L 205 218" class="e"/><path d="M415 218 L 415 188" class="e"/>
