@@ -25,7 +25,11 @@ img{display:block;max-width:100%}
 .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
 
 /* nav */
-nav{position:absolute;top:0;left:0;right:0;z-index:5;background:linear-gradient(180deg,rgba(12,17,23,.92),rgba(12,17,23,0))}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;background:linear-gradient(180deg,rgba(12,17,23,.92),rgba(12,17,23,0));border-bottom:1px solid transparent;transition:background .2s,border-color .2s}
+nav.is-stuck{background:rgba(12,17,23,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom-color:var(--line)}
+nav .links a[aria-current]{color:var(--ink)}
+section[id],header[id]{scroll-margin-top:84px}
+.skip{position:absolute;left:12px;top:-60px;z-index:30;background:var(--flag);color:#0f1216;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none}.skip:focus{top:12px}
 nav .wrap{display:flex;align-items:center;gap:24px;height:72px}
 .mark{display:flex;align-items:center;gap:10px;font:800 20px/1 var(--sans);letter-spacing:.02em;text-decoration:none}
 .mark svg{width:30px;height:30px}
@@ -133,7 +137,20 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 
 
 /* versions */
-.versions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding:4px 2px 18px;margin-top:44px;scroll-snap-type:x mandatory}
+.vscroll{position:relative;margin-top:28px}
+.vscroll__bar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.vscroll__range{font:600 13px/1 var(--mono);color:var(--soft);margin-right:auto}
+.vscroll__range b{color:var(--ink)}
+.vbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--lineStrong);background:var(--panel);color:var(--ink);font-size:18px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:border-color .12s,opacity .12s}
+.vbtn:hover:not(:disabled){border-color:var(--soft)}.vbtn:disabled{opacity:.35;cursor:default}
+.vbtn--now{width:auto;padding:0 14px;border-radius:99px;font:650 13px/1 var(--sans)}
+.versions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,300px);gap:14px;overflow-x:auto;overscroll-behavior-x:contain;padding:22px 6px 34px;margin-top:-16px;scroll-snap-type:x proximity;scroll-padding-inline:4px;scrollbar-width:thin;scrollbar-color:var(--lineStrong) transparent;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,48px)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,48px)),transparent 100%)}
+.versions::-webkit-scrollbar{height:8px}.versions::-webkit-scrollbar-thumb{background:var(--lineStrong);border-radius:99px}.versions::-webkit-scrollbar-track{background:transparent}
+.versions:focus-visible{outline:2px solid var(--flag);outline-offset:4px;border-radius:12px}
+.versions.at-start{--fl:0px}.versions:not(.at-start){--fl:48px}.versions.at-end{--fr:0px}
+.ver{position:relative}
+.ver:not(:last-child)::after{content:"";position:absolute;top:32px;right:-15px;width:16px;height:2px;background:var(--lineStrong)}
 .ver{scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px;min-height:210px}
 .ver__h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .ver__v{font:800 26px/1 var(--sans)}
@@ -176,6 +193,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   .atlas,.judge{grid-template-columns:1fr}
 }
 
+@media (max-width:1100px){ .float{right:-6px} }
 @media (max-width:900px){
   nav .links a:not(.btn){display:none}
   .points{grid-template-columns:1fr 1fr}.point:not(:last-child)::after{display:none}
@@ -189,10 +207,36 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 @media (max-width:520px){ section{padding:56px 0} .hero{padding:96px 0 48px;min-height:auto} .hero__grid{gap:32px} .close{padding:64px 0}
   .device{aspect-ratio:auto;padding-top:250px} .offer{position:relative;left:auto;right:auto;bottom:auto;margin:14px} .device__tag{top:190px} .float{top:70px;right:8px} }
 @media (prefers-reduced-motion:reduce){ *{transition:none!important;scroll-behavior:auto!important} }
+
+/* surface system: one card treatment for every tile. Accent comes from --c; grain + top light + outer glow. */
+:root{--noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;background-image:var(--noise);opacity:.5;mix-blend-mode:overlay}
+.point,.feel li,.col-group,.judge a,.ver{--c:var(--soft);position:relative;isolation:isolate;border-radius:16px;border:1px solid color-mix(in srgb,var(--c) 26%,var(--line));
+  background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--c) 13%,transparent),transparent 58%),var(--noise),linear-gradient(180deg,#1a2029,#12171d);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.015),0 24px 48px -28px rgba(0,0,0,.8),0 0 42px -14px color-mix(in srgb,var(--c) 38%,transparent);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.point::before,.feel li::before,.col-group::before,.judge a::before,.ver::before{content:"";position:absolute;top:-1px;left:22px;right:22px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);box-shadow:0 0 14px 1px color-mix(in srgb,var(--c) 70%,transparent);z-index:1}
+.point:hover,.feel li:hover,.col-group:hover,.judge a:hover,.ver:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 55%,var(--line));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 60px -28px rgba(0,0,0,.85),0 0 60px -10px color-mix(in srgb,var(--c) 55%,transparent)}
+.point{padding:28px 24px 26px}
+.point--atlas{background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--c) 18%,transparent),transparent 60%),var(--noise),linear-gradient(180deg,#1c1a1a,#12171d)}
+.point .n,.feel .n{display:inline-flex;align-items:center;gap:8px;padding:6px 9px;border-radius:99px;background:color-mix(in srgb,var(--c) 12%,transparent);border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+/* connectors between steps: a short lit rail with a node */
+.point:not(:last-child)::after,.feel li:not(:last-child)::after{content:"";position:absolute;right:-15px;top:50%;width:16px;height:2px;margin-top:-1px;transform:none;background:linear-gradient(90deg,var(--c),transparent);box-shadow:0 0 8px color-mix(in srgb,var(--c) 60%,transparent);z-index:2;font-size:0}
+.col-group{--c:var(--cyan)}.col-group--core{--c:var(--instrument)}
+.judge a{--c:var(--flag)}.judge a:nth-child(2){--c:var(--plan)}.judge a:nth-child(3){--c:var(--build)}.judge a:nth-child(4){--c:var(--instrument)}
+.ver{--c:var(--build)}.ver--now{--c:var(--instrument)}.ver--back{--c:#e5534b;opacity:.85}
+.ver::after{display:none}
+.term{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 30px 80px rgba(0,0,0,.5),0 0 60px -18px rgba(58,166,217,.35);background:var(--noise),#0a0d10}
+.device{box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 90px -20px rgba(255,107,74,.35)}
+.facts{background:var(--noise)}
+.fact b{background:linear-gradient(180deg,#fff,#aab4c2);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (prefers-reduced-motion:reduce){.point:hover,.feel li:hover,.col-group:hover,.judge a:hover,.ver:hover{transform:none}}
 </style>
 </head>
 <body>
 
+<a class="skip" href="#feel">Skip to content</a>
 <nav>
   <div class="wrap">
     <a class="mark" href="/" aria-label="3PT home">
@@ -209,7 +253,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   </div>
 </nav>
 
-<header class="hero">
+<header class="hero" id="top">
   <img class="hero__bg" src="/hero-bim.svg" alt="" aria-hidden="true">
   <div class="wrap hero__grid">
     <div>
@@ -260,7 +304,15 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
     <h2>Every new feature came from how people used it.</h2>
     <p class="lede">Ten versions over seven years of a simulated firm. Each card says what the harness noticed, then what it built. One change made answers worse, so it rolled back.</p>
     <div class="live" id="live"><i></i><span>Simulated firm history (built-in copy)</span></div>
-    <div class="versions" id="versions-list"></div>
+    <div class="vscroll">
+      <div class="vscroll__bar">
+        <span class="vscroll__range" id="vrange" aria-live="polite">Oldest first</span>
+        <button class="vbtn" type="button" id="vprev" aria-label="Earlier versions">‹</button>
+        <button class="vbtn" type="button" id="vnext" aria-label="Later versions">›</button>
+        <button class="vbtn vbtn--now" type="button" id="vnow">Jump to current</button>
+      </div>
+      <div class="versions" id="versions-list" role="region" aria-label="Harness versions, oldest to newest. Use arrow keys to scroll." tabindex="0"></div>
+    </div>
   </div>
 </section>
 
@@ -396,15 +448,41 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   [0,"2019-01-07",0,["Generic start: describe each image, its date and its source"],"Install"]].map(function(r){return{v:r[0],when:r[1],rolledBack:!!r[2],changes:r[3],why:r[4]}});
   var list=document.getElementById('versions-list'),live=document.getElementById('live');
   function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  var prev=document.getElementById('vprev'),next=document.getElementById('vnext'),nowBtn=document.getElementById('vnow'),range=document.getElementById('vrange');
+  function step(){var c=list.firstElementChild;return c?c.getBoundingClientRect().width+14:280}
+  function edges(){
+    var max=list.scrollWidth-list.clientWidth-2,x=list.scrollLeft;
+    list.classList.toggle('at-start',x<=2);list.classList.toggle('at-end',x>=max);
+    prev.disabled=x<=2;next.disabled=x>=max;
+    var cards=list.children,first=null,last=null,L=list.getBoundingClientRect();
+    for(var i=0;i<cards.length;i++){var r=cards[i].getBoundingClientRect();if(r.right>L.left+20&&r.left<L.right-20){if(first===null)first=i;last=i}}
+    if(first!==null)range.innerHTML='Showing <b>'+cards[first].dataset.v+'</b> to <b>'+cards[last].dataset.v+'</b> of '+cards.length;
+  }
+  var smooth=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+  prev.onclick=function(){list.scrollBy({left:-step(),behavior:smooth})};
+  next.onclick=function(){list.scrollBy({left:step(),behavior:smooth})};
+  nowBtn.onclick=function(){var c=list.querySelector('.ver--now');if(c)list.scrollTo({left:c.offsetLeft-list.offsetLeft-4,behavior:smooth})};
+  list.addEventListener('scroll',function(){requestAnimationFrame(edges)},{passive:true});
+  addEventListener('resize',edges);
   function draw(vs,cur){
+    vs=vs.slice().sort(function(a,b){return a.v-b.v});
     list.innerHTML=vs.map(function(v){
       var now=v.v===cur,back=v.rolledBack;
-      return '<article class="ver'+(now?' ver--now':'')+(back?' ver--back':'')+'"><div class="ver__h"><span class="ver__v">v'+v.v+'</span>'+
+      return '<article class="ver'+(now?' ver--now':'')+(back?' ver--back':'')+'" data-v="v'+v.v+'"><div class="ver__h"><span class="ver__v">v'+v.v+'</span>'+
         (now?'<span class="pill pill--now">Current</span>':back?'<span class="pill pill--back">Rolled back</span>':'<span class="ver__d">'+esc(v.when)+'</span>')+
         '</div><div class="ver__why">'+esc(v.why)+'</div><ul>'+v.changes.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul></article>';
     }).join('');
+    edges();
   }
   draw(V,10);
+  // nav: solid once the hero scrolls away; the link for the section in view is marked
+  var nav=document.querySelector('nav'),links=[].slice.call(nav.querySelectorAll('.links a[href^="#"]'));
+  function navState(){nav.classList.toggle('is-stuck',scrollY>40)}
+  addEventListener('scroll',navState,{passive:true});navState();
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;links.forEach(function(a){a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id)})})},{rootMargin:'-45% 0px -50% 0px'});
+    links.forEach(function(a){var t=document.querySelector(a.getAttribute('href'));if(t)io.observe(t)});
+  }
   fetch('https://3pt-harness.3pt-worker.workers.dev/app/harness').then(function(r){return r.ok?r.json():null}).then(function(j){
     if(!j||!j.versions)return;
     draw(j.versions,j.current);
