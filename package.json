@@ -1,6 +1,7 @@
 {
   "name": "3pt",
   "private": true,
+  "license": "MIT",
   "description": "3PT \u00b7 Three Point Harness. Polyglot monorepo: ui/ (surfaces), harness/ (the running pipeline), infra/ (batteries that instantiate what the pipeline runs on).",
   "packageManager": "pnpm@12.6.0",
   "engines": {

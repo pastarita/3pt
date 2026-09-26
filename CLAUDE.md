@@ -45,6 +45,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
+| Open-sourcing and submission due diligence: admissibility, hygiene, the package, each row with a status | `docs/15-open-source-checklist.md` |
 | Submission: what the platform asks, the filming tool, artifacts, claims with evidence, priority order to 5 PM | `docs/18-submission.md` |
 
 ## Working rules for agents in this repo

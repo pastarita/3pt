@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/banner.svg" alt="3PT · The harness rewrote its rules. Approve or roll back." width="100%"></p>
+
 # 3PT — Three Point Harness for Media-Heavy Workflows
 <!-- @s1.01 -->
 
@@ -14,8 +16,11 @@ The harness is the product. Images are the workload. Any UI is a secondary inspe
 
 ## Status
 
-Docs of record are written. No application code yet, by decision. See `docs/02-lanes.md`
-for who is doing what and `docs/03-workflow.md` for how code will land.
+Docs of record are written and the monorepo skeleton builds: 17 workspaces, `3pt loop` runs one
+iteration against the memory store, the harness compiles a Policy onto AWS Strands. Still open:
+the Atlas Sandbox cluster and the worker deploy. See `docs/17-term-2-lanes.md` for who is doing what,
+`docs/03-workflow.md` for how code lands, and `docs/15-open-source-checklist.md` for what must be
+true before 5:00 PM.
 
 ## Layout
 
@@ -28,7 +33,6 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `docs/03-workflow.md` | Repo layout, pipeline skeleton, DevX, the install loop |
 | `docs/04-resources.md` | Partners, MCPs, credits, and which 3PT slot each fills |
 | `docs/05-rules.md` | Rules, banned projects, judging weights, deadlines |
-| `brainstorming.md` | Raw transcript blocks, append-only; assessed in `docs/07-assessment-and-measurement.md` |
 | `docs/sources/` | Verbatim local copies of external source documents (the hackathon resource guide) |
 | `docs/07-assessment-and-measurement.md` | Theses and hypotheses converged from the transcript, the measurement system (M-*), and the partner-incentive mapping to a requirement set (R-*) |
 | `docs/06-goal-and-use-case.md` | Goal over time, interior-design use case, value props, screen-capture onboarding |
@@ -43,6 +47,8 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `docs/10-architecture.md` | The polyglot monorepo: three lanes, Turborepo, batteries, eight Mermaid perspectives, extension recipes |
 | `docs/12-strands-archaeology.md` | The harness is built on AWS Strands: source register, capability ledger, strike list, lexicon of handles |
 | `docs/13-strands-diagrams.md` | Ten Mermaid diagrams of the Strands systems, for learning |
+| `docs/15-open-source-checklist.md` | Admissibility, open-source hygiene, and the submission package, each row with a status and the command that checks it |
+| `docs/assets/banner.svg` | The README banner, drawn in the design system's D2 dark tokens; self-contained, no web fonts |
 | `docs/glossary.md` | Terms |
 | `ui/` | Surfaces: PWA, web, macOS (Swift). Inspectors over harness state. See `ui/README.md` |
 | `harness/` | The running pipeline: core, plan, build, instrument, media, cli, api, worker, policies, checkpoints. See `harness/README.md` |
@@ -51,6 +57,7 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `scripts/prov.mjs` | `node scripts/prov.mjs` builds the provenance index; `--check` in CI; `--bake` pulls doc cites back into the transcript |
 | `scripts/prompts.mjs` | Appends the prompts typed into this repo's Claude Code sessions to `brainstorming.md` as provenance-marked sessions; idempotent, redacts secrets |
 | `hub/` | The gated hub workspace, fully self-contained: site, gate, tools, deploy config. See `hub/README.md`. |
+| `LICENSE` | MIT |
 
 ## Hub workspace
 
@@ -66,4 +73,10 @@ make -C hub deploy    # production deploy
 
 ## Team
 
-Patrick Astarita, Yash.
+Patrick Astarita, Yash Kothari.
+
+## License
+
+MIT. See `LICENSE`. Third-party code arrives as dependencies under their own licenses (AWS Strands
+is Apache-2.0); nothing is vendored. The open-sourcing due diligence, and what the hackathon
+requires of a public repo, is the checklist in `docs/15-open-source-checklist.md`.
