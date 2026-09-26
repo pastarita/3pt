@@ -1,0 +1,14 @@
+# base: what every later role assumes. Ubuntu 24.04 inside Colima.
+- name: apt packages
+  become: true
+  ansible.builtin.apt:
+    name: [git, rsync, jq, curl, ca-certificates, gnupg, build-essential, unzip, make, python3-apt]
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+- name: apt keyrings dir
+  become: true
+  ansible.builtin.file: { path: /etc/apt/keyrings, state: directory, mode: "0755" }
+- name: "{{ box_root }} owned by {{ box_user }}"
+  become: true
+  ansible.builtin.file: { path: "{{ box_root }}", state: directory, owner: "{{ box_user }}", group: "{{ box_user }}", mode: "0755" }

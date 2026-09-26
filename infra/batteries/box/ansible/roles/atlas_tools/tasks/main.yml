@@ -1,0 +1,38 @@
+# atlas_tools: the MongoDB toolbelt. mongosh + Atlas CLI + database tools from MongoDB's apt repo (8.0 series),
+# the MongoDB MCP Server from npm. The Atlas CLI is what sandbox.sh drives; it is the Atlas-conventional interface.
+- name: mongodb 8.0 signing key
+  become: true
+  ansible.builtin.shell: curl -fsSL https://pgp.mongodb.com/server-8.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-8.0.gpg
+  args: { creates: /usr/share/keyrings/mongodb-server-8.0.gpg }
+- name: mongodb apt repo
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/8.0 multiverse"
+    filename: mongodb-org-8.0
+    state: present
+- name: mongosh + database tools
+  become: true
+  ansible.builtin.apt: { name: [mongodb-mongosh, mongodb-database-tools], state: present, update_cache: true }
+- name: atlas cli (apt, falls back to the GitHub release .deb)
+  block:
+    - name: atlas cli from apt
+      become: true
+      ansible.builtin.apt: { name: mongodb-atlas-cli, state: present }
+  rescue:
+    - name: atlas cli latest release tag
+      ansible.builtin.shell: curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/mongodb/mongodb-atlas-cli/releases/latest | sed -E 's#.*/atlascli/v##'
+      register: atlascli_ver
+      changed_when: false
+    - name: atlas cli .deb
+      become: true
+      ansible.builtin.apt:
+        deb: "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli/v{{ atlascli_ver.stdout }}/mongodb-atlas-cli_{{ atlascli_ver.stdout }}_linux_{{ 'arm64' if ansible_architecture == 'aarch64' else 'x86_64' }}.deb"
+- name: mongodb mcp server (global npm)
+  become: true
+  ansible.builtin.command: npm install -g mongodb-mcp-server
+  args: { creates: /usr/lib/node_modules/mongodb-mcp-server }
+- name: versions
+  ansible.builtin.shell: echo "mongosh $(mongosh --version) · $(atlas --version | head -1) · $(mongoimport --version | head -1)"
+  register: atlas_v
+  changed_when: false
+- ansible.builtin.debug: { msg: "{{ atlas_v.stdout }}" }

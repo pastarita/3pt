@@ -1,0 +1,15 @@
+# 3PT · battery-box · converge the box. docs/14-sandbox-provisioning.md §2
+# Idempotent: every task is a `creates:`, a package state, or a file state. Re-run freely.
+# Vars arrive from box.sh as .vars.json: repo_root repo_mode repo_url repo_ref atlas_local ssh_config worker_service pnpm_version node_major
+- name: 3PT box
+  hosts: box
+  gather_facts: true
+  vars:
+    box_user: "{{ ansible_user_id }}"
+    box_root: /opt/3pt
+  roles:
+    - { role: base,        tags: [base] }
+    - { role: node,        tags: [node] }
+    - { role: atlas_tools, tags: [atlas_tools] }
+    - { role: atlas_local, tags: [atlas_local], when: atlas_local | bool }
+    - { role: workload,    tags: [workload] }

@@ -1,0 +1,20 @@
+# atlas_local: Atlas Local (mongodb/mongodb-atlas-local) via the Atlas CLI, running in the box's Docker.
+# Gives Atlas Search + Vector Search offline with the same driver calls as the Sandbox cluster.
+# Eligibility note: finalist work must run against the Sandbox cluster; this is the offline substitute.
+- name: existing local deployments
+  ansible.builtin.command: atlas deployments list -o json
+  register: deps
+  changed_when: false
+  failed_when: false
+- name: atlas deployments setup 3pt-local
+  ansible.builtin.command: >
+    atlas deployments setup 3pt-local --type local --port 27017 --bindIpAll
+    --username 3pt --password 3pt --force --skipMongosh --skipSampleData
+  when: "'3pt-local' not in (deps.stdout | default(''))"
+- name: atlas deployments start 3pt-local
+  ansible.builtin.command: atlas deployments start 3pt-local
+  register: st
+  changed_when: "'started' in st.stdout | lower"
+  failed_when: false
+- name: local uri
+  ansible.builtin.set_fact: { atlas_local_uri: "mongodb://3pt:3pt@localhost:27017/?directConnection=true" }

@@ -1,0 +1,47 @@
+# workload: the repo at /opt/3pt, built, provisioned against Atlas, and the worker as a service.
+- name: sync the host checkout into the box (repo_mode=sync)
+  when: repo_mode == 'sync'
+  delegate_to: localhost
+  ansible.builtin.command: >
+    rsync -a --delete -e "ssh -q -F {{ ssh_config }}"
+    --exclude node_modules --exclude dist --exclude .turbo --exclude .worktrees --exclude .claude/worktrees
+    --exclude hub/_site --exclude ui/apps/macos/.build --exclude .install-loop --exclude .blob --exclude .venv
+    --exclude infra/batteries/box/ansible/.inventory.ini --exclude infra/batteries/box/ansible/.ssh_config --exclude infra/batteries/box/ansible/.vars.json
+    {{ repo_root }}/ {{ inventory_hostname }}:{{ box_root }}/
+  register: sync
+  changed_when: true
+- name: clone the repo (repo_mode=clone)
+  when: repo_mode == 'clone'
+  ansible.builtin.git: { repo: "{{ repo_url }}", dest: "{{ box_root }}", version: "{{ repo_ref }}", force: true }
+- name: .env exists
+  ansible.builtin.copy: { src: "{{ box_root }}/.env.example", dest: "{{ box_root }}/.env", remote_src: true, force: false, mode: "0600" }
+- name: ATLAS_URI → Atlas Local when the Sandbox URI is not set
+  when: atlas_local | bool
+  ansible.builtin.lineinfile:
+    path: "{{ box_root }}/.env"
+    regexp: '^ATLAS_URI=(\s*|mongodb\+srv://<user>.*)$'
+    line: "ATLAS_URI={{ atlas_local_uri | default('mongodb://3pt:3pt@localhost:27017/?directConnection=true') }}"
+- name: pnpm install
+  ansible.builtin.command: pnpm install --frozen-lockfile
+  args: { chdir: "{{ box_root }}" }
+  register: inst
+  changed_when: "'Already up to date' not in inst.stdout"
+- name: build (macOS wrapper skipped without Xcode)
+  ansible.builtin.command: pnpm turbo run build --filter='!@3pt/macos'
+  args: { chdir: "{{ box_root }}" }
+  changed_when: true
+- name: provision every battery against .env
+  ansible.builtin.shell: set -a; . ./.env; set +a; pnpm turbo run provision
+  args: { chdir: "{{ box_root }}" }
+  register: prov
+  changed_when: true
+- ansible.builtin.debug: { msg: "{{ prov.stdout_lines | select('search', '\\[atlas\\]|\\[box\\]|\\[blob\\]') | list }}" }
+- name: worker service unit
+  when: worker_service | bool
+  become: true
+  ansible.builtin.template: { src: 3pt-worker.service.j2, dest: /etc/systemd/system/3pt-worker.service, mode: "0644" }
+  register: unit
+- name: worker service running
+  when: worker_service | bool
+  become: true
+  ansible.builtin.systemd: { name: 3pt-worker, enabled: true, state: "{{ 'restarted' if unit.changed or (sync is defined and sync.changed) else 'started' }}", daemon_reload: true }

@@ -1,0 +1,14 @@
+# 3PT worker: drains the jobs collection (media_index → transcribe/tier jobs). infra/batteries/box.
+[Unit]
+Description=3PT worker (first workflow)
+After=network-online.target
+Wants=network-online.target
+[Service]
+User={{ box_user }}
+WorkingDirectory={{ box_root }}
+EnvironmentFile={{ box_root }}/.env
+ExecStart=/usr/bin/node {{ box_root }}/harness/apps/worker/dist/main.js --watch
+Restart=on-failure
+RestartSec=10
+[Install]
+WantedBy=multi-user.target
