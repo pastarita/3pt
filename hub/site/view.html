@@ -36,6 +36,29 @@
   .doc .seg:target{background:color-mix(in srgb,var(--flag) 18%,transparent)}
   .doc details{margin:4px 0}.doc summary{cursor:pointer;font:600 12.5px var(--sans)}
   .warn{border-left:3px solid var(--warn);background:color-mix(in srgb,var(--warn) 9%,transparent);padding:12px 15px;border-radius:0 6px 6px 0;line-height:1.6}
+  /* the outline: h2/h3 of the rendered document, DERIVED at load. Wide: a sticky rail beside the text.
+     Narrow: a collapsible block above it (tpt_toc remembers shut). Hidden when the document has under three sections. */
+  .doc{display:grid;grid-template-columns:minmax(0,82ch);justify-content:center;column-gap:36px;align-items:start}
+  .doc .crumb{grid-column:1/-1;order:-2}
+  .toc{display:none;font:12.5px/1.5 var(--sans);color:var(--soft);order:-1;margin:0 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:8px 12px 10px}
+  .toc.has{display:block}
+  .toc .toc-h{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;color:var(--faint);font:700 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:4px 0;cursor:pointer;text-align:left}
+  .toc .toc-h .n{margin-left:auto;font-weight:600;letter-spacing:.06em}
+  .toc .toc-h .chev{width:10px;height:10px;transition:transform .12s}
+  .toc.shut .toc-h .chev{transform:rotate(-90deg)}.toc.shut ol{display:none}
+  .toc ol{list-style:none;margin:6px 0 0;padding:0}
+  .toc li a{display:block;padding:4px 8px;border-radius:6px;color:var(--soft);text-decoration:none;border-left:2px solid transparent}
+  .toc li.l3 a{padding-left:20px;font-size:11.8px;color:var(--faint)}
+  .toc li a:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+  .toc li a.on{color:var(--ink);border-left-color:var(--flag);background:rgba(255,107,74,.07)}
+  .toc .toc-top{display:block;margin:8px 0 0;padding:4px 8px;font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+  .toc .toc-top:hover{color:var(--ink)}
+  @media(min-width:1240px){
+    .doc{grid-template-columns:minmax(0,82ch) 220px}
+    .toc{order:0;grid-column:2;position:sticky;top:46px;max-height:calc(100vh - 62px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;margin:0;border:0;background:none;padding:0 0 0 14px;border-left:1px solid var(--line);border-radius:0}
+    .toc .toc-h{cursor:default}.toc .toc-h .chev{display:none}.toc.shut ol{display:block}
+  }
+  @media print{.toc{display:none!important}}
   @media print{.crumb{display:none}}
 </style>
 </head>
@@ -44,6 +67,7 @@
 <div class="doc">
   <div class="crumb"><span class="p" id="path"></span><button id="copy">copy path</button><span id="kind"></span><a id="raw" href="#" style="display:none">open raw ↗</a></div>
   <div id="out"></div>
+  <nav class="toc" id="toc" aria-label="Contents"></nav>
 </div>
 <script>
 (function(){
@@ -53,6 +77,35 @@
   document.getElementById('path').textContent = f || '(no ?f= given)';
   document.title = '3PT · ' + (f.split('/').pop() || 'Viewer');
   document.getElementById('copy').onclick = function(e){ navigator.clipboard.writeText(f); e.target.textContent='copied ✓'; setTimeout(function(){ e.target.textContent='copy path'; },1200); };
+  /* the outline — DERIVED from the rendered h2/h3 (h1 is the title). Active section by IntersectionObserver;
+     a click lands on the heading and marks it, the same as arriving with #slug. */
+  function toc(){
+    var nav = document.getElementById('toc'), hs = Array.prototype.slice.call(out.querySelectorAll('h2,h3'));
+    if (hs.length < 3) return;
+    var shut = false; try{ shut = localStorage.getItem('tpt_toc') === 'shut'; }catch(e){}
+    var n2 = hs.filter(function(h){ return h.tagName === 'H2'; }).length;
+    nav.className = 'toc has' + (shut ? ' shut' : '');
+    nav.innerHTML = '<button class="toc-h" aria-expanded="'+(!shut)+'"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>Contents<span class="n">'+n2+' section'+(n2===1?'':'s')+'</span></button>'
+      + '<ol>' + hs.map(function(h){ return '<li class="l'+h.tagName.charAt(1)+'"><a href="#'+h.id+'" data-id="'+h.id+'">'+V.esc(h.textContent)+'</a></li>'; }).join('') + '</ol>'
+      + '<a class="toc-top" href="#">↑ top</a>';
+    nav.querySelector('.toc-h').addEventListener('click', function(){
+      var s = nav.classList.toggle('shut'); this.setAttribute('aria-expanded', !s);
+      try{ s ? localStorage.setItem('tpt_toc','shut') : localStorage.removeItem('tpt_toc'); }catch(e){}
+    });
+    var links = {}; Array.prototype.forEach.call(nav.querySelectorAll('ol a'), function(a){ links[a.getAttribute('data-id')] = a;
+      a.addEventListener('click', function(e){ e.preventDefault(); var t = document.getElementById(a.getAttribute('data-id')); if (!t) return;
+        history.replaceState(null, '', '#' + a.getAttribute('data-id')); t.scrollIntoView({ block:'start' });
+        Array.prototype.forEach.call(out.querySelectorAll('.landed'), function(x){ x.classList.remove('landed'); }); t.classList.add('landed'); mark(a.getAttribute('data-id')); }); });
+    nav.querySelector('.toc-top').addEventListener('click', function(e){ e.preventDefault(); history.replaceState(null, '', location.pathname + location.search); window.scrollTo({ top:0 }); });
+    function mark(id){ for (var k in links) links[k].classList.toggle('on', k === id); var a = links[id]; if (a && nav.scrollHeight > nav.clientHeight) { var r = a.getBoundingClientRect(), w = nav.getBoundingClientRect(); if (r.top < w.top || r.bottom > w.bottom) a.scrollIntoView({ block:'nearest' }); } }
+    if (!('IntersectionObserver' in window)) return;
+    var visible = {};
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ visible[e.target.id] = e.isIntersecting; });
+      var cur = null; for (var i = 0; i < hs.length; i++) { if (visible[hs[i].id]) { cur = hs[i].id; break; } }
+      if (!cur) { for (var j = hs.length - 1; j >= 0; j--) if (hs[j].getBoundingClientRect().top < 80) { cur = hs[j].id; break; } }
+      if (cur) mark(cur); }, { rootMargin:'-40px 0px -70% 0px', threshold:0 });
+    hs.forEach(function(h){ io.observe(h); });
+  }
   if (!f) { out.innerHTML = '<div class="warn">No document requested. Add <code>?f=path</code>.</div>'; return; }
   if (/^[a-z]+:/i.test(f) || f.indexOf('..')>=0 || f.charAt(0)==='/') { out.innerHTML = '<div class="warn">The Viewer reads paths inside this workspace only.</div>'; return; }
   var kind = V.resolve(f);
@@ -61,6 +114,7 @@
   fetch('./' + f).then(function(r){ if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.text(); }).then(function(text){
     out.innerHTML = kind==='markdown' ? V.md(text, f.slice(0, f.lastIndexOf('/')+1)) : kind==='csv' ? V.csv(text) : kind==='json' ? V.json(text) : kind==='jsonl' ? V.jsonl(text) : '<pre><code>'+V.esc(text)+'</code></pre>';
     var h1 = out.querySelector('h1'); if (h1) document.title = '3PT · ' + h1.textContent;
+    toc();
     if (location.hash) {   /* the document arrives after load, so honour #sN.NN and #heading-slug here; a prefix or a heading that contains the words also lands (the prov.mjs rule) */
       var a = decodeURIComponent(location.hash.slice(1)), al = a.toLowerCase(), tgt = document.getElementById(a);
       if (!tgt) tgt = Array.prototype.find.call(out.querySelectorAll('h1,h2,h3,h4,h5,h6'), function(h){ return h.id.indexOf(al) === 0 || h.textContent.toLowerCase().indexOf(al) >= 0; }) || null;
