@@ -36,6 +36,7 @@
     'architecture':   g('<path d="M3 6h5v5H3ZM9.5 3h5v5h-5ZM16 6h5v5h-5Z"/><path d="M5.5 11v3.5h13V11"/><path d="M12 8v6.5"/><path d="M8 18h8M6 21h12" stroke-dasharray="2 2"/>'),
     'architecture-doc': g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h3v3H8ZM13 12h3v3h-3Z"/><path d="M11 13.5h2"/>'),
     'design-system':  g('<path d="M4 4h7v7H4ZM13 4h7v7h-7ZM4 13h7v7H4Z"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="M6 8.5l2-2 2 2M15 6.5h3"/>'),
+    'app':            g('<rect x="3" y="4" width="18" height="15" rx="2"/><path d="M3 8h18"/><rect x="6" y="11" width="5" height="5"/><path d="M14 12h4M14 15h3"/>'),
     'view':           g('<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/>')
   };
 
@@ -54,7 +55,7 @@
     ['',       [['index','Hub']]],
     ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5']]],
     ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
-    ['build',  [['lanes','Lane board'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['resources','Resources & credits','D4']]],
+    ['build',  [['app','App prototype'], ['lanes','Lane board'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
   ];
   /* ROUTE: slugs that are not their own .html file. Documents route through the Viewer. */
@@ -77,7 +78,7 @@
     'provenance':     'view.html?f=docs/09-provenance.md'
   };
   var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
-  var FRESH = { 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1 }; /* retire at next check-in */
+  var FRESH = { 'app':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1 }; /* retire at next check-in */
 
   /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
   function href(s){

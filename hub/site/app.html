@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · App prototype</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  /* Role-based app prototype. Colors come from 3pt.css tokens only. State: localStorage tpt_app_v1. */
+  .appbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;margin:0 0 12px}
+  .appbar .firm{font:800 13px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--flag)}
+  .appbar .crumb{font-weight:700;color:var(--ink);text-decoration:none}
+  .appbar .crumb.dim{color:var(--soft)}
+  .appbar .sp{flex:1}
+  .appbar select{width:auto;min-width:190px}
+  .hv{font:700 12px/1 var(--mono);border:1px solid var(--line-strong);border-radius:99px;padding:6px 10px;color:var(--ink);text-decoration:none;background:var(--card)}
+  .learned{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--instrument);border-radius:var(--radius);padding:12px 14px;margin:0 0 16px}
+  .learned.prop{border-left-color:var(--flag)}
+  .learned .lbl{font:700 10px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);white-space:nowrap;padding-top:3px}
+  .learned .txt{flex:1;font-size:14px}
+  .learned .txt small{display:block;color:var(--soft);font-size:12.5px;margin-top:3px}
+  .learned .acts{display:flex;gap:6px;flex-wrap:wrap}
+  .proto{font-size:12px;color:var(--faint);margin:0 0 10px}
+  h1.big{font-size:30px;margin:6px 0 4px}
+  .sub{color:var(--soft);margin:0 0 16px}
+  /* project cards */
+  .pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .pcard{display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .12s,border-color .12s;text-align:left;padding:0;font:inherit;cursor:pointer;width:100%}
+  .pcard:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+  .pcard .cover{height:170px;position:relative}
+  .pcard .cover .tag{position:absolute;left:10px;top:10px}
+  .pcard .body{padding:12px 14px 14px}
+  .pcard b{font-size:17px;display:block}
+  .pcard .meta{color:var(--soft);font-size:12.5px;margin:2px 0 8px}
+  .pcard .role-line{font-size:13.5px;font-weight:600}
+  .pcard.new .cover{display:flex;align-items:center;justify-content:center;border-bottom:1px dashed var(--line-strong);color:var(--soft);font-size:28px;background:transparent}
+  .live{background:var(--flag);color:#fff;font:800 9.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;padding:4px 8px;border-radius:99px}
+  .closed{background:var(--pine);color:var(--soft);font:800 9.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;padding:4px 8px;border-radius:99px}
+  /* photos: content imagery mixed from tokens */
+  .ph{display:block;width:100%;aspect-ratio:1;border-radius:6px;position:relative;cursor:pointer;border:0;padding:0}
+  .ph .cap{position:absolute;left:4px;bottom:4px;font:700 10px/1 var(--mono);background:var(--pine);color:var(--ink);padding:3px 5px;border-radius:3px;opacity:.9}
+  .ph .fl{position:absolute;right:4px;top:4px;font:700 10px/1 var(--mono);background:var(--flag);color:#fff;padding:3px 5px;border-radius:3px}
+  .k-framing{background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--amber) 70%,var(--ink)) 0 7px,transparent 7px 24px),linear-gradient(160deg,color-mix(in srgb,var(--amber) 35%,var(--pine)),var(--sand))}
+  .k-plumbing{background:linear-gradient(90deg,transparent 44%,var(--flag) 44% 51%,transparent 51%),linear-gradient(0deg,transparent 62%,color-mix(in srgb,var(--flag) 70%,var(--pine)) 62% 67%,transparent 67%),repeating-linear-gradient(90deg,color-mix(in srgb,var(--amber) 45%,var(--pine)) 0 6px,transparent 6px 26px),linear-gradient(200deg,var(--slate),var(--pine))}
+  .k-electrical{background:linear-gradient(20deg,transparent 48%,var(--amber) 48% 50%,transparent 50%),linear-gradient(-30deg,transparent 58%,var(--cyan) 58% 60%,transparent 60%),repeating-linear-gradient(90deg,color-mix(in srgb,var(--amber) 45%,var(--pine)) 0 6px,transparent 6px 26px),linear-gradient(200deg,var(--slate-soft),var(--pine))}
+  .k-drywall{background:radial-gradient(circle at 70% 30%,color-mix(in srgb,var(--ink) 30%,transparent) 0 14%,transparent 15%),linear-gradient(160deg,color-mix(in srgb,var(--ink) 75%,var(--slate)),color-mix(in srgb,var(--ink) 45%,var(--slate)))}
+  .k-concrete{background:radial-gradient(circle at 30% 70%,color-mix(in srgb,var(--slate) 60%,var(--pine)) 0 20%,transparent 21%),linear-gradient(160deg,var(--slate),color-mix(in srgb,var(--slate) 40%,var(--pine)))}
+  .k-exterior{background:linear-gradient(0deg,color-mix(in srgb,var(--slate) 50%,var(--pine)) 0 40%,transparent 40%),repeating-linear-gradient(90deg,var(--line-strong) 0 3px,transparent 3px 30px),linear-gradient(180deg,var(--cyan-soft),color-mix(in srgb,var(--cyan) 40%,var(--pine)))}
+  /* blocks */
+  .blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .block.wide{grid-column:1/-1}
+  .block header{display:flex;align-items:center;gap:8px}
+  .block header h3{margin:0;font-size:15px;flex:1}
+  .block header .x{border:0;background:none;color:var(--faint);padding:4px 6px;font-size:14px}
+  .block header .x:hover{color:var(--ink)}
+  .rank{font:700 10px/1 var(--mono);color:var(--faint)}
+  .todo{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+  .todo:first-of-type{border-top:0}
+  .todo .t{flex:1;font-size:14px}
+  .todo .t small{display:block;color:var(--soft);font-size:12px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--flag);flex:none}
+  .dot.ok{background:var(--good)}
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
+  .units{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .unit{border:1px solid var(--line);border-radius:6px;padding:8px;font:700 13px/1.2 var(--mono);background:var(--panel)}
+  .unit small{display:block;font:500 11px/1.3 var(--sans);color:var(--soft);margin-top:3px}
+  .unit.miss{border-color:var(--flag);box-shadow:inset 0 0 0 1px var(--flag)}
+  .unit.ok{border-color:color-mix(in srgb,var(--good) 55%,var(--line))}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button.on{background:var(--flag);border-color:var(--flag);color:#fff}
+  .opp{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
+  .opp:first-of-type{border-top:0}
+  .opp small{display:block;color:var(--soft);font-size:12px}
+  .opp .h{font:700 13px/1 var(--mono);white-space:nowrap}
+  .facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .facts b{display:block;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+  .facts small{color:var(--soft);font-size:12.5px}
+  .hero{height:200px;border-radius:8px}
+  .kpi{display:flex;gap:18px;flex-wrap:wrap}
+  .kpi div b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+  .kpi div small{color:var(--soft);font-size:12.5px}
+  .tray{margin-top:18px;border:1px dashed var(--line-strong);border-radius:var(--radius);padding:12px 14px}
+  .tray .chips button{font-size:12px}
+  .empty{color:var(--faint);font-size:13px}
+  /* modal */
+  .modal{position:fixed;inset:0;background:color-mix(in srgb,var(--pine) 80%,transparent);display:flex;align-items:center;justify-content:center;z-index:200000;padding:16px}
+  .modal .box{background:var(--panel);border:1px solid var(--line-strong);border-radius:12px;max-width:560px;width:100%;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+  .modal .ph{aspect-ratio:4/3;cursor:default}
+  .modal dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:13px}
+  .modal dt{color:var(--faint);font-family:var(--mono);font-size:11.5px}
+  .modal dd{margin:0}
+  /* harness page */
+  .loop{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pt{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;border-top:4px solid var(--accent)}
+  .pt.p{--accent:var(--plan)}.pt.b{--accent:var(--build)}.pt.i{--accent:var(--instrument)}
+  .pt b{display:block;font-size:14px;margin-bottom:4px}
+  .pt p{margin:0;font-size:13px;color:var(--soft)}
+  .ver{display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+  .ver .v{font:800 16px/1 var(--mono)}
+  .ver.cur .v{color:var(--flag)}
+  .ver.rb .v{color:var(--faint);text-decoration:line-through}
+  .ver ul{margin:4px 0 0;padding-left:18px;font-size:13px;color:var(--soft)}
+  .ver .when{font-size:12px;color:var(--faint)}
+  .layouts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+  .lay{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px}
+  .lay b{display:block;margin-bottom:4px}
+  .lay ol{margin:0;padding-left:18px;color:var(--soft)}
+  .toast{position:fixed;right:16px;bottom:16px;background:var(--pine);border:1px solid var(--line-strong);color:var(--ink);padding:10px 14px;border-radius:8px;font-size:13px;z-index:200001;box-shadow:var(--shadow)}
+  @media(max-width:760px){.blocks{grid-template-columns:1fr}.loop{grid-template-columns:1fr}.units{grid-template-columns:repeat(4,1fr)}.facts{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <p class="eyebrow">Build · prototype · state persists in this browser under <code>tpt_app_v1</code></p>
+  <p class="proto"><span class="pv a">AUTHORED</span> Every project, photo, person and hour on this page is example data. The layout rules and the learning loop run for real in this browser. Nothing talks to MongoDB yet.</p>
+  <div class="appbar" id="appbar"></div>
+  <div id="learned"></div>
+  <main id="view"></main>
+</div>
+<div id="modal"></div>
+<script>
+(function(){
+  var T = window.T;
+  var KEY = 'app_v1';
+
+  /* ---------- seed data (AUTHORED examples) ---------- */
+  var ROLES_SEED = [
+    {id:'super',  name:'Superintendent',   where:'on site, phone',  trade:null},
+    {id:'pm',     name:'Project manager',  where:'office, laptop',  trade:null},
+    {id:'owner',  name:'Owner / executive',where:'weekly, any device', trade:null},
+    {id:'pe',     name:'Project engineer', where:'office, laptop',  trade:null},
+    {id:'trade',  name:'Plumbing foreman', where:'on site, phone',  trade:'plumbing'},
+    {id:'safety', name:'Safety manager',   where:'on site, tablet', trade:null}
+  ];
+  var PROJECTS_SEED = [
+    {id:'towera', name:'Tower A', type:'Residential tower', year:2024, status:'closed', photos:9800, cover:'exterior',
+     retro:{facts:[[38,'owner reports built by hand'],[14,'units closed with no open-wall photo'],[3,'walls reopened later to find a pipe'],[22,'searches that found nothing useful']],
+            lessons:['Take the open-wall photo before drywall in every unit','Build the owner photo pack every Friday','Tag window units for water checks']}},
+    {id:'clinic', name:'Riverside Clinic', type:'Medical office', year:2025, status:'closed', photos:6200, cover:'concrete',
+     retro:{facts:[[21,'owner reports built by hand'],[4,'units closed with no open-wall photo'],[1,'wall reopened later'],[9,'searches that found nothing useful']],
+            lessons:['Sort photos by open or closed wall','Drop duplicate burst photos after 24 hours']}},
+    {id:'towerb', name:'Tower B', type:'Residential tower', year:2026, status:'live', week:14, phase:'Fit-out, level 2', cover:'framing'}
+  ];
+  var OPPS_SEED = [
+    {id:'ownerpack', title:'Build the Friday owner photo pack', kind:'automate', hours:28, from:'Tower A', status:'on', roles:['pm','owner']},
+    {id:'openwall',  title:'Open-wall photo before drywall', kind:'remind', hours:12, from:'Tower A', status:'on', roles:['super','pm','trade']},
+    {id:'wallstate', title:'Search photos by open or closed wall', kind:'harness change', hours:9, from:'Clinic', status:'on', roles:['pm','pe','super']},
+    {id:'water',     title:'Flag water stains near windows', kind:'feature', hours:6, from:'Tower A', status:'open', roles:['pm','super','pe','safety']},
+    {id:'closeout',  title:'Closeout photo set per unit, built automatically', kind:'automate', hours:16, from:'Clinic', status:'open', roles:['pe','pm']},
+    {id:'hazard',    title:'Flag open edges and missing rails in photos', kind:'feature', hours:5, from:'Clinic', status:'open', roles:['safety','super']}
+  ];
+
+  /* photos for the live project: level 2, units 201–208, weeks 9–14 */
+  function seedPhotos(){
+    var out=[], n=0, units=[201,202,203,204,205,206,207,208];
+    units.forEach(function(u){
+      out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'framing',  wall:'open',   week:9+(u%2)});
+      if (u!==206) out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'plumbing', wall:'open', week:11+(u%3)});
+      out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'electrical', wall:'open', week:12});
+      if (u<=206) out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:u, trade:'drywall', wall:'closed', week:u===206?14:13+(u%2)});
+    });
+    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:203, trade:'drywall', wall:'closed', week:14, water:true});
+    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:205, trade:'drywall', wall:'closed', week:14, water:true});
+    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:207, trade:'framing', wall:'open', week:14, hazard:'open edge, no rail'});
+    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:null, trade:'exterior', wall:null, week:14});
+    out.push({id:'IMG_'+(2100+n++), project:'towerb', unit:208, trade:'plumbing', wall:'open', week:14});
+    return out;
+  }
+
+  var LAYOUT_V5 = {
+    super: ['beforeclose','needs','photos_week','ask'],
+    pm:    ['needs','timesavers','progress','ask'],
+    owner: ['progress','portfolio','timesavers'],
+    pe:    ['needs','closeout','ask','photos_week']
+  };
+  var BASE_LAYOUT = ['needs','photos_week','ask'];
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  var VERSIONS_SEED = [
+    {v:0, when:'Mar 2024 · Tower A starts', by:'install', changes:['Generic start: describe each image, its date and its source'], layout:{}, fields:['description','date','source'], score:0.41},
+    {v:1, when:'May 2024 · Tower A', by:'Project manager', changes:['Added fields: unit, level, trade','New block for everyone: "Needs you"'], layout:{}, fields:['description','date','source','unit','level','trade'], score:0.58},
+    {v:2, when:'Sep 2024 · Tower A', by:'Superintendent', changes:['Added field: open or closed wall, after 38 "no" taps on one search'], layout:{}, fields:['description','date','source','unit','level','trade','wall'], score:0.64},
+    {v:3, when:'Nov 2024 · Tower A', by:'harness', changes:['Tried: send 20 photos to the model per question instead of 8'], layout:{}, fields:['description','date','source','unit','level','trade','wall'], score:0.52, rolledBack:true},
+    {v:4, when:'Feb 2025 · Clinic', by:'Project manager', changes:['Wrote a tool: find units with no open-wall photo','Turned on the Friday owner photo pack'], layout:{}, fields:['description','date','source','unit','level','trade','wall'], score:0.74},
+    {v:5, when:'Jan 2026 · Tower B starts', by:'harness', changes:['Learned screens for 4 roles from 2 years of use','Tower B started with 5 lessons from Tower A and Clinic'], layout:LAYOUT_V5, fields:['description','date','source','unit','level','trade','wall'], score:0.81}
+  ];
+
+  function fresh(){
+    return { role:'super', roles:clone(ROLES_SEED), projects:clone(PROJECTS_SEED), photos:seedPhotos(), opps:clone(OPPS_SEED),
+             versions:clone(VERSIONS_SEED), cur:5, events:[], hidden:{}, rejected:{}, reviewed:{}, toast:null };
+  }
+  var S = T.load(KEY, null) || fresh();
+  if(!S.role) S.role='super';
+  function save(){ T.save(KEY, S); }
+
+  /* ---------- helpers ---------- */
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function role(){ return S.roles.filter(function(r){return r.id===S.role;})[0]; }
+  function proj(id){ return S.projects.filter(function(p){return p.id===id;})[0]; }
+  function ver(){ return S.versions.filter(function(v){return v.v===S.cur;})[0]; }
+  function layoutFor(rid){ var l = ver().layout[rid]; return l ? l.slice() : BASE_LAYOUT.slice(); }
+  function learnedLayout(rid){ return !!ver().layout[rid]; }
+  function log(action, block, extra){ var e={t:Date.now(), role:S.role, v:S.cur, action:action, block:block||null}; if(extra) for(var k in extra) e[k]=extra[k]; S.events.push(e); save(); }
+  function photoEl(p, cap){
+    var f = p.water ? '<span class="fl">water?</span>' : (p.hazard ? '<span class="fl">hazard?</span>' : '');
+    return '<button class="ph k-'+p.trade+'" data-photo="'+p.id+'" aria-label="'+esc(p.id)+'">'+f+(cap!==false?'<span class="cap">'+(p.unit||'site')+' · '+p.trade.slice(0,5)+'</span>':'')+'</button>';
+  }
+  function toast(msg){ var d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(function(){ d.remove(); }, 2600); }
+
+  /* ---------- derived facts ---------- */
+  function livePhotos(){ return S.photos.filter(function(p){return p.project==='towerb';}); }
+  function missingOpenWall(){
+    var units={}; livePhotos().forEach(function(p){ if(!p.unit) return; units[p.unit]=units[p.unit]||{}; units[p.unit][p.trade+'_'+p.wall]=true; });
+    return Object.keys(units).filter(function(u){ return units[u]['drywall_closed'] && !units[u]['plumbing_open']; }).map(Number);
+  }
+  function unitStatus(){
+    var st={}, miss=missingOpenWall();
+    [201,202,203,204,205,206,207,208].forEach(function(u){
+      var has=livePhotos().filter(function(p){return p.unit===u;});
+      var dry=has.some(function(p){return p.trade==='drywall';});
+      st[u]={n:has.length, miss:miss.indexOf(u)>=0, closed:dry};
+    });
+    return st;
+  }
+  function hoursSaved(){ return S.opps.filter(function(o){return o.status==='on';}).reduce(function(a,o){return a+o.hours;},0); }
+  function lessonsCount(){ return S.projects.filter(function(p){return p.retro;}).reduce(function(a,p){return a+p.retro.lessons.length;},0); }
+  function todosFor(rid){
+    var r = S.roles.filter(function(x){return x.id===rid;})[0]||{};
+    var t=[];
+    missingOpenWall().forEach(function(u){ if(['super','pm','trade','pe'].indexOf(rid)>=0 || !r.trade) t.push({id:'miss'+u, text:'Unit '+u+': open-wall photo missing', sub:'Drywall started. Take it before the wall closes.', act:'Take photo', do:'take:'+u}); });
+    var water=livePhotos().filter(function(p){return p.water && !S.reviewed[p.id];});
+    if (water.length && ['super','pm','pe','safety'].indexOf(rid)>=0) t.push({id:'water', text:water.length+' photos may show water stains', sub:'Units '+water.map(function(p){return p.unit;}).join(', '), act:'Look', do:'look:water'});
+    var hz=livePhotos().filter(function(p){return p.hazard && !S.reviewed[p.id];});
+    if (hz.length && ['super','safety'].indexOf(rid)>=0) t.push({id:'hazard', text:'Possible hazard in a photo', sub:hz[0].hazard+' · unit '+hz[0].unit, act:'Look', do:'look:hazard'});
+    var pack=S.opps.filter(function(o){return o.id==='ownerpack' && o.status==='on';})[0];
+    if (pack && ['pm','owner'].indexOf(rid)>=0 && !S.reviewed.pack) t.push({id:'pack', text:'Owner photo pack for week 14 is ready', sub:'Built by the harness last night', act:'Send', do:'send:pack'});
+    return t;
+  }
+
+  /* ---------- blocks: the fixed library the harness arranges ---------- */
+  var BLOCKS = {
+    needs:{title:'Needs you', when:'live', render:function(p){
+      var t=todosFor(S.role); if(!t.length) return '<p class="empty">Nothing needs you right now.</p>';
+      return t.map(function(x){ return '<div class="todo"><span class="dot"></span><span class="t">'+esc(x.text)+'<small>'+esc(x.sub)+'</small></span><button class="primary" data-do="'+x.do+'">'+x.act+'</button></div>'; }).join('');
+    }},
+    beforeclose:{title:'Before walls close · level 2', when:'live', wide:true, render:function(){
+      var st=unitStatus();
+      return '<div class="units">'+Object.keys(st).map(function(u){ var s=st[u];
+        return '<button class="unit '+(s.miss?'miss':(s.closed?'ok':''))+'" data-do="unit:'+u+'">'+u+(s.miss?' !':(s.closed?' ✓':''))+'<small>'+(s.miss?'open-wall photo missing':(s.closed?'closed, photos complete':'walls open'))+' · '+s.n+' photos</small></button>'; }).join('')+'</div>';
+    }},
+    photos_week:{title:'Photos this week', when:'live', render:function(){
+      var r=role(), ps=livePhotos().filter(function(p){return p.week===14 && (!r.trade || p.trade===r.trade);});
+      return ps.length ? '<div class="pgrid">'+ps.map(function(p){return photoEl(p);}).join('')+'</div>' : '<p class="empty">No photos this week for your trade.</p>';
+    }},
+    ask:{title:'Ask your photos', when:'any', wide:true, render:function(){
+      var q=S.q||'';
+      var chips=[['plumb','Plumbing before drywall'],['water','Water near windows'],['u204','Everything in unit 204'],['week','This week']];
+      var html='<div class="chips">'+chips.map(function(c){return '<button class="'+(q===c[0]?'on':'')+'" data-do="ask:'+c[0]+'">'+c[1]+'</button>';}).join('')+'</div>';
+      if(!q) return html+'<p class="empty">Pick a question. Tap 👍 or 👎 on a result so the harness learns what you meant.</p>';
+      var res=askResults(q);
+      return html+'<p style="margin:0;font-size:12.5px;color:var(--soft)">'+res.note+'</p><div class="pgrid">'+res.list.slice(0,10).map(function(p){
+        var fb=(S.fb||{})[q+'|'+p.id];
+        return '<div>'+photoEl(p)+'<div class="chips" style="margin-top:4px"><button data-do="fb:'+q+':'+p.id+':up" class="'+(fb==='up'?'on':'')+'">👍</button><button data-do="fb:'+q+':'+p.id+':down" class="'+(fb==='down'?'on':'')+'">👎</button></div></div>';
+      }).join('')+'</div>';
+    }},
+    timesavers:{title:'Time savers', when:'any', render:function(){
+      var r=S.role, list=S.opps.filter(function(o){return o.roles.indexOf(r)>=0 || r==='owner';}).sort(function(a,b){return b.hours-a.hours;});
+      if(!list.length) return '<p class="empty">No time savers for your role yet.</p>';
+      return list.map(function(o){ return '<div class="opp"><span>'+esc(o.title)+'<small>'+o.kind+' · found on '+o.from+'</small></span><span class="h">'+o.hours+' h/job</span>'+
+        (o.status==='on'?'<span class="chip" style="--accent:var(--good);--accent-soft:color-mix(in srgb,var(--good) 15%,transparent)">on</span>':'<button class="primary" data-do="opp:'+o.id+'">Turn on</button>')+'</div>'; }).join('')+
+        '<p style="margin:0;font-size:12px;color:var(--faint)">Hours per job = times it happened × minutes each, from past jobs.</p>';
+    }},
+    progress:{title:'This week, in photos', when:'live', wide:true, render:function(){
+      var st=unitStatus(), closed=Object.keys(st).filter(function(u){return st[u].closed;}).length;
+      var ext=livePhotos().filter(function(p){return p.trade==='exterior';})[0];
+      return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px"><div class="ph hero k-exterior" data-photo="'+(ext?ext.id:'')+'"></div>'+livePhotos().filter(function(p){return p.week===14&&p.trade!=='exterior';}).slice(0,2).map(function(p){return photoEl(p,false);}).join('')+'</div>'+
+        '<div class="kpi"><div><b>'+closed+' / 8</b><small>level 2 units with walls closed</small></div><div><b>'+livePhotos().filter(function(p){return p.week===14;}).length+'</b><small>photos filed this week</small></div><div><b>'+missingOpenWall().length+'</b><small>units with a missing photo</small></div></div>';
+    }},
+    portfolio:{title:'Across all projects', when:'any', render:function(){
+      return '<div class="kpi"><div><b>'+hoursSaved()+' h</b><small>saved per job by time savers that are on</small></div><div><b>'+lessonsCount()+'</b><small>lessons carried to the next job</small></div><div><b>v'+S.cur+'</b><small>harness version</small></div></div>';
+    }},
+    closeout:{title:'Closeout records', when:'any', render:function(p){
+      var st=unitStatus(), ok=Object.keys(st).filter(function(u){return st[u].closed && !st[u].miss;});
+      return '<p style="margin:0">'+ok.length+' of 8 units on level 2 have a complete photo record (open wall and closed wall).</p><button data-do="opp:closeout">Build the closeout set</button>';
+    }},
+    hazards:{title:'Possible hazards', when:'live', render:function(){
+      var hz=livePhotos().filter(function(p){return p.hazard;});
+      return hz.length?'<div class="pgrid">'+hz.map(function(p){return photoEl(p);}).join('')+'</div>':'<p class="empty">None flagged.</p>';
+    }},
+    retro:{title:'Retrospective', when:'closed', wide:true, render:function(p){
+      return '<div class="facts">'+p.retro.facts.map(function(f){return '<div><b>'+f[0]+'</b><small>'+esc(f[1])+'</small></div>';}).join('')+'</div>';
+    }},
+    playbook:{title:'Lessons carried to the next job', when:'closed', render:function(p){
+      return '<ol style="margin:0;padding-left:18px">'+p.retro.lessons.map(function(l){return '<li>'+esc(l)+'</li>';}).join('')+'</ol>';
+    }},
+    lessons:{title:'Lessons this job started with', when:'live', render:function(){
+      var all=[]; S.projects.forEach(function(p){ if(p.retro) p.retro.lessons.forEach(function(l){ all.push([l,p.name]); }); });
+      return '<ol style="margin:0;padding-left:18px">'+all.map(function(l){return '<li>'+esc(l[0])+' <small style="color:var(--faint)">· '+esc(l[1])+'</small></li>';}).join('')+'</ol>';
+    }}
+  };
+
+  function askResults(q){
+    var ps=livePhotos(), fields=ver().fields, hasWall=fields.indexOf('wall')>=0, hasIssue=fields.indexOf('issue')>=0;
+    if(q==='plumb'){
+      var l=ps.filter(function(p){return p.trade==='plumbing' || (!hasWall && p.trade==='drywall');});
+      if(hasWall) l=l.filter(function(p){return p.wall==='open';});
+      return {list:l, note: hasWall?'Using the "open or closed wall" field the harness added in v2.':'This version cannot tell open walls from closed walls.'};
+    }
+    if(q==='water'){
+      if(hasIssue) return {list:ps.filter(function(p){return p.water;}), note:'Using the "issue" field the harness added in v'+fields._v+'.'};
+      return {list:ps.filter(function(p){return p.trade==='drywall';}), note:'No field for water yet. These are all drywall photos. Tap 👎 on the wrong ones.'};
+    }
+    if(q==='u204') return {list:ps.filter(function(p){return p.unit===204;}), note:'All photos for unit 204.'};
+    return {list:ps.filter(function(p){return p.week===14;}), note:'Everything filed in week 14.'};
+  }
+
+  /* ---------- the loop: Plan (find a signal) → Build (new version) → Instrument (score) ---------- */
+  function score(v){
+    var ev=S.events.filter(function(e){return e.v===v;});
+    var good=ev.filter(function(e){return e.action==='fb_up'||e.action==='act';}).length;
+    var bad=ev.filter(function(e){return e.action==='fb_down'||e.action==='hide';}).length;
+    return good+bad ? good/(good+bad) : null;
+  }
+  function plan(){
+    if(!S.role) return null;
+    var rid=S.role, lay=layoutFor(rid), ev=S.events.filter(function(e){return e.role===rid && e.v===S.cur;});
+    // 1 · a block used a lot but not near the top
+    var use={}; ev.filter(function(e){return e.action==='use'&&e.block;}).forEach(function(e){use[e.block]=(use[e.block]||0)+1;});
+    for (var b in use){ var i=lay.indexOf(b), key=rid+':top:'+b;
+      if(use[b]>=3 && i>0 && !S.rejected[key]) return {key:key, kind:'layout', text:'Move "'+BLOCKS[b].title+'" to the top for '+role().name+'s?', why:'You used it '+use[b]+' times in this version, and it sits at position '+(i+1)+'.', apply:function(v){ var l=layoutFor(rid); l.splice(l.indexOf(b),1); l.unshift(b); v.layout[rid]=l; v.changes=['Moved "'+BLOCKS[b].title+'" to the top for '+role().name+'s']; }}; }
+    // 2 · a block from the tray used twice → add it
+    for (var b2 in use){ var key2=rid+':add:'+b2;
+      if(use[b2]>=2 && lay.indexOf(b2)<0 && !S.rejected[key2]) return {key:key2, kind:'layout', text:'Add "'+BLOCKS[b2].title+'" to the '+role().name+' screen?', why:'You opened it from "More blocks" '+use[b2]+' times.', apply:function(v){ var l=layoutFor(rid); l.push(b2); v.layout[rid]=l; v.changes=['Added "'+BLOCKS[b2].title+'" for '+role().name+'s']; }}; }
+    // 3 · a hidden block → remove it
+    var hid=ev.filter(function(e){return e.action==='hide';});
+    if(hid.length){ var b3=hid[hid.length-1].block, key3=rid+':rm:'+b3;
+      if(lay.indexOf(b3)>=0 && !S.rejected[key3]) return {key:key3, kind:'layout', text:'Remove "'+BLOCKS[b3].title+'" from the '+role().name+' screen?', why:'You closed it.', apply:function(v){ var l=layoutFor(rid); l.splice(l.indexOf(b3),1); v.layout[rid]=l; v.changes=['Removed "'+BLOCKS[b3].title+'" for '+role().name+'s']; }}; }
+    // 4 · a search that keeps failing → add a field
+    var downs=S.events.filter(function(e){return e.action==='fb_down' && e.q==='water' && e.v===S.cur;}).length;
+    if(downs>=3 && ver().fields.indexOf('issue')<0 && !S.rejected['field:issue']) return {key:'field:issue', kind:'rule', text:'Add an "issue" field, such as water stain, and read the drywall photos again?', why:downs+' "no" taps on "Water near windows". The current fields cannot answer it.', apply:function(v){ v.fields=v.fields.concat(['issue']); v.fields._v=v.v; v.changes=['Added field: issue (water stain, crack, damage)','Read '+livePhotos().filter(function(p){return p.trade==='drywall';}).length+' drywall photos again, once']; }};
+    return null;
+  }
+  function build(p){
+    var base=ver(), nv={v:S.versions.length, when:'Today · Tower B', by:role().name, changes:[], layout:clone(base.layout), fields:base.fields.slice(), score:null, parent:base.v};
+    p.apply(nv);
+    var prev = score(base.v); nv.prevScore = prev===null?base.score:prev;
+    S.versions.push(nv); S.cur=nv.v; save();
+    return nv;
+  }
+
+  /* ---------- views ---------- */
+  function route(){ var h=location.hash.replace(/^#\/?/,''); var parts=h.split('/'); return {name:parts[0]||'home', id:parts[1]}; }
+
+  function renderBar(r){
+    var ro=role(), p = r.name==='p' ? proj(r.id) : null;
+    document.getElementById('appbar').innerHTML =
+      '<span class="firm">Acme Builders</span>'+
+      '<a class="crumb '+(p||r.name==='harness'?'dim':'')+'" href="#/">Projects</a>'+
+      (p?'<span style="color:var(--faint)">›</span><span class="crumb">'+esc(p.name)+'</span>':'')+
+      (r.name==='harness'?'<span style="color:var(--faint)">›</span><span class="crumb">Harness</span>':'')+
+      '<span class="sp"></span>'+
+      '<label for="rolepick" style="font-size:12px;color:var(--faint)">You are</label>'+
+      '<select id="rolepick">'+S.roles.map(function(x){return '<option value="'+x.id+'"'+(x.id===S.role?' selected':'')+'>'+esc(x.name)+'</option>';}).join('')+'</select>'+
+      '<a class="hv" href="#/harness">Harness v'+S.cur+'</a>'+
+      '<button id="reset" title="Clear this browser\'s prototype state">Reset</button>';
+    document.getElementById('rolepick').onchange=function(e){
+      S.role=e.target.value; save(); render();
+    };
+    document.getElementById('reset').onclick=function(){ S=fresh(); save(); location.hash='#/'; render(); toast('Prototype reset'); };
+  }
+  function renderLearned(r){
+    var el=document.getElementById('learned');
+    if(!S.role){ el.innerHTML=''; return; }
+    var p=plan(), v=ver();
+    if(p){
+      el.innerHTML='<div class="learned prop"><span class="lbl">Suggestion</span><span class="txt">'+esc(p.text)+'<small>Why: '+esc(p.why)+' A yes saves a new harness version. You can roll it back.</small></span><span class="acts"><button class="primary" id="pyes">Yes, do it</button><button id="pno">No</button></span></div>';
+      document.getElementById('pyes').onclick=function(){ var nv=build(p); log('act','proposal'); toast('Saved harness v'+nv.v); render(); };
+      document.getElementById('pno').onclick=function(){ S.rejected[p.key]=true; log('reject',null,{key:p.key}); save(); render(); };
+      return;
+    }
+    var ro=role(), msg;
+    if(!learnedLayout(S.role)) msg='This is a basic screen. I learn the '+ro.name+' screen from what you use. Open blocks from "More blocks" below, and hide the ones you do not need.';
+    else msg=v.changes[v.changes.length-1];
+    el.innerHTML='<div class="learned"><span class="lbl">What I learned</span><span class="txt">'+esc(msg)+'<small>Harness v'+v.v+' · '+esc(v.when)+'</small></span><span class="acts"><a class="btn" href="#/harness">See all changes</a></span></div>';
+  }
+
+  function roleLine(p){
+    if(p.status==='planned') return 'Starts with '+lessonsCount()+' lessons';
+    if(p.status==='closed') return p.retro.lessons.length+' lessons · '+p.photos.toLocaleString()+' photos';
+    var r=S.role;
+    if(r==='owner') return hoursSaved()+' h saved per job · '+missingOpenWall().length+' open issue';
+    var n=todosFor(r).length; return n+' thing'+(n===1?'':'s')+' need you today';
+  }
+  function viewHome(){
+    return '<h1 class="big">Projects</h1><p class="sub">'+esc(role().name)+' · '+esc(role().where)+'</p><div class="pcards">'+
+      S.projects.map(function(p){ return '<a class="pcard" href="#/p/'+p.id+'"><div class="cover k-'+p.cover+'"><span class="tag '+(p.status==='live'?'live':'closed')+'">'+(p.status==='live'?'live · week '+p.week:p.status)+'</span></div><div class="body"><b>'+esc(p.name)+'</b><div class="meta">'+esc(p.type)+' · '+p.year+'</div><div class="role-line">'+esc(roleLine(p))+'</div></div></a>'; }).join('')+
+      '<button class="pcard new" data-do="newproject"><div class="cover">+</div><div class="body"><b>New project</b><div class="meta">Starts with every lesson so far</div></div></button></div>';
+  }
+
+  function blockHTML(id, p, rank){
+    var B=BLOCKS[id]; if(!B) return '';
+    return '<section class="block'+(B.wide?' wide':'')+'" data-block="'+id+'"><header><span class="rank">'+rank+'</span><h3>'+esc(B.title)+'</h3><button class="x" data-do="hide:'+id+'" title="Hide this block" aria-label="Hide '+esc(B.title)+'">✕</button></header>'+B.render(p)+'</section>';
+  }
+  function viewProject(id){
+    var p=proj(id); if(!p) return '<p>Project not found. <a href="#/">Back to projects</a></p>';
+    var lay=layoutFor(S.role), sess=S.hidden[S.role]||{};
+    var fits=function(b){ var w=BLOCKS[b]&&BLOCKS[b].when; if(p.status==='planned') return b==='lessons'||b==='timesavers'||b==='portfolio'; return w==='any' || w===p.status; };
+    var shown = (p.status==='closed'?['retro','playbook']:[]).concat(p.status==='planned'?['lessons']:[]).concat(lay.filter(fits)).filter(function(b,i,a){return a.indexOf(b)===i && !sess[b];});
+    var more = Object.keys(BLOCKS).filter(function(b){return shown.indexOf(b)<0 && fits(b) && b!=='retro' && b!=='playbook';});
+    var head='<h1 class="big">'+esc(p.name)+'</h1><p class="sub">'+esc(p.type)+' · '+(p.status==='live'?'live · week '+p.week+' · '+esc(p.phase):p.status==='planned'?'planned':'closed '+p.year)+' · screen for '+esc(role().name)+'</p>';
+    return head+'<div class="blocks">'+shown.map(function(b,i){return blockHTML(b,p,i+1);}).join('')+'</div>'+
+      (more.length?'<div class="tray"><div class="label" style="font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">More blocks</div><div class="chips">'+more.map(function(b){return '<button data-do="open:'+b+'">'+esc(BLOCKS[b].title)+'</button>';}).join('')+'</div></div>':'');
+  }
+
+  function viewHarness(){
+    var v=ver(), p=plan(), sc=score(v.v);
+    var sig=S.events.filter(function(e){return e.v===v.v;}).length;
+    var loop='<div class="loop">'+
+      '<div class="pt p"><b>Plan</b><p>'+(p?'Signal found: '+esc(p.why):'Watching '+sig+' actions in v'+v.v+'. No change proposed yet.')+'</p></div>'+
+      '<div class="pt b"><b>Build</b><p>Last change: '+esc(v.changes.join(' · '))+'</p></div>'+
+      '<div class="pt i"><b>Instrument</b><p>Useful actions in v'+v.v+': '+(sc===null?'no taps yet':Math.round(sc*100)+'%')+(v.prevScore!=null?' · before: '+Math.round(v.prevScore*100)+'%':'')+'. A drop sends the loop back to the parent version.</p></div></div>';
+    var list=S.versions.slice().reverse().map(function(x){
+      var s=score(x.v), shownScore = s!==null ? Math.round(s*100)+'% (live)' : (x.score!=null? Math.round(x.score*100)+'%':'');
+      return '<div class="ver'+(x.v===S.cur?' cur':'')+(x.rolledBack?' rb':'')+'"><span class="v">v'+x.v+'</span><div><span class="when">'+esc(x.when)+' · approved by '+esc(x.by)+(x.rolledBack?' · rolled back':'')+'</span><ul>'+x.changes.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div><div style="text-align:right"><div style="font:700 12px/1 var(--mono);color:var(--soft);margin-bottom:6px">'+shownScore+'</div>'+
+        (x.v===S.cur?'<span class="chip">current</span>':(x.rolledBack?'':'<button data-do="rollback:'+x.v+'">Roll back to v'+x.v+'</button>'))+'</div></div>';
+    }).join('');
+    var lays='<div class="layouts">'+S.roles.map(function(r){ var l=v.layout[r.id]; return '<div class="lay"><b>'+esc(r.name)+'</b>'+(l?'<ol>'+l.map(function(b){return '<li>'+esc(BLOCKS[b].title)+'</li>';}).join('')+'</ol>':'<span style="color:var(--faint)">basic screen · still learning</span>')+'</div>'; }).join('')+'</div>';
+    return '<h1 class="big">The harness</h1><p class="sub">Every change is a saved version. Every version can be rolled back. People approve changes. The harness never changes who can see what.</p>'+loop+
+      '<h2>Screens by role <span>part of v'+v.v+'</span></h2>'+lays+
+      '<h2>What it reads from each photo <span>part of v'+v.v+'</span></h2><div class="chips">'+v.fields.map(function(f){return '<span class="chip">'+esc(f)+'</span>';}).join('')+'</div>'+
+      '<h2>Versions <span>newest first · snapshots, never edited</span></h2><div>'+list+'</div>';
+  }
+
+  /* ---------- modal ---------- */
+  function openModal(html, after){ var m=document.getElementById('modal'); m.innerHTML='<div class="modal" id="mbg"><div class="box">'+html+'</div></div>'; document.getElementById('mbg').onclick=function(e){ if(e.target.id==='mbg') closeModal(); }; if(after) after(); }
+  function closeModal(){ document.getElementById('modal').innerHTML=''; }
+  function openPhoto(id){
+    var p=S.photos.filter(function(x){return x.id===id;})[0]; if(!p) return;
+    var fields=ver().fields;
+    var rows=[['photo',p.id],['project',proj(p.project).name],['unit',p.unit||'site'],['trade',p.trade],['week',p.week]];
+    if(fields.indexOf('wall')>=0 && p.wall) rows.push(['wall',p.wall]);
+    if(fields.indexOf('issue')>=0) rows.push(['issue',p.water?'water stain':(p.hazard?p.hazard:'none')]);
+    else if(p.hazard) rows.push(['flag',p.hazard]);
+    openModal('<div class="ph k-'+p.trade+'"></div><dl>'+rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>';}).join('')+'</dl><p style="margin:0;font-size:12px;color:var(--faint)">Read once by harness v'+S.cur+'. Fields come from the current version.</p><div class="bar">'+((p.water||p.hazard)&&!S.reviewed[p.id]?'<button class="primary" id="mrev">Mark as checked</button>':'')+'<button id="mclose">Close</button></div>', function(){
+      document.getElementById('mclose').onclick=closeModal;
+      var r=document.getElementById('mrev'); if(r) r.onclick=function(){ S.reviewed[p.id]=true; log('act','needs'); closeModal(); render(); toast('Marked as checked'); };
+    });
+  }
+
+  /* ---------- actions ---------- */
+  function doAction(a, blockEl){
+    var parts=a.split(':'), k=parts[0];
+    if(blockEl) log('use', blockEl);
+    if(k==='newproject'){ var n=S.projects.filter(function(p){return p.status==='planned';}).length; var id='towerc'+(n||''); S.projects.push({id:id,name:'Tower C'+(n?' '+(n+1):''),type:'Residential tower',year:2027,status:'planned',cover:'concrete'}); log('act',null); save(); location.hash='#/p/'+id; toast('New project starts with '+lessonsCount()+' lessons'); return; }
+    if(k==='take'){ var u=+parts[1]; S.photos.push({id:'IMG_'+(3000+S.photos.length), project:'towerb', unit:u, trade:'plumbing', wall:'open', week:14}); log('act','needs'); save(); render(); toast('Photo filed: unit '+u+' · plumbing · open wall'); return; }
+    if(k==='look'){ var f=parts[1], ph=livePhotos().filter(function(p){return f==='water'?p.water:p.hazard;}).filter(function(p){return !S.reviewed[p.id];})[0]; if(ph) openPhoto(ph.id); return; }
+    if(k==='send'){ S.reviewed.pack=true; log('act','needs'); save(); render(); toast('Owner photo pack sent'); return; }
+    if(k==='unit'){ S.q='u'+parts[1]; if(parts[1]!=='204'){ var up=livePhotos().filter(function(p){return p.unit===+parts[1];})[0]; if(up) openPhoto(up.id); return; } save(); render(); return; }
+    if(k==='ask'){ S.q=parts[1]; save(); render(); return; }
+    if(k==='fb'){ S.fb=S.fb||{}; S.fb[parts[1]+'|'+parts[2]]=parts[3]; log(parts[3]==='up'?'fb_up':'fb_down','ask',{q:parts[1]}); render(); return; }
+    if(k==='opp'){ var o=S.opps.filter(function(x){return x.id===parts[1];})[0]; if(o){ o.status='on'; var nv=build({apply:function(v){ v.changes=['Turned on: '+o.title+' ('+o.kind+')']; }}); log('act','timesavers'); toast('Turned on. Saved harness v'+nv.v); render(); } return; }
+    if(k==='hide'){ S.hidden[S.role]=S.hidden[S.role]||{}; S.hidden[S.role][parts[1]]=true; log('hide',parts[1]); save(); render(); return; }
+    if(k==='open'){ S.hidden[S.role]=S.hidden[S.role]||{}; delete S.hidden[S.role][parts[1]]; var lay=layoutFor(S.role); if(lay.indexOf(parts[1])<0){ S.extra=S.extra||{}; } log('use',parts[1]); openModal('<h3 style="margin:0">'+esc(BLOCKS[parts[1]].title)+'</h3>'+BLOCKS[parts[1]].render(proj(route().id)||proj('towerb'))+'<div class="bar"><button id="mclose">Close</button></div>',function(){ document.getElementById('mclose').onclick=function(){ closeModal(); render(); }; }); return; }
+    if(k==='rollback'){ var to=+parts[1], from=S.cur; S.versions.forEach(function(x){ if(x.v===from) x.rolledBack=true; }); S.cur=to; log('rollback',null,{from:from}); save(); render(); toast('Rolled back to v'+to+'. v'+from+' kept as a snapshot.'); return; }
+  }
+
+  document.addEventListener('click', function(e){
+    var ph=e.target.closest('[data-photo]'); if(ph && ph.dataset.photo && !e.target.closest('.modal')){ var bl=e.target.closest('[data-block]'); if(bl) log('use',bl.dataset.block); openPhoto(ph.dataset.photo); return; }
+    var d=e.target.closest('[data-do]'); if(!d) return;
+    var inBlock=e.target.closest('[data-block]');
+    var a=d.dataset.do;
+    doAction(a, inBlock && a.indexOf('hide:')!==0 ? inBlock.dataset.block : null);
+  });
+
+  function render(){
+    var r=route(); renderBar(r); renderLearned(r);
+    var v=document.getElementById('view');
+    if(r.name==='p') v.innerHTML=viewProject(r.id);
+    else if(r.name==='harness') v.innerHTML=viewHarness();
+    else v.innerHTML=viewHome();
+  }
+  window.addEventListener('hashchange', render);
+  render();
+})();
+</script>
+</body>
+</html>
