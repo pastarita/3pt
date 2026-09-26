@@ -6,8 +6,6 @@
  *    GET /sim/projects/p18?week=402      one project: phases, counts, latest photos
  *  Photos are paths under /media-pool/ (served by the hub, data/mock/media-pool/ in the repo).
  *  Every value is AUTHORED example data except the building records and the photos. */
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
 
 type Cfg = Record<string, string | number>;
 interface Sim {
@@ -19,13 +17,18 @@ interface Sim {
   statsUpTo(p: any, w: number): Record<string, number>; hoursSavedUpTo(w: number): number;
 }
 
-export const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
+/** Repo root, for Node only. A Worker never calls this: its bundle loads the model scripts up front. */
+export function repo(): string {
+  return new URL('../../../../', import.meta.url).pathname;
+}
 let base: Sim | null = null;
 async function model(): Promise<Sim> {
   if (!base) {
     const g = globalThis as any;
-    if (!g.MEDIA) { try { await import(join(REPO, 'data', 'mock', 'media-pool', 'media-pool.js')); } catch { g.MEDIA = {}; } }
-    await import(join(REPO, 'hub', 'site', 'sim-data.js'));
+    if (!g.SIM) {
+      if (!g.MEDIA) { try { await import(repo() + 'data/mock/media-pool/media-pool.js'); } catch { g.MEDIA = {}; } }
+      await import(repo() + 'hub/site/sim-data.js');
+    }
     base = g.SIM as Sim;
   }
   return base;

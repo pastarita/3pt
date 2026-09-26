@@ -225,6 +225,9 @@ importers:
 
   harness/apps/worker:
     dependencies:
+      '@3pt/api':
+        specifier: workspace:*
+        version: link:../api
       '@3pt/battery-atlas':
         specifier: workspace:*
         version: link:../../../infra/batteries/atlas

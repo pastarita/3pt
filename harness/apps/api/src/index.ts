@@ -1,25 +1,15 @@
-/** @3pt/api — HTTP for the surfaces. node:http today; same handler shape as a Worker fetch(). */
+/** @3pt/api — HTTP for the surfaces. node:http here; the same handle() runs in the Cloudflare Worker
+ *  (harness/apps/worker/src/edge.ts), which imports it from ./handler.js. */
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join, normalize } from 'node:path';
-import { COLLECTIONS, memoryStore, seedPolicy } from '@3pt/core';
-import { handleSim, REPO } from './sim.js';
-import { handleApp, persistTo } from './app.js';
-
-const store = memoryStore();
-await store.insert(COLLECTIONS.policies, seedPolicy());
-
-export async function handle(url: URL, method = 'GET', body: Record<string, unknown> = {}): Promise<{ status: number; body: unknown }> {
-  const app = await handleApp(url, method, body); if (app) return app;   /* screens composed by the harness, see app.ts */
-  const sim = await handleSim(url); if (sim) return sim;                 /* the demo firm, see sim.ts */
-  if (url.pathname === '/health') return { status: 200, body: { ok: true, at: new Date().toISOString() } };
-  if (url.pathname === '/policies/latest') return { status: 200, body: await store.latest(COLLECTIONS.policies, 'version' as never) };
-  if (url.pathname === '/checkpoints') return { status: 200, body: await store.find(COLLECTIONS.checkpoints, {}) };
-  return { status: 404, body: { error: 'not found' } };
-}
+import { repo } from './sim.js';
+import { handle } from './handler.js';
+import { persistTo } from './app.js';
+export { handle };
 
 /* demo photos: data/mock/media-pool, read-only, jpg only */
-const POOL = join(REPO, 'data', 'mock', 'media-pool');
+const POOL = join(repo(), 'data', 'mock', 'media-pool');
 async function media(path: string): Promise<Buffer | null> {
   const rel = normalize(path.replace(/^\/media-pool\//, ''));
   if (rel.startsWith('..') || !/^[a-z]+\/[a-z]+-\d+\.jpg$/.test(rel)) return null;

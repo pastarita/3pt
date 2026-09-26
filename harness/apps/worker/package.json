@@ -11,8 +11,9 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "deploy": "wrangler deploy"
   },
-  "dependencies": { "@3pt/core": "workspace:*", "@3pt/media": "workspace:*", "@3pt/battery-atlas": "workspace:*" },
+  "dependencies": { "@3pt/core": "workspace:*", "@3pt/media": "workspace:*", "@3pt/battery-atlas": "workspace:*", "@3pt/api": "workspace:*" },
   "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
 }
