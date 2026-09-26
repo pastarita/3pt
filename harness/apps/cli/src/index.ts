@@ -8,7 +8,8 @@ import { buildStage } from '@3pt/build';
 import { instrumentStage } from '@3pt/instrument';
 import { improve } from '@3pt/improver';
 import { headSha, repoRoot, showAt, snapshot } from '@3pt/battery-repo';
-import { atlasStore, atlasUri } from '@3pt/battery-atlas';
+import { atlasStore, atlasUri, loadKeys } from '@3pt/battery-atlas';
+import { keysCommand } from './keys.js';
 import { fileStore } from './store.js';
 
 const argv = process.argv.slice(2);
@@ -16,14 +17,15 @@ const gitSnapshot = argv.includes('--git');           // opt-in: commits land on
 const [cmd = 'help', arg] = argv.filter(a => !a.startsWith('--'));
 
 const root = repoRoot() ?? process.cwd();
-// Key injector: .env (if present) → process.env → readSecrets() → ctx.secrets. Values already in the
-// shell win over .env, so CI and the box can inject their own. Stages never read process.env.
-if (existsSync(join(root, '.env'))) process.loadEnvFile(join(root, '.env'));
-const secrets = readSecrets(process.env);
+// Key injector: Atlas vault ← macOS Keychain ← host env, merged once by loadKeys(), then
+// readSecrets() → ctx.secrets. No .env. Stages never read process.env.
+if (cmd === 'keys') { await keysCommand(argv.slice(1)); process.exit(0); }
+const keys = await loadKeys((l) => console.log(l));
+const secrets = readSecrets(keys);
 const POLICIES = 'harness/policies';
 const CHECKPOINTS = 'harness/checkpoints';
-const uri = atlasUri();
-const store = uri ? await atlasStore(uri, process.env.ATLAS_DB) : fileStore(join(root, '.3pt/store'));   // the battery is injected here, at the edge
+const uri = atlasUri(keys);
+const store = uri ? await atlasStore(uri, keys.ATLAS_DB) : fileStore(join(root, '.3pt/store'));   // the battery is injected here, at the edge
 const gitSha = process.env.GIT_SHA ?? headSha(root);  // the improver records the code sha the iteration ran on
 
 /** Highest n among `<prefix><n><suffix>` files in a directory, or -1. */
@@ -123,5 +125,5 @@ switch (cmd) {
     break;
   }
   case 'rollback': await rollback(arg ?? ''); break;
-  default: console.log('3pt <plan|build|instrument|improve|loop [--git]|rollback cp/<n>>');
+  default: console.log('3pt <plan|build|instrument|improve|loop [--git]|rollback cp/<n>|keys>');
 }

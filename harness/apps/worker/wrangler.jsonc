@@ -5,6 +5,8 @@
   "main": "src/edge.ts",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  // The vault's native binding cannot load in workerd; the Worker never touches the vault.
+  "alias": { "mongodb-client-encryption": "./src/no-fle.js" },
   "vars": { "PAGES_ORIGIN": "https://3pt-web.pages.dev", "ATLAS_DB": "3pt" }
   // Secret, never in this file: npx wrangler secret put ATLAS_URI
 }

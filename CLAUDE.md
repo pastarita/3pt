@@ -55,7 +55,10 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 
 - Docs in `docs/` are the source of record. Update the doc when you change the thing it describes.
 - Do not publish artifacts or external pages; write files here.
-- Secrets live only in `.env`. Add every new key to `.env.example` with a comment.
+- **No `.env`.** Bootstrap keys (Atlas parts, vault master key) live in the macOS Keychain; API keys live in the Atlas vault
+  (`3pt.secrets`, CSFLE explicit encryption, `infra/batteries/atlas/src/vault.ts`). Edit them at `http://127.0.0.1:8787/keys`
+  or with `3pt keys`. `loadKeys()` merges vault ← Keychain ← host env; `readSecrets()` injects `ctx.secrets`. List every new
+  key name in `.env.example` (names only) and in `SECRET_NAMES` or `KEYCHAIN_NAMES`.
 - Prefer MongoDB Agent Skills and the MongoDB MCP Server for anything touching Atlas.
 - Commit prefixes: `plan:`, `build:`, `instrument:`, `media:`, `app:`, `docs:`, `chore:`, `hub:`, `ci:`. Branches are `lane/<slug>`; every PR opens with a description from `docs/pr-descriptions/` (see the herald).
 - Keep `main` installable. If you break the install loop, fix it before anything else.
@@ -79,14 +82,14 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 
 - **One cluster, many doors.** State lives in the Sandbox org's `Cluster0` (M10, AWS us-west-1). Ids, screens and
   limits: `docs/17-atlas-setup-dossier.md` §7. Nothing judged runs against any other cluster.
-- **`.env` holds parts, not a string.** `ATLAS_HOST`, `ATLAS_DBUSER`, `ATLAS_DBPASS`, `ATLAS_DB`; leave `ATLAS_URI`
+- **The Keychain holds parts, not a string.** `ATLAS_HOST`, `ATLAS_DBUSER`, `ATLAS_DBPASS`, `ATLAS_DB`; leave `ATLAS_URI`
   blank. `atlasUri()` in `@3pt/battery-atlas` composes and URL-encodes the connection string, and treats any value
   containing `<` as unset. Every app gets its store through it: `atlasStore()` when a connection exists, a file or
   memory store otherwise. Stages never see a URI.
 - **No inline comment after a real value.** `KEY=value   # note` is fine in `.env.example`; in `.env` the comment
   becomes part of the value for every loader except the shell.
 - **The Worker gets the string as a Cloudflare secret, never a file:** `make worker-secret` pipes `atlasUri()` into
-  `wrangler secret put ATLAS_URI` from `harness/apps/worker`. Its `/health` says `"store":"atlas"` when it took.
+  `wrangler secret put ATLAS_URI` from `harness/apps/worker` (it reads the Keychain). Its `/health` says `"store":"atlas"` when it took.
 - **Provision is idempotent:** `pnpm --filter @3pt/battery-atlas run provision` ensures the collections in `COLLECTIONS`,
   their indexes, and `transcripts_vec`. Run it after any change to `COLLECTIONS` or `INDEXES`.
 - **Doors for people and agents:** `infra/batteries/atlas/sandbox.sh status|uri|scale|autoscale` (Atlas CLI) and the

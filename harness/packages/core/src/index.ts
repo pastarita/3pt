@@ -25,6 +25,7 @@ export const COLLECTIONS = {
   harness_versions: 'harness_versions',  // every harness version: changes, why, layouts by role, fields
   app_state: 'app_state',                // snapshot of the app loop after each change (versions, current, choices)
   app_events: 'app_events',              // every tap the app reported: the loop's evidence
+  secrets: 'secrets',                    // API keys, value encrypted client-side (CSFLE); see @3pt/battery-atlas vault.ts
 } as const;
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
 
@@ -138,18 +139,21 @@ export interface Secrets {
   readonly github?: string;        // GITHUB_TOKEN: repo battery
 }
 
-/** The one place a secret name maps to its env var. Blank and `<placeholder>` values count as missing. */
+/** The one place a secret maps to its name. The vault and the key page use these names too. */
+export const SECRET_NAMES = {
+  openrouter: 'OPENROUTER_API_KEY',
+  voyage: 'VOYAGE_API_KEY',
+  langsmith: 'LANGSMITH_API_KEY',
+  github: 'GITHUB_TOKEN',
+} as const satisfies Record<keyof Secrets, string>;
+
+/** Pick the secrets out of a merged key record (see loadKeys()). Blank and `<placeholder>` values count as missing. */
 export function readSecrets(env: Readonly<Record<string, string | undefined>>): Secrets {
   const get = (name: string) => {
     const v = env[name]?.trim();
     return v && !v.includes('<') ? v : undefined;
   };
-  return Object.freeze({
-    openrouter: get('OPENROUTER_API_KEY'),
-    voyage: get('VOYAGE_API_KEY'),
-    langsmith: get('LANGSMITH_API_KEY'),
-    github: get('GITHUB_TOKEN'),
-  });
+  return Object.freeze(Object.fromEntries(Object.entries(SECRET_NAMES).map(([k, n]) => [k, get(n)])) as Secrets);
 }
 
 export interface StageContext {

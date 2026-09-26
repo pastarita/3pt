@@ -1,6 +1,8 @@
 /** @3pt/battery-atlas — the only place the Sandbox cluster is named. Stages get a Store; they never see a URI. */
 import { COLLECTIONS, type CollectionName } from '@3pt/core';
 export { atlasStore, type AtlasStore } from './store.js';
+export { keychainGet, keychainSet, keychainDelete, keychainEnv, KEYCHAIN_NAMES, type KeychainName } from './keychain.js';
+export { loadKeys, putSecret, deleteSecret, vaultStatus, vaultRead, VAULT_NAMES, type SecretStatus } from './vault.js';
 
 /** The connection string: ATLAS_URI when it is real, else composed from ATLAS_HOST + ATLAS_DBUSER + ATLAS_DBPASS (+ ATLAS_DB).
  *  A placeholder from .env.example (contains `<`) counts as unset. Returns undefined when nothing usable is set. */
@@ -26,6 +28,7 @@ export const INDEXES: IndexSpec[] = [
   { collection: COLLECTIONS.transcripts,  keys: { assetId: 1 }, unique: true },
   { collection: COLLECTIONS.jobs,         keys: { status: 1, createdAt: 1 } },
   { collection: COLLECTIONS.app_state,    keys: { ts: -1 } },
+  { collection: COLLECTIONS.secrets,      keys: { name: 1 }, unique: true },
 ];
 /** Atlas Vector Search definition over transcripts (Voyage voyage-3, 1024 dims). Created by provision(). */
 export const VECTOR_INDEX = { name: 'transcripts_vec', collection: COLLECTIONS.transcripts, field: 'embedding', dims: 1024, similarity: 'cosine' } as const;

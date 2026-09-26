@@ -12,3 +12,4 @@ packages:
 # Without it `pnpm install` exits 1 with ERR_PNPM_IGNORED_BUILDS on a fresh machine (the box, CI).
 allowBuilds:
   esbuild: true
+  mongodb-client-encryption: true   # native libmongocrypt binding (CSFLE key vault, infra/batteries/atlas/src/vault.ts)

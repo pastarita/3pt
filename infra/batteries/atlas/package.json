@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@3pt/core": "workspace:*",
-    "mongodb": "^6.21.0"
+    "mongodb": "^6.21.0",
+    "mongodb-client-encryption": "6.5.0"
   },
   "devDependencies": {
     "@types/node": "^22.18.0",

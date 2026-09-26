@@ -52,8 +52,8 @@ box-down:
 sandbox:          ## Atlas CLI: project + cluster + user + access list inside the Sandbox org; writes ATLAS_URI
 	@bash infra/batteries/atlas/sandbox.sh up --write
 
-worker-secret:    ## pipe the composed Atlas connection string from .env into the Worker's ATLAS_URI secret (never printed)
-	@set -a; . ./.env; set +a; node --input-type=module -e "import {atlasUri} from './infra/batteries/atlas/dist/index.js'; const u=atlasUri(); if(!u){console.error('no Atlas connection in .env');process.exit(1)} process.stdout.write(u)" | (cd harness/apps/worker && npx wrangler secret put ATLAS_URI)
+worker-secret:    ## pipe the composed Atlas connection string from the Keychain into the Worker's ATLAS_URI secret (never printed)
+	@node --input-type=module -e "import {atlasUri,keychainEnv} from './infra/batteries/atlas/dist/index.js'; const u=atlasUri({...keychainEnv(),...process.env}); if(!u){console.error('no Atlas connection: 3pt keys status');process.exit(1)} process.stdout.write(u)" | (cd harness/apps/worker && npx wrangler secret put ATLAS_URI)
 
 hub-check:
 	@$(MAKE) -C hub check
