@@ -14,6 +14,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TRANSCRIPT = 'brainstorming.md';
@@ -31,6 +32,10 @@ const SESSION = /^##\s+Session\s+(\d+)\s*\((\d{4}-\d{2}-\d{2})\)/;
 const SKIP_DIRS = new Set(['.git', 'node_modules', '_site', '.wrangler', 'build', 'DerivedData', '.build', 'dist', '.install-loop']);
 const TEXT_EXT = new Set(['.md', '.js', '.mjs', '.ts', '.swift', '.py', '.sh', '.html', '.css', '.yml', '.yaml', '.json', '.jsonc', '.txt', '.toml', '']);
 
+// The index describes the TRACKED tree (git ls-files, which includes staged new files). An untracked
+// file in someone else's lane can neither be a doc target nor a source of cites, so the committed tree
+// is always self-consistent and CI never fails on a file that is not there.
+const TRACKED = new Set(execFileSync('git', ['ls-files', '-z'], { cwd: REPO }).toString('utf8').split('\0').filter(Boolean));
 const errs = [], warns = [];
 const err = (m) => errs.push(m);
 const warn = (m) => warns.push(m);
@@ -133,7 +138,7 @@ const fileText = new Map();
 const readRepoFile = (p) => { if (!fileText.has(p)) fileText.set(p, readFileSync(join(REPO, p), 'utf8')); return fileText.get(p); };
 const resolveTarget = (seg, t, kind) => {
   if (/^[a-z]+:|^\/|\.\./.test(t.path)) { err(`${seg.id} (line ${t.line}): ${kind} path must be repo-relative: ${t.path}`); return; }
-  if (!existsSync(join(REPO, t.path))) { err(`${seg.id} (line ${t.line}): ${kind} target missing: ${t.path}`); return; }
+  if (!TRACKED.has(t.path)) { err(`${seg.id} (line ${t.line}): ${kind} target is not a tracked file (git add it first): ${t.path}`); return; }
   if (!t.anchor) return;
   const text = readRepoFile(t.path);
   if (!headings.has(t.path)) headings.set(t.path, [...text.matchAll(/^#{1,6}\s+(.*)$/gm)].map(m => ({ slug: slug(m[1]), text: m[1] })));
@@ -176,7 +181,7 @@ const cites = [];  // {file, line, seg, idea}
     const rel = relative(REPO, p);
     let st; try { st = statSync(p); } catch { continue; }
     if (st.isDirectory()) { walk(p); continue; }
-    if (rel === TRANSCRIPT || rel === OUT_MD || rel === OUT_JS || !TEXT_EXT.has(extname(e))) continue;
+    if (rel === TRANSCRIPT || rel === OUT_MD || rel === OUT_JS || !TEXT_EXT.has(extname(e)) || !TRACKED.has(rel)) continue;
     if (st.size > 2_000_000) continue;
     let text = readFileSync(p, 'utf8');
     if (!text.includes('@s') || text.includes('prov:ignore')) continue;

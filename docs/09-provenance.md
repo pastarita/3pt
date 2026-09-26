@@ -90,7 +90,9 @@ The token is `@s<session>.<nn>` with an optional `:<slug>`. The scanner looks in
 file in the repo except the transcript and the generated outputs, so the comment syntax does not
 matter. In Markdown, a token inside a code fence or a backtick span is a quotation and is ignored,
 which is how this document can show examples without claiming them. A file containing the literal
-`prov:ignore` anywhere is skipped entirely (test fixtures). Cite the segment where the idea was born unless a later `grow` or `pivot` is what the
+`prov:ignore` anywhere is skipped entirely (test fixtures). **Only git-tracked files count**, both as
+`doc` targets and as sources of cites: `git add` a new file before citing from it. An untracked file in
+someone else's lane is invisible to the tool, so the committed tree always passes its own check. Cite the segment where the idea was born unless a later `grow` or `pivot` is what the
 text actually reflects.
 
 ## The loop
