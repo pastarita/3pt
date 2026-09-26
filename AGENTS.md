@@ -38,7 +38,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
 | Strands: what we build on, the capability ledger, the handles we speak, what is struck | `docs/12-strands-archaeology.md` |
 | Strands, drawn: ten Mermaid diagrams of its systems, for learning | `docs/13-strands-diagrams.md` |
-| Strands, answered: how to configure it, fine-tune it, why it is open to self-improvement, the media workflow; every claim pinned to docs, code, Strands | `docs/16-strands-questions.md` (hub leaf `strands-journey.html`) |
+| Strands, answered: how to configure it, fine-tune it, why it is open to self-improvement, the media workflow; every claim pinned to docs, code, Strands | `docs/18-strands-questions.md` (hub leaf `strands-journey.html`) |
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
 | How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -130,9 +130,9 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   not yet compiled: disk full, package excluded in `pnpm-workspace.yaml`). Archaeology with 21 cited
   sources and a graded ledger: `docs/12-strands-archaeology.md`; handles in `harness/packages/strands/topology.json`.
   Struck: own loop, own router, own sessions, `HarnessAdapter` as the harness.
-- 2026-09-26 14:50 ET: **Strands questions answered with pointers.** `docs/16-strands-questions.md` answers configure /
+- 2026-09-26 14:50 ET: **Strands questions answered with pointers.** `docs/18-strands-questions.md` answers configure /
   fine-tune / self-improve / media workflow and pins every claim to a doc heading, a code line range, or a Strands source;
   the hub leaf `strands-journey.html` renders it from the register `hub/site/strands-data.js` (tallies DERIVED). The Viewer
   now gives every heading a slug id (`view.html?f=<doc>#<slug>`, same rule as `scripts/prov.mjs`) and `check-view.mjs`
-  fails on any anchor that does not land. Eight gaps listed in docs/16 §5 (no `routes` on `Policy`, `AtlasStorage`
+  fails on any anchor that does not land. Eight gaps listed in docs/18 §5 (no `routes` on `Policy`, `AtlasStorage`
   uncalled, `PolicyFormula`/`harness/evals` unwritten, media tools not `tool()`s). Built on branch `lane/strands-journey`.

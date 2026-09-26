@@ -1,5 +1,5 @@
 /* 3PT · Strands questions register — the pointer index behind strands-journey.html.
-   Source of record: docs/16-strands-questions.md (written together on 2026-09-26; keep in step).
+   Source of record: docs/18-strands-questions.md (written together on 2026-09-26; keep in step).
    Every pointer is [label, href, kind]. kind: doc (view.html?f=…#heading-slug), leaf (x.html#id),
    code (GitHub blob with a line range, symbol named in the label), strands (upstream URL), seg
    (a brainstorming segment). Tallies on the leaf are DERIVED from this file, never typed.
@@ -11,7 +11,7 @@
   var D12 = 'view.html?f=docs/12-strands-archaeology.md#', D13 = 'view.html?f=docs/13-strands-diagrams.md#',
       D00 = 'view.html?f=docs/00-vision.md#', D06 = 'view.html?f=docs/06-goal-and-use-case.md#',
       D07 = 'view.html?f=docs/07-assessment-and-measurement.md#', D10 = 'view.html?f=docs/10-architecture.md#',
-      D03 = 'view.html?f=docs/03-workflow.md#', D15 = 'view.html?f=docs/16-strands-questions.md#';
+      D03 = 'view.html?f=docs/03-workflow.md#', D15 = 'view.html?f=docs/18-strands-questions.md#';
   var S = 'https://github.com/strands-agents/harness-sdk', SD = 'https://strandsagents.com/docs/api/typescript/', SB = 'https://strandsagents.com/blog/';
   var STR = GH+'harness/packages/strands/src/index.ts#L', CORE = GH+'harness/packages/core/src/index.ts#L';
   function doc(l,h){return [l,h,'doc'];} function code(l,h){return [l,h,'code'];} function st(l,h){return [l,h,'strands'];} function leaf(l,h){return [l,h,'leaf'];}

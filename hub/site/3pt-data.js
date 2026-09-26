@@ -62,7 +62,7 @@
       epigram:'Build on Strands, rebuild nothing: source register, capability ledger, strike list, and the handles we speak.' },
     { id:'DW', slug:'strands-diagrams', name:'Strands, drawn',    verb:'Learning',   cluster:'build', temp:'hot', doc:'docs/13-strands-diagrams.md',
       epigram:'Ten Mermaid diagrams of the Strands systems we build on: packages, layers, the loop and its hooks, stop reasons, routing, persistence, control, multi-agent, evals and the optimizer, the ten seams.' },
-    { id:'DJ', slug:'strands-questions', name:'Strands questions', verb:'Answering', cluster:'build', temp:'hot', doc:'docs/16-strands-questions.md',
+    { id:'DJ', slug:'strands-questions', name:'Strands questions', verb:'Answering', cluster:'build', temp:'hot', doc:'docs/18-strands-questions.md',
       epigram:'Four questions of the Strands basis (configure, fine-tune, self-improve, media workflow), each answered and pinned to the docs, the code, and Strands; the gaps the pointers expose.' },
     { id:'D4', slug:'resources',      name:'Resources & credits',  verb:'Provisioning', cluster:'build', temp:'warm', doc:'docs/04-resources.md',
       epigram:'Every partner, credit, MCP, and which 3PT slot it fills.' },

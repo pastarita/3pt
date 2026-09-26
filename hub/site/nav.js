@@ -88,7 +88,7 @@
     'architecture-doc': 'view.html?f=docs/10-architecture.md',
     'strands':        'view.html?f=docs/12-strands-archaeology.md',
     'strands-diagrams': 'view.html?f=docs/13-strands-diagrams.md',
-    'strands-questions': 'view.html?f=docs/16-strands-questions.md',
+    'strands-questions': 'view.html?f=docs/18-strands-questions.md',
     'resources':      'view.html?f=docs/04-resources.md',
     'glossary':       'view.html?f=docs/glossary.md',
     'charter':        'view.html?f=README.md',

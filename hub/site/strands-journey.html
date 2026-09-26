@@ -10,7 +10,7 @@
 <script src="./strands-data.js"></script>
 <style>
   /* A journey: four stations, one per question. Each station = the answer in a breath, a figure, a pointer table
-     rendered from strands-data.js (DERIVED). Source of record: docs/16-strands-questions.md. Tokens from 3pt.css only. */
+     rendered from strands-data.js (DERIVED). Source of record: docs/18-strands-questions.md. Tokens from 3pt.css only. */
   .fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 10px;margin:16px 0}
   .fig h2{margin:0 0 4px;font-size:15px}.fig h2 small{font:700 10px/1 var(--mono);letter-spacing:.12em;color:var(--faint);margin-right:8px;text-transform:uppercase}
   .fig .sk{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
@@ -51,7 +51,7 @@
 <script src="./nav.js"></script>
 <div class="page">
   <header class="top">
-    <p class="eyebrow">Build · hot · a journey through four questions · pointers DERIVED from <code>strands-data.js</code> · record in <code>docs/16</code></p>
+    <p class="eyebrow">Build · hot · a journey through four questions · pointers DERIVED from <code>strands-data.js</code> · record in <code>docs/18</code></p>
     <h1>Strands, answered</h1>
     <p class="lede">Four questions asked of the basis we build on, each answered in a breath and pinned to the docs, the code, and Strands itself. The pointers are the page.</p>
     <p class="legend"><span class="chip doc">doc §</span><span class="chip leaf">leaf #</span><span class="chip code">code L–L</span><span class="chip strands">Strands source</span><span class="chip seg">s1.02 segment</span> <span id="legend-note"></span></p>
@@ -205,7 +205,7 @@
     var host = document.querySelector('[data-q="'+q.id+'"]'); if (!host) return;
     host.innerHTML = '<table><thead><tr>'+q.cols.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr></thead><tbody>'
       + q.rows.map(function(r){ return '<tr><td>'+esc(r[0])+'</td><td>'+r[1].map(chip).join('')+'</td><td>'+r[2].map(chip).join('')+'</td><td>'+r[3].map(chip).join('')+'</td><td class="x">'+esc(r[4])+'</td></tr>'; }).join('')
-      + '<tr><td>Spoken</td><td colspan="3">'+q.segs.map(segChip).join('')+'</td><td class="x"><a href="./'+q.doc+'">read the section in docs/16 →</a></td></tr></tbody></table>';
+      + '<tr><td>Spoken</td><td colspan="3">'+q.segs.map(segChip).join('')+'</td><td class="x"><a href="./'+q.doc+'">read the section in docs/18 →</a></td></tr></tbody></table>';
     var cap = document.querySelector('[data-cap="'+q.id+'"]'); var n = tally.perQ[i];
     if (cap) cap.textContent = n+' pointers over '+q.rows.length+' rows, '+q.segs.length+' segments. Doc chips land on the heading; code chips open the line range on GitHub.';
     var m = document.querySelector('#map-'+q.id+' [data-cnt]'); if (m) m.textContent = n+' pointers';

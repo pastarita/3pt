@@ -43,7 +43,7 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `docs/10-architecture.md` | The polyglot monorepo: three lanes, Turborepo, batteries, eight Mermaid perspectives, extension recipes |
 | `docs/12-strands-archaeology.md` | The harness is built on AWS Strands: source register, capability ledger, strike list, lexicon of handles |
 | `docs/13-strands-diagrams.md` | Ten Mermaid diagrams of the Strands systems, for learning |
-| `docs/16-strands-questions.md` | Strands, answered: configure, fine-tune, self-improve, media workflow; every claim pinned to a doc heading, a code line range, or a Strands source; rendered by the hub leaf `strands-journey.html` from `hub/site/strands-data.js` |
+| `docs/18-strands-questions.md` | Strands, answered: configure, fine-tune, self-improve, media workflow; every claim pinned to a doc heading, a code line range, or a Strands source; rendered by the hub leaf `strands-journey.html` from `hub/site/strands-data.js` |
 | `docs/glossary.md` | Terms |
 | `ui/` | Surfaces: PWA, web, macOS (Swift). Inspectors over harness state. See `ui/README.md` |
 | `harness/` | The running pipeline: core, plan, build, instrument, media, cli, api, worker, policies, checkpoints. See `harness/README.md` |
