@@ -1,0 +1,53 @@
+{
+  "$comment": "3PT · deploy targets. One record per deployable; the resolver is scripts/target.mjs (list | resolve <name> | matrix). status: live | planned | local. Never put a secret value here, only the names of the secrets a deploy needs. Source of record for the topology is docs/13-ci-and-deployment.md.",
+  "targets": {
+    "hub": {
+      "kind": "pages", "provider": "cloudflare", "project": "3pt", "status": "live",
+      "source": "hub/_site", "build": "make -C hub check",
+      "deploy": "npx wrangler pages deploy _site --project-name=3pt --branch=main", "cwd": "hub",
+      "url": "https://3pt.pages.dev", "preview": "https://<branch>.3pt.pages.dev", "health": "https://3pt.pages.dev/",
+      "gated": true, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"], "workflow": ".github/workflows/deploy.yml"
+    },
+    "web": {
+      "kind": "pages", "provider": "cloudflare", "project": "3pt-web", "status": "planned",
+      "source": "ui/apps/web/dist", "build": "pnpm turbo run build --filter=@3pt/web",
+      "deploy": "npx wrangler pages deploy ui/apps/web/dist --project-name=3pt-web --branch=main", "cwd": ".",
+      "url": "https://3pt-web.pages.dev", "preview": "https://<branch>.3pt-web.pages.dev", "health": "https://3pt-web.pages.dev/",
+      "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"], "fallback": "vercel", "workflow": ".github/workflows/ci.yml"
+    },
+    "pwa": {
+      "kind": "pages", "provider": "cloudflare", "project": "3pt-web", "status": "planned",
+      "source": "ui/apps/pwa/dist", "build": "pnpm turbo run build --filter=@3pt/pwa",
+      "deploy": "decide with web: same project under /app, or project 3pt-app", "cwd": ".",
+      "url": "https://3pt-web.pages.dev/app", "health": "https://3pt-web.pages.dev/app/manifest.webmanifest",
+      "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"], "workflow": ".github/workflows/ci.yml"
+    },
+    "harness": {
+      "kind": "worker", "provider": "cloudflare", "project": "3pt-harness", "status": "planned",
+      "source": "harness/apps/worker", "build": "pnpm turbo run build --filter=@3pt/worker --filter=@3pt/api",
+      "deploy": "npx wrangler deploy", "cwd": "harness/apps/worker",
+      "url": "https://3pt-harness.<account>.workers.dev", "health": "https://3pt-harness.<account>.workers.dev/health",
+      "entrypoints": { "fetch": "@3pt/api", "scheduled": "@3pt/worker tick()" }, "compat": { "flags": ["nodejs_compat"], "date": ">=2024-09-23" },
+      "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "ATLAS_URI"], "workflow": ".github/workflows/ci.yml",
+      "confirm": "MongoDB driver on Workers: smoke-test before the video"
+    },
+    "macos": {
+      "kind": "app", "provider": "install-loop", "status": "local",
+      "source": "ui/apps/macos", "build": "xcodegen generate && xcodebuild -scheme 3PT -configuration Release build",
+      "deploy": "bash scripts/install-loop.sh", "cwd": ".",
+      "url": "/Applications/3PT.app", "health": "pgrep -fl 3PT", "secrets": []
+    },
+    "atlas": {
+      "kind": "state", "provider": "mongodb-atlas", "project": "<sandbox project id>", "status": "planned",
+      "databases": { "prod": "3pt", "ci": "3pt_ci" }, "region": "AWS us-east-1 (proposed)", "tier": "TO CONFIRM at creation",
+      "deploy": "pnpm turbo run provision --filter=@3pt/battery-atlas", "cwd": ".",
+      "health": "atlas clusters describe <cluster> --projectId $MONGODB_ATLAS_PROJECT_ID",
+      "secrets": ["ATLAS_URI", "MONGODB_ATLAS_CLIENT_ID", "MONGODB_ATLAS_CLIENT_SECRET", "MONGODB_ATLAS_PROJECT_ID"], "workflow": ".github/workflows/ci.yml"
+    },
+    "tracing": {
+      "kind": "observability", "provider": "langsmith", "project": "3pt", "status": "planned",
+      "deploy": "pnpm turbo run provision --filter=@3pt/battery-tracing", "cwd": ".",
+      "url": "https://smith.langchain.com", "secrets": ["LANGSMITH_API_KEY"]
+    }
+  }
+}

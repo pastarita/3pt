@@ -1,0 +1,38 @@
+# 3PT · the herald: the first gate on every PR, before any build (docs/13-ci-and-deployment.md §6).
+# Three checks, each named in the log: the branch is lane/<slug>, every commit subject carries an
+# allowed prefix, and the PR body grades B or better under scripts/pr-validate.mjs.
+name: Herald
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  herald:
+    name: Branch · prefixes · body
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Branch is lane/<slug>
+        env: { HEAD_REF: ${{ github.head_ref }} }
+        run: |
+          if [[ "$HEAD_REF" =~ ^lane/[a-z0-9]([a-z0-9-]{0,22}[a-z0-9])?$ ]]; then echo "ok: $HEAD_REF";
+          else echo "::error::branch must be lane/<slug> (lowercase kebab, ≤24 chars), got '$HEAD_REF' — see docs/11-worktrees.md"; exit 1; fi
+      - name: Commit subjects carry an allowed prefix
+        env: { BASE: ${{ github.event.pull_request.base.sha }}, HEAD: ${{ github.event.pull_request.head.sha }} }
+        run: |
+          bad=0
+          while IFS= read -r s; do
+            if [[ "$s" =~ ^(plan|build|instrument|media|app|docs|chore|hub|ci)(\([a-z0-9/_.-]+\))?:\ .+ ]] || [[ "$s" =~ ^Merge\  ]]; then echo "ok   $s"; else echo "::error::bad prefix: $s"; bad=1; fi
+          done < <(git log --format=%s "$BASE..$HEAD")
+          exit $bad
+      - name: PR body grades B or better
+        env: { BODY: ${{ github.event.pull_request.body }} }
+        run: printf '%s' "$BODY" | node scripts/pr-validate.mjs --stdin

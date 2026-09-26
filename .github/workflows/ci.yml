@@ -1,0 +1,48 @@
+# 3PT · monorepo check: what `make check` runs on a machine, on every PR and push to main
+# (docs/13-ci-and-deployment.md §1). The workspace build is skipped with a notice until the
+# monorepo skeleton (package.json at the root) is committed; the resolver and hub lints always run.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Deploy targets resolve
+        run: node scripts/target.mjs check
+      - name: PR descriptions grade
+        run: node scripts/pr-validate.mjs
+      - name: Hub lints
+        run: bash tools/stage.sh && node tools/check-nav.mjs && node tools/check-view.mjs
+        working-directory: hub
+      - name: Provenance
+        run: node scripts/prov.mjs --check
+      - name: Monorepo present?
+        id: mono
+        run: |
+          if [ -f package.json ] && [ -f pnpm-lock.yaml ]; then echo "ok=true" >> "$GITHUB_OUTPUT";
+          else echo "ok=false" >> "$GITHUB_OUTPUT"; echo "::notice::package.json / pnpm-lock.yaml not committed yet — workspace build skipped"; fi
+      - uses: pnpm/action-setup@v4
+        if: steps.mono.outputs.ok == 'true'
+      - name: Install
+        if: steps.mono.outputs.ok == 'true'
+        run: pnpm install --frozen-lockfile
+      - name: Build + typecheck (macOS wrapper excluded)
+        if: steps.mono.outputs.ok == 'true'
+        run: pnpm turbo run build typecheck --filter='!@3pt/macos'
