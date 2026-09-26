@@ -18,6 +18,7 @@
     'rules':          g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
     'submission':     g('<rect x="4" y="5" width="16" height="12" rx="2"/><path d="M4 9l8 5 8-5"/><path d="M9 21h6"/>'),
     'checklist':      g('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6Z"/><path d="M9 12l2 2 4-4"/>'),
+    'implications':   g('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/><circle cx="12" cy="12" r="3.5" fill="currentColor" fill-opacity=".25"/><path d="M6 6l3 3M18 6l-3 3M6 18l3-3M18 18l-3-3"/>'),
     'decisions':      g('<path d="M12 4v16"/><path d="M5 8l7-4 7 4"/><path d="M4 14h5l1.5 3h3L15 14h5"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/>'),
     'icp-explorer':   g('<path d="M4 20V10M9 20V5M14 20v-8M19 20V7"/><path d="M2.5 20h19"/><circle cx="9" cy="5" r="1.3" fill="currentColor"/>'),
     'icp-directions': g('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v4M12 16.5v4M3.5 12h4M16.5 12h4"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'),
@@ -38,6 +39,7 @@
     'architecture':   g('<path d="M3 6h5v5H3ZM9.5 3h5v5h-5ZM16 6h5v5h-5Z"/><path d="M5.5 11v3.5h13V11"/><path d="M12 8v6.5"/><path d="M8 18h8M6 21h12" stroke-dasharray="2 2"/>'),
     'strands':        g('<path d="M4 12c2-5 5-5 8 0s6 5 8 0"/><path d="M4 12c2 5 5 5 8 0s6-5 8 0"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>'),
     'strands-diagrams': g('<path d="M4 12c2-5 5-5 8 0s6 5 8 0"/><path d="M5 5h4v4H5ZM15 15h4v4h-4Z"/><path d="M9 7h6M9 17h6" stroke-dasharray="2 2"/>'),
+    'signals':        g('<path d="M3 12h3l2-6 3 12 3-9 2 3h5"/><circle cx="19" cy="6" r="1.4" fill="currentColor"/><path d="M4 19h16"/>'),
     'architecture-doc': g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h3v3H8ZM13 12h3v3h-3Z"/><path d="M11 13.5h2"/>'),
     'setup':          g('<path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="13" r="2.6"/><path d="M12 10.4V3.5M13.8 14.6l6.7 3.9M10.2 14.6l-6.7 3.9"/>'),
     'setup-doc':      g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h5"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/>'),
@@ -66,9 +68,9 @@
      REGISTERING A LEAF = ONE ENTRY HERE. */
   var GROUPS = [
     ['',       [['index','Hub']]],
-    ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5'], ['checklist','Open-source checklist','DL'], ['submission','Submission','DU']]],
+    ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5'], ['checklist','Open-source checklist','DL'], ['submission','Submission','DU'], ['implications','Implications','DY']]],
     ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['design-spec','Design system spec','DK'], ['sketches','Sketch gallery'], ['icons','Icons'], ['components','Components'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
-    ['build', [['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['resources','Resources & credits','D4']]],
+    ['build', [['tour','Product tour & demo'], ['app','App prototype'], ['sim','Simulator'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['signals','Kernel signals','DX'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
   ];
   /* ROUTE: slugs that are not their own .html file. Documents route through the Viewer. */
@@ -81,6 +83,7 @@
     'rules':          'view.html?f=docs/05-rules.md',
     'checklist':      'view.html?f=docs/15-open-source-checklist.md',
     'submission':     'view.html?f=docs/18-submission.md',
+    'implications':   'view.html?f=docs/21-implications.md',
     'decisions':      'view.html?f=docs/12-decisions.md',
     'icp-directions': 'view.html?f=docs/08-icp-directions.md',
     'assessment':     'view.html?f=docs/07-assessment-and-measurement.md',
@@ -92,6 +95,7 @@
     'architecture-doc': 'view.html?f=docs/10-architecture.md',
     'strands':        'view.html?f=docs/12-strands-archaeology.md',
     'strands-diagrams': 'view.html?f=docs/13-strands-diagrams.md',
+    'signals':        'view.html?f=docs/20-kernel-signals.md',
     'resources':      'view.html?f=docs/04-resources.md',
     'glossary':       'view.html?f=docs/glossary.md',
     'charter':        'view.html?f=README.md',

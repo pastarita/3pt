@@ -3,7 +3,7 @@
 #   box.sh up             guard → vm → ping → play (every role) → verify
 #   box.sh vm             start the Colima profile (create it on first run)
 #   box.sh ping           Ansible ping over the generated inventory
-#   box.sh play [roles]   converge; roles = comma list of base,node,atlas_tools,atlas_local,workload (default: all)
+#   box.sh play [roles]   converge; roles = comma list of base,node,atlas_tools,atlas_local,workload,signals (default: all)
 #   box.sh verify         tool versions inside the box; Atlas ping when ATLAS_URI is set
 #   box.sh status         profile state, host free disk, box free disk
 #   box.sh exec <cmd…>    run a command inside the box from /opt/3pt with its .env loaded (the box.exec grant)
@@ -15,7 +15,12 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../../.." && pwd)"
-if [[ -f "$ROOT/.env" ]]; then set -a; . "$ROOT/.env"; set +a; fi
+# .env is KEY=VALUE lines, not shell: a placeholder like <user> must not become a redirection (sourcing it did, 2026-09-26 14:50).
+load_env(){ local k v; while IFS= read -r line || [[ -n "$line" ]]; do
+  [[ "$line" =~ ^[[:space:]]*([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]] || continue; k="${BASH_REMATCH[1]}"; v="${BASH_REMATCH[2]}"
+  v="${v%%[[:space:]]#*}"; v="${v%"${v##*[![:space:]]}"}"; v="${v#\"}"; v="${v%\"}"; v="${v#'}"; v="${v%'}"
+  [[ -n "${!k:-}" ]] || export "$k=$v"; done < "$1"; }
+if [[ -f "$ROOT/.env" ]]; then load_env "$ROOT/.env"; fi
 PROFILE="${BOX_PROFILE:-3pt}"; CPU="${BOX_CPU:-2}"; MEM="${BOX_MEMORY:-4}"; DISK="${BOX_DISK:-20}"
 MIN_FREE="${BOX_MIN_FREE_GB:-2}"; NEW_MIN_FREE="${BOX_NEW_MIN_FREE_GB:-8}"
 ATLAS_LOCAL="${BOX_ATLAS_LOCAL:-0}"; REPO_MODE="${BOX_REPO_MODE:-sync}"
@@ -77,7 +82,7 @@ play(){ # play [roles]
 
 box_exec(){ # run inside the box from /opt/3pt with its .env loaded
   inventory >/dev/null; local host; host="$(awk '/^Host /{print $2; exit}' "$SSHCFG")"
-  ssh -q -F "$SSHCFG" "$host" -- bash -lc "$(printf '%q ' 'cd /opt/3pt 2>/dev/null && { set -a; [ -f .env ] && . ./.env; set +a; }; '"$*")"
+  ssh -q -F "$SSHCFG" "$host" -- bash -lc "$(printf '%q ' "$(declare -f load_env); cd /opt/3pt 2>/dev/null && [ -f .env ] && load_env .env; $*")"
 }
 
 verify(){
@@ -85,8 +90,10 @@ verify(){
   box_exec 'for t in node pnpm mongosh atlas mongoimport docker; do printf "  %-12s %s\n" "$t" "$(command -v $t >/dev/null && ($t --version 2>/dev/null | head -1) || echo MISSING)"; done'
   say "verify: workload"
   box_exec 'ls /opt/3pt/harness/apps/worker/dist/main.js >/dev/null && echo "  worker built" || echo "  worker NOT built"; systemctl is-active 3pt-worker 2>/dev/null | sed "s/^/  3pt-worker: /" || true'
+  say "verify: signals"
+  box_exec 'systemctl is-active 3pt-signals 2>/dev/null | sed "s/^/  3pt-signals: /" || true; sudo SIGNALS_DB=/var/lib/3pt/signals.db node infra/batteries/signals/dist/agent.js --status 2>/dev/null | node -e "let s=\"\";process.stdin.on(\"data\",d=>s+=d).on(\"end\",()=>{try{const j=JSON.parse(s);console.log(\"  store \"+j.events+\" events: \"+j.kinds.map(k=>k.kind+\"=\"+k.n).join(\" \")+\" · cursors \"+(j.cursors.map(c=>c.name+\"@\"+c.pos).join(\" \")||\"-\"))}catch{console.log(\"  store: not readable\")}})"'
   say "verify: atlas"
-  box_exec 'if [ -n "${ATLAS_URI:-}" ]; then mongosh "$ATLAS_URI" --quiet --eval "const r=db.runCommand({ping:1}); print(\"  ping ok=\"+r.ok+\" host=\"+db.getMongo().getURI().replace(/\\/\\/.*@/,\"//…@\"))"; else echo "  ATLAS_URI unset — no cluster to ping (infra/batteries/atlas/sandbox.sh)"; fi'
+  box_exec 'if [ -n "${ATLAS_URI:-}" ] && [[ "$ATLAS_URI" != *"<"* ]]; then mongosh "$ATLAS_URI" --quiet --eval "const r=db.runCommand({ping:1}); print(\"  ping ok=\"+r.ok+\" host=\"+db.getMongo().getURI().replace(/\\/\\/.*@/,\"//…@\"))"; else echo "  ATLAS_URI unset — no cluster to ping (infra/batteries/atlas/sandbox.sh)"; fi'
 }
 
 status(){

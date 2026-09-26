@@ -47,3 +47,11 @@ __pycache__/
 
 # Local harness store until the atlas battery is wired (harness/apps/cli/src/store.ts)
 .3pt/
+
+# Box battery: generated per machine by box.sh (ssh config, inventory, vars)
+infra/batteries/box/ansible/.inventory.ini
+infra/batteries/box/ansible/.ssh_config
+infra/batteries/box/ansible/.vars.json
+
+# Signals battery: the local SQLite store and file-sink output
+.signals/

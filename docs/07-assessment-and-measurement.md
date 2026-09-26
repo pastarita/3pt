@@ -1,3 +1,8 @@
+| **M-20** | `kernel_execs` (`M-K-EXEC`) | execve calls the box's kernel saw during the iteration | eBPF exec sensor (docs/20) | signals battery drain | `kernel:witness` finding; H-2 |
+| **M-21** | `kernel_opens` (`M-K-OPEN`) | openat calls by workload processes | eBPF open sensor | signals battery drain | `kernel:witness` |
+| **M-22** | `kernel_media_rereads` (`M-K-REREAD`) | media opens whose path was already opened earlier in the same iteration, witnessed at the kernel; the independent twin of M-5 | eBPF open sensor + store query | signals battery drain | `kernel:read-once` finding; H-3 |
+| **M-23** | `kernel_connects` (`M-K-CONN`) | outbound TCP connects, classed atlas · https · local · other | eBPF connect sensor | signals battery drain | `kernel:egress` |
+| **M-24** | `kernel_connects_unknown` (`M-K-CONN-UNKNOWN`) | connects in class `other` | same | signals battery drain | `kernel:egress` finding |
 # Assessment Against the Transcript, Measurement System, and Partner-Incentive Mapping
 
 *Source of record. Written 2026-09-26 against `brainstorming.md` (Session 1) read in parallel with

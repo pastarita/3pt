@@ -107,6 +107,29 @@
     <a class="btn primary" href="./view.html?f=docs/12-decisions.md">Open the walkthrough</a>
   </div>
 
+  <!-- implications: the contingency for the capable non-technical operator -->
+  <figure class="fig" id="implications">
+    <svg viewBox="0 0 1000 150" role="img" aria-label="An operator feeds better data and projects into the harness; policies and checkpoints land in their own Atlas; approvals and rollbacks come back to the operator">
+      <defs><marker id="ahx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--soft)"/></marker></defs>
+      <rect x="20" y="40" width="200" height="60" rx="10" fill="var(--panel)" stroke="var(--plan)" stroke-width="2"/>
+      <text x="120" y="66" text-anchor="middle" font-size="20" font-weight="700">operator</text>
+      <text x="120" y="88" text-anchor="middle" class="s" font-size="14">a role, not a repo</text>
+      <rect x="400" y="40" width="200" height="60" rx="10" fill="var(--panel)" stroke="var(--instrument)" stroke-width="2"/>
+      <text x="500" y="66" text-anchor="middle" font-size="20" font-weight="700">harness</text>
+      <text x="500" y="88" text-anchor="middle" class="s" font-size="14">plan · build · instrument</text>
+      <path d="M760 55a60 12 0 0 1 120 0v30a60 12 0 0 1-120 0Z" fill="var(--cyan)" fill-opacity=".15" stroke="var(--cyan)" stroke-width="2"/>
+      <ellipse cx="820" cy="55" rx="60" ry="12" fill="none" stroke="var(--cyan)" stroke-width="2"/>
+      <text x="820" y="122" text-anchor="middle" font-size="16" font-weight="700" fill="var(--cyan)">their Atlas</text>
+      <path class="e" d="M226 60H392" marker-end="url(#ahx)"/>
+      <text x="309" y="50" text-anchor="middle" class="s" font-size="14">better data, better projects</text>
+      <path class="e" d="M606 60H752" marker-end="url(#ahx)"/>
+      <text x="679" y="50" text-anchor="middle" class="s" font-size="14">policy vN, checkpoint</text>
+      <path class="e" d="M760 90C600 135 300 135 226 90" marker-end="url(#ahx)"/>
+      <text x="493" y="138" text-anchor="middle" class="s" font-size="14" font-style="italic">approve, roll back, read the diff</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span><b>Implications.</b> A capable operator grows their own digital twin and owns the data, the improvements, and the steering. <a href="./view.html?f=docs/21-implications.md">Own the twin</a></figcaption>
+  </figure>
+
   <figure class="fig meter-fig" id="catch">
     <svg viewBox="0 0 1000 32" role="img" aria-label="Changelog entries marked read in this browser, as a bar">
       <rect x="0" y="10" width="1000" height="12" rx="6" fill="var(--line)"/>
@@ -126,7 +149,8 @@
     <a class="card" href="./view.html?f=docs/06-goal-and-use-case.md"><svg id="g-goal"></svg><i class="id">D6</i><b>Goal &amp; use case</b><span>Why value compounds.</span><em>read →</em><i class="temp">warm</i></a>
     <a class="card" href="./view.html?f=docs/05-rules.md"><svg id="g-rules"></svg><i class="id">D5</i><b>Rules &amp; judging</b><span>Deadlines, requirements, banned list, weights.</span><em>check →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/15-open-source-checklist.md"><svg id="g-checklist"></svg><i class="id">DL</i><b>Open-source checklist</b><span>One check per row.</span><em>clear →</em><i class="temp">hot</i></a>
-    <a class="card" href="./view.html?f=docs/18-submission.md"><svg id="g-submission"></svg><i class="id">DU</i><b>Submission</b><span>Form, film, claims, order.</span><em>read →</em></a>
+    <a class="card" href="./view.html?f=docs/18-submission.md"><svg id="g-submission"></svg><i class="id">DU</i><b>Submission</b><span>Form, film, claims, order, checklist.</span><em>read →</em></a>
+    <a class="card" href="./view.html?f=docs/21-implications.md"><svg id="g-implications"></svg><i class="id">DY</i><b>Implications</b><span>Own the twin: data, improvements, steering.</span><em>read →</em><i class="temp">hot</i></a>
   </div>
 
   <h2 data-cluster="decide">Decide <span>hot</span></h2>
@@ -158,6 +182,7 @@
     <a class="card" href="./view.html?f=docs/10-architecture.md"><svg id="g-architecture-doc"></svg><i class="id">DA</i><b>Architecture doc</b><span>The tree, eight views, extension recipes.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/12-strands-archaeology.md"><svg id="g-strands"></svg><i class="id">DT</i><b>Strands archaeology</b><span>What we take from Strands.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/13-strands-diagrams.md"><svg id="g-strands-diagrams"></svg><i class="id">DW</i><b>Strands, drawn</b><span>Ten diagrams of Strands, for learning.</span><em>learn →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/20-kernel-signals.md"><svg id="g-signals"></svg><i class="id">DX</i><b>Kernel signals</b><span>The box as a witness: eBPF sensors, a redacting pipeline, a SQLite store, a drain into Atlas.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/16-sandbox-provisioning.md"><svg id="g-sandbox"></svg><i class="id">DV</i><b>Sandbox provisioning</b><span>Box and cluster, one flow.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/17-atlas-setup-dossier.md"><svg id="g-atlas-dossier"></svg><i class="id">DM</i><b>Atlas dossier</b><span>The Atlas console, screen by screen.</span><em>read →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/13-ci-and-deployment.md"><svg id="g-ci"></svg><i class="id">DC</i><b>CI &amp; deployment</b><span>Actions, Cloudflare, Atlas, the herald gate.</span><em>read →</em><i class="temp">hot</i></a>

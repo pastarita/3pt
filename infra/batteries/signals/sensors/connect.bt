@@ -1,0 +1,9 @@
+// 3PT sensor · connect · net cluster. Outbound TCP connects (v4): where the box talks to. Feeds M-K-CONN.
+// BTF struct navigation (CO-RE): /sys/kernel/btf/vmlinux is present on the box (docs/20 §2). 2 = AF_INET.
+kprobe:tcp_v4_connect
+{
+  $sk = (struct sock *)arg0;
+  $p = (uint16)$sk->__sk_common.skc_dport;
+  printf("{\"k\":\"connect\",\"ns\":%llu,\"pid\":%d,\"comm\":\"%s\",\"daddr\":\"%s\",\"dport\":%d}\n",
+    nsecs, pid, comm, ntop(2, $sk->__sk_common.skc_daddr), ($p >> 8) | (($p & 0xff) << 8));
+}

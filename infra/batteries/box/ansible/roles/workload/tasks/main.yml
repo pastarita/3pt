@@ -5,7 +5,7 @@
   ansible.builtin.command: >
     rsync -a --delete -e "ssh -q -F {{ ssh_config }}"
     --exclude node_modules --exclude dist --exclude .turbo --exclude .worktrees --exclude .claude/worktrees
-    --exclude hub/_site --exclude ui/apps/macos/.build --exclude .install-loop --exclude .blob --exclude .venv
+    --exclude hub/_site --exclude .signals --exclude ui/apps/macos/.build --exclude .install-loop --exclude .blob --exclude .venv
     --exclude infra/batteries/box/ansible/.inventory.ini --exclude infra/batteries/box/ansible/.ssh_config --exclude infra/batteries/box/ansible/.vars.json
     {{ repo_root }}/ {{ inventory_hostname }}:{{ box_root }}/
   register: sync

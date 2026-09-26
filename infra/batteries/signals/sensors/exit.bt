@@ -1,0 +1,5 @@
+// 3PT sensor · exit · process cluster. Process end; joined to exec in the pipeline by pid when both are sampled.
+tracepoint:sched:sched_process_exit
+{
+  printf("{\"k\":\"exit\",\"ns\":%llu,\"pid\":%d,\"comm\":\"%s\"}\n", nsecs, pid, comm);
+}

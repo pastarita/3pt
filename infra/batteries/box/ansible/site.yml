@@ -13,3 +13,4 @@
     - { role: atlas_tools, tags: [atlas_tools] }
     - { role: atlas_local, tags: [atlas_local], when: atlas_local | bool }
     - { role: workload,    tags: [workload] }
+    - { role: signals,     tags: [signals], when: signals | default(true) | bool }

@@ -43,6 +43,8 @@ doc docs/glossary.md#Instrumentation backfeed
 term instrumentation loop
 term backfeed
 note "test in a production session, with some backport" was the mentor's prompt for the quality loop
+doc hub/site/index.html
+doc docs/20-kernel-signals.md
 -->
 Why not also give some instructions here to maintain quality? We can test in a production session. There will be some backport. That's a great idea.
 
@@ -64,6 +66,7 @@ doc 3Pt_MOTTO.md
 term retrospective
 term measurement
 doc docs/12-decisions.md
+doc docs/20-kernel-signals.md
 -->
 If we have the planning and instrumentation system, not only dispatch to build but also dispatch to instrument, we could also have a mechanism that considers it a little more heuristically. Provided that the build plan is going as desired, we will do a hypothetical retrospective on what this plan is over time. At every checkpoint, we just reflect on the last few things we don't only have to meet in those dimensions. That retrospective goes into the new dimension of the evolution of the harness, which is measurement. Great, so that the building of the harness
 
@@ -83,6 +86,9 @@ term checkpoint
 term build-with-instrumentation loop
 note Yash restating the system to the mentor ("you can correct me"); the mentor leaves here
 doc docs/12-decisions.md
+doc docs/17-term-2-lanes.md
+doc docs/18-submission.md
+doc hub/site/index.html
 -->
 The planning stage does the build process and also plans for the evaluation and instrumentation. Once it starts building, we have a build-with-instrumentation loop.
 
@@ -243,6 +249,7 @@ term read-once transcript
 term hot / cold tier
 doc docs/08-icp-directions.md
 doc docs/12-decisions.md
+doc docs/20-kernel-signals.md
 -->
 Yash is going to introduce some of the background and statement of need for the media-heavy workflows we're addressing, along with the problems we're addressing in them for our ICPs.
 - How do you manage storage for this? How do you manage what needs to be hot storage and what needs to be cold storage in media? Which media is relevant right now, and which media needs to be accessible right away?
@@ -264,6 +271,7 @@ doc docs/07-assessment-and-measurement.md#R-1
 doc docs/01-icp.md#explicitly-deprioritized
 doc docs/12-decisions.md
 doc docs/10-architecture.md
+doc docs/20-kernel-signals.md
 -->
 To lean into the hackathon in this way, we can use a list-based system and a NoSQL database like MongoDB to manage that remotely. We can also engineer role-based access systems or a permissioning layer for that type of content. The harness might be able to manage the keys or access to that respective content, which could be an additionality. It might be out of scope right now, but maybe there's something. I think a raw data system would be out of scope because, if it's a personal harness right now, we don't want to add collaboration because that could mess up a lot of things. If it's a self-healing or self-creating harness, it might do weird things with raw data access, and we don't want the harness to actually control roles. We just want it to be managed by the human because the human wants to decide who to give access to, not the AI. Let's keep that out of scope for now. Maybe you'll build that later. 
 
@@ -297,6 +305,7 @@ doc docs/00-vision.md
 doc docs/12-decisions.md
 doc docs/10-architecture.md
 doc docs/pr-descriptions/PR_DESCRIPTION_CI_HERALDRY.md
+doc docs/17-term-2-lanes.md
 -->
 Predications: some of the predictions are that Yash and I are in a respective hackathon. There are several lanes, and we want to distribute workloads with respect to the utilization of our own coding agents on our shared repo:
 1. Setting up the repo
@@ -404,6 +413,7 @@ grow proactive-harness :: the harness slowly becomes proactive about what media 
 from s1.21 s1.09
 doc docs/00-vision.md#hackathon-framing
 doc docs/12-decisions.md
+doc docs/18-submission.md
 -->
 — Hackathon Overview
   For just the hackathon we could build out one specific use case with a harness that it's recursively improving (itself) We have a lot of incoming media, and it's managing context over time. The harness is understanding what kind of media we want to capture or gather, trying to organize it, and slowly becoming proactive. Yes, the harness's purpose is to  the harness’s purpose is to be proactive over time that we have a lot of media coming in from the internet, from a free data source. Over time, based on what we are searching for, it will figure out what we want, use that, and build a storyline on top of that for a journal. 
@@ -495,6 +505,7 @@ from s1.27
 doc docs/06-goal-and-use-case.md#onboarding-side-effect
 doc docs/07-assessment-and-measurement.md#T-8
 doc docs/07-assessment-and-measurement.md#R-25
+doc docs/20-kernel-signals.md
 -->
  One side effect is that we might be able to use the XFCE screenshotter or something like it to produce images from regular use of a respective computer in some type of technical workflow (say, in CAD design review). It actually learns from a respective institution's process and allows that to be fed back into a model on a custom harness. That allows them to specify and steer the type of feedback being incurred from that system.
 
@@ -519,6 +530,9 @@ doc docs/06-goal-and-use-case.md#the-ui-we-want
 doc docs/00-vision.md#the-supervisory-ui
 doc docs/07-assessment-and-measurement.md#T-10
 doc docs/12-decisions.md
+doc docs/17-ui-capture.md
+doc docs/18-role-ui-case-study.md
+doc docs/20-kernel-signals.md
 -->
  To recap there, we have this 3-point harness system. It's self-improving because there is an instrumentable flow of media that's incoming and being processed, and the processor for that is the harness. The harness is going to grow over time.
 

@@ -1,0 +1,18 @@
+{"k":"exec","ns":1000000000,"pid":4101,"tid":4101,"uid":1000,"cg":7,"comm":"bash","path":"/usr/bin/node"}
+{"k":"exec","ns":1000200000,"pid":4102,"tid":4102,"uid":1000,"cg":7,"comm":"node","path":"/usr/bin/mongosh"}
+{"k":"open","ns":1000300000,"pid":4101,"comm":"node","path":"/opt/3pt/.env","flags":0}
+{"k":"open","ns":1000400000,"pid":4101,"comm":"node","path":"/opt/3pt/data/mock/acme-builders/framing-1.jpg","flags":0}
+{"k":"open","ns":1000500000,"pid":4101,"comm":"node","path":"/opt/3pt/node_modules/mongodb/lib/index.js","flags":0}
+{"k":"open","ns":1000600000,"pid":4101,"comm":"node","path":"/opt/3pt/data/mock/acme-builders/framing-2.jpg","flags":0}
+{"k":"connect","ns":1000700000,"pid":4101,"comm":"node","daddr":"52.9.14.201","dport":27017}
+{"k":"connect","ns":1000800000,"pid":4101,"comm":"node","daddr":"104.18.2.1","dport":443}
+{"k":"open","ns":1001000000,"pid":4101,"comm":"node","path":"/opt/3pt/data/mock/acme-builders/framing-1.jpg","flags":0}
+{"k":"exec","ns":1001100000,"pid":4103,"tid":4103,"uid":1000,"cg":7,"comm":"node","path":"/usr/bin/curl"}
+{"k":"exec","ns":1001150000,"pid":4104,"tid":4104,"uid":1000,"cg":7,"comm":"bash","path":"/usr/bin/mongosh mongodb+srv://alice:hunter2@cluster0.mongodb.net/3pt --eval x"}
+{"k":"connect","ns":1001200000,"pid":4103,"comm":"curl","daddr":"93.184.216.34","dport":80}
+{"k":"open","ns":1001300000,"pid":4101,"comm":"node","path":"/home/patmac/.config/3pt/ACCESS_PASS","flags":0}
+{"k":"open","ns":1001400000,"pid":4101,"comm":"node","path":"/opt/3pt/data/mock/acme-builders/framing-1.jpg","flags":0}
+{"k":"exit","ns":1001500000,"pid":4103,"comm":"curl"}
+{"k":"exit","ns":1001600000,"pid":4102,"comm":"mongosh"}
+this line is not json and must be counted, not crash the agent
+{"k":"open","ns":1001700000,"pid":4101,"comm":"node","path":"/opt/3pt/.blob/sha256/aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899.bin","flags":0}

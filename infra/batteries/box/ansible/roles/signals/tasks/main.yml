@@ -1,0 +1,19 @@
+# signals: bpftrace on the box and the 3pt-signals agent as a root service. docs/20-kernel-signals.md §4
+# Assumes workload ran (the repo is built at /opt/3pt). Idempotent: package state, file states, unit state.
+- name: bpftrace (eBPF front-end; kernel 6.8 + BTF verified on Colima's Ubuntu 24.04 image)
+  become: true
+  ansible.builtin.apt: { name: [bpftrace], state: present, update_cache: true, cache_valid_time: 3600 }
+- name: BTF is present (CO-RE sensors need it)
+  ansible.builtin.stat: { path: /sys/kernel/btf/vmlinux }
+  register: btf
+  failed_when: not btf.stat.exists
+- name: store directory
+  become: true
+  ansible.builtin.file: { path: /var/lib/3pt, state: directory, mode: "0750" }
+- name: signals agent unit
+  become: true
+  ansible.builtin.template: { src: 3pt-signals.service.j2, dest: /etc/systemd/system/3pt-signals.service, mode: "0644" }
+  register: sunit
+- name: signals agent running
+  become: true
+  ansible.builtin.systemd: { name: 3pt-signals, enabled: true, state: "{{ 'restarted' if sunit.changed or (sync is defined and sync.changed) else 'started' }}", daemon_reload: true }

@@ -1,0 +1,9 @@
+// 3PT sensor · open · file cluster. openat by the workload processes only (comm filter keeps volume sane).
+// The pipeline flags media paths; a media path opened twice in one iteration is the read-once rule broken.
+// flags: O_WRONLY=1 O_RDWR=2 O_CREAT=64 (octal 0100) — the pipeline decodes.
+tracepoint:syscalls:sys_enter_openat
+/ comm == "node" || comm == "mongosh" || comm == "mongoimport" || comm == "python3" || comm == "cat" /
+{
+  printf("{\"k\":\"open\",\"ns\":%llu,\"pid\":%d,\"comm\":\"%s\",\"path\":\"%s\",\"flags\":%d}\n",
+    nsecs, pid, comm, str(args.filename), args.flags);
+}

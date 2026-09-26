@@ -17,6 +17,8 @@ export const COLLECTIONS = {
   media_index: 'media_index',    // asset id, tier, location, transcript ref
   transcripts: 'transcripts',    // read-once extraction + embedding
   jobs: 'jobs',                  // worker queue: index | transcribe | tier | migrate
+  signals: 'signals',            // kernel-witnessed events from the box (eBPF sensors → pipeline → drain); time-series, TTL. docs/20
+  pipeline_plugins: 'pipeline_plugins',  // code pushed into the box's signal pipeline ({name, code, version, enabled}); the agent pulls it
   /* the demo firm (data/mock/acme-builders), seeded by infra/batteries/atlas seed-demo */
   demo_projects: 'demo_projects',        // one document per project: building, phases, dates
   demo_photos: 'demo_photos',            // weekly photo drops, one document per photo
@@ -53,7 +55,7 @@ export interface Measurement {
   metric: string;                  // M-* id from docs/07-assessment-and-measurement.md
   value: number;
   unit: string;
-  source: 'langsmith' | 'atlas' | 'git' | 'harness';
+  source: 'langsmith' | 'atlas' | 'git' | 'harness' | 'kernel';   // kernel: the signals battery (eBPF on the box), docs/20
 }
 
 /** One result of a standards check. Instrument writes it; only the improver turns it into policy. */

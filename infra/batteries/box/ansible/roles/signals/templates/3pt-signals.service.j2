@@ -1,0 +1,19 @@
+# 3PT signals agent: bpftrace sensors → pipeline → SQLite WAL → drain to Atlas. infra/batteries/signals, docs/20.
+# Root because bpftrace attaches kernel probes; the agent itself opens nothing but its store and the cluster.
+[Unit]
+Description=3PT signals agent (kernel witness)
+After=network-online.target 3pt-worker.service
+Wants=network-online.target
+[Service]
+User=root
+WorkingDirectory={{ box_root }}
+EnvironmentFile={{ box_root }}/.env
+Environment=SIGNALS_DB=/var/lib/3pt/signals.db
+Environment=SIGNALS_MARKER={{ box_root }}/.install-loop/stage.json
+ExecStart=/usr/bin/node {{ box_root }}/infra/batteries/signals/dist/agent.js
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGINT
+TimeoutStopSec=20
+[Install]
+WantedBy=multi-user.target

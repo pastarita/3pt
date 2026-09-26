@@ -1,3 +1,7 @@
+| **Signal** | One kernel-witnessed event from the box (exec, exit, open, connect, or a `finding` a plugin raised), shaped like an OpenTelemetry log record and stored in Atlas `signals`. `docs/20-kernel-signals.md`. |
+| **Sensor** | A declared bpftrace program, one hook, JSON lines out; the signals battery runs one process per sensor. |
+| **Drain** | The cursor-driven offload from the box's SQLite store to Atlas: rows to `signals`, windows to `measurements` (source `kernel`). At-least-once. |
+| **Kernel witness** | The idea that the kernel is the one reporter the harness cannot talk over; Instrument's `kernel:*` checks are findings drawn from it. |
 # Glossary
 <!-- @s1.02 @s1.03 @s1.04 @s1.07 @s1.12 @s1.13 @s1.16 -->
 

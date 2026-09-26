@@ -27,7 +27,7 @@ export function boxSpec(env: NodeJS.ProcessEnv = process.env): BoxSpec {
 }
 
 /** The deterministic flow, in order. `box.sh up` runs all of them; `box.sh play <role>` runs one role. */
-export const PHASES = ['guard', 'vm', 'ping', 'base', 'node', 'atlas_tools', 'atlas_local', 'workload', 'verify'] as const;
+export const PHASES = ['guard', 'vm', 'ping', 'base', 'node', 'atlas_tools', 'atlas_local', 'workload', 'signals', 'verify'] as const;
 export type Phase = (typeof PHASES)[number];
 
 export const battery = {

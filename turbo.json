@@ -15,7 +15,7 @@
     "dev": { "cache": false, "persistent": true },
     "provision": {
       "cache": false,
-      "env": ["ATLAS_URI", "ATLAS_PROJECT_ID", "ATLAS_PUBLIC_KEY", "ATLAS_PRIVATE_KEY", "LANGSMITH_API_KEY", "GITHUB_TOKEN", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]
+      "env": ["SIGNALS_*", "ATLAS_URI", "ATLAS_DB", "ATLAS_PROJECT_ID", "ATLAS_PUBLIC_KEY", "ATLAS_PRIVATE_KEY", "LANGSMITH_API_KEY", "GITHUB_TOKEN", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]
     },
     "clean": { "cache": false }
   }

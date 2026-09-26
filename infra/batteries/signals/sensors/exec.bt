@@ -1,0 +1,7 @@
+// 3PT sensor · exec · process cluster. Every execve on the box: who ran what. Feeds M-K-EXEC.
+// Declared like a Tetragon TracingPolicy would be: one hook, one JSON line per event, nothing else.
+tracepoint:syscalls:sys_enter_execve
+{
+  printf("{\"k\":\"exec\",\"ns\":%llu,\"pid\":%d,\"tid\":%d,\"uid\":%d,\"cg\":%llu,\"comm\":\"%s\",\"path\":\"%s\"}\n",
+    nsecs, pid, tid, uid, cgroup, comm, str(args.filename));
+}

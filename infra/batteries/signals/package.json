@@ -1,0 +1,9 @@
+{
+  "name": "@3pt/battery-signals", "version": "0.0.1", "private": true, "description": "Battery: kernel-witnessed signals from the box. bpftrace sensors (Cilium-style: declared, attached, JSON out) → a transform pipeline (normalize, enrich, redact, strip, sample, pushed plugins) → a durable SQLite WAL store → a drain into Atlas (signals time-series + measurements with source 'kernel'). Instrument turns those into findings; the improver turns findings into policy.", "type": "module",
+  "main": "./dist/index.js", "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "bin": { "3pt-signals": "./dist/agent.js" },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "provision": "node dist/provision.js", "replay": "node dist/agent.js --replay fixtures/replay.jsonl --once", "clean": "rm -rf dist" },
+  "dependencies": { "@3pt/core": "workspace:*", "@3pt/battery-atlas": "workspace:*", "mongodb": "^6.21.0" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+}

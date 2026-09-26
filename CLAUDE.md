@@ -38,6 +38,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
 | Strands: what we build on, the capability ledger, the handles we speak, what is struck | `docs/12-strands-archaeology.md` |
 | Strands, drawn: ten Mermaid diagrams of its systems, for learning | `docs/13-strands-diagrams.md` |
+| Kernel signals: the box as a witness (eBPF sensors → pipeline → SQLite → Atlas), the capability menu, the implemented recipe, feedback into findings | `docs/20-kernel-signals.md` |
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
 | How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -46,7 +47,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
 | Open-sourcing and submission due diligence: admissibility, hygiene, the package, each row with a status | `docs/15-open-source-checklist.md` |
-| Submission: what the platform asks, the filming tool, artifacts, claims with evidence, priority order to 5 PM | `docs/18-submission.md` |
+| Submission: what the platform asks, the filming tool, artifacts, claims with evidence, priority order to 5 PM, the submission checklist | `docs/18-submission.md` |
+| Implications: who 3PT is for beyond engineers, the digital-twin contingency, what the operator owns, the levers they hold | `docs/21-implications.md` (hub card DY, lander figure, README § Implications) |
 
 ## Working rules for agents in this repo
 
@@ -152,3 +154,12 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   the checkpoint; Instrument only writes `findings`. Stages get `freezePolicy()` and `stageStore()`, which
   refuses writes to `policies` and `checkpoints`. `3pt improve` runs the improver alone. `@3pt/build` is a
   dry run (no `HarnessAdapter`) until `@3pt/strands` compiles.
+- 2026-09-26 16:00 ET: **kernel witness.** New battery `infra/batteries/signals`: bpftrace sensors (exec, exit, open, connect) on the Colima box
+  → pipeline (normalize, enrich, redact, strip, deterministic sample, pushed plugins in a vm) → SQLite WAL store (`node:sqlite`) →
+  drain to Atlas `signals` (time-series) + `measurements` (source `kernel`, M-20…M-24). Box role `signals` + `3pt-signals.service`;
+  Instrument `kernelChecks()` writes `kernel:witness | read-once | egress` findings (harness lane touched). Box evaluated: kernel 6.8,
+  BTF present, bpftrace 0.20.2. Verified on the fixture and on the box with the file sink; the cluster hop waits on `ATLAS_URI`.
+  Two box.sh fixes: `.env` is parsed, not sourced (a `<user>` placeholder was a redirection); empty or commented env values are unset. `docs/20-kernel-signals.md`.
+- 2026-09-26 16:30 ET: **implications and the submission checklist.** `docs/21-implications.md` (own the twin: the capable non-technical
+  operator, the digital-twin contingency, what they own, the levers) is card DY on the hub, a figure on the lander, and a README section.
+  `docs/18-submission.md` §8 is the submission checklist: every form field, link, and gate in one table with the URLs to open.
