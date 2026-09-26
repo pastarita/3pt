@@ -33,6 +33,8 @@ for who is doing what and `docs/03-workflow.md` for how code will land.
 | `docs/07-assessment-and-measurement.md` | Theses and hypotheses converged from the transcript, the measurement system (M-*), and the partner-incentive mapping to a requirement set (R-*) |
 | `docs/06-goal-and-use-case.md` | Goal over time, interior-design use case, value props, screen-capture onboarding |
 | `hub/site/direction.html` | Direction proposal page in the hub: construction demo, stress test, 60-second video plan |
+| `docs/13-ci-and-deployment.md` | CI and deployment contemplation: build, deploy, topology diagrams, credits, the herald gate; resolver in `infra/targets.json` via `scripts/target.mjs` |
+| `docs/pr-descriptions/` | PR heraldry: one description file per PR (the PR body), graded by `scripts/pr-validate.mjs`; template in `.github/PULL_REQUEST_TEMPLATE.md` |
 | `hub/site/design-system.html` | Design system proposal: invariants, token naming, dark/light patterns, six pieces × three directions, cross-surface (PWA, Swift, web), component library, motif bases against the ICP, and the decision promenade. Open in a browser or via the hub |
 | `docs/08-icp-directions.md` | Five ICP directions side by side: focus, use case, company type, lander messaging, plausibility, rule risk |
 | `docs/09-provenance.md` | The transcript DSL: segment markers in `brainstorming.md`, `@sN.NN` cites everywhere else, and the loop that keeps them honest |
