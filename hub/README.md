@@ -14,6 +14,7 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 | `site/index.html` | The hub: grouped cards + DERIVED tallies. Navigation only, never content. |
 | `site/nav.js` | The Shell: single source of IA (`GROUPS`, `ROUTE`, glyphs, cluster registry). |
 | `site/3pt-data.js` | The Model: doc Register, lanes, ICP directions, criteria, presets, helpers. |
+| `site/strands-data.js` | The Strands questions register: every pointer behind `strands-journey.html`, tallied DERIVED. Source of record `docs/18-strands-questions.md`. |
 | `site/3pt.css` | Design tokens and shared components. Dark base. |
 | `site/view.html` + `site/view-render.js` | The Viewer: renders `.md` / `.csv` / `.json` inside the Shell. |
 | `site/diagram.js` | The mermaid reader: ```` ```mermaid ```` fences in any doc render as SVG in the hub's tokens. Reads flowcharts (subgraphs, six shapes, five edge styles, fan-out, serpentine wrap), sequence, gitGraph, stateDiagram-v2, classDiagram. Colour comes from the class *name* (`:::plan`), never from classDef hex. `tools/check-diagram.mjs` renders every real fence in CI. |
@@ -54,6 +55,9 @@ Two rules the lints now enforce, learned 2026-09-26:
 - **Every relative markdown link must resolve from the document's own directory** inside the
   artifact. From `docs/`, the transcript is `../brainstorming.md` and a root leaf is
   `../lanes.html`. Generators that emit links (`scripts/prov.mjs`) emit them that way.
+- **Every anchor lands.** The Viewer gives each heading an id equal to its slug (lowercase, punctuation dropped,
+  spaces to hyphens: the `scripts/prov.mjs` rule), so `view.html?f=docs/x.md#2-capability-ledger` scrolls to it.
+  `tools/check-view.mjs` fails on any `#anchor` in a doc link, a leaf, or a data file that lands nowhere.
 - **No external fetches from a leaf.** Fonts a leaf needs are vendored: `tools/vendor-fonts.sh`
   writes `site/fonts/directions.css` and the woff2 files beside it.
 

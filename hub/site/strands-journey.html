@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Strands, answered</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<script src="./strands-data.js"></script>
+<style>
+  /* A journey: four stations, one per question. Each station = the answer in a breath, a figure, a pointer table
+     rendered from strands-data.js (DERIVED). Source of record: docs/18-strands-questions.md. Tokens from 3pt.css only. */
+  .fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 10px;margin:16px 0}
+  .fig h2{margin:0 0 4px;font-size:15px}.fig h2 small{font:700 10px/1 var(--mono);letter-spacing:.12em;color:var(--faint);margin-right:8px;text-transform:uppercase}
+  .fig .sk{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .fig svg{width:100%;height:auto;display:block;font-family:var(--mono);font-size:11px}
+  @media(max-width:640px){.fig .sk svg{min-width:880px}}
+  .fig svg text{fill:var(--ink)} .fig svg .t{font-weight:700;font-size:12px} .fig svg .s{fill:var(--soft);font-size:10px} .fig svg .k{fill:var(--faint);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+  .fig svg .box{stroke-width:1.2}
+  .fig svg .plan{fill:var(--violet-soft);stroke:var(--plan)} .fig svg .build{fill:var(--amber-soft);stroke:var(--build)} .fig svg .inst{fill:color-mix(in srgb,var(--instrument) 20%,var(--panel));stroke:var(--instrument)}
+  .fig svg .atlas{fill:var(--cyan-soft);stroke:var(--cyan)} .fig svg .surface{fill:var(--slate-soft);stroke:var(--slate)} .fig svg .battery{fill:var(--sand);stroke:var(--soft)}
+  .fig svg .data{fill:var(--card);stroke:var(--faint)} .fig svg .flag{fill:color-mix(in srgb,var(--flag) 22%,var(--panel));stroke:var(--flag)}
+  .fig svg .e{fill:none;stroke:var(--soft);stroke-width:1.3;marker-end:url(#ah)}
+  .fig svg .e.d{stroke-dasharray:4 3;stroke:var(--cyan);marker-end:url(#ahc)}
+  .fig svg .e.b{stroke:var(--flag);stroke-width:2.4;marker-end:url(#ahf)}
+  .fig svg .e.n{marker-end:none}
+  .fig svg .strike{stroke:var(--flag);stroke-width:3;stroke-linecap:round}
+  .fig svg .rail{stroke:var(--line-strong);stroke-width:3}
+  .fig svg text.f{fill:var(--flag)} .fig svg text.c{fill:var(--cyan)} .fig svg text.g{fill:var(--instrument)}
+  .fig .cap{font-size:12.5px;color:var(--soft);margin:8px 0 0;line-height:1.45} .fig .cap .pv{margin-right:6px}
+  .station{margin-top:34px}
+  .station h2{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}
+  .station h2 .n{font:800 11px/1 var(--mono);letter-spacing:.14em;color:var(--flag);text-transform:uppercase}
+  .station .ans{margin:0 0 6px;max-width:82ch;font-size:14.5px}
+  .station .ans code{font-size:12px}
+  .pt .tbl-wrap{border:0;background:transparent}
+  .pt table{font-size:12.5px}.pt td{vertical-align:top}.pt td:first-child{min-width:200px;color:var(--ink)}
+  .pt td.x{color:var(--soft);font-size:12px;min-width:180px}
+  .chip{display:inline-block;font:600 10.5px/1 var(--mono);border:1px solid var(--line-strong);border-radius:99px;padding:3px 7px;margin:2px 3px 2px 0;text-decoration:none;color:var(--ink);background:var(--card);white-space:nowrap}
+  .chip.doc{border-color:color-mix(in srgb,var(--cyan) 60%,transparent)} .chip.leaf{border-color:color-mix(in srgb,var(--plan) 70%,transparent)}
+  .chip.code{border-color:color-mix(in srgb,var(--build) 70%,transparent)} .chip.strands{border-color:var(--slate);color:var(--soft)}
+  .chip.seg{border-color:color-mix(in srgb,var(--flag) 60%,transparent);color:var(--flag)}
+  .chip:hover{background:var(--sand)}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 0;font-size:12px;color:var(--soft)}
+  .legend .chip{pointer-events:none}
+  @media print{.fig{break-inside:avoid;background:#fff;border-color:#ccc}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Build · hot · a journey through four questions · pointers DERIVED from <code>strands-data.js</code> · record in <code>docs/18</code></p>
+    <h1>Strands, answered</h1>
+    <p class="lede">Four questions asked of the basis we build on, each answered in a breath and pinned to the docs, the code, and Strands itself. The pointers are the page.</p>
+    <p class="legend"><span class="chip doc">doc §</span><span class="chip leaf">leaf #</span><span class="chip code">code L–L</span><span class="chip strands">Strands source</span><span class="chip seg">s1.02 segment</span> <span id="legend-note"></span></p>
+  </header>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--soft)"/></marker>
+      <marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--cyan)"/></marker>
+      <marker id="ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--flag)"/></marker>
+    </defs>
+  </svg>
+
+  <!-- 0 · the map -->
+  <figure class="fig" id="f0">
+    <h2><small>0</small>The route</h2>
+    <div class="sk"><svg viewBox="0 0 1000 160" role="img" aria-label="Four stations on a rail: configure, tune, self-improve, media workflow; under each the Strands layer it touches and a count of pointers">
+      <line x1="60" y1="70" x2="940" y2="70" class="rail"/>
+      <g id="map-q1"><circle cx="140" cy="70" r="12" class="box flag"/><text x="140" y="38" text-anchor="middle" class="t">1 · configure</text><text x="140" y="100" text-anchor="middle" class="s">createHarness · router · AgentConfig</text><text x="140" y="118" text-anchor="middle" class="k" data-cnt="0">— pointers</text></g>
+      <g id="map-q2"><circle cx="380" cy="70" r="12" class="box flag"/><text x="380" y="38" text-anchor="middle" class="t">2 · tune</text><text x="380" y="100" text-anchor="middle" class="s">Formula · Trainer · evals</text><text x="380" y="118" text-anchor="middle" class="k" data-cnt="1">— pointers</text></g>
+      <g id="map-q3"><circle cx="620" cy="70" r="12" class="box flag"/><text x="620" y="38" text-anchor="middle" class="t">3 · self-improve</text><text x="620" y="100" text-anchor="middle" class="s">hooks · Storage · rewritePolicy</text><text x="620" y="118" text-anchor="middle" class="k" data-cnt="2">— pointers</text></g>
+      <g id="map-q4"><circle cx="860" cy="70" r="12" class="box flag"/><text x="860" y="38" text-anchor="middle" class="t">4 · media workflow</text><text x="860" y="100" text-anchor="middle" class="s">left side · jobs · M-5…M-10</text><text x="860" y="118" text-anchor="middle" class="k" data-cnt="3">— pointers</text></g>
+      <text x="60" y="150" class="k" id="map-total">— pointers · — files · — segments</text>
+    </svg></div>
+    <figcaption class="cap"><span class="pv d">DERIVED</span> Counts from the register. Each station: the answer, a figure, then every pointer as a chip. Gaps the pointers expose close the page.</figcaption>
+  </figure>
+
+  <!-- 1 · configure -->
+  <section class="station" id="q1">
+    <h2><span class="n">station 1</span>How can we configure Strands?</h2>
+    <p class="ans">Three layers, one document. The harness options (<code>createHarness</code>), the model and its router (<code>ModelRouter</code>), and the agent passthrough (<code>AgentConfig</code>) are all plain data. A 3PT Policy compiles into them in <code>harnessOptions()</code>, <code>grants()</code> and <code>routerSpec()</code>. Try a shape by hand in the <code>strands</code> CLI first, then <code>/export</code> and diff.</p>
+    <figure class="fig" id="f1">
+      <div class="sk"><svg viewBox="0 0 1000 300" role="img" aria-label="A policy document compiles through @3pt/strands into three Strands configuration layers">
+        <rect x="20" y="70" width="210" height="160" rx="8" class="box data"/><text x="125" y="95" text-anchor="middle" class="t">policy v&lt;n&gt;</text>
+        <text x="36" y="120" class="s">rules[]</text><text x="36" y="138" class="s">contextPolicy {maxTokens, readOnce, hotTierMB}</text><text x="36" y="156" class="s">toolGrants[stage]</text><text x="36" y="174" class="s f">routes[stage] · not yet in Policy</text>
+        <text x="36" y="212" class="k">@3pt/core · policies/v0.json</text>
+        <path d="M230 150 L 300 150" class="e"/>
+        <rect x="300" y="50" width="230" height="200" rx="8" class="box flag"/><text x="415" y="75" text-anchor="middle" class="t">@3pt/strands · the compiler</text>
+        <text x="316" y="102" class="s">harnessOptions(policy, stage)</text><text x="316" y="120" class="s">grants(policy, stage)</text><text x="316" y="138" class="s">routerSpec(stage)</text><text x="316" y="156" class="s f">routerFor() · comment until installed</text>
+        <text x="316" y="190" class="k">index.ts L41 · L28 · L70 · L64</text><text x="316" y="208" class="k">docs/12 §3 · topology.json</text>
+        <path d="M530 100 L 600 80" class="e"/><path d="M530 150 L 600 165" class="e"/><path d="M530 200 L 600 245" class="e"/>
+        <rect x="600" y="40" width="380" height="82" rx="8" class="box surface"/><text x="790" y="62" text-anchor="middle" class="t">createHarness(options) · S2 S4 · L1 L3–L5 L20</text>
+        <text x="616" y="84" class="s">instructions · builtinTools · interventions · session</text><text x="616" y="99" class="s">memory · skills · plugins · mcpServers · subagent</text><text x="616" y="114" class="s">contextManager · caching · effort · model</text>
+        <rect x="600" y="136" width="380" height="60" rx="8" class="box surface"/><text x="790" y="158" text-anchor="middle" class="t">model: ModelRouter · S5 · L2</text>
+        <text x="616" y="182" class="s">ModelRouter(candidates, {strategy, maxSwitches}) · Fallback | Classifier · 'provider/name' · effort</text>
+        <rect x="600" y="210" width="380" height="72" rx="8" class="box surface"/><text x="790" y="232" text-anchor="middle" class="t">AgentConfig passthrough · S6 · L7 L11</text>
+        <text x="616" y="254" class="s">storage · sessionManager · memoryManager · checkpointing</text><text x="616" y="269" class="s">conversationManager · retryStrategy · structuredOutputSchema</text>
+        <text x="20" y="292" class="s">by hand first: strands CLI → /export a project → diff it against harnessOptions() · S18 L17</text>
+      </svg></div>
+      <figcaption class="cap"><span class="pv a">AUTHORED</span> From docs/12 §1 and §4 and the compiler source. Orange marks what the Policy type does not yet carry.</figcaption>
+    </figure>
+    <figure class="fig pt" id="p1"><div class="tbl-wrap" data-q="q1"></div><figcaption class="cap"><span class="pv d">DERIVED</span> <span data-cap="q1"></span></figcaption></figure>
+  </section>
+
+  <!-- 2 · tune -->
+  <section class="station" id="q2">
+    <h2><span class="n">station 2</span>How can we fine-tune Strands?</h2>
+    <p class="ans">Not the weights. Strands has no seam for weight fine-tuning, and the guide gives no AWS credits. It tunes the harness configuration instead: a <code>Formula</code> exposes tunable parameters, evals produce the reward, <code>Trainer.fit()</code> steps. Below that sit dials with no training: effort, steering, classifier routing. Ours is a <code>PolicyFormula</code> rewarded by M-19.</p>
+    <figure class="fig" id="f2">
+      <div class="sk"><svg viewBox="0 0 1000 320" role="img" aria-label="The optimizer loop: PolicyFormula, rollout, evals, reward, optimizer, next policy; model weights struck out; a band of dials that need no training">
+        <rect x="20" y="30" width="200" height="60" rx="8" class="box data"/><text x="120" y="55" text-anchor="middle" class="t">model weights</text><text x="120" y="75" text-anchor="middle" class="s">provider-side · no Strands seam · S21</text>
+        <line x1="34" y1="40" x2="206" y2="82" class="strike"/>
+        <rect x="260" y="40" width="200" height="70" rx="8" class="box flag"/><text x="360" y="62" text-anchor="middle" class="t">PolicyFormula · ours · TO-BUILD</text><text x="360" y="82" text-anchor="middle" class="s">get_tunable_params → rules · grants · routes</text><text x="360" y="98" text-anchor="middle" class="s">update_params → policy v&lt;n+1&gt;</text>
+        <rect x="520" y="40" width="200" height="70" rx="8" class="box surface"/><text x="620" y="62" text-anchor="middle" class="t">AgentRolloutEngine</text><text x="620" y="82" text-anchor="middle" class="s">the harness runs Plan → Build → Instrument</text><text x="620" y="98" text-anchor="middle" class="s">LocalRolloutEngine · S14</text>
+        <rect x="780" y="40" width="200" height="70" rx="8" class="box surface"/><text x="880" y="62" text-anchor="middle" class="t">strands_evals · S15 · L15</text><text x="880" y="82" text-anchor="middle" class="s">Experiment(cases, evaluators)</text><text x="880" y="98" text-anchor="middle" class="s">Case ← Plan.evaluation[]</text>
+        <rect x="780" y="150" width="200" height="60" rx="8" class="box inst"/><text x="880" y="172" text-anchor="middle" class="t">RewardFunction</text><text x="880" y="192" text-anchor="middle" class="s">M-19 harness_health · M-4 · M-6 · M-8 · 1/M-1</text>
+        <rect x="520" y="150" width="200" height="60" rx="8" class="box surface"/><text x="620" y="172" text-anchor="middle" class="t">FormulaOptimizer · Trainer.fit()</text><text x="620" y="192" text-anchor="middle" class="s">ContrastiveReflection · MultiAgent · 0.0.1</text>
+        <rect x="260" y="150" width="200" height="60" rx="8" class="box data"/><text x="360" y="172" text-anchor="middle" class="t">policy v&lt;n+1&gt;</text><text x="360" y="192" text-anchor="middle" class="s">Atlas policies · harness/policies/v&lt;n&gt;.json</text>
+        <path d="M460 75 L 520 75" class="e"/><path d="M720 75 L 780 75" class="e"/><path d="M880 110 L 880 150" class="e"/><path d="M780 180 L 720 180" class="e"/><path d="M520 180 L 460 180" class="e b"/><path d="M360 150 L 360 110" class="e"/>
+        <text x="740" y="130" class="s">reward signal</text><text x="466" y="172" class="s f">update_params</text><text x="368" y="134" class="s">next rollout builds from it</text>
+        <text x="260" y="236" class="s f">today: rewritePolicy(prev, findings, tag) appends findings as rules · instrument/src/index.ts L4</text>
+        <rect x="20" y="254" width="960" height="56" rx="8" class="box surface"/><text x="36" y="274" class="k">dials without training · S4 S5 S13 S17 · L2 L5 L13</text>
+        <text x="36" y="296" class="s">effort auto…max · caching auto · contextManager auto | agentic · ClassifierStrategy · steering Proceed | Guide (100% pass, 66% fewer input tokens)</text>
+      </svg></div>
+      <figcaption class="cap"><span class="pv a">AUTHORED</span> From docs/13 §9 and the optimizer and evals blogs (S14, S15). Strands' own numbers: AppWorld 72.6 → 95.8 tuning the system prompt alone.</figcaption>
+    </figure>
+    <figure class="fig pt" id="p2"><div class="tbl-wrap" data-q="q2"></div><figcaption class="cap"><span class="pv d">DERIVED</span> <span data-cap="q2"></span></figcaption></figure>
+  </section>
+
+  <!-- 3 · self-improve -->
+  <section class="station" id="q3">
+    <h2><span class="n">station 3</span>How is Strands open to self-improvement?</h2>
+    <p class="ans">Strands does not improve itself; it exposes the seams. Hooks see every call, the harness is data, Storage and snapshots remember, checkpoints pause and roll back, memory stores carry, the optimizer trains, a Graph run stays inspectable. 3PT closes the edge: <code>rewritePolicy()</code> writes the next policy, and a checkpoint is a triple.</p>
+    <figure class="fig" id="f3">
+      <div class="sk"><svg viewBox="0 0 1000 330" role="img" aria-label="Six Strands seams around the closing edge 3PT adds: see, remember, carry on the left; rebuild, pause and roll back, train on the right; inspect below">
+        <rect x="430" y="24" width="140" height="44" rx="8" class="box data"/><text x="500" y="51" text-anchor="middle" class="t">policy v&lt;n&gt;</text>
+        <rect x="380" y="124" width="240" height="90" rx="8" class="box flag"/><text x="392" y="142" class="k">the closing edge · ours</text><text x="500" y="164" text-anchor="middle" class="t">rewritePolicy() → policy v&lt;n+1&gt;</text><text x="500" y="182" text-anchor="middle" class="s">next harnessOptions() builds from it</text><text x="500" y="200" text-anchor="middle" class="s">checkpoint = (snapshot id, tag cp/n, policy v)</text>
+        <path d="M500 124 L 500 68" class="e b"/><text x="508" y="100" class="s f">the only edge that changes the rules</text>
+        <rect x="20" y="30" width="290" height="54" rx="8" class="box surface"/><text x="32" y="50" class="t">see · Plugin hooks · S12 · L9</text><text x="32" y="70" class="s">Before/AfterModelCall · Before/AfterToolCall · AfterInvocation → measurementPlugin()</text>
+        <rect x="20" y="143" width="290" height="54" rx="8" class="box surface"/><text x="32" y="163" class="t">remember · Storage + snapshots · S8 S10 · L7</text><text x="32" y="183" class="s">write read delete list namespace · immutable_history/&lt;uuid7&gt; → AtlasStorage</text>
+        <rect x="20" y="256" width="290" height="54" rx="8" class="box surface"/><text x="32" y="276" class="t">carry · MemoryStore · S9 · L8</text><text x="32" y="296" class="s">search add addMessages initialize → AtlasMemoryStore (to build)</text>
+        <rect x="690" y="30" width="290" height="54" rx="8" class="box surface"/><text x="702" y="50" class="t">rebuild · createHarness(options) · S2 S17 · L1</text><text x="702" y="70" class="s">the harness is data: new options, new harness, no new code</text>
+        <rect x="690" y="143" width="290" height="54" rx="8" class="box surface"/><text x="702" y="163" class="t">pause &amp; roll back · checkpointing · S11 · L11</text><text x="702" y="183" class="s">stop_reason: checkpoint · resume from Checkpoint{position, cycle_index}</text>
+        <rect x="690" y="256" width="290" height="54" rx="8" class="box surface"/><text x="702" y="276" class="t">train · Formula · Trainer.fit() · S14 · L14</text><text x="702" y="296" class="s">the configuration as trainable parameters → PolicyFormula</text>
+        <rect x="380" y="262" width="240" height="48" rx="8" class="box surface"/><text x="500" y="282" text-anchor="middle" class="t">inspect · Graph · S10 S20 · L19</text><text x="500" y="299" text-anchor="middle" class="s">persists orchestrator state and node transitions</text>
+        <path d="M310 57 L 380 140" class="e"/><path d="M310 170 L 380 170" class="e"/><path d="M310 283 L 380 205" class="e"/>
+        <path d="M690 57 L 620 140" class="e"/><path d="M690 170 L 620 170" class="e"/><path d="M690 283 L 620 205" class="e"/>
+        <path d="M500 262 L 500 214" class="e d"/>
+      </svg></div>
+      <figcaption class="cap"><span class="pv a">AUTHORED</span> Seams from docs/12 §1 and docs/13 §3, §6, §9; the closing edge from docs/00 and docs/10 §4.2. Our loop, router and session manager are struck.</figcaption>
+    </figure>
+    <figure class="fig pt" id="p3"><div class="tbl-wrap" data-q="q3"></div><figcaption class="cap"><span class="pv d">DERIVED</span> <span data-cap="q3"></span></figcaption></figure>
+  </section>
+
+  <!-- 4 · media -->
+  <section class="station" id="q4">
+    <h2><span class="n">station 4</span>How does the 3PT workflow look for media-heavy content?</h2>
+    <p class="ans">The loop runs on the right side; the media is the left. Plan reads the media state. Build, a Strands harness with the media tools granted, edits the pipelines; the worker drains the jobs. Instrument reads M-5 to M-10 and rewrites the context policy, and the migrations follow.</p>
+    <figure class="fig" id="f4">
+      <div class="sk"><svg viewBox="0 0 1000 360" role="img" aria-label="One iteration over the two sides of the triangle: Plan, Build, Instrument on the right; Atlas media collections, the worker, the blob battery and @3pt/media on the left; the metrics flow right and the policy flows left">
+        <rect x="600" y="30" width="360" height="64" rx="8" class="box plan"/><text x="780" y="52" text-anchor="middle" class="t">Plan · selectMode(last, recent)</text><text x="780" y="74" text-anchor="middle" class="s">reads checkpoints · measurements · media state (tiers, transcripts, jobs)</text>
+        <rect x="600" y="124" width="360" height="64" rx="8" class="box build"/><text x="780" y="146" text-anchor="middle" class="t">Build · a Strands harness</text><text x="780" y="168" text-anchor="middle" class="s">media tools granted: index · transcribe (read-once) · tier · blob.get</text>
+        <rect x="600" y="218" width="360" height="82" rx="8" class="box inst"/><text x="780" y="240" text-anchor="middle" class="t">Instrument · rewritePolicy()</text><text x="780" y="260" text-anchor="middle" class="s">in: M-5 reread · M-6 reuse · M-8 hot hit · M-10 bytes/tier · M-17</text><text x="780" y="278" text-anchor="middle" class="s">out: contextPolicy readOnceTranscripts · hotTierBudgetMB · streams (M-15)</text>
+        <path d="M780 94 L 780 124" class="e"/><path d="M780 188 L 780 218" class="e"/>
+        <path d="M960 260 C 998 220, 998 100, 960 62" class="e b"/><text x="968" y="168" class="s f" transform="rotate(90 968 168)">backfeed</text>
+        <text x="30" y="24" class="k">left side · media context</text><text x="600" y="24" class="k">right side · the harness</text>
+        <rect x="110" y="30" width="400" height="64" rx="8" class="box atlas"/><text x="310" y="52" text-anchor="middle" class="t">Atlas · media_index · transcripts · jobs</text><text x="310" y="74" text-anchor="middle" class="s">MediaAsset{tier, location, transcriptId, lastRead} · Job{kind, status}</text>
+        <ellipse cx="60" cy="42" rx="22" ry="8" class="box atlas"/><path d="M38 42v26c0 4.4 9.8 8 22 8s22-3.6 22-8V42" class="box atlas"/>
+        <rect x="110" y="124" width="400" height="64" rx="8" class="box surface"/><text x="310" y="146" text-anchor="middle" class="t">apps/worker · tick()</text><text x="310" y="168" text-anchor="middle" class="s">jobFor(asset): transcribe if no transcript, else tier if chooseTier() disagrees · migrate: none yet</text>
+        <rect x="110" y="218" width="190" height="56" rx="8" class="box battery"/><text x="205" y="240" text-anchor="middle" class="t">blob battery</text><text x="205" y="260" text-anchor="middle" class="s">GridFS · R2 · fs</text>
+        <rect x="320" y="218" width="190" height="56" rx="8" class="box build"/><text x="415" y="240" text-anchor="middle" class="t">@3pt/media</text><text x="415" y="260" text-anchor="middle" class="s">chooseTier · needsTranscript · jobFor</text>
+        <path d="M310 124 L 310 94" class="e d"/><path d="M205 188 L 205 218" class="e"/><path d="M415 218 L 415 188" class="e"/>
+        <path d="M510 62 L 600 62" class="e d"/><text x="520" y="54" class="s c">media state</text>
+        <path d="M600 156 L 516 226" class="e"/><text x="522" y="176" class="s">edits pipelines · calls tools</text>
+        <path d="M500 94 C 560 130, 545 220, 600 250" class="e d"/><text x="548" y="212" class="s c">M-5 … M-10</text>
+        <path d="M600 290 C 560 326, 480 326, 415 276" class="e b"/><text x="470" y="322" class="s f">new contextPolicy → migrations</text>
+        <text x="20" y="346" class="s">two rules hold: read an image once and trust the transcript · keep hot what is asked for, let the rest sleep</text>
+        <text x="20" y="358" class="k">no feature classifies, captions or judges images · docs/05</text>
+      </svg></div>
+      <figcaption class="cap"><span class="pv a">AUTHORED</span> From docs/00 two sides, docs/10 §4.6, the media and worker source. Sketch f5 draws the same rail over time; the Direction leaf runs it on a construction firm.</figcaption>
+    </figure>
+    <figure class="fig pt" id="p4"><div class="tbl-wrap" data-q="q4"></div><figcaption class="cap"><span class="pv d">DERIVED</span> <span data-cap="q4"></span></figcaption></figure>
+  </section>
+
+  <!-- 5 · gaps -->
+  <section class="station" id="gaps">
+    <h2><span class="n">end of the line</span>What the pointers do not reach</h2>
+    <figure class="fig pt" id="p5"><div class="tbl-wrap" id="gaps-tbl"></div><figcaption class="cap"><span class="pv d">DERIVED</span> <span id="gaps-cap"></span> Every row is a wiring step or a TO-BUILD, none a design question. The first <code>pnpm install</code> with disk promotes or demotes the ledger rows.</figcaption></figure>
+  </section>
+
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Configure it. Tune it. Let it see itself. Then point at where it is not yet true.</p></footer>
+</div>
+<script>
+(function(){
+  var T = window.T; if (!T || !T.STRANDS_Q) return;
+  var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  var chip = function(p){ var ext = /^https?:/.test(p[1]); return '<a class="chip '+p[2]+'" href="'+(ext?p[1]:'./'+p[1])+'"'+(ext?' target="_blank" rel="noopener"':'')+' title="'+esc(p[1])+'">'+esc(p[0])+'</a>'; };
+  var segChip = function(s){ return '<a class="chip seg" href="./view.html?f=brainstorming.md#'+s+'" title="open the segment in the transcript">'+s+'</a>'; };
+  var tally = T.strandsTally();
+  T.STRANDS_Q.forEach(function(q, i){
+    var host = document.querySelector('[data-q="'+q.id+'"]'); if (!host) return;
+    host.innerHTML = '<table><thead><tr>'+q.cols.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr></thead><tbody>'
+      + q.rows.map(function(r){ return '<tr><td>'+esc(r[0])+'</td><td>'+r[1].map(chip).join('')+'</td><td>'+r[2].map(chip).join('')+'</td><td>'+r[3].map(chip).join('')+'</td><td class="x">'+esc(r[4])+'</td></tr>'; }).join('')
+      + '<tr><td>Spoken</td><td colspan="3">'+q.segs.map(segChip).join('')+'</td><td class="x"><a href="./'+q.doc+'">read the section in docs/18 →</a></td></tr></tbody></table>';
+    var cap = document.querySelector('[data-cap="'+q.id+'"]'); var n = tally.perQ[i];
+    if (cap) cap.textContent = n+' pointers over '+q.rows.length+' rows, '+q.segs.length+' segments. Doc chips land on the heading; code chips open the line range on GitHub.';
+    var m = document.querySelector('#map-'+q.id+' [data-cnt]'); if (m) m.textContent = n+' pointers';
+  });
+  var g = document.getElementById('gaps-tbl');
+  g.innerHTML = '<table><thead><tr><th>Gap</th><th>Where it shows</th><th>Ledger</th></tr></thead><tbody>'+T.STRANDS_GAPS.map(function(r){ return '<tr><td>'+esc(r[0])+'</td><td class="x">'+esc(r[1])+'</td><td class="x">'+esc(r[2])+'</td></tr>'; }).join('')+'</tbody></table>';
+  document.getElementById('gaps-cap').textContent = tally.gaps+' gaps, all read off the code while writing the pointers.';
+  document.getElementById('map-total').textContent = tally.total+' pointers · '+tally.byKind.doc+' doc · '+tally.byKind.code+' code · '+tally.byKind.strands+' Strands · '+tally.byKind.leaf+' leaf · '+tally.files+' files · '+tally.segs+' segments';
+  document.getElementById('legend-note').textContent = tally.total+' pointers, none typed by hand into this page.';
+})();
+</script>
+</body>
+</html>

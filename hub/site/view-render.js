@@ -51,6 +51,9 @@
     };
     /* Hard-wrapped prose: consecutive text lines join into ONE paragraph, and an indented
        line under an open list item continues that item. */
+    /* heading ids: the same slug rule as scripts/prov.mjs, so view.html?f=<doc>#<slug> lands on the heading */
+    var seen = {};
+    var hid = function(t){ var s = t.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-') || 'section'; if (seen[s]) { seen[s]++; s += '-' + seen[s]; } else seen[s] = 1; return s; };
     var lines = src.split('\n'), html = [], list = null, para = [], m;
     var flushPara = function(){ if (para.length) { html.push('<p>'+inline(para.join(' '))+'</p>'); para = []; } };
     var closeList = function(){ flushPara(); if (list) { html.push('</'+list+'>'); list = null; } };
@@ -64,7 +67,7 @@
       }
       if (!isBlock(L)) { if (list) closeList(); para.push(L.trim()); continue; }
       flushPara();
-      if ((m = L.match(/^(#{1,6})\s+(.*)/))) { closeList(); html.push('<h'+m[1].length+'>'+inline(m[2])+'</h'+m[1].length+'>'); continue; }
+      if ((m = L.match(/^(#{1,6})\s+(.*)/))) { closeList(); html.push('<h'+m[1].length+' id="'+hid(m[2])+'">'+inline(m[2])+'</h'+m[1].length+'>'); continue; }
       if (/^\s*(---|\*\*\*|___)\s*$/.test(L)) { closeList(); html.push('<hr>'); continue; }
       if ((m = L.match(/^>\s?(.*)/))) { closeList(); html.push('<blockquote>'+inline(m[1])+'</blockquote>'); continue; }
       if (L.trim().charAt(0)==='|' && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i+1]||'')) {

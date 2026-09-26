@@ -40,6 +40,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Strands, drawn: ten Mermaid diagrams of its systems, for learning | `docs/13-strands-diagrams.md` |
 | Sandbox provisioning: the box (Colima + Ansible) and the Sandbox cluster (Atlas CLI), the provisioning MCP | `docs/16-sandbox-provisioning.md` |
 | Atlas console, screen by screen: ids, what goes in `.env`, CLI vs MCP doors, tiers and the scaling affordance | `docs/17-atlas-setup-dossier.md` |
+| Strands, answered: how to configure it, fine-tune it, why it is open to self-improvement, the media workflow; every claim pinned to docs, code, Strands | `docs/18-strands-questions.md` (hub leaf `strands-journey.html`) |
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
 | CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
 | How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -174,3 +175,9 @@ Read `hub/README.md` before touching it, and load the `hub-workspace` skill vend
   the checkpoint; Instrument only writes `findings`. Stages get `freezePolicy()` and `stageStore()`, which
   refuses writes to `policies` and `checkpoints`. `3pt improve` runs the improver alone. `@3pt/build` is a
   dry run (no `HarnessAdapter`) until `@3pt/strands` compiles.
+- 2026-09-26 14:50 ET: **Strands questions answered with pointers.** `docs/18-strands-questions.md` answers configure /
+  fine-tune / self-improve / media workflow and pins every claim to a doc heading, a code line range, or a Strands source;
+  the hub leaf `strands-journey.html` renders it from the register `hub/site/strands-data.js` (tallies DERIVED). The Viewer
+  now gives every heading a slug id (`view.html?f=<doc>#<slug>`, same rule as `scripts/prov.mjs`) and `check-view.mjs`
+  fails on any anchor that does not land. Eight gaps listed in docs/18 §5 (no `routes` on `Policy`, `AtlasStorage`
+  uncalled, `PolicyFormula`/`harness/evals` unwritten, media tools not `tool()`s). Built on branch `lane/strands-journey`.

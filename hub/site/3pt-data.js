@@ -70,6 +70,8 @@
       epigram:'The box (a Colima VM converged by Ansible) and the Sandbox cluster (Atlas CLI): one deterministic, re-runnable flow, and the MCP that could do it instead.' },
     { id:'DM', slug:'atlas-dossier',  name:'Atlas dossier',        verb:'Provisioning', cluster:'build', temp:'hot', doc:'docs/17-atlas-setup-dossier.md',
       epigram:'The Atlas console screen by screen: org and project ids, what goes in .env, the CLI and MCP doors to each affordance, tiers, and the scaling an agent may invoke.' },
+    { id:'DJ', slug:'strands-questions', name:'Strands questions', verb:'Answering', cluster:'build', temp:'hot', doc:'docs/18-strands-questions.md',
+      epigram:'Four questions of the Strands basis (configure, fine-tune, self-improve, media workflow), each answered and pinned to the docs, the code, and Strands; the gaps the pointers expose.' },
     { id:'D4', slug:'resources',      name:'Resources & credits',  verb:'Provisioning', cluster:'build', temp:'warm', doc:'docs/04-resources.md',
       epigram:'Every partner, credit, MCP, and which 3PT slot it fills.' },
     { id:'DB', slug:'brainstorming',  name:'Brainstorming transcript', verb:'Recording', cluster:'record', temp:'cold', doc:'brainstorming.md',
