@@ -95,7 +95,7 @@
     </button>
     <figure class="bulb__panel" id="bulb-pop" hidden>
       <b class="bulb__title">New from the harness</b>
-      <p class="bulb__sub">The harness proposed these from how people use the app, then shipped them.</p>
+      <p class="bulb__sub">The harness found, tested, approved and shipped these itself. Nobody asked for them.</p>
       <ol class="bulb__list" id="bulb-list"></ol>
       <p class="bulb__sub" style="margin-top:8px"><span class="pv d">DERIVED</span>from <code>sim-data.js</code> · Acme Builders, simulated · <a href="./sim.html">Simulator</a></p>
     </figure>
@@ -156,7 +156,7 @@
 
   <!-- who drives: the harness improves itself; the user only sees the result -->
   <figure class="fig" id="driver">
-    <svg viewBox="0 0 1000 330" role="img" aria-label="Left: the harness drives itself in a loop of watch, find, rewrite, save. Right: the user edits nothing and sees insights, screens, opportunities and suggestions get better with each version.">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Left: the harness drives itself in a loop of watch, find, rewrite, approve and ship. Right: the user approves and edits nothing and sees insights, screens, opportunities and suggestions get better with each version.">
       <defs>
         <marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--instrument)"/></marker>
         <marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--warn)"/></marker>
@@ -167,7 +167,7 @@
         <rect x="80" y="58" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="84">1 · watches how people use it</text>
         <rect x="80" y="122" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="148">2 · finds a gap or a waste</text>
         <rect x="80" y="186" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="212" textLength="306" lengthAdjust="spacingAndGlyphs">3 · rewrites its rules, context, tools</text>
-        <rect x="80" y="250" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="276">4 · saves version vN to Atlas</text>
+        <rect x="80" y="250" width="340" height="40" rx="8" fill="var(--instrument)" fill-opacity=".12" stroke="var(--instrument)"/><text x="98" y="276">4 · tests, approves, saves vN</text>
       </g>
       <path d="M250 98v22M250 162v22M250 226v22" stroke="var(--instrument)" stroke-width="2.5" marker-end="url(#ahd)"/>
       <path d="M80 270C30 270 30 78 78 78" fill="none" stroke="var(--instrument)" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ahd)"/>
@@ -175,14 +175,14 @@
       <line x1="500" y1="40" x2="500" y2="320" stroke="var(--line-strong)" stroke-width="2" stroke-dasharray="4 6"/>
       <path d="M446 175H552" stroke="var(--warn)" stroke-width="3" marker-end="url(#ahw)"/>
       <text x="500" y="162" text-anchor="middle" font-size="16" font-weight="700" fill="var(--warn)">ships vN</text>
-      <text x="500" y="202" text-anchor="middle" font-size="14" class="s">user edits</text>
+      <text x="500" y="202" text-anchor="middle" font-size="14" class="s">user approves</text>
       <text x="500" y="220" text-anchor="middle" font-size="14" class="s">nothing</text>
       <text x="570" y="26" class="k" font-size="17" fill="var(--warn)">The user · sees the result</text>
       <rect x="560" y="40" width="430" height="280" rx="12" fill="none" stroke="var(--warn)" stroke-width="2"/>
       <g font-size="14" class="s" text-anchor="middle"><text x="805" y="66">v1</text><text x="850" y="66">v2</text><text x="895" y="66">v3</text><text x="940" y="66">v4</text></g>
       <g id="driver-rows"></g>
     </svg>
-    <figcaption><span class="pv a">AUTHORED</span>The user never tunes the harness. Each version shows up as better insights, screens, opportunities and suggestions. The bulb, top right, lists what changed.</figcaption>
+    <figcaption><span class="pv a">AUTHORED</span>The harness approves its own changes. The user never tunes it. Each version shows up as better insights, screens, opportunities and suggestions. The bulb, top right, lists what changed.</figcaption>
   </figure>
 
   <figure class="fig rail-fig" id="clock">

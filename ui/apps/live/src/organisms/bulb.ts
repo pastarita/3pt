@@ -17,7 +17,7 @@ export function bulb(fetchNews: (since: number) => Promise<News>): Bulb {
   const list = h('ol', { class: 'bulb__list' });
   const panel = h('section', { class: 'bulb__panel', id: 'bulb-panel', hidden: true, 'aria-label': 'New from the harness' },
     h('b', { class: 'bulb__title' }, 'New from the harness'),
-    h('p', { class: 'bulb__sub' }, 'The harness proposed these from how people use the app, then shipped them.'), list,
+    h('p', { class: 'bulb__sub' }, 'The harness found, tested, approved and shipped these itself. Nobody asked for them.'), list,
     h('a', { class: 'bulb__more', href: '#/harness' }, 'Every version →'));
   const el = h('div', { class: 'bulb bulb--quiet' }, tip, btn, panel);
   let news: News | null = null, top = 0, pinged = 0;
