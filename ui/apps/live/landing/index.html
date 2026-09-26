@@ -19,7 +19,12 @@ img{display:block;max-width:100%}
 .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
 .btn{display:inline-flex;align-items:center;gap:8px;font:650 15px/1 var(--sans);padding:14px 20px;border-radius:10px;text-decoration:none;border:1px solid var(--lineStrong);background:rgba(15,18,22,.55);backdrop-filter:blur(6px);transition:transform .12s,border-color .12s}
 .btn:hover{transform:translateY(-1px);border-color:var(--soft)}
-.btn--primary{background:var(--flag);border-color:var(--flag);color:#0f1216}
+.btn--primary{color:#1a0c07;border-color:rgba(255,160,130,.55);text-shadow:0 1px 0 rgba(255,255,255,.28);
+  background:var(--noise),radial-gradient(120% 140% at 30% 0%,#ffa184 0%,rgba(255,161,132,0) 55%),linear-gradient(180deg,#ff8561 0%,#f4623f 55%,#df5231 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 0 rgba(90,20,5,.22),0 1px 2px rgba(0,0,0,.4),0 10px 26px -10px rgba(255,107,74,.75),0 0 0 1px rgba(255,107,74,.25)}
+.btn--primary:hover{border-color:rgba(255,200,180,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 0 rgba(90,20,5,.22),0 1px 2px rgba(0,0,0,.4),0 14px 36px -10px rgba(255,107,74,.9),0 0 28px -4px rgba(255,107,74,.55)}
+.btn--primary:active{transform:translateY(1px);box-shadow:inset 0 2px 6px rgba(90,20,5,.35),0 4px 12px -6px rgba(255,107,74,.6)}
+.btn:not(.btn--primary){background:var(--noise),linear-gradient(180deg,rgba(30,37,46,.8),rgba(15,18,22,.7));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -12px rgba(0,0,0,.8)}
 .btn--primary:hover{border-color:#fff}
 :focus-visible{outline:2px solid var(--flag);outline-offset:3px}
 .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--flag)}
@@ -64,7 +69,7 @@ nav .btn{padding:10px 14px;font-size:14px}
 .offer p{margin:0 0 14px;font-size:14px;color:var(--soft)}
 .offer__b{display:flex;gap:8px}
 .offer__b span{flex:1;text-align:center;font:650 14px/1 var(--sans);padding:11px;border-radius:10px;border:1px solid var(--lineStrong)}
-.offer__b span:first-child{background:var(--flag);border-color:var(--flag);color:#0f1216}
+.offer__b span:first-child{color:#1a0c07;border-color:rgba(255,160,130,.55);text-shadow:0 1px 0 rgba(255,255,255,.28);background:var(--noise),linear-gradient(180deg,#ff8561,#f4623f 55%,#df5231);box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 0 rgba(90,20,5,.22),0 8px 20px -10px rgba(255,107,74,.7)}
 .offer__f{margin-top:10px;font:600 11px/1.4 var(--mono);color:var(--soft)}
 .device-wrap{position:relative}
 .float{position:absolute;z-index:3;right:-28px;top:16%;max-width:230px;background:var(--panel);border:1px solid var(--plan);border-radius:14px;padding:12px 14px;font-size:13.5px;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:rise .7s 1s both}
@@ -83,6 +88,15 @@ nav .btn{padding:10px 14px;font-size:14px}
 .feel p{margin:0;color:var(--soft);font-size:15px}
 .feel q{display:block;margin-top:12px;font-size:13.5px;color:var(--ink);font-style:italic;quotes:"“" "”"}
 
+.point code{font:12.5px var(--mono);color:var(--ink);background:rgba(12,17,23,.6);padding:1px 5px;border-radius:5px}
+.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}.stack span{font:600 12px/1 var(--mono);color:var(--soft);padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--noise),rgba(21,26,33,.8)}
+/* roles */
+.roles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px}
+.role{--c:var(--soft);position:relative;border-radius:16px;padding:20px 18px;border:1px solid color-mix(in srgb,var(--c) 26%,var(--line));background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--c) 13%,transparent),transparent 58%),var(--noise),linear-gradient(180deg,#1a2029,#12171d);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 42px -14px color-mix(in srgb,var(--c) 38%,transparent);display:flex;flex-direction:column;gap:7px}
+.role b{font-size:16px;margin-bottom:6px;color:var(--c)}
+.role span{font-size:13.5px;padding:7px 10px;border-radius:9px;background:rgba(12,17,23,.6);border:1px solid var(--line)}
+.role span:first-of-type{border-color:color-mix(in srgb,var(--c) 45%,var(--line));color:var(--ink)}
+@media (max-width:900px){.roles{grid-template-columns:1fr 1fr}}
 /* sections */
 section{padding:88px 0}
 h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 18px;max-width:18ch}
@@ -245,6 +259,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
     </a>
     <div class="links">
       <a href="#feel">How it works</a>
+      <a href="#roles">Roles</a>
       <a href="#versions">Versions</a>
       <a href="#atlas">Atlas</a>
       <a href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Code</a>
@@ -257,9 +272,9 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
   <img class="hero__bg" src="/hero-bim.svg" alt="" aria-hidden="true">
   <div class="wrap hero__grid">
     <div>
-      <div class="eyebrow">Self-improving software · Recursive Harnessing</div>
+      <div class="eyebrow">A self-improving harness for general contractors</div>
       <h1>The harness for your <em>construction projects</em></h1>
-      <p>Your crew takes photos and uses the app. 3PT learns from how they work, builds the next feature, approves it and ships it. Nobody has to ask. The harness rewrites its own rules and saves every version in MongoDB Atlas, so any earlier version can come back.</p>
+      <p>Your supers, PMs and project engineers take photos and use the app. 3PT is a self-improving harness. It learns how each role works, builds the next feature, ships it and scores it. A version that does worse rolls back. Every version is a checkpoint in MongoDB Atlas.</p>
       <div class="ctas">
         <a class="btn btn--primary" href="/app/">Open the app →</a>
         <a class="btn" href="#versions">See what it built</a>
@@ -272,13 +287,13 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
       <div class="device__tag">Unit 206 · plumbing · open wall</div>
       <div class="offer">
         <span class="offer__k">New for you</span>
-        <h3>Your Friday owner pack, in one tap</h3>
-        <p>You built it by hand every week: 28 hours a job. I built it from this week's photos and turned it on.</p>
+        <h3>Your OAC photo pack, in one tap</h3>
+        <p>Your team built the owner-architect-contractor photo pack by hand every Friday: 28 hours a job. I built it from this week's photos and turned it on.</p>
         <div class="offer__b"><span>Open it</span><span>Undo</span></div>
         <div class="offer__f">Example feature from the simulated firm</div>
       </div>
     </div>
-    <div class="float" aria-hidden="true"><b>Explore · made for you</b>“Units closing this week”: a new screen for superintendents.</div>
+    <div class="float" aria-hidden="true"><b>Explore · made for you</b>“Units closing this week”: open-wall photos to check before drywall.</div>
     </div>
   </div>
 </header>
@@ -286,23 +301,38 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
 <main>
 <section id="feel">
   <div class="wrap">
-    <div class="eyebrow">How it feels</div>
-    <h2>Software that notices, then ships.</h2>
-    <p class="lede">No settings screen and no feature requests. People do their job. The app gets better at that job, and the harness keeps only what works.</p>
+    <div class="eyebrow">On the job</div>
+    <h2>Software that learns your jobsite, then ships.</h2>
+    <p class="lede">No settings screen and no ticket to IT. Your crew does the job. The harness learns the job and keeps only what helps.</p>
     <ol class="feel">
-      <li style="--c:var(--plan)"><span class="n">1 · YOU WORK</span><b>Use it as normal</b><p>Take photos. Search. Build the owner update.</p></li>
-      <li style="--c:var(--build)"><span class="n">2 · IT NOTICES</span><b>It sees the pattern</b><p>The same 3-hour task, every Friday, on every job.</p></li>
-      <li style="--c:var(--instrument)"><span class="n">3 · IT SHIPS</span><b>A new feature, for you</b><p>It builds the tool, approves it and turns it on.</p><q>Here is something we built for you.</q></li>
-      <li style="--c:var(--flag)"><span class="n">4 · IT CHECKS</span><b>Keeps it or rolls it back</b><p>It scores each version on use. A worse version rolls back by itself.</p></li>
+      <li style="--c:var(--plan)"><span class="n">1 · YOUR CREW WORKS</span><b>Photos, searches, owner updates</b><p>Supers shoot MEP rough-in. PMs search for "before drywall". PEs build the turnover package.</p></li>
+      <li style="--c:var(--build)"><span class="n">2 · IT NOTICES</span><b>It sees the pattern</b><p>The same OAC photo pack every Friday. The same open-wall search on every unit.</p></li>
+      <li style="--c:var(--instrument)"><span class="n">3 · IT SHIPS</span><b>A new screen, made for you</b><p>It adds a field, a tool or a screen, and turns it on.</p><q>Here is something we built for you.</q></li>
+      <li style="--c:var(--flag)"><span class="n">4 · IT CHECKS</span><b>Kept or rolled back</b><p>Each version is scored on use. A worse version rolls back by itself.</p></li>
     </ol>
+  </div>
+</section>
+
+<section id="roles" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow">Every role on the job</div>
+    <h2>Each person gets the screen the harness chose for them.</h2>
+    <p class="lede">The harness writes one layout per role and changes it when the role's work changes. These are the layouts in the current version.</p>
+    <div class="roles">
+      <div class="role" style="--c:var(--build)"><b>Superintendent</b><span>Units closing</span><span>Needs you</span><span>This week</span><span>Ask your photos</span></div>
+      <div class="role" style="--c:var(--plan)"><b>Project manager</b><span>Needs you</span><span>Time savers</span><span>Progress</span><span>Ask your photos</span></div>
+      <div class="role" style="--c:var(--cyan)"><b>Owner</b><span>Progress</span><span>All projects</span><span>Time savers</span></div>
+      <div class="role" style="--c:var(--instrument)"><b>Project engineer</b><span>Needs you</span><span>Closeout</span><span>Ask your photos</span><span>This week</span></div>
+      <div class="role" style="--c:var(--flag)"><b>Safety manager</b><span>Hazards</span><span>Needs you</span><span>This week</span></div>
+    </div>
   </div>
 </section>
 
 <section id="versions" style="padding-top:40px">
   <div class="wrap">
-    <div class="eyebrow">Recursive harnessing</div>
+    <div class="eyebrow">Self-improving harness · Recursive Harnessing</div>
     <h2>Every new feature came from how people used it.</h2>
-    <p class="lede">Ten versions over seven years of a simulated firm. Each card says what the harness noticed, then what it built. One change made answers worse, so it rolled back.</p>
+    <p class="lede">Ten versions over seven years of a simulated general contractor. Each card says what the harness noticed on the jobs, then what it shipped. One change made answers worse, so it rolled back.</p>
     <div class="live" id="live"><i></i><span>Simulated firm history (built-in copy)</span></div>
     <div class="vscroll">
       <div class="vscroll__bar">
@@ -319,13 +349,13 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
 <section id="loop">
   <div class="wrap">
     <div class="eyebrow">Under the hood</div>
-    <h2>Three points. One loop. Every turn, a better harness.</h2>
-    <p class="lede">The run cannot change its own rules. Only the improver can, and only from what Instrument found. So each new version has a reason you can read.</p>
+    <h2>Plan, Build, Instrument. Then the improver.</h2>
+    <p class="lede">The stages run on a frozen copy of the policy: rules, context policy and tool grants. Only the improver writes a new policy, and only from what Instrument found. So each version has a reason you can read.</p>
     <div class="points">
-      <div class="point" style="--c:var(--plan)"><span class="n">01 · PLAN</span><b>Pick the sprint</b><p>Reads the last checkpoint and its scores. Picks one mode: feature, improvement or fix.</p></div>
-      <div class="point" style="--c:var(--build)"><span class="n">02 · BUILD</span><b>Run the agent</b><p>Wraps the coding agent with a frozen copy of the rules. It cannot edit them mid-run.</p></div>
-      <div class="point" style="--c:var(--instrument)"><span class="n">03 · INSTRUMENT</span><b>Measure it</b><p>Runs the checks and writes findings. Nothing else.</p></div>
-      <div class="point point--atlas" style="--c:var(--flag)"><span class="n">+ · IMPROVE</span><b>Rewrite the harness</b><p>Turns findings into policy v<i>n</i>+1, tags a checkpoint, saves it to Atlas.</p></div>
+      <div class="point" style="--c:var(--plan)"><span class="n">01 · PLAN</span><b>Pick the sprint</b><p>Reads the last checkpoint and its measurements. Picks one sprint mode: feature, improvement or fix.</p></div>
+      <div class="point" style="--c:var(--build)"><span class="n">02 · BUILD</span><b>Run the agent</b><p>Runs the coding agent (Claude Code today) with <code>freezePolicy()</code> and a store that refuses rule writes.</p></div>
+      <div class="point" style="--c:var(--instrument)"><span class="n">03 · INSTRUMENT</span><b>Measure it</b><p>Runs checks for ten capabilities in trade terms: MEP rough-in, OAC photo pack, closeout walk, turnover package, fall protection. Writes findings.</p></div>
+      <div class="point point--atlas" style="--c:var(--flag)"><span class="n">+ · IMPROVE</span><b>Rewrite the harness</b><p>Turns findings into policy v<i>n</i>+1, tags git <code>cp/n</code>, and writes <code>policies</code> and <code>checkpoints</code> to Atlas.</p></div>
     </div>
   </div>
 </section>
@@ -340,6 +370,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
         <li><span><strong>Checkpoints are durable.</strong> Git sha, policy version, scores and a retrospective, in MongoDB Atlas.</span></li>
         <li><span><strong>Rollback is one command.</strong> The old policy returns as a new version, so history is never lost.</span></li>
       </ul>
+      <div class="stack"><span>TypeScript monorepo · Turborepo + pnpm</span><span>Harness API · Cloudflare Worker</span><span>App · Vite on Cloudflare Pages</span><span>MongoDB Atlas · Sandbox cluster</span><span>Photo fields: unit, level, trade, wall, issue</span></div>
     </div>
     <div class="term" role="img" aria-label="Terminal output of pnpm 3pt loop and pnpm 3pt rollback">
       <div class="term__bar"><i></i><i></i><i></i></div>
@@ -365,7 +396,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
     <div class="atlas">
       <div class="col-group col-group--core"><h3>The harness</h3><p>What it is, and how it got here.</p><code>policies</code><code>checkpoints</code><code>harness_versions</code><code>plans</code><code>findings</code><code>measurements</code></div>
       <div class="col-group"><h3>The media</h3><p>Photos are read once, then tiered.</p><code>media_index</code><code>transcripts</code><code>jobs</code></div>
-      <div class="col-group"><h3>The firm</h3><p>The simulated contractor it learns on.</p><code>demo_projects</code><code>demo_photos</code><code>demo_activity</code><code>demo_outcomes</code></div>
+      <div class="col-group"><h3>The contractor</h3><p>The simulated GC it learns on: projects, photos, activity, outcomes.</p><code>demo_projects</code><code>demo_photos</code><code>demo_activity</code><code>demo_outcomes</code></div>
     </div>
   </div>
 </section>
@@ -387,8 +418,8 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
 <section id="workload">
   <div class="wrap">
     <div class="eyebrow">The workload</div>
-    <h2>Construction photos test the harness.</h2>
-    <p class="lede">Photos are the workload, not the product. The simulated firm supplies photos and activity. The demo tests how the harness changes its own rules, context policy and tool access.</p>
+    <h2>Built on real construction photos.</h2>
+    <p class="lede">Openly licensed site photos and 20 NYC building records from NYC Open Data. Photos are the workload the harness learns on, not the product. It learns which fields matter: unit, level, trade, open or closed wall, issue.</p>
     <div class="mosaic">
       <figure class="m1"><img src="/media-pool/site/site-08.jpg" alt="Piling rig and cranes on an excavation site"><figcaption>Site</figcaption></figure>
       <figure class="m2"><img src="/media-pool/steel/steel-05.jpg" alt="Aerial view of a steel frame structure"><figcaption>Steel</figcaption></figure>
@@ -416,7 +447,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
 <section class="close">
   <div class="wrap">
     <div class="eyebrow">Try it</div>
-    <h2>Watch a harness get better at a job.</h2>
+    <h2>Jobsite software that gets better every week.</h2>
     <div class="ctas">
       <a class="btn btn--primary" href="/app/">Open the app →</a>
       <a class="btn" href="https://github.com/pastarita/3pt" target="_blank" rel="noopener">Read the code</a>
