@@ -1,0 +1,34 @@
+# Xcode / SwiftPM
+*.xcodeproj/
+!apps/3PT/project.yml
+build/
+DerivedData/
+.build/
+*.xcuserstate
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Install loop
+.install-loop/
+dist/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
+
+# Node / Python (harness tooling)
+node_modules/
+__pycache__/
+.venv/
