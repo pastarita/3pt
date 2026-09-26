@@ -256,7 +256,6 @@ doc docs/00-vision.md#scope-for-the-hackathon
 doc docs/03-workflow.md#the-initialized-pipeline
 doc docs/07-assessment-and-measurement.md#R-1
 doc docs/01-icp.md#explicitly-deprioritized
-doc docs/10-architecture.md
 -->
 To lean into the hackathon in this way, we can use a list-based system and a NoSQL database like MongoDB to manage that remotely. We can also engineer role-based access systems or a permissioning layer for that type of content. The harness might be able to manage the keys or access to that respective content, which could be an additionality. It might be out of scope right now, but maybe there's something. I think a raw data system would be out of scope because, if it's a personal harness right now, we don't want to add collaboration because that could mess up a lot of things. If it's a self-healing or self-creating harness, it might do weird things with raw data access, and we don't want the harness to actually control roles. We just want it to be managed by the human because the human wants to decide who to give access to, not the AI. Let's keep that out of scope for now. Maybe you'll build that later. 
 
@@ -286,7 +285,6 @@ doc docs/04-resources.md
 doc docs/glossary.md#Install loop
 term install loop
 doc docs/00-vision.md
-doc docs/10-architecture.md
 -->
 Predications: some of the predictions are that Yash and I are in a respective hackathon. There are several lanes, and we want to distribute workloads with respect to the utilization of our own coding agents on our shared repo:
 1. Setting up the repo
