@@ -73,6 +73,7 @@
   .k-exterior{background:linear-gradient(0deg,color-mix(in srgb,var(--slate) 50%,var(--pine)) 0 40%,transparent 40%),repeating-linear-gradient(90deg,var(--line-strong) 0 3px,transparent 3px 30px),linear-gradient(180deg,var(--cyan-soft),color-mix(in srgb,var(--cyan) 40%,var(--pine)))}
   .shot{position:relative;overflow:hidden}
   .shot::before{content:"";position:absolute;left:0;right:0;bottom:0;height:26%;background:color-mix(in srgb,var(--pine) 45%,transparent);clip-path:polygon(16% 0,84% 0,100% 100%,0 100%)}
+  .ph[style*="url"]::before,.ph[style*="url"]::after,.shot[style*="url"]::before,.shot[style*="url"]::after{display:none}
   /* drawer */
   .modal{position:fixed;inset:0;background:color-mix(in srgb,var(--pine) 82%,transparent);display:flex;align-items:center;justify-content:center;z-index:200000;padding:16px}
   .box{background:var(--panel);border:1px solid var(--line-strong);border-radius:14px;max-width:880px;width:100%;max-height:92vh;overflow:auto;box-shadow:var(--shadow)}
@@ -99,7 +100,7 @@
 <script src="./nav.js"></script>
 <div class="page">
   <p class="eyebrow">Build · demo simulator · replays <code>sim-data.js</code></p>
-  <p style="margin:0 0 10px;font-size:12px;color:var(--faint)"><span class="pv a">AUTHORED</span> Acme Builders is an example firm. The 20 projects, the photos and the hours are generated from a fixed seed. The learning rules are real: each harness version appears the week its trigger fires.</p>
+  <p style="margin:0 0 10px;font-size:12px;color:var(--faint)"><span class="pv a">AUTHORED</span> Acme Builders is an example firm. The 20 projects, the photos and the hours are generated from a fixed seed. The learning rules are real: each harness version appears the week its trigger fires. Buildings: NYC Open Data filings. Photos: openly licensed, <a href="https://github.com/pastarita/3pt/blob/main/data/mock/media-pool/CREDITS.md">credits</a>.</p>
   <div class="ctrl">
     <div class="date"><b id="d">—</b><small id="dw">—</small></div>
     <div class="scrub"><input type="range" id="scrub" min="0" max="0" value="0" aria-label="Simulation week"><div class="ticks" id="ticks"></div></div>

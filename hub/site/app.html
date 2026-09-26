@@ -167,6 +167,7 @@
   .banner .ov b{font-size:34px;line-height:1.05}.banner .ov span{color:var(--soft);font-size:14px}
   .banner .who{position:absolute;right:12px;top:12px;z-index:2;background:var(--pine);border:1px solid var(--line-strong);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700}
   @media(max-width:760px){.plan{grid-template-columns:repeat(2,1fr)}.qrow{grid-template-columns:1fr 1fr}.mason .feat{grid-column:span 1;grid-row:span 1}}
+  .ph[style*="url"]::before,.ph[style*="url"]::after,.shot[style*="url"]::before,.shot[style*="url"]::after{display:none}
   @media(max-width:760px){.blocks{grid-template-columns:1fr}.loop{grid-template-columns:1fr}.units{grid-template-columns:repeat(4,1fr)}.facts{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -174,7 +175,7 @@
 <script src="./nav.js"></script>
 <div class="page">
   <p class="eyebrow">Build · prototype · state persists in this browser under <code>tpt_app_v2</code></p>
-  <p class="proto"><span class="pv a">AUTHORED</span> Every project, photo, person and hour on this page is example data. The layout rules and the learning loop run for real in this browser. Nothing talks to MongoDB yet.</p>
+  <p class="proto"><span class="pv a">AUTHORED</span> Every project, photo, person and hour on this page is example data. The layout rules and the learning loop run for real in this browser. Nothing talks to MongoDB yet. Photos: openly licensed, <a href="https://github.com/pastarita/3pt/blob/main/data/mock/media-pool/CREDITS.md">credits</a>.</p>
   <div class="appbar" id="appbar"></div>
   <div id="learned"></div>
   <main id="view"></main>
