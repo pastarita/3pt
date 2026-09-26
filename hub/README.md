@@ -11,7 +11,7 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 
 | Path | What |
 |---|---|
-| `site/index.html` | The hub: the loop figure, the Judges' cut (twelve doors in four beats, ranked in `docs/21-judges-cut.md`), the four clusters folded, the day figures folded. Navigation only, never content. |
+| `site/index.html` | The hub: the loop figure, Start here (twelve doors in four beats, ranked in `docs/21-the-cut.md`), the four clusters folded, the day figures folded. Navigation only, never content. |
 | `site/nav.js` | The Shell: single source of IA (`GROUPS`, `ROUTE`, glyphs, cluster registry, `FOLD` for a group's accordion). Only the link list scrolls; brand and footer are pinned, the offset survives a leaf change, the current leaf is brought into view. |
 | `site/3pt-data.js` | The Model: doc Register, lanes, ICP directions, criteria, presets, helpers. |
 | `site/strands-data.js` | The Strands questions register: every pointer behind `strands-journey.html`, tallied DERIVED. Source of record `docs/18-strands-questions.md`. |
