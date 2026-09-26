@@ -6,7 +6,7 @@ The app a construction team uses. The harness composes every screen; this app re
 pages/       home · project · harness          fetch one screen, compose organisms
 organisms/   top-bar · block-frame · blocks · photo-viewer
 molecules/   project-card · action-card · unit-tile · saver-card · query-card
-             feedback-photo · learned-strip · proposal-banner · version-row · role-select
+             feedback-photo · learned-strip · version-row · role-select
 atoms/       button · badge · icon · photo · stat
 lib/         dom (element builder) · state (route, role)
 ```

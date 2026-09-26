@@ -75,7 +75,7 @@ The video and the room say only what a judge can open. Three grades: **built** (
 | K5 | The workload is construction site photos; the harness learns fields like unit, level, and open or closed wall | due · T2 | `media_index` seeded from `data/mock/acme-builders`; the v1 diff names the fields |
 | K6 | 3PT compiles a policy into a Strands harness rather than owning its own loop | built, not compiled | `harness/packages/strands`, excluded from the workspace for disk; `docs/12-strands-archaeology.md` |
 | K7 | "It reads sixteen thousand old photos once" and "checks itself on fifty labelled photos" | simulated | `hub/site/sim-data.js`, fixed seed; `expected/harness-versions.json` v0–v10 |
-| K8 | "Answers get worse, so it undoes that one by itself" | simulated | Same; the real rollback is K4 and is operator-approved, not automatic |
+| K8 | "Answers get worse, so it undoes that one by itself" | built (live app) | `harness/apps/api/src/app.ts` `guard()`: a self-shipped version with 4+ scored taps and 20+ points under its parent rolls back by itself; the policy rollback in K4 is still run by a person |
 | K9 | "The Friday owner update took Dev twenty-eight hours a job. One tap, and that tool becomes part of the harness" | simulated | `activity.jsonl` per project; no tool-grant rewrite runs today |
 | K10 | 20 real NYC building records; 144 openly licensed photos | built | `data/mock/README.md`; `CREDITS.md`; NYC Open Data `ic3t-wcy2` |
 | K11 | Everything was built today | built | Commit log starts 12:46 ET today; `docs/15` A-03 |

@@ -259,23 +259,23 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
     <div>
       <div class="eyebrow">Self-improving software · Recursive Harnessing</div>
       <h1>The harness for your <em>construction projects</em></h1>
-      <p>Your crew takes photos and uses the app. 3PT learns from how they work, proposes the next feature, and asks before it ships. The harness rewrites its own rules and saves every version in MongoDB Atlas, so any earlier version can come back.</p>
+      <p>Your crew takes photos and uses the app. 3PT learns from how they work, builds the next feature, approves it and ships it. Nobody has to ask. The harness rewrites its own rules and saves every version in MongoDB Atlas, so any earlier version can come back.</p>
       <div class="ctas">
         <a class="btn btn--primary" href="/app/">Open the app →</a>
         <a class="btn" href="#versions">See what it built</a>
       </div>
       <p class="demo-note">The demo firm is simulated with a fixed seed. The loop, the checkpoints and the policy rollback are real code.</p>
     </div>
-    <div class="device-wrap"><div class="device" role="img" aria-label="The app on a site photo of unit 206, offering a new feature built from the team's usage">
+    <div class="device-wrap"><div class="device" role="img" aria-label="The app on a site photo of unit 206, showing a new feature the harness built from the team's usage and shipped">
       <img src="/media-pool/plumbing/plumbing-06.jpg" alt="">
       <div class="device__bar"><b>ACME BUILDERS</b><span>Harness v6</span></div>
       <div class="device__tag">Unit 206 · plumbing · open wall</div>
       <div class="offer">
         <span class="offer__k">New for you</span>
         <h3>Your Friday owner pack, in one tap</h3>
-        <p>You built it by hand every week: 28 hours a job. I can build it for you from this week's photos.</p>
-        <div class="offer__b"><span>Turn it on</span><span>Not now</span></div>
-        <div class="offer__f">Example proposal from the simulated firm</div>
+        <p>You built it by hand every week: 28 hours a job. I built it from this week's photos and turned it on.</p>
+        <div class="offer__b"><span>Open it</span><span>Undo</span></div>
+        <div class="offer__f">Example feature from the simulated firm</div>
       </div>
     </div>
     <div class="float" aria-hidden="true"><b>Explore · made for you</b>“Units closing this week”: a new screen for superintendents.</div>
@@ -287,13 +287,13 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
 <section id="feel">
   <div class="wrap">
     <div class="eyebrow">How it feels</div>
-    <h2>Software that notices, then offers.</h2>
-    <p class="lede">No settings screen and no feature requests. People do their job. The app gets better at that job, and they decide what stays.</p>
+    <h2>Software that notices, then ships.</h2>
+    <p class="lede">No settings screen and no feature requests. People do their job. The app gets better at that job, and the harness keeps only what works.</p>
     <ol class="feel">
       <li style="--c:var(--plan)"><span class="n">1 · YOU WORK</span><b>Use it as normal</b><p>Take photos. Search. Build the owner update.</p></li>
       <li style="--c:var(--build)"><span class="n">2 · IT NOTICES</span><b>It sees the pattern</b><p>The same 3-hour task, every Friday, on every job.</p></li>
-      <li style="--c:var(--instrument)"><span class="n">3 · IT OFFERS</span><b>A new feature, for you</b><p>It builds the tool and asks first.</p><q>Here is something we built for you.</q></li>
-      <li style="--c:var(--flag)"><span class="n">4 · YOU DECIDE</span><b>Keep it or roll it back</b><p>Yes saves a new version. Rollback restores an earlier set of harness rules.</p></li>
+      <li style="--c:var(--instrument)"><span class="n">3 · IT SHIPS</span><b>A new feature, for you</b><p>It builds the tool, approves it and turns it on.</p><q>Here is something we built for you.</q></li>
+      <li style="--c:var(--flag)"><span class="n">4 · IT CHECKS</span><b>Keeps it or rolls it back</b><p>It scores each version on use. A worse version rolls back by itself.</p></li>
     </ol>
   </div>
 </section>
@@ -375,7 +375,7 @@ body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;ba
     <div class="eyebrow">For the judges</div>
     <h2>Check it in four clicks.</h2>
     <div class="judge">
-      <a href="/app/"><span class="w">DEMO · 35</span><b>Open the demo</b><span>Tap around as a superintendent. Accept a proposal and watch the version change.</span><code>/app/</code></a>
+      <a href="/app/"><span class="w">DEMO · 35</span><b>Open the demo</b><span>Tap around as a superintendent. Use one block three times and watch the harness ship a version.</span><code>/app/</code></a>
       <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/core" target="_blank" rel="noopener"><span class="w">DIFFICULTY · 30</span><b>Frozen policy</b><span>Stages get a read-only policy and a store that refuses rule writes.</span><code>harness/packages/core</code></a>
       <a href="#feel"><span class="w">IMPACT · 20</span><b>For non-technical crews</b><span>Each role sees the screen the current harness chose for it.</span><code>#feel</code></a>
       <a href="https://github.com/pastarita/3pt/tree/main/harness/packages/improver" target="_blank" rel="noopener"><span class="w">CREATIVITY · 15</span><b>It changes its own rules</b><span>The improver is the only writer of the rules.</span><code>harness/packages/improver</code></a>

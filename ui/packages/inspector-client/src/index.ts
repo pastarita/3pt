@@ -2,7 +2,8 @@ import type { Checkpoint, Policy } from '@3pt/core';
 
 /* ---------- screens the harness composes (see harness/apps/api/src/app.ts) ---------- */
 export interface Photo { id: string; unit: number | null; level: number | null; trade: string; wall: string | null; week: number; water?: boolean; hazard?: string | null; file: string | null }
-export interface Proposal { key: string; text: string; why: string }
+/** What one tap made the loop do. The harness approves itself: it ships a change, or undoes one that scored worse. */
+export interface LoopTurn { shipped: { version: number; changes: string[]; why: string } | null; rolled_back: { version: number; to: number; why: string } | null }
 export interface Screen {
   project: { id: string; name: string; type: string; status: 'live' | 'closed' | 'planned'; phase: string | null; week: number; cover: string | null };
   role: string;
@@ -10,7 +11,6 @@ export interface Screen {
   layout: string[];
   more: { id: string; title: string }[];
   blocks: Record<string, { title: string } & Record<string, any>>;
-  proposal: Proposal | null;
 }
 export interface HarnessVersion { v: number; when: string; by: string; changes: string[]; why: string; fields: string[]; layout: Record<string, string[]>; rolledBack?: boolean; score: number | null }
 export interface HarnessState { current: number; fields: string[]; layouts: Record<string, string[]>; versions: HarnessVersion[]; events: number }
@@ -32,9 +32,7 @@ export interface InspectorClient {
   block(id: string, project: string, role: string): Promise<{ title: string } & Record<string, any>>;
   ask(project: string, q: string): Promise<{ note: string; photos: Photo[] }>;
   photos(project: string): Promise<{ photos: (Photo & { focus?: boolean })[] }>;
-  event(e: AppEvent): Promise<{ ok: boolean; proposal: Proposal | null }>;
-  approve(key: string, role: string): Promise<{ version: number; changes: string[] }>;
-  reject(key: string): Promise<{ ok: boolean }>;
+  event(e: AppEvent): Promise<{ ok: boolean } & LoopTurn>;
   rollback(v: number): Promise<{ version: number; rolled_back: number }>;
   harness(): Promise<HarnessState>;
   /** Versions the harness shipped after `since` that are still live, newest first. Drives the bulb. */
@@ -59,8 +57,6 @@ export function createClient(baseUrl: string, f: typeof fetch = fetch): Inspecto
     ask: (project, q) => get('/app/ask' + qs({ project, q })),
     photos: (project) => get('/app/photos' + qs({ project })),
     event: (e) => post('/app/events', e),
-    approve: (key, role) => post('/app/approve', { key, role }),
-    reject: (key) => post('/app/reject', { key }),
     rollback: (v) => post('/app/rollback', { v }),
     harness: () => get('/app/harness'),
     news: (since) => get('/app/news' + qs({ since })),

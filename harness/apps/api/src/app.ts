@@ -1,15 +1,15 @@
 /** The app's screens, composed by the harness. A surface asks for one screen; the harness decides which blocks
  *  that role sees and in what order (its layout is part of the current harness version), and fills each block
- *  from the demo firm. Every tap comes back as an event; the loop turns events into proposals; a person approves;
- *  approval saves a new version. Nothing on the screen is chosen by the surface.
+ *  from the demo firm. Every tap comes back as an event. The loop approves itself: Plan turns events into a change,
+ *  Build ships it as a new version at once, Instrument scores it and rolls it back if it scores worse than its
+ *  parent. Nobody approves anything. Nothing on the screen is chosen by the surface.
  *
- *    GET  /app/screen?project=p18&role=super     layout + filled blocks + "what I learned" + proposal
+ *    GET  /app/screen?project=p18&role=super     layout + filled blocks + "what I learned"
  *    GET  /app/ask?project=p18&q=plumb           photo search, answered with the current version's fields
  *    GET  /app/photos?project=p18                every photo the app may show for one project
  *    POST /app/events        {role, action, block?, q?, photo?}    use | hide | open | fb_up | fb_down | act
- *    POST /app/approve       {key, role}          saves the proposal as a new harness version
- *    POST /app/reject        {key}
- *    POST /app/rollback      {v}
+ *                            → {shipped?, rolled_back?} when the tap made the harness ship or undo a version
+ *    POST /app/rollback      {v}                  a person can still undo a version; the harness will not re-ship it
  *    GET  /app/harness                            versions, fields, layouts by role, loop status
  *    GET  /app/news?since=4                        versions shipped after v4 and still live (the surfaces' bulb)
  *    POST /app/reset                              back to the seeded state
@@ -20,7 +20,7 @@ import { COLLECTIONS, type Store } from '@3pt/core';
 import { firm, iso } from './sim.js';
 
 type Json = Record<string, any>;
-interface Version { v: number; when: string; by: string; changes: string[]; why: string; layout: Record<string, string[]>; fields: string[]; rolledBack?: boolean; parent?: number }
+interface Version { v: number; when: string; by: string; changes: string[]; why: string; layout: Record<string, string[]>; fields: string[]; rolledBack?: boolean; parent?: number; key?: string }
 interface Ev { t: number; role: string; v: number; action: string; block?: string; q?: string; photo?: string }
 
 const LAYOUT_LEARNED: Record<string, string[]> = {
@@ -160,7 +160,10 @@ async function fill(id: string, pid: string, role: string) {
   return {};
 }
 
-/* ---------------- the loop: Plan (signal) → Build (new version) → Instrument (score) ---------------- */
+/* ---------------- the loop: Plan (signal) → Build (ship a version) → Instrument (score, undo) ----------------
+   Self-approving: a change Plan finds ships at once. The check comes after, from use: Instrument compares the
+   new version's score with its parent's and undoes it when it is clearly worse. An undone change is remembered
+   (rejected) so Plan does not offer it again. */
 function plan(role: string): Json | null {
   const lay = layoutFor(role), ev = S.events.filter(e => e.role === role && e.v === S.cur);
   const use: Record<string, number> = {};
@@ -182,9 +185,29 @@ function plan(role: string): Json | null {
   }
   return null;
 }
-function score(v: number) {
+function tally(v: number) {
   const ev = S.events.filter(e => e.v === v), good = ev.filter(e => e.action === 'fb_up' || e.action === 'act').length, bad = ev.filter(e => e.action === 'fb_down' || e.action === 'hide').length;
-  return good + bad ? Math.round((100 * good) / (good + bad)) : null;
+  return { n: good + bad, pct: good + bad ? Math.round((100 * good) / (good + bad)) : null };
+}
+const score = (v: number) => tally(v).pct;
+/* Instrument's guard: at least MIN_SIGNALS scored taps on the new version, and DROP points under its parent. */
+const MIN_SIGNALS = 4, DROP = 20;
+function guard(): Version | null {
+  const cur = ver();
+  if (cur.by !== 'harness' || cur.parent == null || !cur.key) return null;
+  const now = tally(cur.v), before = score(cur.parent);
+  if (now.n < MIN_SIGNALS || now.pct == null || before == null || now.pct > before - DROP) return null;
+  cur.rolledBack = true; S.rejected[cur.key] = true; S.cur = cur.parent;
+  return cur;
+}
+/** One turn of the loop after a tap: undo a bad version first, else ship the next change if Plan has one. */
+function selfApprove(role: string): { shipped: Json | null; rolled_back: Json | null } {
+  const bad = guard();
+  if (bad) return { shipped: null, rolled_back: { version: bad.v, to: S.cur, why: `Scored ${score(bad.v)}% useful against ${score(S.cur)}% before it` } };
+  const p = plan(role);
+  if (!p) return { shipped: null, rolled_back: null };
+  const nv = build(p, 'harness'); nv.key = p.key;
+  return { shipped: { version: nv.v, changes: nv.changes, why: nv.why }, rolled_back: null };
 }
 function build(p: Json, by: string) {
   const base = ver(), nv: Version = { v: S.versions.length, when: new Date().toISOString().slice(0, 10), by, changes: [], why: p.why, layout: JSON.parse(JSON.stringify(base.layout)), fields: base.fields.slice(), parent: base.v };
@@ -222,11 +245,11 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
     const layout = [...(st === 'closed' ? ['retro', 'playbook'] : []), ...layoutFor(role).filter(fits)].filter((b, i, a) => a.indexOf(b) === i && !hidden.has(b));
     const more = Object.keys(BLOCKS).filter(b => !layout.includes(b) && fits(b) && b !== 'retro' && b !== 'playbook');
     const blocks: Json = {}; for (const b of layout) blocks[b] = { title: BLOCKS[b].title, ...(await fill(b, pid, role)) };
-    const v = ver(), prop = plan(role);
+    const v = ver();
     return { status: 200, body: {
       project: { id: sp.id, name: sp.name, type: sp.typeLabel, status: st, phase: st === 'live' ? F.phaseAt(sp, TW).name : null, week: TW - sp.startWeek + 1, cover: (await photosOf(pid)).filter(p => p.file).slice(-1)[0]?.file ?? null },
       role, harness: { version: v.v, learned: ver().layout[role] ? v.changes[v.changes.length - 1] : 'This is a basic screen. I learn this role\'s screen from what you use.', when: v.when },
-      layout, more: more.map(b => ({ id: b, title: BLOCKS[b].title })), blocks, proposal: prop ? { key: prop.key, text: prop.text, why: prop.why } : null,
+      layout, more: more.map(b => ({ id: b, title: BLOCKS[b].title })), blocks,
     } };
   }
   if (path === '/app/block' && method === 'GET') {
@@ -246,22 +269,15 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
       if (k === 'send') S.reviewed['pack' + body.project] = true;
       if (k === 'opp') S.reviewed['opp' + arg] = true;
     }
-    /* every tap changes what plan() sees (hides, 👎 counts), so every tap is a snapshot; a Worker reloads from it */
-    await snapshot(e.action === 'act' ? 'act ' + body.do : 'tap ' + e.action);
-    return { status: 200, body: { ok: true, proposal: plan(e.role) } };
+    /* every tap changes what plan() sees (hides, 👎 counts), so every tap runs the loop once and is a snapshot */
+    const turn = selfApprove(e.role);
+    await snapshot(turn.shipped ? `self-approve v${turn.shipped.version}` : turn.rolled_back ? `self-rollback v${turn.rolled_back.version}` : e.action === 'act' ? 'act ' + body.do : 'tap ' + e.action);
+    return { status: 200, body: { ok: true, ...turn } };
   }
-  if (path === '/app/approve' && method === 'POST') {
-    const p = plan(String(body.role ?? 'super'));
-    if (!p || p.key !== body.key) return { status: 409, body: { error: 'that proposal is no longer current' } };
-    const nv = build(p, String(body.role ?? 'person'));
-    await snapshot(`approve v${nv.v}`);
-    return { status: 200, body: { version: nv.v, changes: nv.changes } };
-  }
-  if (path === '/app/reject' && method === 'POST') { S.rejected[String(body.key)] = true; await snapshot('reject'); return { status: 200, body: { ok: true } }; }
   if (path === '/app/rollback' && method === 'POST') {
     const to = Number(body.v), cur = ver();
     if (!S.versions.some(v => v.v === to && !v.rolledBack)) return { status: 400, body: { error: 'cannot roll back to that version' } };
-    cur.rolledBack = true; S.cur = to; await snapshot(`rollback to v${to}`); return { status: 200, body: { version: to, rolled_back: cur.v } };
+    cur.rolledBack = true; if (cur.key) S.rejected[cur.key] = true; S.cur = to; await snapshot(`rollback to v${to}`); return { status: 200, body: { version: to, rolled_back: cur.v } };
   }
   if (path === '/app/harness' && method === 'GET') {
     const v = ver();

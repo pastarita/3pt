@@ -50,8 +50,7 @@ button.photo{cursor:pointer}
 .query{border-radius:12px;border:2px solid var(--line);overflow:hidden}.query--on{border-color:var(--flag)}.query .photo{border-radius:0}
 .fbphoto{position:relative}.fbphoto__bar{position:absolute;right:6px;bottom:6px;display:flex;gap:4px}.fbphoto__bar .btn{padding:6px;background:var(--bg)}
 .strip{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--instrument);border-radius:var(--radius);padding:12px 14px;margin:12px 0}
-.strip--prop{border-left-color:var(--flag)}
-.strip__icon{color:var(--instrument)}.strip--prop .strip__icon{color:var(--flag)}
+.strip__icon{color:var(--instrument)}
 .strip__txt{flex:1;display:flex;flex-direction:column;gap:2px}.strip__txt small{color:var(--soft);font-size:12.5px}
 .strip__lbl{font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
 .strip__acts{display:flex;gap:6px;flex-wrap:wrap}
