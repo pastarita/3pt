@@ -124,7 +124,7 @@
   var PUBLISHED = [
     { k:'hub',    label:'Hub',            url:'https://3pt.pages.dev',                                              state:'gated',   note:'Access · PIN' },
     { k:'repo',   label:'Repo',           url:'https://github.com/pastarita/3pt',                                   state:'public',  note:'MIT' },
-    { k:'atlas',  label:'Atlas Sandbox',  url:'',                                                                   state:'live',    note:'Cluster0 · M10' },
+        { k:'atlas',  label:'Atlas Sandbox',  url:'https://cloud.mongodb.com/v2/6ab80ef67d3d0c27d97a4b0e#/explorer/6ab80efdaf16c2903a9a9acb/3pt/checkpoints/find', state:'live', note:'Cluster0 · M10 · checkpoints' },
     { k:'demo',   label:'Demo link',      url:'https://3pt-web.pages.dev',                                          state:'public',  note:'ungated' },
     { k:'api',    label:'Harness API',    url:'https://3pt-harness.3pt-worker.workers.dev',                                        state:'public',  note:'Worker' },
     { k:'video',  label:'Video',          url:'https://youtu.be/MxAMXWKRcvc',                                       state:'public',  note:'60 s' },
