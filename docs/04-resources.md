@@ -5,6 +5,7 @@ No coupon codes appear in the doc; every code arrives by email or the Discord bo
 Saturday, and only for participants registered on Cerebral Valley and checked in on site.*
 
 ## Source documents (register)
+<!-- @s1.16 @s1.17 -->
 
 External documents this file and `docs/05-rules.md` were compiled from. Registered 2026-09-26.
 If a link stops working, the Google Doc ID is the durable key.

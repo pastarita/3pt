@@ -48,7 +48,38 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 - Two humans (Patrick, Yash) run agents concurrently. Stay inside your lane's directories; if you
   must touch another lane, say so in the commit message.
 
+## The hub workspace (`hub/`)
+
+A gated Cloudflare Pages site over the docs of record, built to the hub-workspace pattern and
+**cordoned entirely under `hub/`** (site, gate, tools, deploy config, its own README). The only
+hub file outside that directory is `.github/workflows/deploy.yml`, scoped to hub and docs paths.
+Live at https://3pt.pages.dev; previews per PR at `https://<branch>.3pt.pages.dev`.
+Read `hub/README.md` before touching it, and load the `hub-workspace` skill vendored at
+`.claude/skills/hub-workspace/` for the full pattern. The short version:
+
+- **Three moves to add a surface, never a fourth:** write the leaf in `hub/site/`, register it in
+  `hub/site/nav.js` GROUPS with a minted glyph, card it on `hub/site/index.html`. Documents are not
+  leaves: card them as `view.html?f=docs/<file>.md` and route them in `nav.js` ROUTE.
+- **Model:** `hub/site/3pt-data.js` (`globalThis.T`). Hot-leaf state in `localStorage` under `tpt_`.
+- **Artifact:** `hub/tools/stage.sh` builds `hub/_site/` = `hub/site/` + `docs/` + `README.md` +
+  `brainstorming.md`. Nothing else ships. `_site/` is gitignored.
+- **Lints, preview, deploy:** `make -C hub check` · `make -C hub preview` · `make -C hub deploy`.
+  Run `check` after every Register change; CI runs it on every push. After any gate change run
+  `make -C hub verify`: anon 401, valid 200, wrong-domain 401.
+- **Gate:** two doors, one room. Tier 1 Cloudflare Access app over `3pt.pages.dev` + `*.3pt.pages.dev`
+  (allowlist in the Access policy; `make -C hub access` manages it over the API). Tier 0 Basic auth
+  beside it (`ACCESS_PASS` secret, `ACCESS_USERS` variable). `hub/functions/_middleware.js` verifies
+  the Access assertion's signature/issuer/audience/expiry and fails closed. No `DISABLE_GATE`.
+  No password or token ever appears in the repo; local copies live in `~/.config/3pt/`.
+- **Provenance:** every figure on a leaf wears DERIVED, AUTHORED, or TO CONFIRM. Tallies are never typed.
+- **Harness code never goes in `hub/`.** The hub renders the repo; it is not the repo.
+
 ## Current state (update as it changes)
 
 - 2026-09-26 11:30 ET: docs of record written. No application code yet, by decision.
   Repo is **private**; must be public before submission. Atlas Sandbox project not yet created.
+- 2026-09-26 12:45 ET: hub workspace live at https://3pt.pages.dev behind the Tier 0 gate
+  (verified anon 401 / valid 200 / wrong-domain 401). `ACCESS_PASS` set in Production and Preview;
+  the local copy is in `~/.config/3pt/ACCESS_PASS` on Patrick's machine. GitHub Actions secrets
+  (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) not yet set, so CI lints but does not deploy.
+  Yash not yet on the gate (`ACCESS_USERS`) or the repo. ICP not decided; see the explorer.

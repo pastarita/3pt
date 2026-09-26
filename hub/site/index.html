@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Hub</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .brand{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .mark{width:60px;height:60px;flex:none}
+  .clock{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;margin:14px 0 4px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .clock b{font-size:13px}.clock .m{font:600 12px/1.3 var(--mono);color:var(--soft);flex:1;min-width:220px}
+  .clock .big{font:800 22px/1 var(--mono);color:var(--flag)}
+  .clock.past .big{color:var(--faint)}
+  .catch{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 16px;margin:8px 0 4px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .catch b{font-size:13px}.catch .m{font:600 11.5px/1.3 var(--mono);color:var(--soft);flex:1;min-width:200px}
+  .grp-blurb{font:italic 13px/1.4 var(--serif);color:var(--soft);margin:-4px 0 12px}
+  .tri{display:flex;gap:12px;align-items:center;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:8px}
+  .tri i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="#a3adbb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5l7.5 13h-15Z"/><circle cx="12" cy="4.5" r="2" fill="#8b7cf6" stroke="none"/><circle cx="19.5" cy="17.5" r="2" fill="#e0a33a" stroke="none"/><circle cx="4.5" cy="17.5" r="2" fill="#3fb886" stroke="none"/></svg>
+      <div>
+        <p class="eyebrow">Hub · The Malin Chelsea · Saturday, September 26, 2026</p>
+        <h1>3PT · Three Point Harness</h1>
+        <div class="tri"><span><i style="background:var(--plan)"></i>Plan</span><span><i style="background:var(--build)"></i>Build</span><span><i style="background:var(--instrument)"></i>Instrument</span></div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:14px">The working surface for two people and their agents building a self-improving harness for media-heavy workflows. The harness is the product. Images are the workload. This page holds navigation and live tallies only; the documents of record are in <code>docs/</code>.</p>
+  </header>
+
+  <div class="clock" id="clock">
+    <b>Submissions due 5:00 PM ET</b>
+    <span class="big" id="clock-n">—</span>
+    <span class="m" id="clock-m">computing…</span>
+    <a class="btn" href="./view.html?f=docs/05-rules.md">Rules & judging</a>
+  </div>
+
+  <div class="catch" id="catch">
+    <b>Catching up?</b>
+    <span class="m" id="meter">nothing marked read in this browser yet</span>
+    <a class="btn primary" href="./changelog.html">Changelog</a>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <p style="margin:6px 0 0;font-size:12px;color:var(--faint)"><span class="pv d">DERIVED</span> tallies computed from <code>3pt-data.js</code>, the clock, and this browser's saved lane-board state at load. Nothing on this page is typed in.</p>
+
+  <h2 data-cluster="orient">Orient <span>warm · what this is and what the rules allow</span></h2>
+  <p class="grp-blurb" id="b-orient"></p>
+  <div class="cards" data-cluster="orient">
+    <a class="card" href="./view.html?f=docs/00-vision.md"><svg id="g-vision"></svg><i class="id">D0</i><b>Vision</b><span>Plan → Build → Instrument, the loops inside the loop, the two sides of the triangle, and the hackathon reframing: harness as product, images as workload.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/06-goal-and-use-case.md"><svg id="g-goal"></svg><i class="id">D6</i><b>Goal &amp; use case</b><span>Why the harness gets more valuable over time. The interior-design firm, repeated walls becoming building blocks, and the screen as an onboarding stream.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/05-rules.md"><svg id="g-rules"></svg><i class="id">D5</i><b>Rules &amp; judging</b><span>Timeline, hard requirements, the banned list, judging weights, prizes, and what each implies for how we frame 3PT.</span><em>check →</em><i class="temp">hot</i></a>
+  </div>
+
+  <h2 data-cluster="decide">Decide <span>warm · who we build for today</span></h2>
+  <p class="grp-blurb" id="b-decide"></p>
+  <div class="cards" data-cluster="decide">
+    <a class="card" href="./icp-explorer.html"><svg id="g-icp-explorer"></svg><b>ICP explorer</b><span>Five directions scored against nine criteria. Pick a preset or move the dials; read which ordering holds under every preset, not the score.</span><em>weigh →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/08-icp-directions.md"><svg id="g-icp-directions"></svg><i class="id">D8</i><b>ICP directions</b><span>For each direction: focus, example use case, example company type, lander messaging, what a fully built app would do, and the rule risk.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/07-assessment-and-measurement.md"><svg id="g-assessment"></svg><i class="id">D7</i><b>Assessment &amp; measurement</b><span>The transcript converged into theses and falsifiable hypotheses, the M-* metrics that score the recursive loop, and the R-* requirement set mapped onto partner incentives.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/01-icp.md"><svg id="g-icp"></svg><i class="id">D1</i><b>ICPs</b><span>The three original profiles, re-ranked against the rules so the demo persona is buying a harness, not image insights.</span><em>read →</em><i class="temp">warm</i></a>
+  </div>
+
+  <h2 data-cluster="build">Build <span>hot · lanes, owners, workflow, and the tooling we run on</span></h2>
+  <p class="grp-blurb" id="b-build"></p>
+  <div class="cards" data-cluster="build">
+    <a class="card" href="./lanes.html"><svg id="g-lanes"></svg><b>Lane board</b><span>Seven lanes. Assign an owner, cycle the status, keep the next action current, export as text for the standup. The tallies above read from here.</span><em>work →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/02-lanes.md"><svg id="g-lanes-doc"></svg><i class="id">D2</i><b>Lanes</b><span>The lane definitions, the Stack / UI / Backend split, the proposed ownership, and the rules that shape the split.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/03-workflow.md"><svg id="g-workflow"></svg><i class="id">D3</i><b>Workflow</b><span>Proposed repo layout, the Plan → Build → Instrument skeleton with its Atlas collections, DevX conventions, and the install loop.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/04-resources.md"><svg id="g-resources"></svg><i class="id">D4</i><b>Resources &amp; credits</b><span>Every partner, credit amount, redemption path, MCP server, and the 3PT slot each one fills. Codes arrive by email and Discord from 10:30 AM.</span><em>read →</em><i class="temp">warm</i></a>
+  </div>
+
+  <h2 data-cluster="record">Record <span>cold · what shipped, what did not move, and the words</span></h2>
+  <p class="grp-blurb" id="b-record"></p>
+  <div class="cards" data-cluster="record">
+    <a class="card" href="./changelog.html"><svg id="g-changelog"></svg><b>Changelog</b><span>What shipped, by wave, with commit shas, and stated plainly what did not move. Tick entries read; the band at the top tracks it.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=brainstorming.md"><svg id="g-brainstorming"></svg><i class="id">DB</i><b>Brainstorming transcript</b><span>Raw session notes, as spoken, append-only. The assessment doc reads from here; nobody edits here.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=docs/sources/hackathon-resource-guide.md"><svg id="g-sources"></svg><i class="id">DS</i><b>Resource guide (verbatim)</b><span>The official partner resource guide as pulled on 2026-09-26. The Google Doc is upstream; re-pull rather than edit.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=docs/glossary.md"><svg id="g-glossary"></svg><i class="id">DG</i><b>Glossary</b><span>Install loop, backfeed, furnace, checkpoint, sprint modes, the left and right sides of the triangle.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=README.md"><svg id="g-charter"></svg><i class="id">DR</i><b>README</b><span>The repo front door: status, layout, and where to start.</span><em>read →</em><i class="temp">cold</i></a>
+  </div>
+
+  <footer>
+    <hr class="rule">
+    <p class="wordmark">3PT</p>
+    <p class="sig">Plan it. Build it. Instrument it. Then let it rewrite itself.</p>
+    <p class="contact">Patrick Astarita · Yash · workspace started 2026-09-26 · <a href="https://github.com/pastarita/3pt">github.com/pastarita/3pt</a></p>
+  </footer>
+</div>
+<script>
+(function(){
+  var N = window.TPTNAV, T = window.T;
+  document.querySelectorAll('svg[id^="g-"]').forEach(function(el){
+    var slug = el.id.slice(2), src = N.GLYPH[slug];
+    if (src) el.outerHTML = src.replace('<svg', '<svg class="card-glyph"');
+  });
+  Object.keys(T.CLUSTERS).forEach(function(k){ var b=document.getElementById('b-'+k); if(b) b.textContent = T.CLUSTERS[k].blurb; });
+
+  /* clock — DERIVED from T.EVENT and the browser's time */
+  function clock(){
+    var u = T.until(T.EVENT.submission), el = document.getElementById('clock');
+    document.getElementById('clock-n').textContent = u.neg ? 'closed' : u.text;
+    document.getElementById('clock-m').textContent = u.neg
+      ? 'submission window closed ' + u.text.replace('−','') + ' ago · judging 5:15–6:45 PM · Top 6 at 7:00 PM'
+      : 'until submissions close · then judging 5:15–6:45 PM in assigned rooms · Top 6 demo at 7:00 PM';
+    el.classList.toggle('past', u.neg);
+  }
+  clock(); setInterval(clock, 30000);
+
+  /* DERIVED tallies: lane board state overlays the Model */
+  var saved = T.load('lanes_v1', {});
+  var owner  = function(l){ return (saved[l.key] && saved[l.key].owner)  || l.owner; };
+  var status = function(l){ return (saved[l.key] && saved[l.key].status) || l.status; };
+  var owned   = T.LANES.filter(function(l){ return owner(l) !== 'TBD'; }).length;
+  var done    = T.LANES.filter(function(l){ return status(l) === 'done'; }).length;
+  var blocked = T.LANES.filter(function(l){ return status(l) === 'blocked'; }).length;
+  var tiles = [
+    [T.DOCS.length, 'documents of record in the Register'],
+    [owned + ' / ' + T.LANES.length, 'lanes with an owner'],
+    [done + ' / ' + T.LANES.length, 'lanes done · ' + blocked + ' blocked'],
+    [T.DIRECTIONS.length, 'ICP directions under consideration']
+  ];
+  document.getElementById('stats').innerHTML = tiles.map(function(t){ return '<div class="stat"><div class="n">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>'; }).join('');
+
+  /* catch-up band */
+  var CHG_TOTAL = T.load('changelog_total', 0);
+  var read = T.load('changelog_v1', {}); var c = Object.keys(read).filter(function(k){ return read[k]; }).length;
+  document.getElementById('meter').textContent = c ? 'changelog ' + c + (CHG_TOTAL ? '/' + CHG_TOTAL : '') + ' read' : 'nothing marked read in this browser yet';
+})();
+</script>
+</body>
+</html>

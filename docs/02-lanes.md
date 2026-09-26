@@ -4,6 +4,7 @@
 this shared repo. Owners marked TBD are to be assigned at kickoff; fill them in here.*
 
 ## The five lanes
+<!-- @s1.16 -->
 
 | # | Lane | Deliverable | Owner | Status |
 |---|---|---|---|---|
@@ -15,6 +16,7 @@ this shared repo. Owners marked TBD are to be assigned at kickoff; fill them in 
 | — | **Resources scan** | Partners, MCPs, credits, and mapping onto 3PT | Agent (done) | `docs/04-resources.md` |
 
 ## Cross-cutting split: Stack / UI / Backend
+<!-- @s1.15 -->
 
 | Area | Contents | Owner |
 |---|---|---|

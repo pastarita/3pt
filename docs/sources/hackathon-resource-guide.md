@@ -2,7 +2,7 @@
 Verbatim copy of the official hackathon resource guide, pulled 2026-09-26 via Google Docs
 Markdown export (https://docs.google.com/document/d/13c8je_4unbaLLMGYhCO58zMKx4eZZ_GcuYhrUSONld8/export?format=md).
 Only edit: the inline MongoDB logo image was removed. The Google Doc is the upstream; if the
-organizers change it, re-pull rather than editing here. Registered in docs/04-resources.md.
+organizers change it, re-pull rather than editing here. Registered in docs/04-resources.md. Cited from the transcript at @s1.17.
 -->
 
 # The Harness Engineering & Model Wrangling Hackathon: Resource Guide (verbatim copy)

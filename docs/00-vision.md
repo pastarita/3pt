@@ -3,6 +3,7 @@
 *Source of record. Distilled from the founding conversation (Patrick + Yash, Sep 2026).*
 
 ## One-paragraph pitch
+<!-- @s1.01 @s1.02 -->
 
 3PT ("Three Point Harness") is a meta-harness for coding agents aimed at **media-heavy
 workflows**. It wraps any frontier coding agent (Claude Code, Kiro, Strands, …) in a
@@ -12,6 +13,7 @@ an instrumentation agent then refactors toward our standards, and those standard
 baked back into the harness code so the next iteration starts from a healthier base.
 
 ## The three points
+<!-- @s1.01 @s1.04 -->
 
 | Stage | Job | Owns |
 |---|---|---|
@@ -20,6 +22,7 @@ baked back into the harness code so the next iteration starts from a healthier b
 | **Instrument** | Observability, DevX, CI/CD, deployments, memory. Standards here are enforced on the codebase and **backfed** into the harness and into Plan's prompt gateway. | Standards, checks, dashboards, memory schema |
 
 ### Loops inside the loop
+<!-- @s1.02 @s1.03 @s1.04 @s1.12 -->
 
 - **Build-with-instrumentation loop** — builder ↔ reviewer, back and forth until standards pass, then return to Plan.
 - **Instrumentation backfeed** — what Instrument learns becomes harness code and Plan context.
@@ -30,6 +33,7 @@ baked back into the harness code so the next iteration starts from a healthier b
   3. **Fix** sprint — find and reduce errors.
 
 ## Two sides of the triangle
+<!-- @s1.07 @s1.08 -->
 
 Think of the stack as a triangle drawn per iteration.
 
@@ -39,6 +43,7 @@ Think of the stack as a triangle drawn per iteration.
 We want a **polyglot** left side: a plurality of methods for indexing, parsing, and running maintenance jobs over long-lived media data, with a temporal-segmentation visualization for humans.
 
 ## Hackathon framing (revised 2026-09-26 against the rules)
+<!-- @s1.06 @s1.20 @s1.22 -->
 
 The rules ban **Image Analyzers**, **dashboards as the main feature**, and **basic RAG**
 (`docs/05-rules.md`). The original "generate context from image feeds, spot trends" pitch reads
@@ -59,6 +64,7 @@ as an image analyzer. The revision:
   transcripts, and measurements.
 
 ## Scope for the hackathon
+<!-- @s1.08 @s1.10 @s1.14 @s1.21 -->
 
 - **Images only.** No video, no audio.
 - **Context maintenance, not image analysis and not generation.** The harness maintains indexes,
@@ -69,6 +75,7 @@ as an image analyzer. The revision:
 - **Read once, trust the transcript.** Extract context from an image once, store it as source of truth, re-read only deliberately. Repeated re-reading is a hallucination vector.
 
 ## Problems we are addressing (statement of need)
+<!-- @s1.13 -->
 
 1. Hot/cold storage management for media, and relevance-driven promotion/demotion.
 2. Transcription of images into durable, non-hallucinated context.
@@ -76,10 +83,12 @@ as an image analyzer. The revision:
 4. Local media organization is personal; the harness must adapt its storage layout to the user over time.
 
 ## The supervisory UI
+<!-- @s1.09 @s1.29 -->
 
 A terse spatial view: 3D thumbnail stacks whose scale reflects corpus magnitude at each node, with drill-in inspectability so a human can quickly evaluate images and judge how pipelines are performing. This is the human's supervisory mode over long-running agent iteration. First target: a macOS SwiftUI app (`apps/3PT`).
 
 ## Names
+<!-- @s1.02 @s1.07 @s1.16 -->
 
 - **Install loop** — merge → download → build → install, run between team machines fast. See `docs/03-workflow.md`.
 - **Instrumentation loop** — the area that manages all instrumentation systems.

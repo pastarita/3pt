@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Changelog</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .wave{margin:26px 0 0}.wave h2 .d{font:700 10.5px/1 var(--mono);color:var(--faint)}
+  .wave .sub{font:italic 400 13.5px/1.5 var(--serif);color:var(--soft);margin:0 0 10px;max-width:70ch}
+  .ent{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin:7px 0}
+  .ent.read{background:transparent;border-style:dashed}.ent.read h4,.ent.read p{color:var(--faint)}
+  .ent input{margin:3px 0 0;flex:none;cursor:pointer}.ent .body{min-width:0;flex:1}
+  .ent h4{font:700 13.5px/1.35 var(--sans);margin:0 0 3px}.ent p{font-size:12.8px;color:var(--soft);margin:0;max-width:82ch}
+  .ent .meta{margin-top:7px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .go{font:600 11.5px/1 var(--sans);color:var(--flag);text-decoration:none}.src{font:11px/1 var(--mono);color:var(--faint)}
+  .prog{font:600 12px/1.4 var(--sans);color:var(--soft);margin:14px 0 6px;display:flex;gap:12px;align-items:center}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Record · release record · from 2026-09-26</p>
+    <h1>Changelog</h1>
+    <p class="lede">What shipped, by wave, and, stated plainly, what did not move. Tick entries as you read; the hub's catch-up band shows where this browser is.</p>
+  </header>
+  <div class="prog" id="prog"></div>
+  <div id="feed"></div>
+
+  <h2>What did not move <span>stated plainly</span></h2>
+  <div class="rulebox"><b>No application code exists.</b> By decision, the repo holds documents and this hub only. <b>The repo is still private</b>, which fails a hard submission requirement. <b>The Atlas Sandbox project has not been created</b>, which fails another. Yash is not a collaborator on the GitHub repo and not on the gate allowlist. The Cloudflare secrets for CI are not set, so pushes lint but do not deploy until they are. No ICP direction has been decided; the explorer is loaded, the decision is not made. Lane owners are mostly TBD.</div>
+
+  <h2>Where you come in <span>next moves</span></h2>
+  <ul>
+    <li>Walk the <a href="./icp-explorer.html">ICP explorer</a> together and pick the direction that holds under every preset. Record it in <a href="./view.html?f=docs/01-icp.md">ICPs</a>.</li>
+    <li>Claim lanes on the <a href="./lanes.html">Lane board</a>, export, paste to Discord.</li>
+    <li>Lane 1: flip the repo public, create the Atlas Sandbox project, add Yash.</li>
+    <li>Lane 4: first Atlas write from the pipeline skeleton before anything else gets built.</li>
+  </ul>
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">If it shipped and nobody can find it, it didn't ship.</p></footer>
+</div>
+<script>
+(function(){
+  var T = window.T;
+  /* [key, cluster, title, sentence, [label, href]|null, sha|null] — sha filled at commit time */
+  var WAVES = [
+    ['2026-09-26 · 11:20–11:55', 'The frame goes up', 'Two people, five lanes, one shared repo. The conversation needed a source of record before anyone opened an agent.', [
+      ['vision',   'orient', 'Vision, reframed against the rules',  'Plan → Build → Instrument with the backfeed loop, then the pivot the rules forced: harness as product, images as workload, UI as inspector.', ['Read the vision','./view.html?f=docs/00-vision.md'], '07d53ac'],
+      ['rules',    'orient', 'Rules and judging captured',          'Timeline, banned list, judging weights, prizes, and what each implies. Sept 26 at The Malin; Sept 30 applies only to finalists.', ['Check the rules','./view.html?f=docs/05-rules.md'], '07d53ac'],
+      ['resources','build',  'Partner resources and credits mapped','Every partner, amount, redemption path and MCP from the official guide, mapped onto 3PT slots. Fetched by a research agent from the resource doc.', ['See the ledger','./view.html?f=docs/04-resources.md'], '07d53ac'],
+      ['goal',     'orient', 'Goal and the interior-design use case','Why the harness gets more valuable over time, the interior-design firm, repeated walls as building blocks, the screen as onboarding stream.', ['Read the goal','./view.html?f=docs/06-goal-and-use-case.md'], '07d53ac'],
+      ['lanes',    'build',  'Lanes and the workflow design',       'Five lanes plus the resources scan; Stack / UI / Backend split; repo layout, Atlas collections and the install loop as design, not code.', ['Read the lanes','./view.html?f=docs/02-lanes.md'], '07d53ac']
+    ]],
+    ['2026-09-26 · 12:00–12:40', 'The hub goes up', 'The docs needed a surface the two principals and their agents could share, behind a gate, with previews per PR.', [
+      ['hub',      'record', 'Hub workspace',                       'Shell, Model, Viewer, tokens, gate, CI, lints and a Pages-faithful preview server, built to the hub-workspace pattern. The hub is a subdirectory; docs/ is staged in so the Viewer reaches it.', ['See the hub','./index.html'], null],
+      ['explorer', 'decide', 'ICP explorer',                        'Five directions × nine criteria, four presets, live dials. Reports which ordering holds under every preset instead of a single score.', ['Weigh the directions','./icp-explorer.html'], null],
+      ['directions','decide','ICP directions brief',                'For each direction: focus, example use case, example company type, lander messaging, the fully instantiated app, and the rule risk.', ['Read the brief','./view.html?f=docs/08-icp-directions.md'], null],
+      ['board',    'build',  'Lane board',                          'Owner, status ladder and next action per lane, persisted per browser, exportable as text for Discord. The hub tallies read from it.', ['Claim a lane','./lanes.html'], null]
+    ]]
+  ];
+  var total = WAVES.reduce(function(a,w){ return a+w[3].length; },0); T.save('changelog_total', total);
+  var read = T.load('changelog_v1', {});
+  function draw(){
+    document.getElementById('feed').innerHTML = WAVES.map(function(w){
+      return '<div class="wave"><h2><span class="d">'+w[0]+'</span> '+w[1]+'</h2><p class="sub">'+w[2]+'</p>'
+        + w[3].map(function(e){ var c=T.CLUSTERS[e[1]]; return '<label class="ent'+(read[e[0]]?' read':'')+'"><input type="checkbox" data-k="'+e[0]+'"'+(read[e[0]]?' checked':'')+'><div class="body"><h4>'+e[2]+'</h4><p>'+e[3]+'</p><div class="meta"><span class="chip" data-cluster="'+e[1]+'">'+c.label+'</span>'+(e[4]?'<a class="go" href="'+e[4][1]+'">'+e[4][0]+' →</a>':'')+'<span class="src">'+(e[5]||'uncommitted')+'</span></div></div></label>'; }).join('') + '</div>';
+    }).join('');
+    var n = Object.keys(read).filter(function(k){return read[k];}).length;
+    document.getElementById('prog').innerHTML = '<span>'+n+' / '+total+' read in this browser</span><button id="all">Mark all read</button><button id="none">Clear</button>';
+    document.getElementById('all').onclick=function(){ WAVES.forEach(function(w){ w[3].forEach(function(e){ read[e[0]]=true; }); }); T.save('changelog_v1', read); draw(); };
+    document.getElementById('none').onclick=function(){ read={}; T.save('changelog_v1', read); draw(); };
+  }
+  document.getElementById('feed').addEventListener('change', function(e){ if(e.target.type!=='checkbox') return; read[e.target.dataset.k]=e.target.checked; T.save('changelog_v1', read); draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

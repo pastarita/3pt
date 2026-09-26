@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Lane board</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .lane{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin:8px 0;display:grid;grid-template-columns:34px 1fr 150px 130px;gap:12px;align-items:start}
+  .lane .n{font:800 18px/1 var(--mono);color:var(--faint);padding-top:3px}
+  .lane h3{margin:0 0 3px;font-size:14.5px}
+  .lane .del{font-size:12.5px;color:var(--soft);margin:0 0 6px}
+  .lane textarea{min-height:44px;resize:vertical;font-size:12.5px}
+  .lane .stbtn{display:flex;align-items:center;gap:6px;width:100%;justify-content:flex-start}
+  .lane.done{opacity:.72}.lane.blocked{border-left:4px solid var(--alert)}
+  .lane label{font:700 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:5px}
+  .who{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+  .who .pill{font:700 11px/1 var(--sans);border:1px solid var(--line);border-radius:99px;padding:6px 10px;color:var(--soft)}
+  .who .pill b{color:var(--ink)}
+  pre.export{background:var(--sand);border:1px solid var(--line);border-radius:8px;padding:12px;font:12px/1.5 var(--mono);white-space:pre-wrap;display:none}
+  @media(max-width:900px){.lane{grid-template-columns:28px 1fr}.lane .own,.lane .sta{grid-column:2}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Build · hot · state persists in this browser under <code>tpt_lanes_v1</code></p>
+    <h1>Lane board</h1>
+    <p class="lede">Who is doing what, right now. Assign an owner, cycle the status, keep the next action honest. Export as text and paste it into Discord for the other principal; this board does not sync between browsers yet.</p>
+  </header>
+  <div class="who" id="who"></div>
+  <div class="bar">
+    <button id="export">Export as text</button>
+    <button id="reset">Reset to defaults</button>
+    <span style="font-size:12px;color:var(--faint)"><span class="pv a">AUTHORED</span> defaults from <code>docs/02-lanes.md</code> · your edits overlay them</span>
+  </div>
+  <pre class="export" id="out"></pre>
+  <div id="board"></div>
+  <div class="rulebox"><b>Status ladder:</b> ○ open → ◐ active → ● done, or — blocked. Click the status to advance; a blocked lane needs a note in its next action saying what unblocks it. Owners: <b>TBD</b> is a real state and counts against us on the hub.</div>
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">A lane without an owner is a lane that is not happening.</p></footer>
+</div>
+<script>
+(function(){
+  var T = window.T;
+  var saved = T.load('lanes_v1', {});
+  function get(l){ var s = saved[l.key] || {}; return { owner: s.owner || l.owner, status: s.status || l.status, next: (s.next != null ? s.next : l.next) }; }
+  function set(key, patch){ saved[key] = Object.assign({}, saved[key] || {}, patch); T.save('lanes_v1', saved); draw(); }
+  function draw(){
+    var counts = {}; T.PEOPLE.forEach(function(p){ counts[p]=0; });
+    T.LANES.forEach(function(l){ counts[get(l).owner] = (counts[get(l).owner]||0) + 1; });
+    document.getElementById('who').innerHTML = T.PEOPLE.map(function(p){ return '<span class="pill"><b>'+p+'</b> · '+counts[p]+' lane'+(counts[p]===1?'':'s')+'</span>'; }).join('');
+    document.getElementById('board').innerHTML = T.LANES.map(function(l){
+      var s = get(l), st = T.STATUS[s.status];
+      return '<div class="lane '+s.status+'" data-k="'+l.key+'">'
+        + '<div class="n">'+l.n+'</div>'
+        + '<div><h3>'+T.esc(l.name)+'</h3><p class="del">'+T.esc(l.deliverable)+'</p><label>Next action</label><textarea data-f="next">'+T.esc(s.next)+'</textarea></div>'
+        + '<div class="own"><label>Owner</label><select data-f="owner">'+T.PEOPLE.map(function(p){ return '<option'+(p===s.owner?' selected':'')+'>'+p+'</option>'; }).join('')+'</select></div>'
+        + '<div class="sta"><label>Status</label><button class="stbtn" data-f="status"><span class="st '+st.cls+'">'+st.glyph+'</span>'+st.label+'</button></div>'
+        + '</div>';
+    }).join('');
+  }
+  document.getElementById('board').addEventListener('change', function(e){
+    var lane = e.target.closest('.lane'); if (!lane) return;
+    var f = e.target.dataset.f; if (f==='owner') set(lane.dataset.k, { owner: e.target.value });
+    if (f==='next') set(lane.dataset.k, { next: e.target.value });
+  });
+  document.getElementById('board').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-f=status]'); if (!b) return;
+    var lane = b.closest('.lane'), l = T.LANES.filter(function(x){ return x.key===lane.dataset.k; })[0];
+    var cur = get(l).status, i = T.STATUS_ORDER.indexOf(cur);
+    set(l.key, { status: T.STATUS_ORDER[(i+1) % T.STATUS_ORDER.length] });
+  });
+  document.getElementById('export').onclick = function(){
+    var out = document.getElementById('out');
+    out.textContent = '3PT lanes · ' + new Date().toISOString().slice(0,16).replace('T',' ') + '\n' + T.LANES.map(function(l){ var s=get(l); return T.STATUS[s.status].glyph+' L'+l.n+' '+l.name+' — '+s.owner+' — '+s.next; }).join('\n');
+    out.style.display = out.style.display==='block' ? 'none' : 'block';
+    navigator.clipboard && navigator.clipboard.writeText(out.textContent);
+  };
+  document.getElementById('reset').onclick = function(){ saved = {}; T.save('lanes_v1', saved); draw(); };
+  draw();
+})();
+</script>
+</body>
+</html>

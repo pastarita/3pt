@@ -16,6 +16,7 @@ guardrails, tool access and memory) that let agents adapt to a task, sustain wor
 and act on real data," with MongoDB as the data and memory layer.
 
 ## Goal
+<!-- @s1.19 @s1.20 @s1.23 @s1.24 @s1.25 -->
 
 Build a purpose-built image and knowledge management pipeline across the unique workflow of a
 media-heavy business, such that **the harness gets more valuable the longer it runs**.
@@ -26,6 +27,7 @@ down the context needed to represent everything generated over time. The busines
 insight into what it has actually been doing across its media-heavy workloads.
 
 ## Use case: an interior design firm
+<!-- @s1.26 -->
 
 Interior design firms derive models continuously (Blender scenes, CAD drawings, renders, line
 drawings, mood boards). Authors derive models; firms derive models; the models pile up.
@@ -50,6 +52,7 @@ Two streams come out of this and should be segmented from each other:
   work and acquires new customers, produced from the same media base.
 
 ## Value props
+<!-- @s1.27 -->
 
 - **A lot of data from a media pipeline, turned into feedback.** The harness slowly learns your
   media workflows and what repeats in your outputs, then suggests automations for the repeated parts.
@@ -60,6 +63,7 @@ Two streams come out of this and should be segmented from each other:
   workflow becomes composition instead of repetition.
 
 ## Onboarding side effect: learn from the screen
+<!-- @s1.28 -->
 
 A company already running CAD every day can be onboarded by observation rather than by data entry.
 
@@ -78,6 +82,7 @@ A company already running CAD every day can be onboarded by observation rather t
   offers the next block while they work.
 
 ## Recap: why this is self-improving
+<!-- @s1.21 @s1.29 -->
 
 There is an instrumentable flow of media coming in and being processed. The processor is the
 harness. The harness grows over time.
@@ -89,6 +94,7 @@ reduce overall bit-storage load over time, and extract value from the media stre
 different time domains (today, this quarter, this decade).
 
 ## The UI we want
+<!-- @s1.29 -->
 
 For non-technical people to configure the harness from what they already know and use. It should:
 

@@ -14,6 +14,9 @@ requirement. Priorities are MoSCoW: Must / Should / Could / Won't (today).
 ---
 
 ## 1. Canonical theses (converged from the transcript)
+<!-- Transcript origins by segment (grammar: docs/09-provenance.md; index: docs/provenance-index.md):
+     T-1 @s1.01 @s1.02 · T-2 @s1.06 @s1.08 · T-3 @s1.13 · T-4 @s1.13 · T-5 @s1.04 · T-6 @s1.03 @s1.12
+     T-7 @s1.01 · T-8 @s1.28 · T-9 @s1.23 @s1.26 @s1.27 · T-10 @s1.09 @s1.29 · T-11 @s1.07 -->
 
 | ID | Thesis | Transcript origin | Doc anchor |
 |---|---|---|---|
@@ -30,6 +33,7 @@ requirement. Priorities are MoSCoW: Must / Should / Could / Won't (today).
 | **T-11** | **Two sides of the triangle.** Right side is harness code history; left side is media context (indexes, transcripts, tiers, pipelines-as-code). The right side ("furnace") drives migrations of the left. | "right side of our triangles … left side is how … the data inputs … are intermediated" | `00-vision.md` §Two sides of the triangle |
 
 ### Transcript claims that did not converge (deferred or cut)
+<!-- trend analysis @s1.11 · construction @s1.18 · RBAC @s1.14 · journal @s1.21 · parallel sessions @s1.12 · DTrace @s1.28 -->
 
 | Transcript claim | Disposition | Reason |
 |---|---|---|
@@ -93,6 +97,7 @@ inspector UI reads them to draw the evolution. Nothing is measured that is not w
 | **M-19** | `harness_health` | Weighted composite of M-4, M-6, M-8, inverse M-1; weights themselves live in `policies` and can be rewritten | Computed | Instrument | Sprint-mode selection; inspector headline |
 
 ### 3.2 Sprint-mode selection rule (initial policy; Instrument may rewrite it)
+<!-- @s1.12 -->
 
 ```
 if M-4 fell vs. previous checkpoint OR M-3 exceeded budget      -> Fix

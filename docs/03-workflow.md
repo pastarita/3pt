@@ -32,6 +32,7 @@ When Lane 4 and Lane 5 start, they implement this document.*
 ```
 
 ## The initialized pipeline (Plan → Build → Instrument skeleton)
+<!-- @s1.04 @s1.14 -->
 
 Minimum viable loop, in order of implementation:
 
@@ -60,6 +61,7 @@ token spend per iteration.
 - One `Makefile` at root: `make install`, `make loop`, `make plan`, `make build`, `make instrument`, `make rollback`.
 
 ## The install loop
+<!-- @s1.16 -->
 
 Colloquial name for **merge → download → build → install**, run between both machines fast.
 

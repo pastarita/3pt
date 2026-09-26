@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · ICP explorer</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px 18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin:10px 0}
+  .dial label{display:flex;justify-content:space-between;font:600 11.5px/1.3 var(--sans);color:var(--soft);margin-bottom:4px;cursor:help}
+  .dial label b{font:700 11px var(--mono);color:var(--ink)}
+  .dial input{width:100%}
+  .rank{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;display:grid;grid-template-columns:34px 1fr 190px;gap:12px;align-items:center}
+  .row .pos{font:800 20px/1 var(--mono);color:var(--faint)}
+  .row.top .pos{color:var(--flag)}
+  .row h3{margin:0 0 2px;font-size:14.5px}.row .hl{font:italic 12.5px/1.4 var(--serif);color:var(--soft);margin:0}
+  .row .co{font-size:11.5px;color:var(--faint);margin:4px 0 0}
+  .bar2{height:8px;background:var(--sand);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .bar2 i{display:block;height:100%;background:var(--cyan)}
+  .row .sc{font:700 13px/1 var(--mono);text-align:right;margin-bottom:6px}
+  .row .who{font:700 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:6px;text-align:right}
+  .stab{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;margin:16px 0;font-size:13.5px}
+  .stab b{color:var(--ink)}
+  .matrix td.s{font-family:var(--mono);text-align:center}
+  .matrix td.s.hi{color:var(--good);font-weight:700}.matrix td.s.lo{color:var(--alert)}
+  @media(max-width:760px){.row{grid-template-columns:28px 1fr}.row>div:last-child{grid-column:2}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Decide · hot · dials persist in this browser under <code>tpt_icp_weights_v1</code></p>
+    <h1>ICP explorer</h1>
+    <p class="lede">Five directions, nine criteria, four named presets. The score is not the finding. The finding is which ordering holds under every preset and which flips on one dial. Briefs for each direction are in <a href="./view.html?f=docs/08-icp-directions.md">ICP directions</a>.</p>
+  </header>
+
+  <h2>Preset <span>a preset is a record: a named weight vector rendered into the dials below</span></h2>
+  <div class="presets" id="presets"></div>
+  <div class="dials" id="dials"></div>
+  <p style="font-size:12px;color:var(--faint);margin:2px 0 0"><span class="pv a">AUTHORED</span> scores 0–5 per criterion in <code>3pt-data.js</code>, estimated by the principals on 2026-09-26. <span class="pv d">DERIVED</span> rank = Σ(w·s) / (Σw × 5), recomputed on every dial move.</p>
+
+  <h2>Ranking <span>under the current weights</span></h2>
+  <div class="rank" id="rank"></div>
+
+  <div class="stab" id="stab"></div>
+
+  <h2>Score matrix <span>the atoms the ranking is computed from</span></h2>
+  <div class="tbl-wrap"><table class="matrix" id="matrix"></table></div>
+
+  <div class="rulebox"><b>Where the model ends.</b> A weighted sum cannot express "this one is disqualified": a direction that reads as an image analyzer goes to zero under the rules, it does not merely slip. That is a constraint, and it lives in <a href="./view.html?f=docs/05-rules.md">Rules &amp; judging</a>, not in these dials. Read the <em>Distance from banned list</em> column as a gate first, then the ranking.</div>
+
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Read the stability, not the score.</p></footer>
+</div>
+<script>
+(function(){
+  var T = window.T;
+  var state = T.load('icp_weights_v1', { preset:'Judges today', w: Object.assign({}, T.PRESETS['Judges today']) });
+  function ranked(w){ return T.DIRECTIONS.map(function(d){ return { d:d, r:T.rank(d.scores, w) }; }).sort(function(a,b){ return b.r-a.r; }); }
+  function draw(){
+    document.getElementById('presets').innerHTML = Object.keys(T.PRESETS).map(function(p){ return '<button class="'+(state.preset===p?'on':'')+'" data-p="'+p+'">'+p+'</button>'; }).join('') + '<button data-p="__custom" class="'+(state.preset==='custom'?'on':'')+'">custom</button>';
+    document.getElementById('dials').innerHTML = T.CRITERIA.map(function(c){ return '<div class="dial"><label data-tip="'+T.esc(c.tip)+'"><span>'+c.label+'</span><b>'+state.w[c.key]+'</b></label><input type="range" min="0" max="5" step="1" value="'+state.w[c.key]+'" data-k="'+c.key+'"></div>'; }).join('');
+    var rk = ranked(state.w);
+    document.getElementById('rank').innerHTML = rk.map(function(x,i){ return '<div class="row'+(i===0?' top':'')+'"><div class="pos">'+(i+1)+'</div><div><h3>'+T.esc(x.d.name)+'</h3><p class="hl">“'+T.esc(x.d.headline)+'”</p><p class="co">'+T.esc(x.d.company)+'</p></div><div><div class="sc">'+(x.r*100).toFixed(0)+'</div><div class="bar2"><i style="width:'+(x.r*100)+'%"></i></div><div class="who">raised by '+x.d.who+'</div></div></div>'; }).join('');
+    /* stability: which pairs hold across ALL presets */
+    var orders = Object.keys(T.PRESETS).map(function(p){ return ranked(T.PRESETS[p]).map(function(x){ return x.d.key; }); });
+    var firsts = {}; orders.forEach(function(o){ firsts[o[0]] = (firsts[o[0]]||0)+1; });
+    var always = T.DIRECTIONS.filter(function(d){ return orders.every(function(o){ return o.indexOf(d.key) <= 1; }); });
+    var never  = T.DIRECTIONS.filter(function(d){ return orders.every(function(o){ return o.indexOf(d.key) >= 3; }); });
+    var name = function(k){ return T.DIRECTIONS.filter(function(d){ return d.key===k; })[0].name; };
+    document.getElementById('stab').innerHTML = '<span class="pv d">DERIVED</span> across all '+orders.length+' presets: '
+      + '<b>first place</b> goes to ' + Object.keys(firsts).map(function(k){ return name(k)+' ('+firsts[k]+'×)'; }).join(', ') + '. '
+      + (always.length ? '<b>Top two under every preset:</b> ' + always.map(function(d){ return d.name; }).join(', ') + '. ' : '<b>No direction is top-two under every preset.</b> ')
+      + (never.length ? '<b>Bottom two under every preset:</b> ' + never.map(function(d){ return d.name; }).join(', ') + '. ' : '')
+      + 'The stable finding is what you take to the decision; anything that flips on one dial is a coin you have not yet flipped.';
+    var m = '<thead><tr><th>Direction</th>' + T.CRITERIA.map(function(c){ return '<th data-tip="'+T.esc(c.tip)+'">'+c.label+'</th>'; }).join('') + '</tr></thead><tbody>';
+    m += T.DIRECTIONS.map(function(d){ return '<tr><td><b>'+T.esc(d.name)+'</b></td>' + T.CRITERIA.map(function(c){ var s=d.scores[c.key]; return '<td class="s'+(s>=4?' hi':s<=2?' lo':'')+'">'+s+'</td>'; }).join('') + '</tr>'; }).join('');
+    document.getElementById('matrix').innerHTML = m + '</tbody>';
+  }
+  document.getElementById('presets').addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b) return; var p=b.dataset.p; if (p==='__custom') { state.preset='custom'; } else { state.preset=p; state.w=Object.assign({}, T.PRESETS[p]); } T.save('icp_weights_v1', state); draw(); });
+  document.getElementById('dials').addEventListener('input', function(e){ if (e.target.type!=='range') return; state.w[e.target.dataset.k]=+e.target.value; state.preset='custom'; T.save('icp_weights_v1', state); draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

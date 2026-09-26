@@ -1,0 +1,92 @@
+# 3PT hub workspace
+
+Everything about the hub lives in this directory. The rest of the repo does not depend on it.
+
+The hub is a gated Cloudflare Pages site that renders the repo's docs of record and holds two
+working surfaces for the principals: the lane board and the ICP explorer. Live at
+**https://3pt.pages.dev**; every PR that touches `hub/` or `docs/` gets a preview at
+`https://<branch>.3pt.pages.dev`.
+
+## Layout
+
+| Path | What |
+|---|---|
+| `site/index.html` | The hub: grouped cards + DERIVED tallies. Navigation only, never content. |
+| `site/nav.js` | The Shell: single source of IA (`GROUPS`, `ROUTE`, glyphs, cluster registry). |
+| `site/3pt-data.js` | The Model: doc Register, lanes, ICP directions, criteria, presets, helpers. |
+| `site/3pt.css` | Design tokens and shared components. Dark base. |
+| `site/view.html` + `site/view-render.js` | The Viewer: renders `.md` / `.csv` / `.json` inside the Shell. |
+| `site/lanes.html`, `site/icp-explorer.html`, `site/changelog.html` | Leaves. |
+| `functions/_middleware.js` | The Gate: Tier 0 Basic auth at the edge. |
+| `tools/stage.sh` | Builds `_site/` = `site/` + `../docs/` + `../README.md` + `../brainstorming.md`. |
+| `tools/check-nav.mjs`, `tools/check-view.mjs` | Lints, run against `_site/`. The type-check for the IA. |
+| `tools/serve.py` | Pages-faithful preview server for `_site/`. |
+| `wrangler.jsonc`, `Makefile` | Deploy config and targets. |
+| `_site/` | Generated. Gitignored. |
+
+## Working it
+
+```sh
+cd hub
+make preview   # stage + serve at http://127.0.0.1:8000/
+make check     # stage + both lints
+make deploy    # stage + lints + production deploy (from hub/, so functions/ compiles)
+make verify    # anon 401 · valid 200 · wrong-domain 401   (needs ACCESS_PASS in the environment)
+```
+
+## Adding a surface: three moves, never a fourth
+
+1. Write the leaf in `site/`: self-contained HTML, tokens from `3pt.css` only, `<script src="./nav.js">`.
+2. Register it in `nav.js` `GROUPS` under its phase, with a minted 24×24 glyph.
+3. Card it on `index.html` with one honest sentence and a go-verb.
+
+Documents are not leaves. Card them as `view.html?f=docs/<file>.md` and route them in `nav.js` `ROUTE`.
+Then `make check`.
+
+## State
+
+Hot-leaf state is per browser, in `localStorage` under the `tpt_` prefix:
+`tpt_lanes_v1`, `tpt_icp_weights_v1`, `tpt_changelog_v1`, `tpt_changelog_total`, `tpt_nav`.
+It does not sync between people yet. Export the lane board as text and paste it.
+
+## Gate: two doors, one room
+
+**Door 1, Tier 1: Cloudflare Access (Zero Trust).** One self-hosted Access application covers
+`3pt.pages.dev` and `*.3pt.pages.dev`, so production and every PR preview share the same app and
+AUD. The allowlist lives in the Access policy, not in code; adding a person is a dashboard edit.
+Visitors sign in with a one-time PIN to their email (or any identity provider enabled on the team).
+`functions/_middleware.js` then **verifies the assertion** Access attaches (RS256 against the team's
+published keys, issuer, audience, expiry) and fails closed with 503 if the keys are unreachable.
+The convenience email header is never trusted on its own.
+
+```sh
+# once: an API token with  Access: Apps and Policies · Edit  +  Access: Organizations · Read
+#       saved to ~/.config/3pt/CF_API_TOKEN (chmod 600). Never committed.
+ACCESS_EMAILS="patrick@factorita.com,yash@example.com" make access   # creates/updates app + policy,
+                                                                     # writes ACCESS_TEAM_DOMAIN + ACCESS_AUD to Pages
+make deploy && make verify
+```
+
+**Door 2, Tier 0: Basic auth.** Any `@factorita.com` address, the `ALLOW` array in the middleware,
+or the comma-separated `ACCESS_USERS` Pages variable, plus the `ACCESS_PASS` Pages secret. This is
+the door `curl` uses and the door that still works if the Access app is ever removed. On hostnames
+Access fronts, it is unreachable (Access intercepts first). No password is ever in the repo.
+
+```sh
+npx wrangler pages secret put ACCESS_PASS --project-name=3pt                # production
+npx wrangler pages secret put ACCESS_PASS --project-name=3pt --env preview  # preview
+```
+
+There is no `DISABLE_GATE`. Graduate to Tier 2 (self-service request-and-approve) the first time a
+collaborator is locked out; the pattern is in `.claude/skills/hub-workspace/references/collaborator-access.md`.
+
+## CI
+
+`.github/workflows/deploy.yml` at the repo root, scoped to `hub/**`, `docs/**`, `README.md`,
+`brainstorming.md`. Lints on every push and PR; deploys once the repo has `CLOUDFLARE_API_TOKEN`
+and `CLOUDFLARE_ACCOUNT_ID` secrets. Until then, deploy by hand with `make deploy`.
+
+## Provenance
+
+Every figure on a leaf wears one badge: DERIVED (computed from the Model at load, computation
+stated), AUTHORED (an estimate, labelled), or TO CONFIRM (a placeholder). Hub tallies are never typed.

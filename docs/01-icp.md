@@ -20,6 +20,7 @@ long-term trends, and (d) would benefit from a self-improving harness rather tha
 pipeline.
 
 ## ICP-1 (primary): Visual trend analyst
+<!-- @s1.11 -->
 
 **Who.** A strategist, researcher, or small team monitoring image-dominant social feeds
 (Instagram, TikTok stills, Pinterest, X) to spot emerging visual trends for a brand,
@@ -40,6 +41,7 @@ A harness that re-plans, rebuilds, and re-instruments itself is the only thing t
 **Hackathon demo slice.** One feed, one week of images, one trend board, one retrospective checkpoint.
 
 ## ICP-2: Advertising / creative-ops analyst
+<!-- @s1.11 -->
 
 **Who.** Performance-marketing or creative-ops person at an agency or in-house team sitting
 on a large library of ad creatives with performance data attached.
@@ -51,6 +53,7 @@ attributes drive results, watch those relationships drift over time.
 the insights directly valuable. Slightly heavier data-integration burden than ICP-1.
 
 ## ICP-3: Pipeline-building data engineer / ML engineer
+<!-- @s1.13 -->
 
 **Who.** An engineer running classification, segmentation, extraction, or regeneration
 pipelines over large image datasets who wants to build *their own* harness.
@@ -63,12 +66,14 @@ the most technically aligned with the meta-harness idea, but the hardest to demo
 hackathon window.
 
 ## Explicitly deprioritized
+<!-- @s1.10 @s1.14 -->
 
 - **Content creation / marketing generation.** Generation is a solved, crowded space and does
   not exercise the long-term-context problem.
 - **Multi-user collaboration and RBAC.** Out of scope; humans manage access, never the AI.
 
 ## Working decision
+<!-- @s1.30 -->
 
 Build for **ICP-3** during the hackathon: an engineer who owns a long-running, media-heavy
 codebase and wants the harness that maintains it to evolve its own rules, context policies,

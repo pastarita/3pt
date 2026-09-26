@@ -16,6 +16,11 @@ xcuserdata/
 .install-loop/
 dist/
 
+# Hub workspace (Cloudflare Pages)
+_site/
+.wrangler/
+.dev.vars
+
 # Secrets
 .env
 .env.*
