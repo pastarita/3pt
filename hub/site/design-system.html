@@ -218,6 +218,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 </head>
 <body>
 <script src="./nav.js"></script>
+<script src="./sdf-depth.js"></script>
 <div class="wrap">
 
 <header class="top">
@@ -372,6 +373,11 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 <p>All twelve components on the composition currently in the compile row of the promenade. This is what the monorepo would look like if the ballot closed now.</p>
 <div id="compiled-spec" class="specs one"></div>
 
+<h2 id="depth"><small>8b · depth · experiment</small>A signed-distance field behind the surfaces</h2>
+<p>One fragment shader draws the triangle mark as a height field: plateau inside, falloff outside, a lit rim, faint contours, and each region tinted by the nearest point. It reads the compiled tokens, so it re-skins with the ballot. Homepage: low intensity, fixed behind the page. Components: the same field at small scale inside a tile.</p>
+<div class="bar"><label>Intensity</label><input type="range" id="sdf-int" min="0" max="1" step="0.05" value="0.7" style="width:140px"><label>Scale</label><input type="range" id="sdf-scale" min="0.4" max="1.6" step="0.05" value="1" style="width:140px"><span style="font-size:12px;color:var(--d-muted)" id="sdf-note">WebGL; reduced motion renders one frame; no WebGL falls back to radial gradients.</span></div>
+<div id="depth-spec" class="specs"></div>
+
 <h2 id="icp"><small>9 · motifs against the ICP</small>What is acceptable, and on what basis</h2>
 <p>The ICP is still being dialled in (<code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>). Motifs speak to industries: marking paint reads as a jobsite, a title block reads as a studio, a rail of coloured points reads as an engineer's console. The bases below say what any motif must satisfy regardless of industry; the matrix says how each direction speaks to each ICP direction, so the design decision can follow the ICP decision instead of preceding it.</p>
 <h3>Bases: every motif must pass all seven</h3>
@@ -434,6 +440,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color
 
 <script>
 (function(){
+var G = window;
 /* ---------- Data. Colour sets were tuned against WCAG thresholds before this page was written; the table in section 6 recomputes them at load. ---------- */
 var COLOR = {"D1":{"light":{"canvas":"#E9EDF1","surface":"#F7F9FB","raised":"#FFFFFF","deep":"#232A33","onDeep":"#E8B04A","ink":"#18202B","muted":"#5A6676","faint":"#7D8896","line":"#C9D1DB","lineStrong":"#7F8C9B","accent":"#B8400C","accentSoft":"#FBE3D6","onAccent":"#FFFFFF","ok":"#1B6E4C","okSoft":"#D6EEE3","warn":"#8A5A00","warnSoft":"#F5E6C4","alert":"#B3261E","alertSoft":"#F8DAD7","plan":"#2F5FB3","build":"#B8400C","instrument":"#1F7A55"},"dark":{"canvas":"#12161B","surface":"#1B2129","raised":"#232A33","deep":"#0B0E12","onDeep":"#E8B04A","ink":"#E6EBF1","muted":"#98A4B3","faint":"#7C8797","line":"#2E3743","lineStrong":"#66748A","accent":"#FF8A4C","accentSoft":"#3A2418","onAccent":"#1A0E08","ok":"#5CCB98","okSoft":"#17332A","warn":"#E8B04A","warnSoft":"#3A2E14","alert":"#F0796F","alertSoft":"#3B1B19","plan":"#7FA6E8","build":"#FF8A4C","instrument":"#5CCB98"}},"D2":{"dark":{"canvas":"#0F1216","surface":"#151A21","raised":"#1A2029","deep":"#0B0E12","onDeep":"#E6E9EE","ink":"#E6E9EE","muted":"#A3ADBB","faint":"#7B8694","line":"#2A323D","lineStrong":"#5E6C85","accent":"#FF6B4A","accentSoft":"#3A1F18","onAccent":"#14100E","ok":"#3FB886","okSoft":"#14302A","warn":"#E0A33A","warnSoft":"#3A2C12","alert":"#F06A61","alertSoft":"#3A1A19","plan":"#8B7CF6","build":"#E0A33A","instrument":"#3FB886"},"light":{"canvas":"#F3F5F8","surface":"#FFFFFF","raised":"#FFFFFF","deep":"#141A22","onDeep":"#E6E9EE","ink":"#141A22","muted":"#4F5B69","faint":"#6B7684","line":"#D5DBE3","lineStrong":"#8794A3","accent":"#C43E16","accentSoft":"#FBE1D9","onAccent":"#FFFFFF","ok":"#1A6E4C","okSoft":"#D6EFE3","warn":"#8A5A00","warnSoft":"#F6E7C5","alert":"#B8302A","alertSoft":"#F9DAD8","plan":"#5B47D6","build":"#8A5A00","instrument":"#1D7A55"}},"D3":{"light":{"canvas":"#F4F1EA","surface":"#FBF9F4","raised":"#FFFFFF","deep":"#1F1D1A","onDeep":"#EDE8DD","ink":"#1F1D1A","muted":"#5E5A52","faint":"#7C776D","line":"#D8D2C4","lineStrong":"#8E877A","accent":"#2E4E9E","accentSoft":"#DDE4F5","onAccent":"#FFFFFF","ok":"#3A6B3F","okSoft":"#DCE9DA","warn":"#835A0E","warnSoft":"#F1E5C3","alert":"#B8321F","alertSoft":"#F6DCD6","plan":"#2E4E9E","build":"#8F6210","instrument":"#3A6B3F"},"dark":{"canvas":"#1B1A17","surface":"#24221E","raised":"#2E2B26","deep":"#121110","onDeep":"#EDE8DD","ink":"#EDE8DD","muted":"#A8A196","faint":"#857F74","line":"#3A362F","lineStrong":"#7A7264","accent":"#8FA9E8","accentSoft":"#22304D","onAccent":"#0F1526","ok":"#7FC48F","okSoft":"#1E3A26","warn":"#E0B45A","warnSoft":"#3E2F12","alert":"#E8776A","alertSoft":"#4A1F1A","plan":"#8FA9E8","build":"#E0B45A","instrument":"#7FC48F"}}}
 ;
@@ -606,7 +613,7 @@ function renderCompiled(){
   host.appendChild(specimens(S.compiled, 'compiled', false));
   var mix = PIECES.map(function(p){ return p[1].toLowerCase()+' '+S.compiled[p[0]]; }).join(' · ');
   document.getElementById('compiled-line').textContent = 'compiled: '+mix;
-  renderGen();
+  renderGen(); renderDepth();
 }
 
 /* ---------- Contrast (DERIVED) ---------- */
@@ -705,6 +712,33 @@ document.addEventListener('click', function(e){
 });
 document.addEventListener('input', function(e){ var n=e.target.getAttribute&&e.target.getAttribute('data-note'); if(n){ S.notes[n]=e.target.value; save(S); } });
 document.getElementById('lens').addEventListener('change', function(){ S.lens=this.value; save(S); renderFit(); });
+
+
+/* ---------- Depth (experiment): the SDF field behind a specimen and inside its tiles ---------- */
+var DEPTH = [];
+function depthPanel(label){
+  return '<div class="sp big"><span class="lbl">'+label+'</span>'
+   +'<div><div class="eb">Harness · v2 → v3 · proposal</div><h3 class="h">The harness rewrote its rules. <em>Approve or roll back.</em></h3><p class="ld">The same tokens, with a field behind them. Text stays on the raised layer; the field never carries meaning.</p></div>'
+   +'<div class="row"><button class="btn pri">Approve v3</button><button class="btn">Roll back</button><span class="chip plan">Plan</span><span class="chip build">Build</span><span class="chip inst">Instrument</span></div>'
+   +'<div class="stats"><div class="stat depth-tile"><div class="n">7 / 8</div><div class="l">useful answers <span class="pvb d">DERIVED</span></div></div><div class="stat depth-tile"><div class="n">−38%</div><div class="l">tokens per query <span class="pvb d">DERIVED</span></div></div><div class="stat depth-tile"><div class="n">$0.11</div><div class="l">per photo <span class="pvb a">AUTHORED</span></div></div></div>'
+   +'<div class="prop"><b>Drywall started in unit 206. No photo of its plumbing with the wall open.</b><p>Units 201 to 205 each have one. Ask the field team for a photo today?</p><div class="row"><button class="btn pri">Send request</button><button class="btn">Not needed</button></div></div>'
+   +'</div>';
+}
+function renderDepth(){
+  if (!G.SDF) return;
+  DEPTH.forEach(function(h){ h.destroy(); }); DEPTH = [];
+  var host=document.getElementById('depth-spec'); if(!host) return;
+  var modes = MODE==='split' ? ['light','dark'] : [MODE];
+  host.className = 'specs' + (modes.length===1 ? ' one' : '');
+  host.innerHTML = modes.map(function(m){ return '<div data-m="'+m+'">'+depthPanel('depth · '+m)+'</div>'; }).join('');
+  var inten = parseFloat(document.getElementById('sdf-int').value), sc = parseFloat(document.getElementById('sdf-scale').value);
+  host.querySelectorAll('[data-m]').forEach(function(w){
+    var sp = w.firstChild; apply(sp, S.compiled, w.getAttribute('data-m'));
+    DEPTH.push(G.SDF.mount(sp, { intensity: inten, scale: sc, speed: 1 }));
+    sp.querySelectorAll('.depth-tile').forEach(function(t){ t.style.overflow='hidden'; DEPTH.push(G.SDF.mount(t, { intensity: Math.min(1, inten+0.2), scale: 0.55, speed: 0.6 })); });
+  });
+}
+['sdf-int','sdf-scale'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('input', function(){ var i=parseFloat(document.getElementById('sdf-int').value), sc=parseFloat(document.getElementById('sdf-scale').value); DEPTH.forEach(function(h,k){ h.set({ intensity: k%4===0? i : Math.min(1,i+0.2), scale: k%4===0? sc : 0.55 }); }); }); });
 
 renderPieces(); renderDirs(); renderContrast(); renderFit(); renderBallot(); renderCompiled();
 })();
