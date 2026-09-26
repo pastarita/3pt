@@ -11,16 +11,27 @@
   .page{position:relative;z-index:1}
   .brand{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
   .mark{width:60px;height:60px;flex:none}
-  .clock{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;margin:14px 0 4px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-  .clock b{font-size:13px}.clock .m{font:600 12px/1.3 var(--mono);color:var(--soft);flex:1;min-width:220px}
-  .clock .big{font:800 22px/1 var(--mono);color:var(--flag)}
-  .clock.past .big{color:var(--faint)}
-  .clock.decide{border-color:var(--flag);border-left:4px solid var(--flag)}
-  .catch{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 16px;margin:8px 0 4px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-  .catch b{font-size:13px}.catch .m{font:600 11.5px/1.3 var(--mono);color:var(--soft);flex:1;min-width:200px}
-  .grp-blurb{font:italic 13px/1.4 var(--serif);color:var(--soft);margin:-4px 0 12px}
   .tri{display:flex;gap:12px;align-items:center;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:8px}
   .tri i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  figure{margin:14px 0 0}
+  figcaption{font:italic 12.5px/1.45 var(--serif);color:var(--soft);margin:6px 0 0}
+  figcaption .pv{font-style:normal;margin-right:6px}
+  .fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 8px}
+  .fig svg{width:100%;height:auto;display:block;font-family:var(--mono)}
+  .fig svg text{fill:var(--ink)}
+  .fig svg .k{fill:var(--faint);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .fig svg .s{fill:var(--soft)}
+  .fig svg .e{fill:none;stroke:var(--soft);stroke-width:3}
+  .fig svg .b{fill:none;stroke:var(--instrument);stroke-width:4}
+  .fig svg .c{fill:none;stroke:var(--cyan);stroke-width:2.5;stroke-dasharray:8 7}
+  .fig svg .node{stroke-width:3}
+  .rail-fig .now{fill:var(--flag)}
+  .band{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 16px;margin:10px 0 0;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .band b{font-size:13px}.band .m{font:600 11.5px/1.3 var(--mono);color:var(--soft);flex:1;min-width:200px}
+  .band.decide{border-color:var(--flag);border-left:4px solid var(--flag)}
+  .stats-fig{margin-top:10px}.stats-fig .stats{margin:0}
+  .rail-fig .big{font:800 15px/1 var(--mono);color:var(--flag);font-style:normal}
+  .rail-fig.past .big{color:var(--faint)}
 </style>
 </head>
 <body>
@@ -29,92 +40,138 @@
 <div class="page">
   <header class="top">
     <div class="brand">
-      <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="#a3adbb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5l7.5 13h-15Z"/><circle cx="12" cy="4.5" r="2" fill="#8b7cf6" stroke="none"/><circle cx="19.5" cy="17.5" r="2" fill="#e0a33a" stroke="none"/><circle cx="4.5" cy="17.5" r="2" fill="#3fb886" stroke="none"/></svg>
+      <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--soft)"><path d="M12 4.5l7.5 13h-15Z"/><circle cx="12" cy="4.5" r="2" fill="var(--plan)" stroke="none"/><circle cx="19.5" cy="17.5" r="2" fill="var(--build)" stroke="none"/><circle cx="4.5" cy="17.5" r="2" fill="var(--instrument)" stroke="none"/></svg>
       <div>
-        <p class="eyebrow">Hub · The Malin Chelsea · Saturday, September 26, 2026</p>
+        <p class="eyebrow">Hub · The Malin Chelsea · 2026-09-26</p>
         <h1>3PT · Three Point Harness</h1>
         <div class="tri"><span><i style="background:var(--plan)"></i>Plan</span><span><i style="background:var(--build)"></i>Build</span><span><i style="background:var(--instrument)"></i>Instrument</span></div>
       </div>
     </div>
-    <p class="lede" style="margin-top:14px">The working surface for two people and their agents building a self-improving harness for media-heavy workflows. The harness is the product. Images are the workload. This page holds navigation and live tallies only; the documents of record are in <code>docs/</code>.</p>
+    <p class="lede" style="margin-top:14px">A self-improving harness for media-heavy work. The harness is the product; images are the workload. The record is in <code>docs/</code>.</p>
   </header>
 
-  <div class="clock decide" id="decide">
+  <!-- @s1.02 @s1.04 the product in one picture: the loop, the backfeed, the checkpoint store -->
+  <figure class="fig" id="loop">
+    <svg viewBox="0 0 1000 380" role="img" aria-label="Plan, Build, Instrument in a triangle; Instrument feeds back into the harness rules; Atlas underneath stores every checkpoint">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--soft)"/></marker>
+        <marker id="ahi" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--instrument)"/></marker>
+        <marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5 0 10Z" fill="var(--cyan)"/></marker>
+      </defs>
+      <!-- the loop: Plan → Build → Instrument → Plan -->
+      <path class="e" d="M520 58L718 208" marker-end="url(#ah)"/>
+      <path class="e" d="M708 236H298" marker-end="url(#ah)"/>
+      <path class="e" d="M280 208L478 58" marker-end="url(#ah)"/>
+      <!-- backfeed: Instrument rewrites the harness that ran it -->
+      <path class="b" d="M300 214C360 186 372 176 404 166" marker-end="url(#ahi)"/>
+      <text x="352" y="211" text-anchor="middle" class="s" font-size="18" font-style="italic">backfeed</text>
+      <!-- checkpoints: every stage lands in Atlas -->
+      <path class="c" d="M500 200V286" marker-end="url(#ahc)"/>
+      <path class="c" d="M262 256L440 300" marker-end="url(#ahc)"/>
+      <path class="c" d="M738 256L560 300" marker-end="url(#ahc)"/>
+      <!-- the harness inside the triangle -->
+      <rect x="372" y="128" width="256" height="72" rx="10" fill="var(--panel)" stroke="var(--instrument)" stroke-width="2"/>
+      <text x="500" y="156" text-anchor="middle" class="k" font-size="19">harness</text>
+      <text x="500" y="184" text-anchor="middle" class="s" font-size="15" textLength="228" lengthAdjust="spacingAndGlyphs">rules · context · tool grants</text>
+      <!-- the three points -->
+      <circle cx="500" cy="40" r="26" fill="var(--plan)" fill-opacity=".18" stroke="var(--plan)" class="node"/>
+      <text x="500" y="49" text-anchor="middle" font-size="24" font-weight="700">P</text>
+      <text x="545" y="48" font-size="28" font-weight="700" fill="var(--plan)">Plan</text>
+      <circle cx="740" cy="230" r="26" fill="var(--build)" fill-opacity=".18" stroke="var(--build)" class="node"/>
+      <text x="740" y="239" text-anchor="middle" font-size="24" font-weight="700">B</text>
+      <text x="784" y="238" font-size="28" font-weight="700" fill="var(--build)">Build</text>
+      <circle cx="260" cy="230" r="26" fill="var(--instrument)" fill-opacity=".18" stroke="var(--instrument)" class="node"/>
+      <text x="260" y="239" text-anchor="middle" font-size="24" font-weight="700">I</text>
+      <text x="216" y="238" text-anchor="end" font-size="28" font-weight="700" fill="var(--instrument)">Instrument</text>
+      <!-- Atlas: the checkpoint store -->
+      <path d="M380 312a120 16 0 0 1 240 0v40a120 16 0 0 1-240 0Z" fill="var(--cyan)" fill-opacity=".15" stroke="var(--cyan)" stroke-width="2.5"/>
+      <ellipse cx="500" cy="312" rx="120" ry="16" fill="none" stroke="var(--cyan)" stroke-width="2.5"/>
+      <text x="500" y="348" text-anchor="middle" font-size="22" font-weight="700" fill="var(--cyan)">MongoDB Atlas</text>
+      <text x="640" y="345" font-size="17" class="s">sha · policy vN · metrics</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span>Instrument rewrites the harness that ran it; checkpoints land in Atlas.</figcaption>
+  </figure>
+
+  <figure class="fig rail-fig" id="clock">
+    <svg viewBox="0 0 1000 120" role="img" aria-label="The day as a rail from hacking start to the Top 6 demo, with a marker for now">
+      <line x1="60" y1="70" x2="940" y2="70" stroke="var(--line-strong)" stroke-width="3"/>
+      <g id="rail-ticks"></g>
+      <g id="rail-now"></g>
+    </svg>
+    <figcaption><span class="pv d">DERIVED</span><b class="big" id="clock-n">—</b> <span id="clock-m">computing…</span> · <a href="./view.html?f=docs/05-rules.md">Rules &amp; judging</a></figcaption>
+  </figure>
+
+  <div class="band decide" id="decide">
     <b>Group decisions</b>
-    <span class="big" style="font-size:16px">9 domains</span>
-    <span class="m">walk the questions by voice, top to bottom, before the 3:45 PM cut · each domain becomes a Session 2 segment in the transcript</span>
+    <span class="m">by voice, before 3:45 PM</span>
     <a class="btn primary" href="./view.html?f=docs/12-decisions.md">Open the walkthrough</a>
   </div>
 
-  <div class="clock" id="clock">
-    <b>Submissions due 5:00 PM ET</b>
-    <span class="big" id="clock-n">—</span>
-    <span class="m" id="clock-m">computing…</span>
-    <a class="btn" href="./view.html?f=docs/05-rules.md">Rules & judging</a>
-  </div>
+  <figure class="fig meter-fig" id="catch">
+    <svg viewBox="0 0 1000 32" role="img" aria-label="Changelog entries marked read in this browser, as a bar">
+      <rect x="0" y="10" width="1000" height="12" rx="6" fill="var(--line)"/>
+      <rect id="meter-bar" x="0" y="10" width="0" height="12" rx="6" fill="var(--flag)"/>
+    </svg>
+    <figcaption><span class="pv d">DERIVED</span><span id="meter">nothing read in this browser yet</span> · <a href="./changelog.html">Changelog</a></figcaption>
+  </figure>
 
-  <div class="catch" id="catch">
-    <b>Catching up?</b>
-    <span class="m" id="meter">nothing marked read in this browser yet</span>
-    <a class="btn primary" href="./changelog.html">Changelog</a>
-  </div>
+  <figure class="stats-fig">
+    <div class="stats" id="stats"></div>
+    <figcaption><span class="pv d">DERIVED</span>from <code>3pt-data.js</code> and this browser's lane board.</figcaption>
+  </figure>
 
-  <div class="stats" id="stats"></div>
-  <p style="margin:6px 0 0;font-size:12px;color:var(--faint)"><span class="pv d">DERIVED</span> tallies computed from <code>3pt-data.js</code>, the clock, and this browser's saved lane-board state at load. Nothing on this page is typed in.</p>
-
-  <h2 data-cluster="orient">Orient <span>warm · what this is and what the rules allow</span></h2>
-  <p class="grp-blurb" id="b-orient"></p>
+  <h2 data-cluster="orient">Orient <span>warm</span></h2>
   <div class="cards" data-cluster="orient">
-    <a class="card" href="./view.html?f=docs/00-vision.md"><svg id="g-vision"></svg><i class="id">D0</i><b>Vision</b><span>Plan → Build → Instrument, the loops inside the loop, the two sides of the triangle, and the hackathon reframing: harness as product, images as workload.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=docs/06-goal-and-use-case.md"><svg id="g-goal"></svg><i class="id">D6</i><b>Goal &amp; use case</b><span>Why the harness gets more valuable over time. The interior-design firm, repeated walls becoming building blocks, and the screen as an onboarding stream.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=docs/05-rules.md"><svg id="g-rules"></svg><i class="id">D5</i><b>Rules &amp; judging</b><span>Timeline, hard requirements, the banned list, judging weights, prizes, and what each implies for how we frame 3PT.</span><em>check →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/00-vision.md"><svg id="g-vision"></svg><i class="id">D0</i><b>Vision</b><span>Plan → Build → Instrument, the backfeed, harness as product.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/06-goal-and-use-case.md"><svg id="g-goal"></svg><i class="id">D6</i><b>Goal &amp; use case</b><span>Compounding value; the interior-design firm; the screen as onboarding.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/05-rules.md"><svg id="g-rules"></svg><i class="id">D5</i><b>Rules &amp; judging</b><span>Timeline, hard requirements, banned list, judging weights, prizes.</span><em>check →</em><i class="temp">hot</i></a>
   </div>
 
-  <h2 data-cluster="decide">Decide <span>warm · who we build for today</span></h2>
-  <p class="grp-blurb" id="b-decide"></p>
+  <h2 data-cluster="decide">Decide <span>hot</span></h2>
   <div class="cards" data-cluster="decide">
-    <a class="card" href="./direction.html"><svg id="g-direction"></svg><b>Direction</b><span>Proposal: 3PT as a general media harness, shown on a construction firm's lifetime of site photos. Stress test, anti-project check, 60-second video plan.</span><em>review →</em><i class="temp">hot</i></a>
-    <a class="card" href="./design-system.html"><svg id="g-design-system"></svg><i class="id">DD</i><b>Design system</b><span>Proposal: token naming, dark and light patterns, six pieces with three candidates each, three canonical directions on one specimen, cross-surface mapping to the PWA and Swift, and the ballot for deciding.</span><em>decide →</em><i class="temp">hot</i></a>
+    <a class="card" href="./direction.html"><svg id="g-direction"></svg><b>Direction</b><span>Proposal: a general media harness on a construction firm's photos.</span><em>review →</em><i class="temp">hot</i></a>
+    <a class="card" href="./design-system.html"><svg id="g-design-system"></svg><i class="id">DD</i><b>Design system</b><span>Proposal: tokens, dark and light, three directions, the ballot.</span><em>decide →</em><i class="temp">hot</i></a>
+    <a class="card" href="./sketches.html"><svg id="g-sketches"></svg><b>Sketch gallery</b><span>The vocabulary, then eight sketches: loop, dispatch, rail, inspector, scrubber.</span><em>look →</em><i class="temp">hot</i></a>
     <a class="card" href="./icons.html"><svg id="g-icons"></svg><b>Icons</b><span>Thirty Phosphor glyphs vendored as the utility set for app surfaces, each with the 3PT meaning it carries; the hand-drawn nav glyphs stay the identity set.</span><em>browse →</em><i class="temp">hot</i></a>
-    <a class="card" href="./view.html?f=docs/12-decisions.md"><svg id="g-decisions"></svg><i class="id">DQ</i><b>Group decisions</b><span>The walkthrough: nine domains of concern, the questions in each, a default if undecided, and a blank decision line. Read aloud, transcribe as Session 2.</span><em>decide →</em><i class="temp">hot</i></a>
-    <a class="card" href="./icp-explorer.html"><svg id="g-icp-explorer"></svg><b>ICP explorer</b><span>Five directions scored against nine criteria. Pick a preset or move the dials; read which ordering holds under every preset, not the score.</span><em>weigh →</em><i class="temp">hot</i></a>
-    <a class="card" href="./view.html?f=docs/08-icp-directions.md"><svg id="g-icp-directions"></svg><i class="id">D8</i><b>ICP directions</b><span>For each direction: focus, example use case, example company type, lander messaging, what a fully built app would do, and the rule risk.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=docs/07-assessment-and-measurement.md"><svg id="g-assessment"></svg><i class="id">D7</i><b>Assessment &amp; measurement</b><span>The transcript converged into theses and falsifiable hypotheses, the M-* metrics that score the recursive loop, and the R-* requirement set mapped onto partner incentives.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=docs/01-icp.md"><svg id="g-icp"></svg><i class="id">D1</i><b>ICPs</b><span>The three original profiles, re-ranked against the rules so the demo persona is buying a harness, not image insights.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/12-decisions.md"><svg id="g-decisions"></svg><i class="id">DQ</i><b>Group decisions</b><span>Nine domains, their questions, a default each, a decision line.</span><em>decide →</em><i class="temp">hot</i></a>
+    <a class="card" href="./icp-explorer.html"><svg id="g-icp-explorer"></svg><b>ICP explorer</b><span>Five directions × nine criteria; which ordering holds under every preset.</span><em>weigh →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/08-icp-directions.md"><svg id="g-icp-directions"></svg><i class="id">D8</i><b>ICP directions</b><span>Per direction: focus, use case, company type, messaging, rule risk.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/07-assessment-and-measurement.md"><svg id="g-assessment"></svg><i class="id">D7</i><b>Assessment &amp; measurement</b><span>Theses, hypotheses, M-* metrics, R-* requirements mapped to partners.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/01-icp.md"><svg id="g-icp"></svg><i class="id">D1</i><b>ICPs</b><span>Three profiles, re-ranked so the persona buys a harness.</span><em>read →</em><i class="temp">warm</i></a>
   </div>
 
-  <h2 data-cluster="build">Build <span>hot · lanes, owners, workflow, and the tooling we run on</span></h2>
-  <p class="grp-blurb" id="b-build"></p>
+  <h2 data-cluster="build">Build <span>hot</span></h2>
   <div class="cards" data-cluster="build">
     <a class="card" href="./app.html"><svg id="g-app"></svg><b>App prototype</b><span>Wireframe of the 3PT app for a construction firm. Switch roles in the dropdown; each role gets its own screen, and the harness learns and versions it.</span><em>try →</em><i class="temp">hot</i></a>
     <a class="card" href="./setup.html"><svg id="g-setup"></svg><b>Setup cascade</b><span>Batteries included, for a non-technical operator: eight slots, pick a provider each (Atlas, OpenRouter or Vercel AI Gateway, GridFS or R2 or S3, Cloudflare or AWS), get the signup and key links, copy the generated .env, run provision.</span><em>set up →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/14-setup-cascade.md"><svg id="g-setup-doc"></svg><i class="id">DP</i><b>Setup cascade doc</b><span>The model behind the leaf: slots, options, defaults, credits, the proposed gateway battery, and the scripted half of onboarding.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./lanes.html"><svg id="g-lanes"></svg><b>Lane board</b><span>Seven lanes. Assign an owner, cycle the status, keep the next action current, export as text for the standup. The tallies above read from here.</span><em>work →</em><i class="temp">hot</i></a>
-    <a class="card" href="./view.html?f=docs/02-lanes.md"><svg id="g-lanes-doc"></svg><i class="id">D2</i><b>Lanes</b><span>The lane definitions, the Stack / UI / Backend split, the proposed ownership, and the rules that shape the split.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=docs/03-workflow.md"><svg id="g-workflow"></svg><i class="id">D3</i><b>Workflow</b><span>Proposed repo layout, the Plan → Build → Instrument skeleton with its Atlas collections, DevX conventions, and the install loop.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./architecture.html"><svg id="g-architecture"></svg><b>Architecture</b><span>The monorepo as three lanes, drawn as first-class SVG: who imports whom, one iteration and its backfeed, batteries to tool grants to stages, and what runs where.</span><em>see →</em><i class="temp">hot</i></a>
-    <a class="card" href="./view.html?f=docs/10-architecture.md"><svg id="g-architecture-doc"></svg><i class="id">DA</i><b>Architecture doc</b><span>The decision (Turborepo over Bazel, batteries included), the tree, the diagram design system, eight Mermaid perspectives, and the extension recipes with their move counts.</span><em>read →</em><i class="temp">hot</i></a>
+    <a class="card" href="./lanes.html"><svg id="g-lanes"></svg><b>Lane board</b><span>Owners, status, next actions; export for standup.</span><em>work →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/02-lanes.md"><svg id="g-lanes-doc"></svg><i class="id">D2</i><b>Lanes</b><span>Lane definitions, the Stack / UI / Backend split, ownership.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/03-workflow.md"><svg id="g-workflow"></svg><i class="id">D3</i><b>Workflow</b><span>Repo layout, pipeline skeleton, Atlas collections, the install loop.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./architecture.html"><svg id="g-architecture"></svg><b>Architecture</b><span>Three lanes, drawn: imports, one iteration, batteries, deployment.</span><em>see →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/10-architecture.md"><svg id="g-architecture-doc"></svg><i class="id">DA</i><b>Architecture doc</b><span>Turborepo over Bazel, the tree, eight perspectives, extension recipes.</span><em>read →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/12-strands-archaeology.md"><svg id="g-strands"></svg><i class="id">DT</i><b>Strands archaeology</b><span>Built on AWS Strands: sources, graded ledger, strike list, lexicon.</span><em>read →</em><i class="temp">hot</i></a>
+    <a class="card" href="./view.html?f=docs/13-strands-diagrams.md"><svg id="g-strands-diagrams"></svg><i class="id">DW</i><b>Strands, drawn</b><span>Ten Mermaid diagrams: layers, hooks, stop reasons, routing, seams.</span><em>learn →</em><i class="temp">hot</i></a>
     <a class="card" href="./view.html?f=docs/13-ci-and-deployment.md"><svg id="g-ci"></svg><i class="id">DC</i><b>CI &amp; deployment</b><span>Contemplation: build and deploy infrastructure on GitHub Actions and Cloudflare, the topology with Atlas as the only state, what the credits can fund, the herald gate on PRs, and the deploy-target resolver.</span><em>read →</em><i class="temp">hot</i></a>
-    <a class="card" href="./view.html?f=docs/04-resources.md"><svg id="g-resources"></svg><i class="id">D4</i><b>Resources &amp; credits</b><span>Every partner, credit amount, redemption path, MCP server, and the 3PT slot each one fills. Codes arrive by email and Discord from 10:30 AM.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/04-resources.md"><svg id="g-resources"></svg><i class="id">D4</i><b>Resources &amp; credits</b><span>Every partner, credit, redemption path, MCP server, 3PT slot.</span><em>read →</em><i class="temp">warm</i></a>
   </div>
 
-  <h2 data-cluster="record">Record <span>cold · what shipped, what did not move, and the words</span></h2>
-  <p class="grp-blurb" id="b-record"></p>
+  <h2 data-cluster="record">Record <span>cold</span></h2>
   <div class="cards" data-cluster="record">
-    <a class="card" href="./changelog.html"><svg id="g-changelog"></svg><b>Changelog</b><span>What shipped, by wave, with commit shas, and stated plainly what did not move. Tick entries read; the band at the top tracks it.</span><em>read →</em><i class="temp">cold</i></a>
-    <a class="card" href="./timeline.html"><svg id="g-timeline"></svg><b>Timeline</b><span>The brainstorm as a rail: who said what, in order, which ideas were born there, what they grew from, where they landed, and what is still open.</span><em>trace →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=docs/09-provenance.md"><svg id="g-provenance"></svg><i class="id">D9</i><b>Provenance DSL</b><span>How the transcript is marked up without being edited, how docs and code cite it back, and the one tool that builds the index and refuses broken pointers.</span><em>read →</em><i class="temp">warm</i></a>
-    <a class="card" href="./view.html?f=brainstorming.md"><svg id="g-brainstorming"></svg><i class="id">DB</i><b>Brainstorming transcript</b><span>Raw session notes, as spoken, append-only. The assessment doc reads from here; nobody edits here.</span><em>read →</em><i class="temp">cold</i></a>
-    <a class="card" href="./view.html?f=docs/sources/hackathon-resource-guide.md"><svg id="g-sources"></svg><i class="id">DS</i><b>Resource guide (verbatim)</b><span>The official partner resource guide as pulled on 2026-09-26. The Google Doc is upstream; re-pull rather than edit.</span><em>read →</em><i class="temp">cold</i></a>
-    <a class="card" href="./view.html?f=docs/glossary.md"><svg id="g-glossary"></svg><i class="id">DG</i><b>Glossary</b><span>Install loop, backfeed, furnace, checkpoint, sprint modes, the left and right sides of the triangle.</span><em>read →</em><i class="temp">cold</i></a>
-    <a class="card" href="./view.html?f=README.md"><svg id="g-charter"></svg><i class="id">DR</i><b>README</b><span>The repo front door: status, layout, and where to start.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./changelog.html"><svg id="g-changelog"></svg><b>Changelog</b><span>What shipped by wave, with shas; what did not move.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./timeline.html"><svg id="g-timeline"></svg><b>Timeline</b><span>The brainstorm as a rail: who said what, what landed.</span><em>trace →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=docs/09-provenance.md"><svg id="g-provenance"></svg><i class="id">D9</i><b>Provenance DSL</b><span>Mark the transcript without editing it; cite back; one tool.</span><em>read →</em><i class="temp">warm</i></a>
+    <a class="card" href="./view.html?f=brainstorming.md"><svg id="g-brainstorming"></svg><i class="id">DB</i><b>Brainstorming transcript</b><span>Raw session notes, as spoken, append-only.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=docs/sources/hackathon-resource-guide.md"><svg id="g-sources"></svg><i class="id">DS</i><b>Resource guide (verbatim)</b><span>Official partner guide, pulled 2026-09-26. Re-pull, never edit.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=docs/glossary.md"><svg id="g-glossary"></svg><i class="id">DG</i><b>Glossary</b><span>Install loop, backfeed, furnace, checkpoint, triangle sides.</span><em>read →</em><i class="temp">cold</i></a>
+    <a class="card" href="./view.html?f=README.md"><svg id="g-charter"></svg><i class="id">DR</i><b>README</b><span>Status, layout, where to start.</span><em>read →</em><i class="temp">cold</i></a>
   </div>
 
   <footer>
     <hr class="rule">
     <p class="wordmark">3PT</p>
     <p class="sig">Plan it. Build it. Instrument it. Then let it rewrite itself.</p>
-    <p class="contact">Patrick Astarita · Yash · workspace started 2026-09-26 · <a href="https://github.com/pastarita/3pt">github.com/pastarita/3pt</a></p>
+    <p class="contact">Patrick Astarita · Yash · 2026-09-26 · <a href="https://github.com/pastarita/3pt">github.com/pastarita/3pt</a></p>
   </footer>
 </div>
 <script>
@@ -126,16 +183,32 @@
     var slug = el.id.slice(2), src = N.GLYPH[slug];
     if (src) el.outerHTML = src.replace('<svg', '<svg class="card-glyph"');
   });
-  Object.keys(T.CLUSTERS).forEach(function(k){ var b=document.getElementById('b-'+k); if(b) b.textContent = T.CLUSTERS[k].blurb; });
+
+  /* day rail — DERIVED from T.EVENT; the now-marker from the browser's time */
+  var X0 = 60, X1 = 940, t0 = +new Date(T.EVENT.hacking), t1 = +new Date(T.EVENT.top6);
+  var x = function(iso){ return X0 + (X1 - X0) * (+new Date(iso) - t0) / (t1 - t0); };
+  var hhmm = function(iso){ return new Date(iso).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true, timeZone:'America/New_York' }).replace(/\s?[AP]M$/i, ''); };
+  var ticks = [
+    ['hacking', T.EVENT.hacking, 'var(--soft)'],
+    ['decide', '2026-09-26T15:45:00-04:00', 'var(--flag)'],
+    ['submit', T.EVENT.submission, 'var(--flag)'],
+    ['judging', T.EVENT.judging, 'var(--soft)'],
+    ['top 6', T.EVENT.top6, 'var(--soft)']
+  ];
+  document.getElementById('rail-ticks').innerHTML = ticks.map(function(t, i){
+    var px = x(t[1]), up = i % 2 === 0, anchor = i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle';
+    return '<line x1="'+px+'" y1="58" x2="'+px+'" y2="82" stroke="'+t[2]+'" stroke-width="3"/>'
+      + '<text x="'+px+'" y="'+(up ? 44 : 108)+'" text-anchor="'+anchor+'" font-size="20" font-weight="700" fill="'+t[2]+'">'+t[0]+' '+hhmm(t[1])+'</text>';
+  }).join('');
 
   /* clock — DERIVED from T.EVENT and the browser's time */
   function clock(){
     var u = T.until(T.EVENT.submission), el = document.getElementById('clock');
     document.getElementById('clock-n').textContent = u.neg ? 'closed' : u.text;
-    document.getElementById('clock-m').textContent = u.neg
-      ? 'submission window closed ' + u.text.replace('−','') + ' ago · judging 5:15–6:45 PM · Top 6 at 7:00 PM'
-      : 'until submissions close · then judging 5:15–6:45 PM in assigned rooms · Top 6 demo at 7:00 PM';
+    document.getElementById('clock-m').textContent = u.neg ? 'since submissions closed' : 'until submissions close';
     el.classList.toggle('past', u.neg);
+    var now = Date.now(), px = Math.max(X0, Math.min(X1, X0 + (X1 - X0) * (now - t0) / (t1 - t0)));
+    document.getElementById('rail-now').innerHTML = (now < t0 || now > t1) ? '' : '<circle class="now" cx="'+px+'" cy="70" r="9"/><text x="'+px+'" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="var(--flag)">now</text>';
   }
   clock(); setInterval(clock, 30000);
 
@@ -157,7 +230,8 @@
   /* catch-up band */
   var CHG_TOTAL = T.load('changelog_total', 0);
   var read = T.load('changelog_v1', {}); var c = Object.keys(read).filter(function(k){ return read[k]; }).length;
-  document.getElementById('meter').textContent = c ? 'changelog ' + c + (CHG_TOTAL ? '/' + CHG_TOTAL : '') + ' read' : 'nothing marked read in this browser yet';
+  document.getElementById('meter').textContent = c ? 'changelog ' + c + (CHG_TOTAL ? '/' + CHG_TOTAL : '') + ' read in this browser' : 'nothing read in this browser yet';
+  document.getElementById('meter-bar').setAttribute('width', CHG_TOTAL ? Math.round(1000 * Math.min(c, CHG_TOTAL) / CHG_TOTAL) : 0);
 })();
 </script>
 </body>

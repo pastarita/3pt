@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3PT · Sketch gallery</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./3pt.css">
+<script src="./3pt-data.js"></script>
+<style>
+  .fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 10px;margin:16px 0}
+  .fig h2{margin:0 0 4px;font-size:15px}.fig h2 small{font:700 10px/1 var(--mono);letter-spacing:.12em;color:var(--faint);margin-right:8px;text-transform:uppercase}
+  .fig .q{display:block;font:700 12px/1.4 var(--sans);color:var(--soft);margin:0 0 10px}
+  .fig .sk{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .fig svg{width:100%;height:auto;display:block;font-family:var(--mono);font-size:11px}
+  @media(max-width:640px){.fig .sk svg{min-width:880px}}   /* phone: the figure scrolls inside its panel; the page never does */
+  .fig svg text{fill:var(--ink)} .fig svg .t{font-weight:700;font-size:12px} .fig svg .s{fill:var(--soft);font-size:10px} .fig svg .k{fill:var(--faint);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+  .fig svg .box{stroke-width:1.2}
+  .fig svg .plan{fill:var(--violet-soft);stroke:var(--plan)} .fig svg .build{fill:var(--amber-soft);stroke:var(--build)} .fig svg .inst{fill:color-mix(in srgb,var(--instrument) 20%,var(--panel));stroke:var(--instrument)}
+  .fig svg .atlas{fill:var(--cyan-soft);stroke:var(--cyan)} .fig svg .surface{fill:var(--slate-soft);stroke:var(--slate)} .fig svg .battery{fill:var(--sand);stroke:var(--soft)}
+  .fig svg .data{fill:var(--card);stroke:var(--faint)} .fig svg .flag{fill:color-mix(in srgb,var(--flag) 22%,var(--panel));stroke:var(--flag)}
+  .fig svg .lane{fill:none;stroke:var(--line-strong);stroke-dasharray:4 3;stroke-width:1}
+  .fig svg .e{fill:none;stroke:var(--soft);stroke-width:1.3;marker-end:url(#ah)}
+  .fig svg .e.d{stroke-dasharray:4 3;stroke:var(--cyan);marker-end:url(#ahc)}
+  .fig svg .e.b{stroke:var(--flag);stroke-width:2.4;marker-end:url(#ahf)}
+  .fig svg .e.r{stroke:var(--plan);stroke-dasharray:2 4;stroke-width:1.6;marker-end:url(#ahv)}
+  .fig svg .e.h{stroke:var(--slate);marker-end:url(#ah)}
+  .fig svg .e.n{marker-end:none}
+  .fig svg .mark{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+  .fig .cap{font-size:12.5px;color:var(--soft);margin:8px 0 0;line-height:1.45} .fig .cap .pv{margin-right:6px}
+  @media print{.fig{break-inside:avoid;background:#fff;border-color:#ccc}}
+</style>
+</head>
+<body>
+<script src="./nav.js"></script>
+<div class="page">
+  <header class="top">
+    <p class="eyebrow">Decide · hot · sketches, not specifications · every figure AUTHORED</p>
+    <h1>Sketch gallery</h1>
+    <p class="lede">Nine figures: the diagram vocabulary grown from the triangle mark, then eight sketches from the whiteboard and the transcript. Proposals, not specifications.</p>
+  </header>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--soft)"/></marker>
+      <marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--cyan)"/></marker>
+      <marker id="ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--flag)"/></marker>
+      <marker id="ahv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--plan)"/></marker>
+      <!-- the vocabulary: every symbol is drawn on a 40×40 grid, stroke 2, round joins, and takes its colour from the point hues -->
+      <symbol id="sy-tri" viewBox="0 0 40 40"><path d="M20 7l13 23H7Z" class="mark"/><circle cx="20" cy="7" r="3.6" fill="var(--plan)"/><circle cx="33" cy="30" r="3.6" fill="var(--build)"/><circle cx="7" cy="30" r="3.6" fill="var(--instrument)"/></symbol>
+      <symbol id="sy-gate" viewBox="0 0 40 40"><g fill="none" stroke="var(--soft)" stroke-width="3" stroke-linecap="round"><path d="M4 12h16M4 20h22M4 28h16"/></g><path d="M26 12l10 8-10 8" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="sy-agent" viewBox="0 0 40 40"><rect x="6" y="9" width="28" height="22" rx="5" fill="var(--sand)" stroke="var(--soft)" stroke-width="1.6"/><circle cx="15" cy="20" r="2.4" fill="var(--ink)"/><circle cx="25" cy="20" r="2.4" fill="var(--ink)"/><path d="M20 4v5" stroke="var(--soft)" stroke-width="1.6"/></symbol>
+      <symbol id="sy-packet" viewBox="0 0 40 40"><path d="M8 6h16l8 8v20H8Z" fill="var(--card)" stroke="var(--soft)" stroke-width="1.6" stroke-linejoin="round"/><path d="M24 6v8h8M12 20h16M12 26h10" fill="none" stroke="var(--soft)" stroke-width="1.6"/></symbol>
+      <symbol id="sy-store" viewBox="0 0 40 40"><ellipse cx="20" cy="10" rx="13" ry="4.5" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.6"/><path d="M7 10v20c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5V10" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.6"/></symbol>
+      <symbol id="sy-media" viewBox="0 0 40 40"><rect x="12" y="4" width="22" height="16" rx="2" fill="var(--sand)" stroke="var(--slate)" stroke-width="1.4"/><rect x="8" y="10" width="22" height="16" rx="2" fill="var(--sand)" stroke="var(--slate)" stroke-width="1.4"/><rect x="4" y="16" width="22" height="16" rx="2" fill="var(--slate-soft)" stroke="var(--ink)" stroke-width="1.6"/><path d="M8 28l5-6 4 4 3-3 4 5" fill="none" stroke="var(--ink)" stroke-width="1.4"/></symbol>
+      <symbol id="sy-flag" viewBox="0 0 40 40"><path d="M11 36V6" stroke="var(--flag)" stroke-width="2.2" stroke-linecap="round"/><path d="M11 7h18l-5 7 5 7H11Z" fill="color-mix(in srgb,var(--flag) 22%,var(--panel))" stroke="var(--flag)" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="sy-meter" viewBox="0 0 40 40"><path d="M6 28a14 14 0 0 1 28 0" fill="none" stroke="var(--faint)" stroke-width="3" stroke-linecap="round"/><path d="M6 28a14 14 0 0 1 12-13.6" fill="none" stroke="var(--instrument)" stroke-width="3" stroke-linecap="round"/><path d="M20 28l7-9" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="28" r="2" fill="var(--ink)"/></symbol>
+      <symbol id="sy-sprint" viewBox="0 0 40 40"><path d="M8 8h24l-14 24Z" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+      <symbol id="sy-app" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M20 4v32" stroke="var(--ink)" stroke-width="1.4"/><path d="M8 26l9-7v13Z" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><path d="M22 14l10 7-10 7Z" fill="var(--ink)"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- 0 · vocabulary -->
+  <figure class="fig" id="f0">
+    <h2><small>0</small>The vocabulary</h2>
+    <b class="q">Ten symbols, eight box classes, four arrow kinds. Everything below is built from these.</b>
+    <div class="sk"><svg viewBox="0 0 1000 322" role="img" aria-label="Legend: ten symbols, eight box classes shared with the architecture leaf, and four arrow kinds">
+      <text x="20" y="22" class="k">symbols · 40-unit grid · stroke 2 · round joins · colour from the point hues</text>
+      <use href="#sy-tri" x="88" y="34" width="56" height="56"/><text x="116" y="106" text-anchor="middle" class="t">mark</text><text x="116" y="120" text-anchor="middle" class="s">the loop · the wordmark</text>
+      <use href="#sy-gate" x="280" y="34" width="56" height="56"/><text x="308" y="106" text-anchor="middle" class="t">gateway</text><text x="308" y="120" text-anchor="middle" class="s">commands and prompts in</text>
+      <use href="#sy-agent" x="472" y="34" width="56" height="56"/><text x="500" y="106" text-anchor="middle" class="t">agent</text><text x="500" y="120" text-anchor="middle" class="s">one harness invocation</text>
+      <use href="#sy-packet" x="664" y="34" width="56" height="56"/><text x="692" y="106" text-anchor="middle" class="t">packet</text><text x="692" y="120" text-anchor="middle" class="s">a context hand-off</text>
+      <use href="#sy-store" x="856" y="34" width="56" height="56"/><text x="884" y="106" text-anchor="middle" class="t">store</text><text x="884" y="120" text-anchor="middle" class="s">Atlas collection</text>
+      <use href="#sy-media" x="88" y="136" width="56" height="56"/><text x="116" y="208" text-anchor="middle" class="t">media</text><text x="116" y="222" text-anchor="middle" class="s">first-class source stack</text>
+      <use href="#sy-flag" x="280" y="136" width="56" height="56"/><text x="308" y="208" text-anchor="middle" class="t">checkpoint</text><text x="308" y="222" text-anchor="middle" class="s">git tag + Atlas doc</text>
+      <use href="#sy-meter" x="472" y="136" width="56" height="56"/><text x="500" y="208" text-anchor="middle" class="t">meter</text><text x="500" y="222" text-anchor="middle" class="s">a budget or a measure</text>
+      <use href="#sy-sprint" x="664" y="136" width="56" height="56"/><text x="692" y="208" text-anchor="middle" class="t">sprint</text><text x="692" y="222" text-anchor="middle" class="s">one iteration on the rail</text>
+      <use href="#sy-app" x="856" y="136" width="56" height="56"/><text x="884" y="208" text-anchor="middle" class="t">inspector</text><text x="884" y="222" text-anchor="middle" class="s">the app mark (whiteboard)</text>
+      <text x="20" y="246" class="k">boxes · shared with the architecture leaf</text>
+      <rect x="20" y="254" width="110" height="22" rx="5" class="box plan"/><text x="75" y="269" text-anchor="middle" class="s">plan</text>
+      <rect x="140" y="254" width="110" height="22" rx="5" class="box build"/><text x="195" y="269" text-anchor="middle" class="s">build</text>
+      <rect x="260" y="254" width="110" height="22" rx="5" class="box inst"/><text x="315" y="269" text-anchor="middle" class="s">instrument</text>
+      <rect x="380" y="254" width="110" height="22" rx="5" class="box atlas"/><text x="435" y="269" text-anchor="middle" class="s">atlas</text>
+      <rect x="500" y="254" width="110" height="22" rx="5" class="box surface"/><text x="555" y="269" text-anchor="middle" class="s">surface</text>
+      <rect x="620" y="254" width="110" height="22" rx="5" class="box battery"/><text x="675" y="269" text-anchor="middle" class="s">battery</text>
+      <rect x="740" y="254" width="110" height="22" rx="5" class="box data"/><text x="795" y="269" text-anchor="middle" class="s">data</text>
+      <rect x="860" y="254" width="110" height="22" rx="5" class="box flag"/><text x="915" y="269" text-anchor="middle" class="s">flag</text>
+      <text x="20" y="298" class="k">arrows</text>
+      <path d="M70 308 H 130" class="e"/><text x="140" y="312" class="s">flow · a call or hand-off</text>
+      <path d="M290 308 H 350" class="e d"/><text x="360" y="312" class="s">state · through Atlas</text>
+      <path d="M510 308 H 570" class="e b"/><text x="580" y="312" class="s">backfeed · policy rewrite</text>
+      <path d="M740 308 H 800" class="e r"/><text x="810" y="312" class="s">replay · rerun earlier sources</text>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Extends the hub's brand block. Colour only from the point hues, state cyan, and the one flag orange; a new symbol is a new row here first.</figcaption>
+  </figure>
+
+  <!-- 1 · gateway -->
+  <figure class="fig" id="f1">
+    <h2><small>1</small>The polyglot gateway into Plan</h2>
+    <b class="q">Many mouths, one throat. Nothing enters Build without passing here.</b>
+    <div class="sk"><svg viewBox="0 0 1000 300" role="img" aria-label="Many input channels converge through a gateway into the Plan stage, which holds four context packets">
+      <text x="24" y="28" class="k">mouths · any surface, any agent</text>
+      <g><rect x="24" y="44" width="170" height="30" rx="6" class="box surface"/><text x="109" y="63" text-anchor="middle" class="t">3pt plan · cli</text></g>
+      <g><rect x="24" y="84" width="170" height="30" rx="6" class="box surface"/><text x="109" y="103" text-anchor="middle" class="t">prompt · PWA / macOS</text></g>
+      <g><rect x="24" y="124" width="170" height="30" rx="6" class="box surface"/><text x="109" y="143" text-anchor="middle" class="t">mcp call · another agent</text></g>
+      <g><rect x="24" y="164" width="170" height="30" rx="6" class="box surface"/><text x="109" y="183" text-anchor="middle" class="t">sop · feature | improve | fix</text></g>
+      <g><rect x="24" y="204" width="170" height="30" rx="6" class="box surface"/><text x="109" y="223" text-anchor="middle" class="t">schedule · worker tick</text></g>
+      <path d="M194 59 L 300 150" class="e n"/><path d="M194 99 L 300 150" class="e n"/><path d="M194 139 L 300 150" class="e n"/><path d="M194 179 L 300 150" class="e n"/><path d="M194 219 L 300 150" class="e n"/>
+      <use href="#sy-gate" x="290" y="110" width="80" height="80"/>
+      <text x="330" y="212" text-anchor="middle" class="k">gateway</text>
+      <text x="330" y="226" text-anchor="middle" class="s">normalise · auth · attach budget</text>
+      <text x="330" y="240" text-anchor="middle" class="s">confirm-before-Build lives here</text>
+      <path d="M372 150 L 430 150" class="e"/>
+      <g><rect x="430" y="60" width="300" height="180" rx="10" class="box plan"/><text x="580" y="84" text-anchor="middle" class="t">Plan</text><text x="580" y="100" text-anchor="middle" class="s">selectMode → spec + evaluation plan</text></g>
+      <use href="#sy-packet" x="446" y="112" width="40" height="40"/><text x="492" y="130" class="s">last checkpoint</text><text x="492" y="143" class="s">cp/&lt;n&gt; · retrospective</text>
+      <use href="#sy-packet" x="588" y="112" width="40" height="40"/><text x="634" y="130" class="s">measurements</text><text x="634" y="143" class="s">M-* of iteration n</text>
+      <use href="#sy-packet" x="446" y="170" width="40" height="40"/><text x="492" y="188" class="s">media state</text><text x="492" y="201" class="s">tiers · transcripts · jobs</text>
+      <use href="#sy-packet" x="588" y="170" width="40" height="40"/><text x="634" y="188" class="s">policy v&lt;n&gt;</text><text x="634" y="201" class="s">rules · grants · routes</text>
+      <text x="580" y="228" text-anchor="middle" class="s">four packets = what @3pt/plan reads</text>
+      <use href="#sy-store" x="800" y="40" width="60" height="60"/><text x="830" y="118" text-anchor="middle" class="s">Atlas</text>
+      <path d="M800 70 L 732 120" class="e d"/>
+      <path d="M730 190 L 830 190 L 830 250" class="e"/>
+      <g><rect x="780" y="250" width="100" height="30" rx="6" class="box build"/><text x="830" y="269" text-anchor="middle" class="t">→ Build</text></g>
+      <text x="845" y="230" class="s">spec · eval plan</text>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Whiteboard's three bars into Plan + the transcript's "polyglot gateway". <span class="pv c">TO CONFIRM</span> the schedule mouth: Plan, or straight to the worker?</figcaption>
+  </figure>
+
+  <!-- 2 · the loop with utility arrows -->
+  <figure class="fig" id="f2">
+    <h2><small>2</small>The loop, with every arrow named</h2>
+    <b class="q">Three hand-offs clockwise; the backfeed is the only edge that may change the rules.</b>
+    <div class="sk"><svg viewBox="0 0 1000 360" role="img" aria-label="Plan, Build, Instrument triangle with labelled arrows">
+      <g><rect x="400" y="30" width="200" height="56" rx="8" class="box plan"/><text x="500" y="53" text-anchor="middle" class="t">Plan</text><text x="500" y="70" text-anchor="middle" class="s">gateway · mode · spec · eval plan</text></g>
+      <g><rect x="700" y="290" width="220" height="56" rx="8" class="box build"/><text x="810" y="313" text-anchor="middle" class="t">Build</text><text x="810" y="330" text-anchor="middle" class="s">harness · builder ↔ instrumenter</text></g>
+      <g><rect x="80" y="290" width="220" height="56" rx="8" class="box inst"/><text x="190" y="313" text-anchor="middle" class="t">Instrument</text><text x="190" y="330" text-anchor="middle" class="s">checks · measure · rewrite · tag</text></g>
+      <text x="500" y="212" text-anchor="middle" class="t" style="font-size:16px;letter-spacing:.2em">3PT</text>
+      <path d="M600 70 L 760 290" class="e"/><text x="700" y="170" class="s">① spec + evaluation plan</text>
+      <path d="M700 320 L 300 320" class="e"/><text x="500" y="345" text-anchor="middle" class="s">② built + reviewed · turn count · stop reason</text>
+      <path d="M240 290 L 400 70" class="e b"/><text x="270" y="170" text-anchor="end" class="s" fill="var(--flag)">③ backfeed: policy v(n+1) · cp/n · retrospective</text><text x="270" y="184" text-anchor="end" class="s" fill="var(--flag)">the only edge allowed to change the rules</text>
+      <path d="M700 300 C 620 250, 380 250, 300 300" class="e n" stroke-dasharray="3 3"/><text x="500" y="262" text-anchor="middle" class="s">inner: builder ↔ instrumenter, until 0 fixes or budget</text>
+      <path d="M100 290 C 40 240, 20 300, 80 330" class="e"/><text x="30" y="232" class="s">self-loop:</text><text x="30" y="246" class="s">instruments keep instruments</text>
+      <path d="M400 58 C 300 58, 300 20, 400 40" class="e n" stroke-dasharray="2 3"/><text x="290" y="34" class="s" text-anchor="end">retrospective read</text>
+      <use href="#sy-flag" x="860" y="20" width="56" height="56"/><text x="888" y="92" text-anchor="middle" class="s">cp/n</text>
+      <path d="M300 300 C 400 200, 800 120, 860 60" class="e d"/>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Whiteboard, top-left. ② carries the Strands stop reason + turn count, so Instrument never re-reads the session.</figcaption>
+  </figure>
+
+  <!-- 3 · dispatch -->
+  <figure class="fig" id="f3">
+    <h2><small>3</small>Dispatch: a plurality of agents, and how context moves between them</h2>
+    <b class="q">Packets, not messages. Depth is a grant.</b>
+    <div class="sk"><svg viewBox="0 0 1000 340" role="img" aria-label="Builder and instrumenter agents exchanging context packets under a shared turn budget">
+      <rect x="20" y="20" width="560" height="300" rx="10" class="lane"/><text x="34" y="42" class="k">build area · subagent depth ≤ 1 · one shared turn budget</text>
+      <rect x="600" y="20" width="380" height="300" rx="10" class="lane"/><text x="614" y="42" class="k">instrumentation area · spawns builders: never</text>
+      <use href="#sy-agent" x="60" y="60" width="56" height="56"/><text x="88" y="132" text-anchor="middle" class="s">builder b1</text><text x="88" y="145" text-anchor="middle" class="s">effort high</text>
+      <use href="#sy-agent" x="60" y="170" width="56" height="56"/><text x="88" y="242" text-anchor="middle" class="s">builder b2</text><text x="88" y="255" text-anchor="middle" class="s">media tools</text>
+      <use href="#sy-agent" x="260" y="115" width="56" height="56"/><text x="288" y="187" text-anchor="middle" class="s">reviewer</text><text x="288" y="200" text-anchor="middle" class="s">preset · inherits model</text>
+      <text x="288" y="214" text-anchor="middle" class="s">one per builder, no more</text>
+      <use href="#sy-packet" x="440" y="60" width="40" height="40"/><text x="460" y="116" text-anchor="middle" class="s">spec</text>
+      <use href="#sy-packet" x="440" y="140" width="40" height="40"/><text x="460" y="196" text-anchor="middle" class="s">diff + summary</text>
+      <use href="#sy-packet" x="440" y="220" width="40" height="40"/><text x="460" y="276" text-anchor="middle" class="s">fixes[]</text>
+      <path d="M440 80 L 120 85" class="e"/><path d="M440 80 L 120 195" class="e"/>
+      <path d="M116 90 L 260 140" class="e"/><path d="M116 200 L 260 150" class="e"/>
+      <path d="M316 145 L 440 160" class="e"/>
+      <path d="M440 240 C 380 260, 200 260, 116 205" class="e"/>
+      <text x="34" y="306" class="s">builder: spec in, diff + summary out · reviewer: fixes out</text>
+      <use href="#sy-agent" x="640" y="60" width="56" height="56"/><text x="668" y="132" text-anchor="middle" class="s">checker</text><text x="668" y="145" text-anchor="middle" class="s">standards · evals</text>
+      <use href="#sy-agent" x="640" y="170" width="56" height="56"/><text x="668" y="242" text-anchor="middle" class="s">measurer</text><text x="668" y="255" text-anchor="middle" class="s">traces → M-*</text>
+      <use href="#sy-agent" x="820" y="115" width="56" height="56"/><text x="848" y="187" text-anchor="middle" class="s">rewriter</text><text x="848" y="200" text-anchor="middle" class="s">policy v(n+1)</text>
+      <path d="M580 160 L 640 90" class="e"/><path d="M580 160 L 640 195" class="e"/>
+      <path d="M696 90 L 820 140" class="e"/><path d="M696 195 L 820 150" class="e"/>
+      <text x="614" y="306" class="s">checker + measurer see session + traces, never the diff</text>
+      <use href="#sy-meter" x="900" y="40" width="48" height="48"/><text x="924" y="102" text-anchor="middle" class="s">turn budget</text>
+      <use href="#sy-flag" x="900" y="220" width="48" height="48"/><text x="924" y="282" text-anchor="middle" class="s">cp/n</text>
+      <path d="M876 150 L 910 220" class="e d"/>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> "The dispatchment of a plurality of agents." Strands: <code>subagent: { maxDepth: 1 }</code>, a reviewer <code>Preset</code>, <code>limitTurns</code> / <code>limitTotalTokens</code> as the meter.</figcaption>
+  </figure>
+
+  <!-- 4 · plan hand-offs -->
+  <figure class="fig" id="f4">
+    <h2><small>4</small>Plan's three hand-offs</h2>
+    <b class="q">One packet, one named recipient, each. The evaluation is prepared before the build.</b>
+    <div class="sk"><svg viewBox="0 0 1000 320" role="img" aria-label="Plan fans out three packets to evaluation prep, the output loop, and harness iteration">
+      <g><rect x="40" y="110" width="220" height="120" rx="10" class="box plan"/><text x="150" y="136" text-anchor="middle" class="t">Plan</text><text x="150" y="154" text-anchor="middle" class="s">mode: feature | improvement | fix</text><text x="150" y="170" text-anchor="middle" class="s">contexts: checkpoint · measurements</text><text x="150" y="184" text-anchor="middle" class="s">media state · policy · retrospective</text><text x="150" y="212" text-anchor="middle" class="s">reads only; writes plans</text></g>
+      <use href="#sy-packet" x="300" y="40" width="40" height="40"/>
+      <use href="#sy-packet" x="300" y="150" width="40" height="40"/>
+      <use href="#sy-packet" x="300" y="260" width="40" height="40"/>
+      <path d="M260 150 L 300 65" class="e"/><path d="M260 170 L 300 170" class="e"/><path d="M260 190 L 300 275" class="e"/>
+      <text x="350" y="58" class="s">evaluation plan · cases · evaluators · reward</text>
+      <text x="350" y="168" class="s">spec · acceptance · turn budget · grants</text>
+      <text x="350" y="278" class="s">harness delta · which policy fields may move</text>
+      <text x="350" y="292" class="s" fill="var(--flag)">fixed before Build: the rewrite cannot dodge the eval</text>
+      <g><rect x="680" y="40" width="300" height="44" rx="8" class="box inst"/><text x="830" y="58" text-anchor="middle" class="t">① prepare the evaluation</text><text x="830" y="74" text-anchor="middle" class="s">Instrument builds the Experiment before Build runs</text></g>
+      <g><rect x="680" y="150" width="300" height="44" rx="8" class="box build"/><text x="830" y="168" text-anchor="middle" class="t">② the output loop</text><text x="830" y="184" text-anchor="middle" class="s">Build produces; the evaluation scores it</text></g>
+      <g><rect x="680" y="260" width="300" height="44" rx="8" class="box flag"/><text x="830" y="278" text-anchor="middle" class="t">③ iterate the harness</text><text x="830" y="294" text-anchor="middle" class="s">Instrument's optimizer may move only these fields</text></g>
+      <path d="M660 58 L 680 62" class="e"/><path d="M660 168 L 680 172" class="e"/><path d="M660 278 L 680 282" class="e"/>
+      <path d="M830 84 L 830 150" class="e d"/><path d="M830 194 L 830 260" class="e d"/>
+      <text x="840" y="122" class="s">scores</text><text x="840" y="232" class="s">reward</text>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Transcript: "a plurality of contexts by which it can hand off to other instrumentation steps." Evaluation before build is what keeps the reward honest.</figcaption>
+  </figure>
+
+  <!-- 5 · the timeline -->
+  <figure class="fig" id="f5">
+    <h2><small>5</small>The rail: sprints over time, code on the right, media on the left</h2>
+    <b class="q">The whiteboard's vertical axis. Reading down is reading forward.</b>
+    <div class="sk"><svg viewBox="0 0 1000 460" role="img" aria-label="Vertical timeline of sprints with code rail on the right and media rail on the left">
+      <path d="M500 440 L 500 40" class="e"/><text x="500" y="28" text-anchor="middle" class="k">time · sprint-wise deployments · one triangle = one sprint</text>
+      <text x="760" y="60" class="k">code + harness · its own history</text><text x="240" y="60" text-anchor="end" class="k">media + context · what it maintains</text>
+      <use href="#sy-sprint" x="470" y="90" width="60" height="60"/><text x="545" y="112" class="s">sprint 1 · feature</text>
+      <use href="#sy-sprint" x="470" y="180" width="60" height="60"/><text x="545" y="202" class="s">sprint 2 · improvement</text>
+      <use href="#sy-sprint" x="470" y="270" width="60" height="60"/><text x="545" y="292" class="s">sprint 3 · fix</text>
+      <use href="#sy-sprint" x="470" y="360" width="60" height="60"/><text x="545" y="382" class="s">sprint 4 · feature</text>
+      <use href="#sy-flag" x="760" y="96" width="36" height="36"/><text x="802" y="118" class="s">cp/1 · policy v1 · deploy</text>
+      <use href="#sy-flag" x="760" y="186" width="36" height="36"/><text x="802" y="208" class="s">cp/2 · policy v2 · deploy</text>
+      <use href="#sy-flag" x="760" y="276" width="36" height="36"/><text x="802" y="298" class="s">cp/3 · v3 · rolled back → cp/2</text>
+      <use href="#sy-flag" x="760" y="366" width="36" height="36"/><text x="802" y="388" class="s">cp/4 · policy v4 · deploy</text>
+      <path d="M530 118 L 760 116" class="e n" stroke-dasharray="3 3"/><path d="M530 208 L 760 206" class="e n" stroke-dasharray="3 3"/><path d="M530 298 L 760 296" class="e n" stroke-dasharray="3 3"/><path d="M530 388 L 760 386" class="e n" stroke-dasharray="3 3"/>
+      <text x="645" y="134" text-anchor="middle" class="s">rung = the Atlas checkpoint document</text>
+      <use href="#sy-media" x="180" y="92" width="44" height="44"/><text x="170" y="118" text-anchor="end" class="s">sources 1–40 · indexed · hot</text>
+      <use href="#sy-media" x="180" y="182" width="44" height="44"/><text x="170" y="208" text-anchor="end" class="s">sources 41–120 · transcribed</text>
+      <use href="#sy-media" x="180" y="272" width="44" height="44"/><text x="170" y="298" text-anchor="end" class="s">tiering migrated · 30% cold</text>
+      <use href="#sy-media" x="180" y="362" width="44" height="44"/><text x="170" y="388" text-anchor="end" class="s">sources 121–300 · indexed</text>
+      <path d="M470 118 L 226 116" class="e d"/><path d="M470 208 L 226 206" class="e d"/><path d="M470 298 L 226 296" class="e d"/><path d="M470 388 L 226 386" class="e d"/>
+      <path d="M300 380 C 260 330, 260 250, 300 210" class="e r"/><text x="255" y="256" text-anchor="end" class="s" fill="var(--plan)">replay: v4 over sources 41–120</text>
+      <path d="M700 380 C 740 330, 740 250, 700 210" class="e r"/><text x="745" y="256" class="s" fill="var(--plan)">compare: v4 vs v2, same cases</text>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Whiteboard, right half. The rollback at cp/3 is the demo moment of <code>docs/03-workflow.md</code>. <span class="pv c">TO CONFIRM</span> the sprint-mode sequence is illustrative.</figcaption>
+  </figure>
+
+  <!-- 6 · replay -->
+  <figure class="fig" id="f6">
+    <h2><small>6</small>Replay and backpropagation over the media stream</h2>
+    <b class="q">Sources never change; what the harness makes of them does. The diff is a measurement.</b>
+    <div class="sk"><svg viewBox="0 0 1000 380" role="img" aria-label="Harness versions rerunning over an immutable media stream and producing transcript diffs">
+      <text x="24" y="28" class="k">harness versions</text>
+      <g><rect x="24" y="44" width="150" height="34" rx="6" class="box data"/><text x="99" y="65" text-anchor="middle" class="t">policy v2</text></g>
+      <g><rect x="24" y="90" width="150" height="34" rx="6" class="box data"/><text x="99" y="111" text-anchor="middle" class="t">policy v3</text></g>
+      <g><rect x="24" y="136" width="150" height="34" rx="6" class="box flag"/><text x="99" y="157" text-anchor="middle" class="t">policy v4 · current</text></g>
+      <text x="24" y="348" class="k">the media stream · immutable · first-class · never edited</text>
+      <g transform="translate(24 252)">
+        <use href="#sy-media" x="0" y="0" width="60" height="60"/><use href="#sy-media" x="90" y="0" width="60" height="60"/><use href="#sy-media" x="180" y="0" width="60" height="60"/><use href="#sy-media" x="270" y="0" width="60" height="60"/><use href="#sy-media" x="360" y="0" width="60" height="60"/><use href="#sy-media" x="450" y="0" width="60" height="60"/>
+        <text x="30" y="76" text-anchor="middle" class="s">s1–40</text><text x="120" y="76" text-anchor="middle" class="s">s41–120</text><text x="210" y="76" text-anchor="middle" class="s">s121–300</text><text x="300" y="76" text-anchor="middle" class="s">s301–…</text><text x="390" y="76" text-anchor="middle" class="s">new</text><text x="480" y="76" text-anchor="middle" class="s">new</text>
+      </g>
+      <path d="M140 170 L 234 252" class="e"/><path d="M160 170 L 324 252" class="e"/>
+      <path d="M60 170 C 30 210, 40 230, 54 250" class="e r"/><path d="M100 170 C 110 210, 130 230, 144 250" class="e r"/>
+      <text x="176" y="200" class="s" fill="var(--plan)">replay v4 over s1–120</text><text x="345" y="196" class="s">index new sources</text>
+      <text x="560" y="32" class="k">the diff is the measurement</text>
+      <g><rect x="560" y="44" width="416" height="150" rx="10" class="box inst"/><text x="768" y="68" text-anchor="middle" class="t">transcript diff · v2 → v4</text>
+        <text x="578" y="94" class="s">s17   room: kitchen → kitchen, island, pendants   +2 facts</text>
+        <text x="578" y="112" class="s">s44   tier: hot → cold (unread 21d)               −38 MB hot</text>
+        <text x="578" y="130" class="s">s88   read-once: v2 violated, v4 honoured         −1 reread</text>
+        <text x="578" y="148" class="s">s102  hallucinated wall count dropped             −1 error</text>
+        <text x="578" y="176" class="s" fill="var(--instrument)">M-REUSE +12% · M-HOT −38 MB · M-ERR −1 · cost $0.41</text>
+      </g>
+      <path d="M460 252 C 520 200, 540 180, 560 150" class="e d"/>
+      <use href="#sy-store" x="880" y="230" width="60" height="60"/><text x="976" y="308" text-anchor="end" class="s">transcripts · media_index</text><text x="976" y="322" text-anchor="end" class="s">versioned by policy · old reading kept</text>
+      <path d="M800 194 L 880 250" class="e d"/>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Rows are invented (interior-design case, <code>docs/06</code>); M-* names from <code>docs/07</code>. A replay costs money: it is a Plan decision with a budget.</figcaption>
+  </figure>
+
+  <!-- 7 · inspector -->
+  <figure class="fig" id="f7">
+    <h2><small>7</small>The inspector: a screenshot that is also an event log</h2>
+    <b class="q">macOS app and PWA. Sprint rail left, corpus stacks centre, live state right. Every number wears a badge.</b>
+    <div class="sk"><svg viewBox="0 0 1000 560" role="img" aria-label="Mockup of the inspector window with a sprint rail, thumbnail stacks, and a state panel">
+      <rect x="20" y="20" width="960" height="520" rx="12" class="box surface"/>
+      <circle cx="44" cy="40" r="5" fill="var(--alert)"/><circle cx="60" cy="40" r="5" fill="var(--build)"/><circle cx="76" cy="40" r="5" fill="var(--instrument)"/>
+      <use href="#sy-tri" x="440" y="26" width="28" height="28"/><text x="476" y="45" class="t">3PT · inspector</text><text x="900" y="45" text-anchor="end" class="s">cp/4 · policy v4 · 2 machines</text>
+      <rect x="20" y="60" width="200" height="480" class="data" style="stroke:none"/>
+      <text x="36" y="84" class="k">sprints</text>
+      <g transform="translate(36 96)"><use href="#sy-sprint" width="26" height="26"/><text x="34" y="18" class="s">1 · feature</text></g>
+      <g transform="translate(36 128)"><use href="#sy-sprint" width="26" height="26"/><text x="34" y="18" class="s">2 · improvement</text></g>
+      <g transform="translate(36 160)"><use href="#sy-sprint" width="26" height="26"/><text x="34" y="18" class="s">3 · fix · rolled back</text></g>
+      <rect x="28" y="188" width="184" height="30" rx="6" fill="color-mix(in srgb,var(--ink) 6%,transparent)"/><g transform="translate(36 192)"><use href="#sy-sprint" width="26" height="26"/><text x="34" y="18" class="s" fill="var(--ink)">4 · feature · running</text></g>
+      <text x="36" y="250" class="k">media</text>
+      <text x="36" y="272" class="s">hot 412 MB · cold 1.9 GB</text><text x="36" y="288" class="s">transcripts 300 / 300</text><text x="36" y="304" class="s">jobs queued 3</text>
+      <text x="36" y="340" class="k">scrub</text>
+      <path d="M36 360 H 204" stroke="var(--line-strong)" stroke-width="3" stroke-linecap="round"/><circle cx="160" cy="360" r="6" fill="var(--flag)"/><text x="36" y="382" class="s">cp/1</text><text x="204" y="382" text-anchor="end" class="s">now</text>
+      <text x="250" y="84" class="k">corpus · stacks by node · height = magnitude</text>
+      <g transform="translate(250 100)">
+        <use href="#sy-media" x="0" y="60" width="80" height="80"/><text x="40" y="160" text-anchor="middle" class="s">kitchens · 84</text>
+        <use href="#sy-media" x="110" y="20" width="120" height="120"/><text x="170" y="160" text-anchor="middle" class="s">living · 131</text>
+        <use href="#sy-media" x="260" y="80" width="60" height="60"/><text x="290" y="160" text-anchor="middle" class="s">baths · 22</text>
+        <use href="#sy-media" x="350" y="90" width="50" height="50"/><text x="375" y="160" text-anchor="middle" class="s">exterior · 12</text>
+        <path d="M40 60 L 170 40" class="e n" stroke-dasharray="2 3"/><path d="M170 40 L 290 80" class="e n" stroke-dasharray="2 3"/>
+      </g>
+      <text x="250" y="300" class="k">events · this sprint · the harness's own stream</text>
+      <text x="250" y="322" class="s">13:41:02  plan        mode=feature   policy v4      <tspan fill="var(--instrument)">endTurn</tspan></text>
+      <text x="250" y="338" class="s">13:41:20  build b1    turn 1/6       tool: write    <tspan fill="var(--build)">toolUse</tspan></text>
+      <text x="250" y="354" class="s">13:42:07  reviewer    fixes 2        guide: read-once</text>
+      <text x="250" y="370" class="s">13:43:15  build b1    turn 2/6       tool: edit</text>
+      <text x="250" y="386" class="s">13:44:02  reviewer    fixes 0        <tspan fill="var(--instrument)">Proceed</tspan></text>
+      <text x="250" y="402" class="s">13:44:10  instrument  M-REUSE 0.71   M-HOT 412MB    <tspan fill="var(--flag)">policy v5 pending</tspan></text>
+      <rect x="700" y="60" width="280" height="480" class="data" style="stroke:none;opacity:.6"/>
+      <text x="716" y="84" class="k">state</text>
+      <g transform="translate(716 96)"><use href="#sy-agent" width="30" height="30"/><text x="38" y="14" class="s">build b1 · turn 2/6</text><text x="38" y="27" class="s">route anthropic/opus · high</text></g>
+      <g transform="translate(716 140)"><use href="#sy-agent" width="30" height="30"/><text x="38" y="14" class="s">reviewer · idle</text><text x="38" y="27" class="s">last: Proceed</text></g>
+      <g transform="translate(716 184)"><use href="#sy-meter" width="30" height="30"/><text x="38" y="14" class="s">budget 2/6 turns</text><text x="38" y="27" class="s">41k / 120k tokens</text></g>
+      <text x="716" y="250" class="k">measures · M-*</text>
+      <polyline points="716,300 746,292 776,296 806,280 836,284 866,270 896,262 926,258 956,250" fill="none" stroke="var(--instrument)" stroke-width="1.8"/><text x="716" y="318" class="s">M-REUSE ↑ 0.71</text>
+      <polyline points="716,360 746,356 776,362 806,350 836,340 866,342 896,332 926,330 956,318" fill="none" stroke="var(--cyan)" stroke-width="1.8"/><text x="716" y="378" class="s">M-HOT ↓ 412 MB</text>
+      <polyline points="716,420 746,420 776,410 806,412 836,404 866,404 896,396 926,398 956,390" fill="none" stroke="var(--build)" stroke-width="1.8"/><text x="716" y="438" class="s">M-COST · $0.41 / sprint</text>
+      <g transform="translate(716 470)"><use href="#sy-flag" width="30" height="30"/><text x="38" y="14" class="s">cp/4 · 3 min ago</text><text x="38" y="27" class="s">rollback ▸</text></g>
+      <text x="716" y="528" class="s"><tspan fill="var(--instrument)">DERIVED</tspan> from Atlas at load · <tspan fill="var(--build)">AUTHORED</tspan> none</text>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Numbers are placeholders. Rule: every figure DERIVED from Atlas at load, so a screenshot is a faithful state; the stacks are the "terse spatial view" of <code>docs/00</code>.</figcaption>
+  </figure>
+
+  <!-- 8 · evolution navigator -->
+  <figure class="fig" id="f8">
+    <h2><small>8</small>Navigating the evolution of the codebase</h2>
+    <b class="q">A scrubber over checkpoints. Rolling back is dragging the handle.</b>
+    <div class="sk"><svg viewBox="0 0 1000 418" role="img" aria-label="Checkpoint scrubber with metric lines above and verification rows below">
+      <text x="24" y="28" class="k">measures over checkpoints</text>
+      <path d="M60 140 H 940" stroke="var(--line)"/><path d="M60 100 H 940" stroke="var(--line)"/><path d="M60 60 H 940" stroke="var(--line)"/>
+      <polyline points="120,130 280,118 440,122 600,96 760,84 920,70" fill="none" stroke="var(--instrument)" stroke-width="2"/><text x="930" y="72" class="s" fill="var(--instrument)">M-REUSE</text>
+      <polyline points="120,70 280,84 440,80 600,104 760,112 920,126" fill="none" stroke="var(--cyan)" stroke-width="2"/><text x="930" y="130" class="s" fill="var(--cyan)">M-HOT</text>
+      <polyline points="120,110 280,106 440,128 600,108 760,100 920,98" fill="none" stroke="var(--build)" stroke-width="2"/><text x="930" y="100" class="s" fill="var(--build)">M-COST</text>
+      <path d="M60 200 H 940" stroke="var(--line-strong)" stroke-width="3" stroke-linecap="round"/>
+      <use href="#sy-flag" x="106" y="172" width="28" height="28"/><text x="120" y="225" text-anchor="middle" class="s">cp/1</text><text x="120" y="239" text-anchor="middle" class="s">v1 · rules +2</text>
+      <use href="#sy-flag" x="266" y="172" width="28" height="28"/><text x="280" y="225" text-anchor="middle" class="s">cp/2</text><text x="280" y="239" text-anchor="middle" class="s">v2 · grants −1</text>
+      <use href="#sy-flag" x="426" y="172" width="28" height="28"/><text x="440" y="225" text-anchor="middle" class="s">cp/3</text><text x="440" y="239" text-anchor="middle" class="s" fill="var(--alert)">v3 · rolled back</text>
+      <use href="#sy-flag" x="586" y="172" width="28" height="28"/><text x="600" y="225" text-anchor="middle" class="s">cp/4</text><text x="600" y="239" text-anchor="middle" class="s">v4 · routes +1</text>
+      <use href="#sy-flag" x="746" y="172" width="28" height="28"/><text x="760" y="225" text-anchor="middle" class="s">cp/5</text><text x="760" y="239" text-anchor="middle" class="s">v5 · context −20k</text>
+      <circle cx="920" cy="200" r="9" fill="var(--flag)"/><text x="920" y="225" text-anchor="middle" class="s" fill="var(--flag)">now</text><text x="920" y="239" text-anchor="middle" class="s" fill="var(--flag)">drag to roll back</text>
+      <path d="M440 165 C 400 120, 320 120, 280 165" class="e r"/>
+      <text x="24" y="266" class="k">verified · evals · install · replay · any column open = no roll-forward to it</text>
+      <text x="120" y="284" text-anchor="middle" class="s">✓ ✓ ✓</text>
+      <text x="280" y="284" text-anchor="middle" class="s">✓ ✓ ✓</text>
+      <text x="440" y="284" text-anchor="middle" class="s" fill="var(--alert)">✗ ✓ —</text>
+      <text x="600" y="284" text-anchor="middle" class="s">✓ ✓ ✓</text>
+      <text x="760" y="284" text-anchor="middle" class="s">✓ ✓ ○</text>
+      <text x="24" y="316" class="k">diff at the handle</text>
+      <g><rect x="24" y="326" width="950" height="74" rx="8" class="box data"/>
+        <text x="40" y="346" class="s">policy v4 → v5 · context.maxTokensPerStage.build 120000 → 100000 · grants unchanged · routes unchanged</text>
+        <text x="40" y="364" class="s">rules + "Prefer the transcript over the image when both exist"</text>
+        <text x="40" y="386" class="s">git 3f2a1c9 → 8b77e04 · 14 files · retrospective: "reads dropped 31% with no eval regression"</text>
+      </g>
+    </svg></div>
+    <figcaption class="cap"><span class="pv a">AUTHORED</span> Verified = evals (Instrument) · install loop (both machines) · replay (figure 6).</figcaption>
+  </figure>
+
+  <div class="rulebox"><b>For arguing.</b> A sketch is a claim about what the harness must expose. When one wins: symbols → the design-system decision, numbers → DERIVED, fields → <code>ui/</code> and <code>@3pt/core</code>.</div>
+
+  <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Draw the arrow before you write the function.</p></footer>
+</div>
+</body>
+</html>

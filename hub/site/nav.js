@@ -16,6 +16,7 @@
     'vision':         g('<path d="M3 12s3.5-6.5 9-6.5 9 6.5 9 6.5-3.5 6.5-9 6.5S3 12 3 12Z"/><path d="M12 3v2.5M12 18.5V21"/><circle cx="12" cy="12" r="2.4"/>'),
     'goal':           g('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3.5v3M20.5 12h-3"/>'),
     'rules':          g('<path d="M6 3h12v18H6Z"/><path d="M9 8h6M9 11.5h6M9 15h3"/><path d="M15.5 14.5l1.5 1.5 3-3"/>'),
+    'checklist':      g('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6Z"/><path d="M9 12l2 2 4-4"/>'),
     'decisions':      g('<path d="M12 4v16"/><path d="M5 8l7-4 7 4"/><path d="M4 14h5l1.5 3h3L15 14h5"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/>'),
     'icp-explorer':   g('<path d="M4 20V10M9 20V5M14 20v-8M19 20V7"/><path d="M2.5 20h19"/><circle cx="9" cy="5" r="1.3" fill="currentColor"/>'),
     'icp-directions': g('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v4M12 16.5v4M3.5 12h4M16.5 12h4"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'),
@@ -34,10 +35,13 @@
     'charter':        g('<path d="M6 3h9l4 4v14H6Z"/><path d="M15 3v4h4"/><path d="M9 11h7M9 14.5h7M9 18h4"/>'),
     'direction':      g('<path d="M4 19.5l8-14 8 14Z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>'),
     'architecture':   g('<path d="M3 6h5v5H3ZM9.5 3h5v5h-5ZM16 6h5v5h-5Z"/><path d="M5.5 11v3.5h13V11"/><path d="M12 8v6.5"/><path d="M8 18h8M6 21h12" stroke-dasharray="2 2"/>'),
+    'strands':        g('<path d="M4 12c2-5 5-5 8 0s6 5 8 0"/><path d="M4 12c2 5 5 5 8 0s6-5 8 0"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>'),
+    'strands-diagrams': g('<path d="M4 12c2-5 5-5 8 0s6 5 8 0"/><path d="M5 5h4v4H5ZM15 15h4v4h-4Z"/><path d="M9 7h6M9 17h6" stroke-dasharray="2 2"/>'),
     'architecture-doc': g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h3v3H8ZM13 12h3v3h-3Z"/><path d="M11 13.5h2"/>'),
     'setup':          g('<path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="13" r="2.6"/><path d="M12 10.4V3.5M13.8 14.6l6.7 3.9M10.2 14.6l-6.7 3.9"/>'),
     'setup-doc':      g('<path d="M5 4h10l4 4v12H5Z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h5"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/>'),
     'icons':          g('<path d="M4 4h6v6H4ZM14 4h6v6h-6ZM4 14h6v6H4Z"/><circle cx="17" cy="17" r="3"/><path d="M7 7h0M17 7h0" stroke-width="2.4"/>'),
+    'sketches':       g('<path d="M4 18l4-10 4 10"/><path d="M14 8h6M14 12h6M14 16h4"/><path d="M3 21h18" stroke-dasharray="2 2"/>'),
     'design-system':  g('<path d="M4 4h7v7H4ZM13 4h7v7h-7ZM4 13h7v7H4Z"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="M6 8.5l2-2 2 2M15 6.5h3"/>'),
     'app':            g('<rect x="3" y="4" width="18" height="15" rx="2"/><path d="M3 8h18"/><rect x="6" y="11" width="5" height="5"/><path d="M14 12h4M14 15h3"/>'),
     'ci':             g('<path d="M4 6h6v6H4ZM14 6h6v6h-6ZM9 15h6v6H9Z"/><path d="M10 9h4M7 12v3h5M17 12v3h-5"/><circle cx="12" cy="18" r="1" fill="currentColor"/>'),
@@ -57,9 +61,9 @@
      REGISTERING A LEAF = ONE ENTRY HERE. */
   var GROUPS = [
     ['',       [['index','Hub']]],
-    ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5']]],
-    ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['icons','Icons'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
-    ['build',  [['app','App prototype'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['resources','Resources & credits','D4']]],
+    ['orient', [['vision','Vision','D0'], ['goal','Goal & use case','D6'], ['rules','Rules & judging','D5'], ['checklist','Open-source checklist','DL']]],
+    ['decide', [['decisions','Group decisions','DQ'], ['direction','Direction'], ['design-system','Design system','DD'], ['sketches','Sketch gallery'], ['icons','Icons'], ['icp-explorer','ICP explorer'], ['icp-directions','ICP directions','D8'], ['assessment','Assessment','D7'], ['icp','ICPs','D1']]],
+    ['build', [['app','App prototype'], ['lanes','Lane board'], ['setup','Setup cascade'], ['setup-doc','Setup cascade doc','DP'], ['lanes-doc','Lanes','D2'], ['workflow','Workflow','D3'], ['ci','CI & deployment','DC'], ['architecture','Architecture'], ['architecture-doc','Architecture doc','DA'], ['strands','Strands archaeology','DT'], ['strands-diagrams','Strands, drawn','DW'], ['resources','Resources & credits','D4']]],
     ['record', [['changelog','Changelog'], ['timeline','Timeline'], ['brainstorming','Brainstorming','DB'], ['provenance','Provenance DSL','D9'], ['sources','Resource guide','DS'], ['glossary','Glossary','DG'], ['charter','README','DR']]]
   ];
   /* ROUTE: slugs that are not their own .html file. Documents route through the Viewer. */
@@ -69,6 +73,7 @@
     'vision':         'view.html?f=docs/00-vision.md',
     'goal':           'view.html?f=docs/06-goal-and-use-case.md',
     'rules':          'view.html?f=docs/05-rules.md',
+    'checklist':      'view.html?f=docs/15-open-source-checklist.md',
     'decisions':      'view.html?f=docs/12-decisions.md',
     'icp-directions': 'view.html?f=docs/08-icp-directions.md',
     'assessment':     'view.html?f=docs/07-assessment-and-measurement.md',
@@ -78,13 +83,15 @@
     'lanes-doc':      'view.html?f=docs/02-lanes.md',
     'workflow':       'view.html?f=docs/03-workflow.md',
     'architecture-doc': 'view.html?f=docs/10-architecture.md',
+    'strands':        'view.html?f=docs/12-strands-archaeology.md',
+    'strands-diagrams': 'view.html?f=docs/13-strands-diagrams.md',
     'resources':      'view.html?f=docs/04-resources.md',
     'glossary':       'view.html?f=docs/glossary.md',
     'charter':        'view.html?f=README.md',
     'provenance':     'view.html?f=docs/09-provenance.md'
   };
   var PATH  = {};  /* slug → 'nested/dir/' for leaves below the site root (none yet) */
-  var FRESH = { 'app':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1, 'ci':1, 'icons':1, 'setup':1 }; /* retire at next check-in */
+  var FRESH = { 'app':1, 'direction':1, 'design-system':1, 'icp-explorer':1, 'lanes':1, 'icp-directions':1, 'timeline':1, 'decisions':1, 'ci':1, 'icons':1, 'setup':1, 'checklist':1, 'sketches':1 }; /* retire at next check-in */
 
   /* ALWAYS emit .html. Never derive from the page's own URL scheme or host. */
   function href(s){
