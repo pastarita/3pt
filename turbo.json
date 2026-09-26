@@ -1,0 +1,22 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "globalEnv": ["NODE_ENV", "CI"],
+  "globalDependencies": ["tsconfig.base.json", ".env.example"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!README.md"],
+      "outputs": ["dist/**", ".build/**", "build/Release/**"]
+    },
+    "typecheck": { "dependsOn": ["^build"] },
+    "lint": {},
+    "test": { "dependsOn": ["build"] },
+    "dev": { "cache": false, "persistent": true },
+    "provision": {
+      "cache": false,
+      "env": ["ATLAS_URI", "ATLAS_PROJECT_ID", "ATLAS_PUBLIC_KEY", "ATLAS_PRIVATE_KEY", "LANGSMITH_API_KEY", "GITHUB_TOKEN", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]
+    },
+    "clean": { "cache": false }
+  }
+}

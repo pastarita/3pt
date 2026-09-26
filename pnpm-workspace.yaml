@@ -1,0 +1,12 @@
+# 3PT · workspace globs. The three top-level lanes are ui/, harness/, infra/ (docs/10-architecture.md).
+# Inside each lane the Turborepo convention applies: apps/ are deployable or installable,
+# packages/ are libraries. infra/batteries/ are provisioners: each one is a package that can
+# stand up the thing the harness runs on (Atlas, blob, artifacts, repo, tracing).
+packages:
+  - ui/apps/*
+  - ui/packages/*
+  - harness/apps/*
+  - harness/packages/*
+  - infra/batteries/*
+allowBuilds:
+  esbuild: set this to true or false

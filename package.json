@@ -1,0 +1,37 @@
+{
+  "name": "3pt",
+  "private": true,
+  "description": "3PT \u00b7 Three Point Harness. Polyglot monorepo: ui/ (surfaces), harness/ (the running pipeline), infra/ (batteries that instantiate what the pipeline runs on).",
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "ui/apps/*",
+    "ui/packages/*",
+    "harness/apps/*",
+    "harness/packages/*",
+    "infra/batteries/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "provision": "turbo run provision",
+    "clean": "turbo run clean && rm -rf .turbo",
+    "graph": "turbo run build --graph=docs/generated/turbo-graph.html",
+    "3pt": "node harness/apps/cli/dist/index.js"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2",
+    "@types/node": "^22.18.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

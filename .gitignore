@@ -1,6 +1,6 @@
 # Xcode / SwiftPM
 *.xcodeproj/
-!apps/3PT/project.yml
+!ui/apps/macos/project.yml
 build/
 DerivedData/
 .build/
@@ -35,6 +35,10 @@ _site/
 
 # Node / Python (harness tooling)
 node_modules/
+.turbo/
+*.tsbuildinfo
+docs/generated/
+.blob/
 __pycache__/
 .venv/
 
