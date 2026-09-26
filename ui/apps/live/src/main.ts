@@ -5,6 +5,7 @@ import { createClient, type AppEvent, type Photo, type Screen } from '@3pt/inspe
 import { h } from './lib/dom.js';
 import { ROLES, route, getRole, setRole } from './lib/state.js';
 import { topBar } from './organisms/top-bar.js';
+import { siteNav } from './organisms/site-nav.js';
 import { photoViewer } from './organisms/photo-viewer.js';
 import { learnedStrip } from './molecules/learned-strip.js';
 import { homePage } from './pages/home.js';
@@ -17,6 +18,8 @@ import './styles.css';
 const tokens = document.createElement('style'); tokens.textContent = cssVars(); document.head.prepend(tokens);
 const api = createClient(import.meta.env.VITE_THREEPT_API_URL ?? 'http://127.0.0.1:8787');
 const root = document.getElementById('app')!;
+/* the general navigation bar: persistent, above the app root, active state from the hash route */
+const nav = siteNav(); root.before(nav.el);
 const modal = h('div', { id: 'modal' }); document.body.append(modal);
 /* the bulb: lights up when the harness ships a version. Rings at once when a tap here made it ship; the poll
    catches versions shipped from another device or by the Worker. */
@@ -85,5 +88,5 @@ async function render() {
     }
   } catch (e) { fail(e); }
 }
-window.addEventListener('hashchange', () => { ask.q = null; void render(); });
+window.addEventListener('hashchange', () => { ask.q = null; nav.refresh(); void render(); });
 void render();

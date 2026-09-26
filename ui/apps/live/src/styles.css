@@ -64,7 +64,19 @@ button.photo{cursor:pointer}
 .ver__body{display:flex;flex-direction:column;gap:2px}.ver__body span,.ver__body small{color:var(--soft);font-size:12.5px}
 .ver__side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}.ver__score{font:700 12px/1 var(--mono);color:var(--soft)}
 /* organisms */
-.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;position:sticky;top:8px;z-index:10}
+/* the general navigation bar: full-bleed, sticky at the very top; the top bar sticks just under it */
+.sitenav{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:4px;height:44px;margin:0 -16px 12px;padding:0 66px 0 16px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+.sitenav::-webkit-scrollbar{display:none}
+.sitenav__mark{display:inline-flex;align-items:center;gap:7px;color:var(--flag);text-decoration:none;margin-right:10px;flex:none}
+.sitenav__mark .ic{width:20px;height:20px}.sitenav__mark b{font:800 12px/1 var(--mono);letter-spacing:.18em}
+.sitenav__grp{display:flex;align-items:center;gap:2px;flex:none}.sitenav__grp--site{margin-left:auto}
+.sitenav__lbl{font:700 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 6px 0 4px}
+.sitenav__a{display:inline-flex;align-items:center;gap:4px;font:600 13px/1 var(--sans);color:var(--soft);text-decoration:none;padding:8px 10px;border-radius:8px;position:relative}
+.sitenav__a:hover{color:var(--ink);background:var(--panel)}
+.sitenav__a--on{color:var(--ink)}.sitenav__a--on::after{content:'';position:absolute;left:10px;right:10px;bottom:-1px;height:2px;background:var(--flag);border-radius:2px}
+.sitenav__ext{font-size:11px;color:var(--faint)}
+.sitenav__sep{width:1px;height:18px;background:var(--line);margin:0 8px;flex:none}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;position:sticky;top:52px;z-index:10}
 .topbar__firm{font:800 13px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--flag);text-decoration:none}
 .topbar__crumbs{display:flex;gap:8px;align-items:center;color:var(--soft)}.topbar__crumbs a{text-decoration:none}
 .topbar__sp{flex:1}.topbar__hv{font:700 12px/1 var(--mono);border:1px solid var(--lineStrong);border-radius:99px;padding:7px 11px;text-decoration:none}
@@ -144,4 +156,5 @@ button.photo{cursor:pointer}
 @keyframes bulb-open{from{opacity:0;transform:scale(.85) translateY(-6px)}to{opacity:1;transform:none}}
 @keyframes bulb-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media (max-width:1330px){.topbar{margin-right:52px}}
+@media (max-width:760px){.sitenav__grp--site{margin-left:8px}.sitenav__lbl{display:none}}
 @media (prefers-reduced-motion:reduce){.bulb__blob,.bulb__halo,.bulb__n,.bulb__panel,.bulb__item,.bulb--ping .bulb__blob,.bulb--ping .bulb__blob::before,.bulb--ping .bulb__blob::after{animation:none}.bulb__blob:hover{transform:none}}
