@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** 3pt · plan | build | instrument | improve | loop [--git] | rollback <tag>. See root Makefile. */
+/** 3pt · plan | build | instrument | improve | loop [--git] | rollback <tag> | replay [dir]. See root Makefile. */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { COLLECTIONS, freezePolicy, readSecrets, runIteration, seedPolicy, stageStore, type Checkpoint, type HarnessKind, type Policy, type StageContext } from '@3pt/core';
@@ -10,6 +10,7 @@ import { improve } from '@3pt/improver';
 import { headSha, repoRoot, showAt, snapshot } from '@3pt/battery-repo';
 import { atlasStore, atlasUri, loadKeys } from '@3pt/battery-atlas';
 import { keysCommand } from './keys.js';
+import { replay } from './replay.js';
 import { fileStore } from './store.js';
 
 const argv = process.argv.slice(2);
@@ -20,6 +21,8 @@ const root = repoRoot() ?? process.cwd();
 // Key injector: Atlas vault ← macOS Keychain ← host env, merged once by loadKeys(), then
 // readSecrets() → ctx.secrets. No .env. Stages never read process.env.
 if (cmd === 'keys') { await keysCommand(argv.slice(1)); process.exit(0); }
+// A dry run by definition: no keys (Build stays a dry run), a memory store, no Atlas connection opened.
+if (cmd === 'replay') { await replay(join(root, arg ?? 'data/mock/acme-builders'), readSecrets({}), process.env.GIT_SHA ?? headSha(root)); process.exit(0); }
 const keys = await loadKeys((l) => console.log(l));
 const secrets = readSecrets(keys);
 const POLICIES = 'harness/policies';
@@ -125,5 +128,5 @@ switch (cmd) {
     break;
   }
   case 'rollback': await rollback(arg ?? ''); break;
-  default: console.log('3pt <plan|build|instrument|improve|loop [--git]|rollback cp/<n>|keys>');
+  default: console.log('3pt <plan|build|instrument|improve|loop [--git]|rollback cp/<n>|replay [dir]|keys>');
 }

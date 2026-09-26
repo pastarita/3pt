@@ -67,6 +67,8 @@ export interface Finding {
   check: string;                   // which standard, e.g. 'hot-tier budget'
   passed: boolean;
   note: string;                    // what the improver may learn from it
+  answer?: string;                 // a build tool grant that answers this check; the improver adds it when the check fails
+  revoke?: string;                 // a build tool grant that did not work; the improver removes it (fix sprint)
 }
 
 export interface Plan {

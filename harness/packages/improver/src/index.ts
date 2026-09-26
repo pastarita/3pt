@@ -9,20 +9,31 @@ import {
   type Checkpoint, type Finding, type HarnessKind, type Policy, type Secrets, type Stage, type Store,
 } from '@3pt/core';
 
-/** The backfeed: derive the next policy version from failed checks. Pure. */
+/**
+ * The backfeed: derive the next policy version from failed checks. Pure.
+ * A failed check adds its lesson to `rules` once (keyed by check name, so a repeat does not grow every
+ * stage prompt). A finding that names an `answer` grants that tool to Build; one that names `revoke`
+ * (a fix sprint found the grant did not work) removes it. A revoke is always recorded as a rule.
+ */
 export function rewritePolicy(prev: Policy, findings: Finding[], checkpointTag: string): Policy {
   const failed = findings.filter(f => !f.passed);
   const { _id, ...rest } = structuredClone(prev);  // a new version is a new document
-  // A lesson already in the rules is not added again, so a repeated failure does not grow every stage prompt.
   const learned = failed
-    .filter(f => !prev.rules.some(r => r.endsWith(`(${f.check}): ${f.note}`)))
+    .filter(f => f.revoke || !prev.rules.some(r => r.includes(`(${f.check}):`)))
     .map(f => `Learned at ${checkpointTag} (${f.check}): ${f.note}`);
+  const revoked = failed.map(f => f.revoke).filter((g): g is string => !!g && rest.toolGrants.build.includes(g));
+  const grants = failed.map(f => f.answer).filter((g): g is string => !!g && !rest.toolGrants.build.includes(g));
+  rest.toolGrants.build = [...rest.toolGrants.build.filter(g => !revoked.includes(g)), ...new Set(grants)];
+  const reason = failed.length
+    ? `${failed.length} failed checks (${failed.map(f => f.check).join(', ')})` +
+      (grants.length ? `; granted ${grants.join(', ')}` : '') + (revoked.length ? `; revoked ${revoked.join(', ')}` : '')
+    : 'no failed checks; version bump for lineage';
   return {
     ...rest,
     version: prev.version + 1,
     createdAt: new Date().toISOString(),
     rules: [...prev.rules, ...learned],
-    provenance: { checkpoint: checkpointTag, reason: failed.length ? `${failed.length} failed checks` : 'no failed checks; version bump for lineage' },
+    provenance: { checkpoint: checkpointTag, reason },
   };
 }
 

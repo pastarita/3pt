@@ -215,6 +215,22 @@ sequenceDiagram
   Note over P,A: next iteration's Plan reads vN+1 and cp/<iteration>: the backfeed closes
 ```
 
+**Sprints.** Plan picks the mode. Most sprints are `feature`. Every 4th iteration is `improvement`
+(`IMPROVE_EVERY`) when a grant exists. The next iteration is `fix` when an improvement sprint found a grant
+that did not work, or when Build reported `M-ERR`.
+
+| Mode | Instrument checks (`@3pt/instrument`) | Improver does |
+|---|---|---|
+| feature | `search-miss`, `wall-evidence`, `water-late`, `manual-pack` over the last 3 iterations: the problem reaches the bar (3) and no grant answers it | grants `answer` to Build, adds one rule |
+| improvement | `effect:<check>` for each grant at least 6 iterations old (`MIN_AGE`): is the problem lower than at grant time? | adds a rule when a grant failed |
+| fix | `fix:<check>` for each failed effect: where the problem still is, by project | revokes the grant, records why; the check waits 12 iterations (`COOLDOWN`) before a new grant |
+
+The bar, `MIN_AGE`, `COOLDOWN` and `IMPROVE_EVERY` are demo tuning, one value each, not tuned per check.
+
+**Dry run over the projects:** `node harness/apps/cli/dist/index.js replay [dir]` runs one iteration per month
+over `data/mock/acme-builders` (92 months, 20 projects) with a memory store and no keys. It prints each
+grant, effect and revoke, a sprint strip by month, and a comparison with `expected/harness-versions.json`.
+
 ### 4.3 Batteries, tool grants, stages
 
 *Question: how does the improver change what a stage may do without changing stage code?*
