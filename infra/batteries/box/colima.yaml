@@ -1,0 +1,13 @@
+# 3PT · battery-box · Colima profile template. docs/14-sandbox-provisioning.md
+# box.sh passes these as flags on first `colima start -p <profile>`; the file documents the choice.
+# Ubuntu 24.04 (Colima's default image), Docker runtime so `atlas deployments setup --type local` works inside.
+cpu: 2
+memory: 4        # GiB. The worker + mongosh + one Atlas Local container fit in 4.
+disk: 20         # GiB allocated, sparse: only written blocks cost host disk.
+arch: aarch64
+runtime: docker
+vmType: vz
+mountType: virtiofs
+mounts:
+  - location: ~          # the host checkout is visible at the same path inside the box (repo_mode=sync copies it to /opt/3pt)
+    writable: false

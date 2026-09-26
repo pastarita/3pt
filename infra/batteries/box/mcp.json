@@ -1,0 +1,14 @@
+{
+  "_comment": "The provisioning MCP: the MongoDB MCP Server with an Atlas service account. With MDB_MCP_API_CLIENT_ID/SECRET the server exposes atlas-* tools (list orgs/projects/clusters, create project, create free cluster, create db user, add access list, connect) next to the data tools. An agent holding this can do everything sandbox.sh does, one tool call at a time. docs/14-sandbox-provisioning.md §3.",
+  "mcpServers": {
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server", "--readOnly", "false"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "${ATLAS_URI}",
+        "MDB_MCP_API_CLIENT_ID": "${ATLAS_CLIENT_ID}",
+        "MDB_MCP_API_CLIENT_SECRET": "${ATLAS_CLIENT_SECRET}"
+      }
+    }
+  }
+}
