@@ -1,11 +1,13 @@
 /** @3pt/api — HTTP for the surfaces. node:http today; same handler shape as a Worker fetch(). */
 import { createServer } from 'node:http';
 import { COLLECTIONS, memoryStore, seedPolicy } from '@3pt/core';
+import { handleSim } from './sim.js';
 
 const store = memoryStore();
 await store.insert(COLLECTIONS.policies, seedPolicy());
 
 export async function handle(url: URL): Promise<{ status: number; body: unknown }> {
+  const sim = await handleSim(url); if (sim) return sim;   /* the demo firm, see sim.ts */
   if (url.pathname === '/health') return { status: 200, body: { ok: true, at: new Date().toISOString() } };
   if (url.pathname === '/policies/latest') return { status: 200, body: await store.latest(COLLECTIONS.policies, 'version' as never) };
   if (url.pathname === '/checkpoints') return { status: 200, body: await store.find(COLLECTIONS.checkpoints, {}) };
