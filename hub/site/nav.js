@@ -110,8 +110,9 @@
   var PUBLISHED = [
     { k:'hub',    label:'Hub',            url:'https://3pt.pages.dev',                                              state:'gated',   note:'Access · PIN' },
     { k:'repo',   label:'Repo',           url:'https://github.com/pastarita/3pt',                                   state:'public',  note:'MIT' },
-    { k:'atlas',  label:'Atlas Sandbox',  url:'',                                                                   state:'pending', note:'T1 · cluster' },
-    { k:'demo',   label:'Demo link',      url:'',                                                                   state:'pending', note:'T3 · ungated' },
+    { k:'atlas',  label:'Atlas Sandbox',  url:'',                                                                   state:'live',    note:'Cluster0 · M10 · user pending' },
+    { k:'demo',   label:'Demo link',      url:'https://3pt-web.pages.dev',                                          state:'public',  note:'ungated' },
+    { k:'api',    label:'Harness API',    url:'https://3pt-harness.3pt-worker.workers.dev',                                        state:'public',  note:'Worker' },
     { k:'video',  label:'Video',          url:'',                                                                   state:'pending', note:'T5 · 60 s' },
     { k:'form',   label:'Submission',     url:'https://cerebralvalley.ai/e/mongodb-nyc-hackathon/hackathon/submit', state:'open',    note:'due 17:00 ET' }
   ];
