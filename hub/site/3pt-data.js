@@ -52,6 +52,8 @@
       epigram:'Repo layout, the pipeline skeleton, DevX, and the install loop.' },
     { id:'DA', slug:'architecture-doc', name:'Architecture',        verb:'Structuring', cluster:'build', temp:'hot', doc:'docs/10-architecture.md',
       epigram:'Three lanes (ui, harness, infra), Turborepo inside each, batteries injected at the edge; eight Mermaid perspectives and the extension recipes.' },
+    { id:'DC', slug:'ci',             name:'CI & deployment',      verb:'Shipping',  cluster:'build',  temp:'hot',  doc:'docs/13-ci-and-deployment.md',
+      epigram:'Build and deploy infrastructure, the topology, what each credit can actually fund, the herald that guards branching, and the target resolver.' },
     { id:'D4', slug:'resources',      name:'Resources & credits',  verb:'Provisioning', cluster:'build', temp:'warm', doc:'docs/04-resources.md',
       epigram:'Every partner, credit, MCP, and which 3PT slot it fills.' },
     { id:'DB', slug:'brainstorming',  name:'Brainstorming transcript', verb:'Recording', cluster:'record', temp:'cold', doc:'brainstorming.md',

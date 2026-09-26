@@ -37,6 +37,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Visual direction: construction demo, stress test, video plan (proposal, not yet merged into docs 00 to 06) | `hub/site/direction.html` (hub leaf "Direction") |
 | The monorepo: three lanes, Turborepo, batteries, diagrams, extension recipes | `docs/10-architecture.md` |
 | Design system: tokens, naming, dark/light, three canonical directions, cross-surface, components, the promenade for deciding (proposal) | `hub/site/design-system.html` (hub leaf "Design system") |
+| CI, deployment topology, credits, the herald gate on PRs, and the deploy-target resolver (contemplation) | `docs/13-ci-and-deployment.md`, `infra/targets.json`, `scripts/target.mjs` |
+| How a PR is described, graded and filed (heraldry) | `docs/pr-descriptions/README.md`, `.github/PULL_REQUEST_TEMPLATE.md` |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
@@ -47,7 +49,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 - Do not publish artifacts or external pages; write files here.
 - Secrets live only in `.env`. Add every new key to `.env.example` with a comment.
 - Prefer MongoDB Agent Skills and the MongoDB MCP Server for anything touching Atlas.
-- Commit prefixes: `plan:`, `build:`, `instrument:`, `media:`, `app:`, `docs:`, `chore:`.
+- Commit prefixes: `plan:`, `build:`, `instrument:`, `media:`, `app:`, `docs:`, `chore:`, `hub:`, `ci:`. Branches are `lane/<slug>`; every PR opens with a description from `docs/pr-descriptions/` (see the herald).
 - Keep `main` installable. If you break the install loop, fix it before anything else.
 - Two humans (Patrick, Yash) run agents concurrently. Stay inside your lane's directories; if you
   must touch another lane, say so in the commit message.
