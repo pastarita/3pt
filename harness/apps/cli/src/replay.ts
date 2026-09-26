@@ -17,15 +17,19 @@ const rows = (f: string) => readFileSync(f, 'utf8').split('\n').filter(Boolean).
 // Authored: which hand-written capability each grant stands for. Used only for the comparison at the end.
 const CAPABILITY: Record<string, string> = {
   'field.unit_level_trade': 'fields', 'tool.open_wall_gap': 'remind', 'flag.issue_on_arrival': 'issue', 'tool.owner_pack': 'pack',
+  'field.wall_state': 'wall', 'context.photos_per_question_20': 'wide', 'screen.by_role': 'screens', 'tool.closeout_set': 'closeout',
+  'tool.drop_bursts': 'bursts', 'flag.hazard': 'hazard',
 };
 
 export async function replay(dir: string, secrets: Secrets, gitSha: string) {
-  const byMonth = new Map<string, { o: any[]; a: any[] }>();
-  const bucket = (m: string) => byMonth.get(m) ?? (byMonth.set(m, { o: [], a: [] }), byMonth.get(m)!);
+  const byMonth = new Map<string, { o: any[]; a: any[]; p: any[] }>();
+  const bucket = (m: string) => byMonth.get(m) ?? (byMonth.set(m, { o: [], a: [], p: [] }), byMonth.get(m)!);
   const projects = readdirSync(join(dir, 'projects'));
   for (const p of projects) {
     for (const r of rows(join(dir, 'projects', p, 'outcomes.jsonl'))) bucket(r.at.slice(0, 7)).o.push({ ...r, project: p });
     for (const r of rows(join(dir, 'projects', p, 'activity.jsonl'))) bucket(r.at.slice(0, 7)).a.push({ ...r, project: p });
+    for (const f of readdirSync(join(dir, 'projects', p, 'media')))
+      for (const r of rows(join(dir, 'projects', p, 'media', f))) bucket(r.taken_at.slice(0, 7)).p.push({ ...r, project: p });
   }
   const months = [...byMonth.keys()].sort();
   console.log(`[replay] ${projects.length} projects, ${months.length} months (${months[0]} → ${months.at(-1)}), memory store`);
@@ -36,13 +40,14 @@ export async function replay(dir: string, secrets: Secrets, gitSha: string) {
   const found: { first: string; kept: string; grant: string }[] = [];
   const verdict = new Map<string, boolean>();       // grant → last effect result; only changes are printed
   const strip = new Map<string, string>();          // year → one letter per month: F feature, I improvement, X fix
-  const tally = { feature: 0, improvement: 0, fix: 0, granted: 0, revoked: 0, worked: 0, failedEffect: 0 };
+  const tally = { feature: 0, improvement: 0, fix: 0, granted: 0, revoked: 0, kept: 0, worked: 0, failedEffect: 0 };
 
   for (const [i, month] of months.entries()) {
     const iteration = i + 1;
-    const { o, a } = byMonth.get(month)!;
+    const { o, a, p } = byMonth.get(month)!;
     for (const r of o) await store.insert(COLLECTIONS.demo_outcomes, { ...r, iteration });
     for (const r of a) await store.insert(COLLECTIONS.demo_activity, { ...r, iteration });
+    for (const r of p) await store.insert(COLLECTIONS.demo_photos, { ...r, iteration });
     const policy = (await store.latest<Policy>(COLLECTIONS.policies, 'version'))!;
     await runIteration([planStage, buildStage, instrumentStage], {
       iteration, policy: freezePolicy(policy), store: stageStore(store), secrets, harness: 'claude-code', log: quiet,
@@ -65,6 +70,7 @@ export async function replay(dir: string, secrets: Secrets, gitSha: string) {
     for (const g of policy.toolGrants.build.filter(g => !next.toolGrants.build.includes(g))) {
       tally.revoked++; lines.push(`- ${findings.find(f => f.revoke === g)?.note ?? g}`);
     }
+    for (const f of findings.filter(f => f.check.startsWith('fix:') && f.passed)) { tally.kept++; lines.push(`= ${f.note}`); }
     for (const f of findings.filter(f => f.check.startsWith('effect:'))) {
       if (f.passed) tally.worked++; else tally.failedEffect++;
       const g = f.note.split(' ')[0];
@@ -80,7 +86,7 @@ export async function replay(dir: string, secrets: Secrets, gitSha: string) {
   console.log('\n[replay] sprints by month (F feature · I improvement · X fix):');
   for (const [y, s] of strip) console.log(`  ${y}  ${s.split('').join(' ')}`);
   console.log(`  ${tally.feature} feature · ${tally.improvement} improvement · ${tally.fix} fix sprints; ` +
-    `${tally.granted} grants, ${tally.worked} confirmed, ${tally.failedEffect} failed effect checks, ${tally.revoked} revoked`);
+    `${tally.granted} grants, ${tally.worked} confirmed, ${tally.failedEffect} failed effect checks, ${tally.revoked} revoked, ${tally.kept} kept after debug`);
 
   const final = (await store.latest<Policy>(COLLECTIONS.policies, 'version'))!;
   const seed = seedPolicy();
@@ -88,10 +94,10 @@ export async function replay(dir: string, secrets: Secrets, gitSha: string) {
 
   const expected = JSON.parse(readFileSync(join(dir, 'expected', 'harness-versions.json'), 'utf8')) as { v: number; date: string; capability: string | null; why: string }[];
   console.log('\n[replay] compared with expected/harness-versions.json (hand-written):');
-  console.log('  v   capability  expected   loop first try   loop kept');
+  console.log('  v   capability  expected   loop first try   loop now');
   for (const e of expected.filter(e => e.capability)) {
     const f = found.find(x => CAPABILITY[x.grant] === e.capability);
-    console.log(`  ${String(e.v).padEnd(3)} ${e.capability!.padEnd(11)} ${e.date.slice(0, 7)}    ${f ? `${f.first}          ${f.kept}  (${f.grant})` : 'no check for it yet'}`);
+    console.log(`  ${String(e.v).padEnd(3)} ${e.capability!.padEnd(11)} ${e.date.slice(0, 7)}    ${f ? `${f.first}          ${final.toolGrants.build.includes(f.grant) ? f.kept : 'revoked'}    (${f.grant})` : 'no check for it yet'}`);
   }
   console.log(`  found ${found.length} of ${expected.filter(e => e.capability).length}`);
 }

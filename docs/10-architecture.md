@@ -221,9 +221,22 @@ that did not work, or when Build reported `M-ERR`.
 
 | Mode | Instrument checks (`@3pt/instrument`) | Improver does |
 |---|---|---|
-| feature | `search-miss`, `wall-evidence`, `water-late`, `manual-pack` over the last 3 iterations: the problem reaches the bar (3) and no grant answers it | grants `answer` to Build, adds one rule |
+| feature | ten project checks over the last 3 iterations (table below): the problem reaches the bar and no grant answers it | grants `answer` to Build, adds one rule |
 | improvement | `effect:<check>` for each grant at least 6 iterations old (`MIN_AGE`): is the problem lower than at grant time? | adds a rule when a grant failed |
-| fix | `fix:<check>` for each failed effect: where the problem still is, by project | revokes the grant, records why; the check waits 12 iterations (`COOLDOWN`) before a new grant |
+| fix | `fix:<check>` for each failed effect. Debug first: if the problem already fell below its value at grant time, the failure was noise and the grant stays. Else: where the problem still is, by project | keeps the grant, or revokes it and records why; a revoked check waits 12 iterations (`COOLDOWN`) |
+
+| Check | Signal in `data/mock/acme-builders` | Grant (hand-written capability) |
+|---|---|---|
+| `search-miss` | searches that found nothing | `field.unit_level_trade` (fields) |
+| `wall-evidence` | walls closed or reopened with no open-wall photo | `tool.open_wall_gap` (remind) |
+| `wall-search` | "before drywall" searches that found nothing | `field.wall_state` (wall) |
+| `slow-answers` | searches that still find nothing once fields are granted | `context.photos_per_question_20` (wide) |
+| `water-late` | water stains found at closeout | `flag.issue_on_arrival` (issue) |
+| `manual-pack` | hours of owner packs made by hand | `tool.owner_pack` (pack) |
+| `repeat-questions` | the same role asks the same question again on a project (20 = 1 event) | `screen.by_role` (screens) |
+| `closeout-by-hand` | searches for closeout photos by unit | `tool.closeout_set` (closeout) |
+| `duplicate-photos` | the same image file stored again on a project (20 = 1 event) | `tool.drop_bursts` (bursts) |
+| `hazard-photos` | photo notes: open edge, missing rail, toe board, ladder. Bar 1, not 3: safety | `flag.hazard` (hazard) |
 
 The bar, `MIN_AGE`, `COOLDOWN` and `IMPROVE_EVERY` are demo tuning, one value each, not tuned per check.
 

@@ -29,7 +29,7 @@ export const planStage: Stage<Plan> = {
     const last = await ctx.store.latest<Checkpoint>(COLLECTIONS.checkpoints, 'iteration');
     const recent = await ctx.store.find<Measurement>(COLLECTIONS.measurements, { iteration: ctx.iteration - 1 } as Partial<Measurement>);
     const lastFindings = await ctx.store.find<Finding>(COLLECTIONS.findings, { iteration: ctx.iteration - 1 } as Partial<Finding>);
-    const grants = ctx.policy.toolGrants.build.filter(g => /^(field|tool|flag)\./.test(g)).length;
+    const grants = ctx.policy.toolGrants.build.filter(g => /^(field|tool|flag|screen|context)\./.test(g)).length;
     const mode = selectMode(ctx.iteration, last, recent, lastFindings, grants);
     const plan: Plan = {
       iteration: ctx.iteration,
