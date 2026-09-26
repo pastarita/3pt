@@ -21,6 +21,23 @@
   .who .pill b{color:var(--ink)}
   pre.export{background:var(--sand);border:1px solid var(--line);border-radius:8px;padding:12px;font:12px/1.5 var(--mono);white-space:pre-wrap;display:none}
   @media(max-width:900px){.lane{grid-template-columns:28px 1fr}.lane .own,.lane .sta{grid-column:2}}
+  figure.fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 8px;margin:12px 0}
+  figure.fig svg{width:100%;height:auto;display:block;font-family:var(--mono)}
+  figure.fig svg text{fill:var(--ink);font-size:21px;font-weight:700}
+  figure.fig svg .s{fill:var(--soft);font-size:15px;font-weight:400;font-family:var(--sans)}
+  figure.fig svg .k{fill:var(--faint);font-size:15px;font-weight:700;letter-spacing:.08em}
+  figure.fig svg .box{stroke-width:1.4}
+  figure.fig svg .surface{fill:var(--slate-soft);stroke:var(--slate)}
+  figure.fig svg .build{fill:var(--amber-soft);stroke:var(--build)}
+  figure.fig svg .battery{fill:var(--sand);stroke:var(--soft)}
+  figure.fig svg .core{fill:var(--pine-soft);stroke:var(--flag)}
+  figure.fig svg .lane-rect{fill:none;stroke:var(--line-strong);stroke-dasharray:5 4;stroke-width:1.2}
+  figure.fig svg .e{fill:none;stroke:var(--soft);stroke-width:2;marker-end:url(#lb-ah)}
+  figure.fig svg .e.d{stroke:var(--cyan);stroke-dasharray:6 4;marker-end:url(#lb-ahc)}
+  figure.fig svg .e.b{stroke:var(--flag);stroke-width:3;marker-end:url(#lb-ahf)}
+  figure.fig svg #lb-ah path{fill:var(--soft)} figure.fig svg #lb-ahc path{fill:var(--cyan)} figure.fig svg #lb-ahf path{fill:var(--flag)}
+  figure.fig figcaption{font-size:12.5px;color:var(--soft);margin:8px 0 0}
+  figure.fig figcaption .pv{margin-right:6px}
 </style>
 </head>
 <body>
@@ -29,8 +46,49 @@
   <header class="top">
     <p class="eyebrow">Build · hot · state persists in this browser under <code>tpt_lanes_v1</code></p>
     <h1>Lane board</h1>
-    <p class="lede">Who is doing what, right now. Assign an owner, cycle the status, keep the next action honest. Export as text and paste it into Discord for the other principal; this board does not sync between browsers yet.</p>
+    <p class="lede">Who is doing what, right now. Assign an owner, cycle the status, export as text for the other principal; the board does not sync between browsers yet.</p>
   </header>
+  <!-- Figure: the three code lanes every work lane lands in, and the one direction of dependency (docs/10-architecture.md §2) -->
+  <figure class="fig" id="lanes-map">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Three lanes, ui, harness, infra; dependency runs apps to packages to @3pt/core, never back">
+      <defs>
+        <marker id="lb-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker>
+        <marker id="lb-ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker>
+        <marker id="lb-ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <rect x="10" y="10" width="310" height="280" rx="12" class="lane-rect"/>
+      <rect x="345" y="10" width="310" height="280" rx="12" class="lane-rect"/>
+      <rect x="680" y="10" width="310" height="280" rx="12" class="lane-rect"/>
+      <text x="28" y="42" class="k">UI/ · SEES</text>
+      <text x="363" y="42" class="k">HARNESS/ · DOES</text>
+      <text x="698" y="42" class="k">INFRA/ · STANDS IT UP</text>
+      <!-- ui -->
+      <rect x="28" y="62" width="274" height="60" rx="8" class="box surface"/>
+      <text x="165" y="88" text-anchor="middle">apps/</text><text x="165" y="110" text-anchor="middle" class="s">pwa · web · macos</text>
+      <rect x="28" y="170" width="274" height="60" rx="8" class="box surface"/>
+      <text x="165" y="196" text-anchor="middle">packages/</text><text x="165" y="218" text-anchor="middle" class="s">design-system · inspector-client</text>
+      <path d="M165 122 L165 168" class="e"/>
+      <!-- harness -->
+      <rect x="363" y="62" width="274" height="60" rx="8" class="box build"/>
+      <text x="500" y="88" text-anchor="middle">apps/</text><text x="500" y="110" text-anchor="middle" class="s">cli · api · worker</text>
+      <rect x="363" y="150" width="274" height="60" rx="8" class="box build"/>
+      <text x="500" y="176" text-anchor="middle">packages/</text><text x="500" y="198" text-anchor="middle" class="s">plan · build · instrument · media</text>
+      <rect x="363" y="236" width="274" height="46" rx="8" class="box core"/>
+      <text x="500" y="266" text-anchor="middle">@3pt/core <tspan class="s">· no imports</tspan></text>
+      <path d="M500 122 L500 148" class="e"/>
+      <path d="M500 210 L500 234" class="e"/>
+      <!-- infra -->
+      <rect x="698" y="62" width="274" height="80" rx="8" class="box battery"/>
+      <text x="835" y="88" text-anchor="middle">batteries/</text><text x="835" y="110" text-anchor="middle" class="s">atlas · blob · artifacts</text><text x="835" y="130" text-anchor="middle" class="s">repo · tracing</text>
+      <!-- cross-lane -->
+      <path d="M302 92 L361 92" class="e"/><text x="332" y="80" text-anchor="middle" class="s">HTTP</text>
+      <path d="M698 92 L639 92" class="e b"/><text x="668" y="80" text-anchor="middle" class="s">injected</text>
+      <path d="M302 200 L361 252" class="e d"/><text x="322" y="242" class="s">types</text>
+      <path d="M760 142 L639 252" class="e d"/><text x="706" y="210" class="s">types</text>
+      <text x="500" y="318" text-anchor="middle" class="s">apps → packages → @3pt/core · never back</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Every lane below lands in one of these directories. Dependency runs one way, from <code>docs/10-architecture.md</code> §2.</figcaption>
+  </figure>
   <div class="who" id="who"></div>
   <div class="bar">
     <button id="export">Export as text</button>
@@ -39,7 +97,7 @@
   </div>
   <pre class="export" id="out"></pre>
   <div id="board"></div>
-  <div class="rulebox"><b>Status ladder:</b> ○ open → ◐ active → ● done, or — blocked. Click the status to advance; a blocked lane needs a note in its next action saying what unblocks it. Owners: <b>TBD</b> is a real state and counts against us on the hub.</div>
+  <div class="rulebox"><b>Status ladder:</b> ○ open → ◐ active → ● done, or — blocked. Click to advance; a blocked lane says what unblocks it. <b>TBD</b> is a real owner and counts against us.</div>
   <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">A lane without an owner is a lane that is not happening.</p></footer>
 </div>
 <script>

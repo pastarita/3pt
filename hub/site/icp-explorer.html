@@ -29,6 +29,18 @@
   .matrix td.s{font-family:var(--mono);text-align:center}
   .matrix td.s.hi{color:var(--good);font-weight:700}.matrix td.s.lo{color:var(--alert)}
   @media(max-width:760px){.row{grid-template-columns:28px 1fr}.row>div:last-child{grid-column:2}}
+  figure.fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 8px;margin:12px 0}
+  figure.fig svg{width:100%;height:auto;display:block;font-family:var(--mono)}
+  figure.fig svg text{fill:var(--ink);font-size:22px;font-weight:700}
+  figure.fig svg .s{fill:var(--soft);font-size:15px;font-weight:400;font-family:var(--sans)}
+  figure.fig svg .k{fill:var(--faint);font-size:15px;font-weight:700;letter-spacing:.08em}
+  figure.fig svg .cell{fill:var(--card);stroke:var(--line);stroke-width:1.2}
+  figure.fig svg .cell.w{stroke:var(--cyan)} figure.fig svg .cell.p{fill:var(--sand)}
+  figure.fig svg .out{fill:var(--cyan-soft);stroke:var(--cyan);stroke-width:1.4}
+  figure.fig svg .e{fill:none;stroke:var(--soft);stroke-width:2;marker-end:url(#ic-ah)}
+  figure.fig svg #ic-ah path{fill:var(--soft)}
+  figure.fig figcaption{font-size:12.5px;color:var(--soft);margin:8px 0 0}
+  figure.fig figcaption .pv{margin-right:6px}
 </style>
 </head>
 <body>
@@ -37,13 +49,66 @@
   <header class="top">
     <p class="eyebrow">Decide · hot · dials persist in this browser under <code>tpt_icp_weights_v1</code></p>
     <h1>ICP explorer</h1>
-    <p class="lede">Five directions, nine criteria, four named presets. The score is not the finding. The finding is which ordering holds under every preset and which flips on one dial. Briefs for each direction are in <a href="./view.html?f=docs/08-icp-directions.md">ICP directions</a>.</p>
+    <p class="lede">Directions × criteria × a preset of weights. The score is not the finding; the finding is which ordering holds under every preset and which flips on one dial.</p>
   </header>
 
-  <h2>Preset <span>a preset is a record: a named weight vector rendered into the dials below</span></h2>
+  <h2>Preset <span>a named weight vector, rendered into the dials · briefs in <a href="./view.html?f=docs/08-icp-directions.md">ICP directions</a></span></h2>
   <div class="presets" id="presets"></div>
   <div class="dials" id="dials"></div>
-  <p style="font-size:12px;color:var(--faint);margin:2px 0 0"><span class="pv a">AUTHORED</span> scores 0–5 per criterion in <code>3pt-data.js</code>, estimated by the principals on 2026-09-26. <span class="pv d">DERIVED</span> rank = Σ(w·s) / (Σw × 5), recomputed on every dial move.</p>
+  <!-- Figure: the mechanism. Nine dials × nine scores, summed and normalised; filled by draw() for the current leader -->
+  <figure class="fig" id="mechanism">
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Weights times criterion scores, summed and divided by the weight total times five, give the rank">
+      <defs><marker id="ic-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+      <text x="20" y="91" class="s">w · dial</text>
+      <text x="20" y="161" class="s">s · matrix</text>
+      <text x="20" y="231" class="s">w × s</text>
+      <text x="20" y="46" class="k">CRITERION</text>
+      <text x="179" y="46" text-anchor="middle" class="k">c1</text>
+      <rect x="150" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw0" x="179" y="91" text-anchor="middle">·</text>
+      <rect x="150" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms0" x="179" y="161" text-anchor="middle">·</text>
+      <rect x="150" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp0" x="179" y="231" text-anchor="middle">·</text>
+      <text x="245" y="46" text-anchor="middle" class="k">c2</text>
+      <rect x="216" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw1" x="245" y="91" text-anchor="middle">·</text>
+      <rect x="216" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms1" x="245" y="161" text-anchor="middle">·</text>
+      <rect x="216" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp1" x="245" y="231" text-anchor="middle">·</text>
+      <text x="311" y="46" text-anchor="middle" class="k">c3</text>
+      <rect x="282" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw2" x="311" y="91" text-anchor="middle">·</text>
+      <rect x="282" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms2" x="311" y="161" text-anchor="middle">·</text>
+      <rect x="282" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp2" x="311" y="231" text-anchor="middle">·</text>
+      <text x="377" y="46" text-anchor="middle" class="k">c4</text>
+      <rect x="348" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw3" x="377" y="91" text-anchor="middle">·</text>
+      <rect x="348" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms3" x="377" y="161" text-anchor="middle">·</text>
+      <rect x="348" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp3" x="377" y="231" text-anchor="middle">·</text>
+      <text x="443" y="46" text-anchor="middle" class="k">c5</text>
+      <rect x="414" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw4" x="443" y="91" text-anchor="middle">·</text>
+      <rect x="414" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms4" x="443" y="161" text-anchor="middle">·</text>
+      <rect x="414" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp4" x="443" y="231" text-anchor="middle">·</text>
+      <text x="509" y="46" text-anchor="middle" class="k">c6</text>
+      <rect x="480" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw5" x="509" y="91" text-anchor="middle">·</text>
+      <rect x="480" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms5" x="509" y="161" text-anchor="middle">·</text>
+      <rect x="480" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp5" x="509" y="231" text-anchor="middle">·</text>
+      <text x="575" y="46" text-anchor="middle" class="k">c7</text>
+      <rect x="546" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw6" x="575" y="91" text-anchor="middle">·</text>
+      <rect x="546" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms6" x="575" y="161" text-anchor="middle">·</text>
+      <rect x="546" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp6" x="575" y="231" text-anchor="middle">·</text>
+      <text x="641" y="46" text-anchor="middle" class="k">c8</text>
+      <rect x="612" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw7" x="641" y="91" text-anchor="middle">·</text>
+      <rect x="612" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms7" x="641" y="161" text-anchor="middle">·</text>
+      <rect x="612" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp7" x="641" y="231" text-anchor="middle">·</text>
+      <text x="707" y="46" text-anchor="middle" class="k">c9</text>
+      <rect x="678" y="60" width="58" height="46" rx="6" class="cell w"/><text id="mw8" x="707" y="91" text-anchor="middle">·</text>
+      <rect x="678" y="130" width="58" height="46" rx="6" class="cell"/><text id="ms8" x="707" y="161" text-anchor="middle">·</text>
+      <rect x="678" y="200" width="58" height="46" rx="6" class="cell p"/><text id="mp8" x="707" y="231" text-anchor="middle">·</text>
+      <text x="447" y="124" text-anchor="middle" class="s">×</text>
+      <path d="M760 223 L800 223" class="e"/>
+      <rect x="806" y="60" width="180" height="46" rx="6" class="cell"/><text x="896" y="80" text-anchor="middle" class="s">Σw × 5</text><text id="mden" x="896" y="100" text-anchor="middle">·</text>
+      <rect x="806" y="200" width="180" height="46" rx="6" class="cell p"/><text x="896" y="220" text-anchor="middle" class="s">Σ w·s</text><text id="msum" x="896" y="240" text-anchor="middle">·</text>
+      <path d="M896 106 L896 128" class="e"/><path d="M896 200 L896 178" class="e"/>
+      <rect x="806" y="130" width="180" height="46" rx="6" class="out"/><text x="896" y="150" text-anchor="middle" class="s">÷ → score</text><text id="mout" x="896" y="170" text-anchor="middle">·</text>
+      <text id="mname" x="20" y="286" class="s">leader under these dials</text>
+    </svg>
+    <figcaption><span class="pv d">DERIVED</span> for the current leader: rank = Σ(w·s) / (Σw × 5), recomputed on every dial move. <span class="pv a">AUTHORED</span> scores 0–5 per criterion in <code>3pt-data.js</code>, estimated by the principals on 2026-09-26.</figcaption>
+  </figure>
 
   <h2>Ranking <span>under the current weights</span></h2>
   <div class="rank" id="rank"></div>
@@ -53,7 +118,7 @@
   <h2>Score matrix <span>the atoms the ranking is computed from</span></h2>
   <div class="tbl-wrap"><table class="matrix" id="matrix"></table></div>
 
-  <div class="rulebox"><b>Where the model ends.</b> A weighted sum cannot express "this one is disqualified": a direction that reads as an image analyzer goes to zero under the rules, it does not merely slip. That is a constraint, and it lives in <a href="./view.html?f=docs/05-rules.md">Rules &amp; judging</a>, not in these dials. Read the <em>Distance from banned list</em> column as a gate first, then the ranking.</div>
+  <div class="rulebox"><b>Where the model ends.</b> A weighted sum cannot say "disqualified": a direction that reads as an image analyzer goes to zero under <a href="./view.html?f=docs/05-rules.md">Rules &amp; judging</a>. Read <em>Distance from banned list</em> as a gate first, then the ranking.</div>
 
   <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Read the stability, not the score.</p></footer>
 </div>
@@ -67,6 +132,11 @@
     document.getElementById('dials').innerHTML = T.CRITERIA.map(function(c){ return '<div class="dial"><label data-tip="'+T.esc(c.tip)+'"><span>'+c.label+'</span><b>'+state.w[c.key]+'</b></label><input type="range" min="0" max="5" step="1" value="'+state.w[c.key]+'" data-k="'+c.key+'"></div>'; }).join('');
     var rk = ranked(state.w);
     document.getElementById('rank').innerHTML = rk.map(function(x,i){ return '<div class="row'+(i===0?' top':'')+'"><div class="pos">'+(i+1)+'</div><div><h3>'+T.esc(x.d.name)+'</h3><p class="hl">“'+T.esc(x.d.headline)+'”</p><p class="co">'+T.esc(x.d.company)+'</p></div><div><div class="sc">'+(x.r*100).toFixed(0)+'</div><div class="bar2"><i style="width:'+(x.r*100)+'%"></i></div><div class="who">raised by '+x.d.who+'</div></div></div>'; }).join('');
+    /* mechanism figure: the leader's arithmetic under the current dials */
+    var top = rk[0], num = 0, den = 0, $ = function(id){ return document.getElementById(id); };
+    T.CRITERIA.forEach(function(c, i){ var w = state.w[c.key], sc = top.d.scores[c.key]; num += w*sc; den += w;
+      if ($('mw'+i)) { $('mw'+i).textContent = w; $('ms'+i).textContent = sc; $('mp'+i).textContent = w*sc; } });
+    if ($('msum')) { $('msum').textContent = num; $('mden').textContent = den*5; $('mout').textContent = (top.r*100).toFixed(0); $('mname').textContent = 'leader under these dials: ' + top.d.name; }
     /* stability: which pairs hold across ALL presets */
     var orders = Object.keys(T.PRESETS).map(function(p){ return ranked(T.PRESETS[p]).map(function(x){ return x.d.key; }); });
     var firsts = {}; orders.forEach(function(o){ firsts[o[0]] = (firsts[o[0]]||0)+1; });

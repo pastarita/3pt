@@ -17,6 +17,18 @@
   .ent .meta{margin-top:7px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .go{font:600 11.5px/1 var(--sans);color:var(--flag);text-decoration:none}.src{font:11px/1 var(--mono);color:var(--faint)}
   .prog{font:600 12px/1.4 var(--sans);color:var(--soft);margin:14px 0 6px;display:flex;gap:12px;align-items:center}
+  figure{margin:14px 0 0}
+  figcaption{font:italic 12.5px/1.45 var(--serif);color:var(--soft);margin:6px 0 0}
+  figcaption .pv{font-style:normal;margin-right:6px}
+  .fig{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 8px}
+  .fig svg{width:100%;height:auto;display:block;font-family:var(--mono)}
+  .fig svg text{fill:var(--soft)}
+  .fig svg .read{fill-opacity:.25}
+  table.moves{width:100%;border-collapse:collapse;font-size:12.8px;margin:8px 0}
+  table.moves th{text-align:left;font:700 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:6px 10px;border-bottom:1px solid var(--line)}
+  table.moves td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--soft)}
+  table.moves td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+  table.moves .hard{color:var(--alert);font:700 9.5px/1 var(--mono);letter-spacing:.1em}
 </style>
 </head>
 <body>
@@ -25,20 +37,43 @@
   <header class="top">
     <p class="eyebrow">Record · release record · from 2026-09-26</p>
     <h1>Changelog</h1>
-    <p class="lede">What shipped, by wave, and, stated plainly, what did not move. Tick entries as you read; the hub's catch-up band shows where this browser is.</p>
+    <p class="lede">What shipped, by wave, and what did not move. Tick entries as you read; the hub's catch-up band tracks this browser.</p>
   </header>
-  <div class="prog" id="prog"></div>
-  <div id="feed"></div>
+
+  <figure class="fig" id="day">
+    <svg viewBox="0 0 1000 120" role="img" aria-label="The day as a rail; one dot per shipped entry, placed at its wave's time and coloured by cluster">
+      <line x1="60" y1="70" x2="940" y2="70" stroke="var(--line-strong)" stroke-width="3"/>
+      <g id="day-ticks"></g>
+      <g id="day-dots"></g>
+    </svg>
+    <figcaption><span class="pv d">DERIVED</span>from the waves below: one dot per entry at its wave's hour, coloured by cluster; ticked entries fade.</figcaption>
+  </figure>
+
+  <figure id="waves">
+    <div class="prog" id="prog"></div>
+    <div id="feed"></div>
+  </figure>
 
   <h2>What did not move <span>stated plainly</span></h2>
-  <div class="rulebox"><b>No application code exists.</b> By decision, the repo holds documents and this hub only. <b>The repo is still private</b>, which fails a hard submission requirement. <b>The Atlas Sandbox project has not been created</b>, which fails another. Yash is on the Access policy but not yet a collaborator on the GitHub repo. The Cloudflare secrets for CI are not set, so pushes lint but do not deploy until they are. No ICP direction has been decided; the explorer is loaded, the decision is not made. Lane owners are mostly TBD.</div>
+  <table class="moves">
+    <thead><tr><th>Thing</th><th>State</th><th></th></tr></thead>
+    <tbody>
+      <tr><td>Application code</td><td>none, by decision: documents and this hub only</td><td></td></tr>
+      <tr><td>Repo visibility</td><td>still private</td><td><span class="hard">fails a hard requirement</span></td></tr>
+      <tr><td>Atlas Sandbox project</td><td>not created</td><td><span class="hard">fails a hard requirement</span></td></tr>
+      <tr><td>Yash on GitHub</td><td>on the Access policy, not yet a collaborator</td><td></td></tr>
+      <tr><td>CI secrets</td><td>unset: pushes lint, do not deploy</td><td></td></tr>
+      <tr><td>ICP direction</td><td>explorer loaded, decision not made</td><td></td></tr>
+      <tr><td>Lane owners</td><td>mostly TBD</td><td></td></tr>
+    </tbody>
+  </table>
 
   <h2>Where you come in <span>next moves</span></h2>
   <ul>
-    <li>Walk the <a href="./icp-explorer.html">ICP explorer</a> together and pick the direction that holds under every preset. Record it in <a href="./view.html?f=docs/01-icp.md">ICPs</a>.</li>
+    <li>Pick the direction that holds under every preset in the <a href="./icp-explorer.html">ICP explorer</a>; record it in <a href="./view.html?f=docs/01-icp.md">ICPs</a>.</li>
     <li>Claim lanes on the <a href="./lanes.html">Lane board</a>, export, paste to Discord.</li>
-    <li>Lane 1: flip the repo public, create the Atlas Sandbox project, add Yash.</li>
-    <li>Lane 4: first Atlas write from the pipeline skeleton before anything else gets built.</li>
+    <li>Lane 1: repo public, Atlas Sandbox created, Yash added.</li>
+    <li>Lane 4: first Atlas write from the pipeline skeleton.</li>
   </ul>
   <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">If it shipped and nobody can find it, it didn't ship.</p></footer>
 </div>
@@ -68,7 +103,25 @@
   ];
   var total = WAVES.reduce(function(a,w){ return a+w[3].length; },0); T.save('changelog_total', total);
   var read = T.load('changelog_v1', {});
+  /* day strip — DERIVED from WAVES: each wave's "HH:MM–HH:MM" span on a rail from 10:30 to submission */
+  var X0 = 60, X1 = 940, T0 = 10.5, T1 = 17;
+  var hx = function(h){ return X0 + (X1 - X0) * (h - T0) / (T1 - T0); };
+  var span = function(k){ var m = k.match(/(\d\d):(\d\d)[–-](\d\d):(\d\d)/); return m ? [+m[1] + m[2] / 60, +m[3] + m[4] / 60] : null; };
+  document.getElementById('day-ticks').innerHTML = [[T0, 'hacking'], [12, 'noon'], [14, '2pm'], [T1, 'submit']].map(function(t){
+    var px = hx(t[0]), a = t[0] === T0 ? 'start' : t[0] === T1 ? 'end' : 'middle';
+    return '<line x1="'+px+'" y1="60" x2="'+px+'" y2="80" stroke="var(--line-strong)" stroke-width="3"/><text x="'+px+'" y="106" text-anchor="'+a+'" font-size="20" font-weight="700">'+t[1]+'</text>';
+  }).join('');
+  function strip(){
+    document.getElementById('day-dots').innerHTML = WAVES.map(function(w, wi){
+      var sp = span(w[0]); if (!sp) return '';
+      var x0 = hx(sp[0]), x1 = hx(sp[1]), n = w[3].length;
+      return '<line x1="'+x0+'" y1="70" x2="'+x1+'" y2="70" stroke="var(--soft)" stroke-width="8" stroke-opacity=".35"/>'
+        + '<text x="'+((x0+x1)/2)+'" y="'+(wi % 2 ? 22 : 38)+'" text-anchor="middle" font-size="17">'+w[1]+'</text>'
+        + w[3].map(function(e, i){ var c = T.CLUSTERS[e[1]]; var px = x0 + (x1 - x0) * (i + .5) / n; return '<circle cx="'+px+'" cy="70" r="9" fill="'+c.color+'"'+(read[e[0]] ? ' class="read"' : '')+'><title>'+e[2]+'</title></circle>'; }).join('');
+    }).join('');
+  }
   function draw(){
+    strip();
     document.getElementById('feed').innerHTML = WAVES.map(function(w){
       return '<div class="wave"><h2><span class="d">'+w[0]+'</span> '+w[1]+'</h2><p class="sub">'+w[2]+'</p>'
         + w[3].map(function(e){ var c=T.CLUSTERS[e[1]]; return '<label class="ent'+(read[e[0]]?' read':'')+'"><input type="checkbox" data-k="'+e[0]+'"'+(read[e[0]]?' checked':'')+'><div class="body"><h4>'+e[2]+'</h4><p>'+e[3]+'</p><div class="meta"><span class="chip" data-cluster="'+e[1]+'">'+c.label+'</span>'+(e[4]?'<a class="go" href="'+e[4][1]+'">'+e[4][0]+' →</a>':'')+'<span class="src">'+(e[5]||'uncommitted')+'</span></div></div></label>'; }).join('') + '</div>';

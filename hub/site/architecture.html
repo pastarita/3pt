@@ -49,7 +49,7 @@
   <header class="top">
     <p class="eyebrow">Build · hot · first-class SVG · source of record is <code>docs/10-architecture.md</code></p>
     <h1>Architecture</h1>
-    <p class="lede">The polyglot monorepo as three lanes: <b>ui/</b> is how a human sees state, <b>harness/</b> is what the pipeline does, <b>infra/</b> is what it runs on and how that gets stood up. Four figures, one vocabulary. The Mermaid twins of these figures, and the extension recipes, live in the document.</p>
+    <p class="lede">Three lanes: <b>ui/</b> sees state, <b>harness/</b> runs the pipeline, <b>infra/</b> stands it up. Five figures, one vocabulary; the Mermaid twins and the extension recipes live in the document.</p>
   </header>
 
   <div class="legend">
@@ -77,7 +77,7 @@
   <!-- Figure 1: the three lanes and the direction of dependency -->
   <section class="fig">
     <h2>1 · Three lanes, one direction</h2>
-    <p class="q">Who is allowed to import whom. Apps depend on packages, packages on core, core on nothing. Surfaces reach the harness only over HTTP. Batteries are injected, never imported.</p>
+    <p class="q">Apps import packages, packages import core, core imports nothing. Surfaces reach the harness over HTTP; batteries are injected, never imported.</p>
     <svg viewBox="0 0 1000 420" role="img" aria-label="Three lanes: ui, harness, infra, with dependency arrows">
       <!-- lanes -->
       <rect x="10" y="10" width="300" height="400" rx="10" class="lane"/>
@@ -130,13 +130,13 @@
       <path d="M714 175 L 580 270" class="e d"/><text x="662" y="214" class="s" text-anchor="middle">types only</text>
       <path d="M298 175 L 430 262" class="e d"/><text x="330" y="236" class="s">types only</text>
     </svg>
-    <p class="cap"><span class="pv a">AUTHORED</span> Drawn from the tree in <code>docs/10-architecture.md</code> §2 and the workspace globs in <code>pnpm-workspace.yaml</code>. Mermaid twin: §4.1.</p>
+    <p class="cap"><span class="pv a">AUTHORED</span> from <code>docs/10-architecture.md</code> §2 and <code>pnpm-workspace.yaml</code>. Mermaid twin §4.1.</p>
   </section>
 
   <!-- Figure 2: one iteration -->
   <section class="fig">
     <h2>2 · One iteration, and the backfeed that closes it</h2>
-    <p class="q">What <code>3pt loop</code> does. Plan reads the last checkpoint and measurements; Build runs builder ↔ instrumenter turns inside an adapter; Instrument measures, rewrites the policy, tags a checkpoint. The next Plan reads the rewrite.</p>
+    <p class="q">One <code>3pt loop</code> tick: Plan reads the last checkpoint, Build runs builder ↔ reviewer turns, Instrument measures, rewrites the policy, tags. The next Plan reads the rewrite.</p>
     <svg viewBox="0 0 1000 412" role="img" aria-label="Plan, Build, Instrument triangle around Atlas with the backfeed arrow">
       <!-- triangle points -->
       <g><rect x="40" y="300" width="250" height="64" rx="8" class="box plan"/><text x="165" y="324" text-anchor="middle" class="t">Plan</text><text x="165" y="340" text-anchor="middle" class="s">latest(checkpoints) · find(measurements)</text><text x="165" y="353" text-anchor="middle" class="s">selectMode → insert(plans)</text></g>
@@ -159,13 +159,13 @@
       <path d="M830 178 L 830 300" class="e h"/><text x="838" y="245" class="s">read traces</text>
       <path d="M945 88 L 945 300" class="e h"/><text x="952" y="200" class="s">tag</text>
     </svg>
-    <p class="cap"><span class="pv a">AUTHORED</span> From <code>@3pt/core runIteration</code>, the three stage packages, and the sequence in <code>docs/10-architecture.md</code> §4.2. The loop ran end to end today against the memory store: policy v0 → v1, checkpoint cp/1.</p>
+    <p class="cap"><span class="pv a">AUTHORED</span> from <code>@3pt/core runIteration</code> and <code>docs/10-architecture.md</code> §4.2. Ran today against the memory store: policy v0 → v1, cp/1.</p>
   </section>
 
   <!-- Figure 3: batteries → grants → stages -->
   <section class="fig">
     <h2>3 · Batteries, tool grants, stages</h2>
-    <p class="q">How Instrument changes what a stage may do without changing stage code. The middle column is a document in Atlas (<code>policy.toolGrants</code>), mirrored in git. Instrument edits it; that edit is the Recursive Harnessing proof.</p>
+    <p class="q">Instrument changes what a stage may do by editing <code>policy.toolGrants</code> in Atlas, not stage code. That edit is the Recursive Harnessing proof.</p>
     <svg viewBox="0 0 1000 350" role="img" aria-label="Bipartite graph: batteries provide tool grants consumed by stages">
       <text x="30" y="26" class="k">infra/batteries · provides</text>
       <text x="380" y="26" class="k">policy.toolGrants · data</text>
@@ -191,13 +191,13 @@
       <text x="715" y="336" text-anchor="middle" class="s" fill="#ff6b4a">rewritePolicy: Instrument edits the grants</text>
       <text x="30" y="318" class="s">harness/policies/v&lt;n&gt;.json mirrors the middle column</text>
     </svg>
-    <p class="cap"><span class="pv a">AUTHORED</span> Grants as in <code>seedPolicy()</code> (<code>harness/packages/core</code>) and <code>harness/policies/v0.json</code>; battery descriptors in <code>infra/batteries/*/src/index.ts</code>. Mermaid twin: §4.3.</p>
+    <p class="cap"><span class="pv a">AUTHORED</span> grants from <code>seedPolicy()</code> and <code>harness/policies/v0.json</code>; descriptors in <code>infra/batteries/*/src/index.ts</code>. Mermaid twin §4.3.</p>
   </section>
 
   <!-- Figure 4: deployment topology -->
   <section class="fig">
     <h2>4 · What runs where</h2>
-    <p class="q">Nothing stateful lives on either machine. Two machines run the loop against one Sandbox cluster; that is the install-loop demo. The deployed worker runs the same tick as the local one.</p>
+    <p class="q">Nothing stateful lives on a machine. Two machines, one Sandbox cluster: the install-loop demo. The deployed worker runs the same tick as the local one.</p>
     <svg viewBox="0 0 1000 372" role="img" aria-label="Deployment topology: two machines, Cloudflare, Atlas, LangSmith, GitHub">
       <rect x="10" y="10" width="230" height="200" rx="10" class="lane"/><text x="24" y="32" class="k">machine · Patrick</text>
       <rect x="260" y="10" width="230" height="200" rx="10" class="lane"/><text x="274" y="32" class="k">machine · Yash</text>
@@ -232,12 +232,12 @@
       <path d="M190 210 V 300" class="e" style="opacity:.55"/>
       <text x="500" y="345" text-anchor="middle" class="s">solid: call · dashed cyan: state through Atlas · the web inspector reaches an api over THREEPT_API_URL</text>
     </svg>
-    <p class="cap"><span class="pv a">AUTHORED</span> Hosts from <code>docs/10-architecture.md</code> §4.5 and <code>.env.example</code>. <span class="pv c">TO CONFIRM</span> the Cloudflare worker deploy, the web inspector's Pages project, and the Sandbox cluster are not yet created; the second machine has not yet run the install loop.</p>
+    <p class="cap"><span class="pv a">AUTHORED</span> hosts from <code>docs/10-architecture.md</code> §4.5 and <code>.env.example</code>. <span class="pv c">TO CONFIRM</span> worker deploy, inspector Pages project, Sandbox cluster, second-machine install loop: none exist yet.</p>
   </section>
 
   <section class="fig">
     <h2>5 · Extension recipes</h2>
-    <p class="q">Each change is a fixed number of moves. If one needs more, the architecture is wrong, not the change.</p>
+    <p class="q">Each change is a fixed number of moves. If one needs more, the architecture is wrong.</p>
     <table class="recipes">
       <thead><tr><th>To add</th><th>Moves</th><th>Figure</th></tr></thead>
       <tbody>
@@ -252,7 +252,7 @@
     <p class="cap">Not extensible by design: three stages, three lanes, one state store.</p>
   </section>
 
-  <div class="rulebox"><b>Keep the twins together.</b> This leaf and <code>docs/10-architecture.md</code> draw the same architecture, SVG here and Mermaid there. Change a name in one, change it in the other in the same commit. The document is the source of record; this leaf is the rendering.</div>
+  <div class="rulebox"><b>Twins.</b> SVG here, Mermaid in <code>docs/10-architecture.md</code>. Rename in one, rename in the other, same commit. The document is the source of record; this leaf renders it.</div>
 
   <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">ui/ sees. harness/ does. infra/ stands it up.</p></footer>
 </div>

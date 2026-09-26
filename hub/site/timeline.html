@@ -40,6 +40,10 @@
   .ideas{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin:12px 0}
   .ideas h3{margin:0;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12.5px;display:flex;gap:8px;align-items:baseline}
   .ideas h3 span{font:600 11px/1 var(--mono);color:var(--faint)}
+  figure{margin:0}
+  .stats-fig .stats{margin:16px 0 0}
+  figcaption{font:italic 12.5px/1.45 var(--serif);color:var(--soft);margin:6px 0 0}
+  figcaption .pv{font-style:normal;margin-right:6px}
   .legend{display:flex;gap:12px;flex-wrap:wrap;font:600 11px/1.6 var(--sans);color:var(--faint);margin:8px 0 0}
   .legend i{display:inline-flex;width:16px;height:16px;border-radius:50%;border:2px solid var(--line-strong);margin-right:4px;vertical-align:middle;font:800 8px/12px var(--mono);align-items:center;justify-content:center;font-style:normal;color:var(--ink)}
   @media(max-width:760px){.ideas .row{grid-template-columns:1fr;gap:4px}.rail{padding-left:44px}.seg .who{left:-44px;width:36px}.seg .who i{width:22px;height:22px;font-size:10px}.rail::before{left:17px}}
@@ -52,11 +56,13 @@
   <header class="top">
     <p class="eyebrow">Record · derived · from <code>brainstorming.md</code> via <code>scripts/prov.mjs</code></p>
     <h1>Timeline</h1>
-    <p class="lede">The brainstorm as it happened: who spoke, what was born there, what it grew out of, where it landed in the docs, and what is still undecided. The words are the transcript's; the structure is the segment markers described in the <a href="./view.html?f=docs/09-provenance.md">Provenance DSL</a>.</p>
+    <p class="lede">The brainstorm as it happened: who spoke, what was born, where it landed, what is still open. Structure from the <a href="./view.html?f=docs/09-provenance.md">Provenance DSL</a>; words from the transcript.</p>
   </header>
 
-  <div class="stats" id="stats"></div>
-  <p style="margin:6px 0 0;font-size:12px;color:var(--faint)"><span class="pv d">DERIVED</span> everything on this page is computed from <code>prov-data.js</code>, which <code>node scripts/prov.mjs</code> regenerates from the transcript. Generated <span id="gen"></span>.</p>
+  <figure class="stats-fig">
+    <div class="stats" id="stats"></div>
+    <figcaption><span class="pv d">DERIVED</span>from <code>prov-data.js</code>, which <code>node scripts/prov.mjs</code> regenerates from the transcript. Generated <span id="gen"></span>.</figcaption>
+  </figure>
 
   <div class="bar" id="bar">
     <button data-view="rail" class="on">Chronology</button>
@@ -70,9 +76,10 @@
     <span style="width:10px"></span>
     <button id="words">Show the words</button>
   </div>
-  <p class="legend"><i>P</i>Patrick <i style="border-style:double">Y</i>Yash <i style="border-style:dashed">X</i>guest or mentor <i style="color:var(--faint)">?</i>uncertain &nbsp;·&nbsp; <span class="op idea" style="padding:2px 7px"><b>●</b>born</span> <span class="op" style="padding:2px 7px"><b>＋</b>grown</span> <span class="op pivot" style="padding:2px 7px"><b>↻</b>pivoted</span> <span class="op drop" style="padding:2px 7px"><b>✕</b>dropped</span></p>
-
-  <div id="out"></div>
+  <figure class="rail-fig" id="rail">
+    <figcaption class="legend"><i>P</i>Patrick <i style="border-style:double">Y</i>Yash <i style="border-style:dashed">X</i>guest or mentor <i style="color:var(--faint)">?</i>uncertain &nbsp;·&nbsp; <span class="op idea" style="padding:2px 7px"><b>●</b>born</span> <span class="op" style="padding:2px 7px"><b>＋</b>grown</span> <span class="op pivot" style="padding:2px 7px"><b>↻</b>pivoted</span> <span class="op drop" style="padding:2px 7px"><b>✕</b>dropped</span></figcaption>
+    <div id="out"></div>
+  </figure>
 
   <footer><hr class="rule"><p class="wordmark">3PT</p><p class="sig">Every idea has a birthplace. This is the map back to it.</p></footer>
 </div>

@@ -7,784 +7,542 @@
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="stylesheet" href="./3pt.css">
 <style>
-:root{
-  /* aliases onto 3pt.css tokens; this leaf invents no colors */
-  --ground:var(--bg);--sheet:var(--card);--muted:var(--soft);
-  --marker:var(--flag);--marker-soft:color-mix(in srgb,var(--flag) 16%,transparent);
-  --keep:var(--good);--keep-soft:color-mix(in srgb,var(--good) 14%,transparent);
-  --cut:var(--warn);--cut-soft:var(--amber-soft);
-  --film:var(--pine);--film-text:var(--amber);
-  --display:var(--sans);--body:var(--sans);--on-marker:#fff;
-}
-h2{display:block}
-.sec-head .pv{align-self:flex-start}
-
-*{box-sizing:border-box}
-.wrap{max-width:1080px;margin-inline:auto;display:flex;flex-direction:column;gap:88px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
-h1{font-size:clamp(34px,6vw,64px);line-height:1.02;font-weight:700}
-h2{font-size:clamp(26px,4vw,40px);line-height:1.08;font-weight:700}
-h3{font-size:20px;font-weight:600}
-p{margin:0}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.lede{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:60ch}
-.marker{color:var(--marker)}
-section{display:flex;flex-direction:column;gap:24px}
-.sec-head{display:flex;flex-direction:column;gap:10px}
-.tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;width:max-content}
-.tag.ex{background:var(--marker-soft);color:var(--marker)}
-
-/* hero */
-header{padding-top:48px;display:flex;flex-direction:column;gap:20px}
-.flow{display:grid;grid-template-columns:1.3fr auto 1fr auto 1.1fr;gap:16px;align-items:center;margin-top:16px}
-.arrow{font-family:var(--mono);color:var(--marker);font-size:28px;text-align:center}
-.strip{background:var(--film);border-radius:6px;padding:18px 10px;position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.strip::before,.strip::after{content:"";position:absolute;left:8px;right:8px;height:6px;background:repeating-linear-gradient(90deg,var(--ground) 0 8px,transparent 8px 18px);opacity:.55}
-.strip::before{top:6px}.strip::after{bottom:6px}
-.strip .ph{aspect-ratio:1}
-.strip .code{grid-column:1/-1;font-family:var(--mono);font-size:11px;color:var(--film-text);letter-spacing:.1em}
-.ph{border-radius:2px;display:block;width:100%}
-.rec{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:16px;font-family:var(--mono);font-size:13px;line-height:1.6;overflow-x:auto}
-.rec .k{color:var(--muted)}.rec .v{color:var(--ink)}.rec .hl{color:var(--marker)}
-.stacks{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:10px}
-.srow{display:grid;grid-template-columns:84px 1fr;gap:8px;align-items:end;font-size:12px}
-.srow span{font-family:var(--mono);color:var(--muted);align-self:center}
-.bars{display:flex;gap:4px;align-items:end;height:40px}
-.bars i{flex:1;background:var(--ink);opacity:.8;border-radius:1px}
-.srow.new .bars i{background:var(--marker);opacity:1}
-.flow-cap{display:grid;grid-template-columns:1.3fr auto 1fr auto 1.1fr;gap:16px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.flow-cap .sp{width:28px}
-
-/* the call */
-.call{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.opt{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:14px;position:relative}
-.opt.pick{border:2px solid var(--marker)}
-.opt .big{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.15}
-.opt p{color:var(--muted)}
-.circled{position:absolute;top:-14px;right:18px;background:var(--marker);color:#fff;font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:3px;letter-spacing:.06em}
-.opt.drop .big{text-decoration:line-through;text-decoration-color:var(--marker);text-decoration-thickness:3px;color:var(--muted)}
-
-/* keep / cut */
-.kc{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.col{display:flex;flex-direction:column;gap:8px}
-.col h3{display:flex;gap:10px;align-items:center}
-.pill{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:6px}
-.keep .pill{background:var(--keep-soft)}
-.cut .pill{background:var(--cut-soft)}
-.pill b{font-weight:600}
-.pill small{color:var(--muted);font-size:13px}
-.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
-.keep .dot{background:var(--keep)}.cut .dot{background:var(--cut)}
-
-/* loop */
-.loopwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center}
-.loopwrap svg{width:100%;height:auto;max-width:520px;justify-self:center}
-.steps{display:flex;flex-direction:column;gap:18px}
-.step{display:grid;grid-template-columns:40px 1fr;gap:12px}
-.step .n{font-family:var(--display);font-size:28px;font-weight:700;color:var(--marker);line-height:1}
-.step p{color:var(--muted)}
-
-/* diff */
-.diff{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
-.diff .rec{display:flex;flex-direction:column;gap:2px}
-.diff .add{background:var(--keep-soft);color:var(--keep);margin-inline:-6px;padding-inline:6px;border-radius:2px}
-.diff .mid{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center}
-.score{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.metric{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px}
-.metric .num{font-family:var(--display);font-size:36px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
-.metric .num s{color:var(--muted);font-size:22px;text-decoration-thickness:2px}
-.metric small{color:var(--muted);font-size:13px}
-
-/* board mock */
-.board{background:var(--sheet);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 300px}
-.board-main{padding:18px;display:flex;flex-direction:column;gap:14px;overflow-x:auto;min-width:0}
-.board-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.tl{display:grid;grid-template-columns:120px repeat(7,minmax(46px,1fr));gap:8px;align-items:end;min-width:520px}
-.tl .lab{font-size:13px;font-weight:500;align-self:center}
-.tl .lab.new{color:var(--marker)}
-.tl .day{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
-.pile{position:relative;height:74px}
-.pile .ph{position:absolute;left:50%;width:42px;height:42px;border:2px solid var(--sheet);box-shadow:0 1px 2px rgba(0,0,0,.2)}
-.pile .ct{position:absolute;left:0;right:0;top:0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted)}
-.side{border-left:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:14px;background:var(--ground)}
-.alert{border:2px solid var(--marker);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--sheet)}
-.alert .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.alert .grid .ph{aspect-ratio:1}
-.btns{display:flex;gap:8px}
-.btn{font-family:var(--body);font-size:14px;font-weight:600;padding:8px 14px;border-radius:5px;border:1px solid var(--line);background:var(--sheet);color:var(--ink)}
-.btn.pri{background:var(--marker);border-color:var(--marker);color:#fff}
-.ver{font-family:var(--mono);font-size:12px;display:flex;flex-direction:column;gap:6px}
-.ver div{display:flex;justify-content:space-between;padding:6px 8px;border-radius:4px;background:var(--sheet)}
-.ver .bad{color:var(--marker)}
-
-/* mongo */
-.colls{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.coll{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:8px}
-.coll .nm{font-family:var(--mono);font-weight:500;font-size:15px}
-.coll code{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.6;white-space:pre-wrap}
-.uses{display:flex;flex-wrap:wrap;gap:8px}
-.uses span{font-size:13px;padding:6px 10px;border-radius:4px;border:1px solid var(--line);background:var(--sheet)}
-
-/* stress */
-.risks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.risk{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.risk .q{font-family:var(--display);font-size:19px;font-weight:600;line-height:1.2}
-.risk p{color:var(--muted);font-size:15px}
-.st{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;width:max-content}
-.st.ok{background:var(--keep-soft);color:var(--keep)}
-.st.open{background:var(--marker-soft);color:var(--marker)}
-
-/* storyboard */
-.story{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.frame{display:flex;flex-direction:column;gap:8px}
-.frame .pic{background:var(--film);border-radius:4px;aspect-ratio:4/3;padding:10px;display:flex;flex-direction:column;justify-content:space-between;color:var(--ink)}
-.frame .t{font-family:var(--mono);font-size:11px;color:var(--film-text);letter-spacing:.08em}
-.frame .pic b{font-family:var(--display);font-size:17px;font-weight:600;line-height:1.15}
-.frame p{font-size:14px;color:var(--muted)}
-
-/* lanes */
-.lanes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.lane{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:10px}
-.lane ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
-.lane li{font-size:15px}
-.shared{border-style:dashed;grid-column:1/-1}
-.qs{display:flex;flex-direction:column;gap:8px}
-.qs div{padding:12px 14px;border-left:3px solid var(--marker);background:var(--sheet);font-size:15px}
-
-@media (max-width:820px){
-  .flow,.flow-cap{grid-template-columns:1fr}
-  .flow .arrow{transform:rotate(90deg)}
-  .flow-cap{display:none}
-  .call,.kc,.loopwrap,.risks,.lanes{grid-template-columns:1fr}
-  .diff{grid-template-columns:1fr}
-  .diff .mid{flex-direction:row}
-  .board{grid-template-columns:1fr}
-  .side{border-left:0;border-top:1px solid var(--line)}
-  .colls{grid-template-columns:1fr 1fr}
-  .story{grid-template-columns:1fr 1fr}
-  .score{grid-template-columns:1fr}
-}
-@media (max-width:480px){.colls,.story{grid-template-columns:1fr}}
+/* This leaf invents no colours: every fill and stroke is a 3pt.css token. */
+.wrap{max-width:1080px;margin-inline:auto}
+header.hero{padding-top:24px;margin-bottom:8px}
+header.hero h1{font-size:clamp(26px,4.5vw,44px);line-height:1.08;max-width:22ch}
+header.hero h1 .f{color:var(--flag)}
+header.hero .lede{margin-top:10px}
+.tag{display:inline-block;font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--cyan-soft);color:var(--cyan);margin-bottom:10px}
+section{margin-top:34px}
+h2{margin:0 0 12px}
+figure{margin:0 0 16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 10px}
+figure svg{width:100%;height:auto;display:block;font-family:var(--sans)}
+figure svg text{fill:var(--ink)}
+figcaption{margin-top:10px;font-size:13px;color:var(--soft);line-height:1.5}
+figcaption ul{margin:4px 0 0;padding-left:18px}
+figcaption li{margin:2px 0}
+figcaption .pv{margin-right:6px}
+figure .tbl-wrap{border:0;background:transparent}
+figure table{font-size:13px}
+figure td b{color:var(--ink)}
+.add{color:var(--good)}
+.qs{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.qs li{border-left:3px solid var(--flag);background:var(--card);padding:10px 14px;font-size:14px}
+/* svg vocabulary */
+.t{font-weight:800;font-size:30px}
+.m{font-size:22px}
+.m2{font-size:20px}
+.s{fill:var(--soft);font-size:21px}
+.s2{fill:var(--soft);font-size:19px}
+.s3{fill:var(--soft);font-size:17px}
+.k{fill:var(--faint);font-size:19px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.b{font-weight:700}
+.mono{font-family:var(--mono)}
+.big{font-weight:800;font-size:44px}
+.bx{fill:var(--card);stroke:var(--line-strong);stroke-width:2}
+.plan{fill:var(--violet-soft);stroke:var(--plan);stroke-width:2}
+.build{fill:var(--amber-soft);stroke:var(--build);stroke-width:2}
+.inst{fill:color-mix(in srgb,var(--instrument) 16%,var(--bg));stroke:var(--instrument);stroke-width:2}
+.atlas{fill:var(--cyan-soft);stroke:var(--cyan);stroke-width:2}
+.flag{fill:color-mix(in srgb,var(--flag) 14%,var(--bg));stroke:var(--flag);stroke-width:2}
+.flagfill{fill:var(--flag)}
+.good{fill:color-mix(in srgb,var(--good) 14%,var(--bg));stroke:var(--good);stroke-width:2}
+.warn{fill:var(--amber-soft);stroke:var(--warn);stroke-width:2}
+.off{fill:none;stroke:var(--line-strong);stroke-width:2;stroke-dasharray:7 6}
+.dim{fill:var(--sand);stroke:var(--line-strong);stroke-width:2}
+.e{fill:none;stroke:var(--soft);stroke-width:2.5;marker-end:url(#ah)}
+.e.f{stroke:var(--flag);marker-end:url(#ahf)}
+.e.d{stroke-dasharray:7 6}
+.ln{stroke:var(--line-strong);stroke-width:2}
+.strike{stroke:var(--flag);stroke-width:4}
+text.f{fill:var(--flag)} text.g{fill:var(--good)} text.w{fill:var(--warn)} text.c{fill:var(--cyan)} text.onflag{fill:var(--ink)}
 </style>
 </head>
 <body>
 <script src="./nav.js"></script>
-<style>
-.btn.pri,.circled{color:var(--on-marker)}
-.hv{background:var(--sheet);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
-.hv-row{display:grid;grid-template-columns:150px 1fr 1.4fr;gap:16px;padding:14px 18px;border-top:1px solid var(--line);min-width:560px;font-size:15px}
-.hv-row:first-child{border-top:0}
-.hv-head{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.hv-row b{font-family:var(--display);font-size:17px}
-.hv-row span{color:var(--muted)}
-.hv-row .add{color:var(--keep);font-weight:500}
-.core{display:flex;flex-direction:column;gap:12px}
-.core-box{background:var(--film);color:var(--ink);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}
-.core-items{display:flex;flex-wrap:wrap;gap:8px}
-.core-items span{border:1px solid var(--line-strong);border-radius:4px;padding:6px 10px;font-size:14px}
-.wl-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.wl{border:1px dashed var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px;opacity:.6}
-.wl.on{border:2px solid var(--marker);opacity:1;background:var(--sheet)}
-.wl b{font-family:var(--display);font-size:18px;line-height:1.15}
-.wl small{color:var(--muted);font-size:13px}
-.life{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px}
-.life-jobs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.job{display:flex;flex-direction:column;gap:4px}
-.job-bar{height:10px;border-radius:5px;background:var(--ink);opacity:.8}
-.job b{font-family:var(--display);font-size:17px}
-.job small{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
-.life-vers{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-.lv{border-top:3px solid var(--keep);padding-top:8px;display:flex;flex-direction:column;gap:4px}
-.lv.bad{border-top-color:var(--marker)}
-.lv .vn{font-family:var(--mono);font-weight:500;font-size:15px}
-.lv.bad .vn{color:var(--marker);text-decoration:line-through}
-.lv small{color:var(--muted);font-size:12px;line-height:1.35}
-@media (max-width:820px){.wl-row{grid-template-columns:1fr 1fr}.life-jobs{grid-template-columns:1fr}.life-vers{grid-template-columns:1fr 1fr}}
-.phases{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
-.phase{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px}
-.phase b{font-family:var(--display);font-size:22px;line-height:1.15}
-.phase p{color:var(--muted)}
-.phase-arrow{font-family:var(--mono);font-size:32px;color:var(--marker);align-self:center}
-.ticks{display:flex;gap:4px;margin-top:auto}
-.ticks i{flex:1;height:26px;border-radius:2px;background:var(--keep);opacity:.75}
-.ticks.live i{flex:0 0 22%;background:var(--marker)}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.lane-card{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px}
-.pattern{font-family:var(--display);font-size:20px;line-height:1.25;border-left:3px solid var(--marker);padding-left:12px}
-.ladder{display:flex;flex-direction:column;gap:10px}
-.rung{display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start}
-.rung .rn{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--sheet);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px}
-.rung b{display:block}
-.rung small{color:var(--muted);font-size:14px}
-.rung code{font-family:var(--mono)}
-.note{font-size:14px;color:var(--muted)}
-@media (max-width:820px){.phases,.split{grid-template-columns:1fr}.phase-arrow{transform:rotate(90deg);justify-self:center}}
-.rp{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:16px;align-items:start}
-.rp-col{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
-.rp-h{display:flex;gap:10px;align-items:center;font-family:var(--display);font-weight:700;font-size:17px}
-.rp-h .rn{width:26px;height:26px;border-radius:50%;background:var(--marker);color:var(--on-marker);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;flex:none}
-.rp-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.rp-facts b{display:block;font-size:30px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
-.rp-facts small{color:var(--muted);font-size:13px}
-.rp td:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
-.pb{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.pb li{border-left:3px solid var(--keep);padding-left:10px}
-.pb b{display:block;font-size:14px}
-.pb small{color:var(--muted);font-size:13px}
-@media (max-width:1000px){.rp{grid-template-columns:1fr}}
-.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.vs .opt ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
-.ask{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px}
-.q-box{display:flex;gap:10px;align-items:center;border:2px solid var(--ink);border-radius:8px;padding:12px 14px;font-size:clamp(16px,2.2vw,20px);font-weight:500}
-.q-box .ic{font-family:var(--mono);color:var(--marker)}
-.answers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.ans{display:flex;flex-direction:column;gap:8px}
-.ans .hd{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.ans .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.tile{position:relative}
-.tile .ph{aspect-ratio:1}
-.tile .mk{position:absolute;right:4px;top:4px;font-family:var(--mono);font-size:11px;font-weight:500;padding:1px 5px;border-radius:3px;background:var(--sheet)}
-.tile .mk.y{color:var(--keep)}.tile .mk.n{color:var(--marker)}
-.ans.bad .tile .ph{opacity:.55}
-.ans .foot{font-size:14px;color:var(--muted)}
-.gapcard{display:grid;grid-template-columns:1fr 1.2fr;gap:0;border:2px solid var(--marker);border-radius:10px;overflow:hidden;background:var(--sheet)}
-.gapcard .pics{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:14px;background:var(--film)}
-.gapcard .pics .slot{aspect-ratio:1;border:2px dashed var(--film-text);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--film-text);text-align:center;padding:6px}
-.gapcard .pics .cap{grid-column:1/-1;font-family:var(--mono);font-size:11px;color:var(--film-text);letter-spacing:.08em}
-.gapcard .pics .ph{aspect-ratio:1}
-.gapcard .txt{padding:20px;display:flex;flex-direction:column;gap:12px;justify-content:center}
-.gapcard .txt .big{font-family:var(--display);font-size:clamp(20px,2.6vw,28px);font-weight:700;line-height:1.15}
-.streams{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stream{border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);background:var(--sheet)}
-.stream.off{opacity:.5;border-style:dashed;background:transparent}
-.sw{width:40px;height:22px;border-radius:11px;background:var(--line);position:relative}
-.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--sheet)}
-.stream.on .sw{background:var(--keep)}
-.stream.on .sw::after{left:21px}
-.stream b{font-family:var(--display);font-size:19px}
-.stream small{color:var(--muted);font-size:13px}
-.tree{font-family:var(--mono);font-size:13px;line-height:1.8;background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:16px;overflow-x:auto;white-space:pre}
-.tree .hl{color:var(--marker)}
-.goal{background:var(--film);color:var(--ink);border-radius:10px;padding:clamp(20px,4vw,36px);display:flex;flex-direction:column;gap:12px}
-.goal .eyebrow{color:var(--film-text)}
-.goal p{font-family:var(--display);font-size:clamp(20px,2.8vw,30px);line-height:1.25;font-weight:500;max-width:34ch}
-.goal p .marker{color:var(--flag)}
-@media (max-width:820px){.vs,.answers,.gapcard{grid-template-columns:1fr}.streams{grid-template-columns:1fr 1fr}}
-</style>
 
 <div class="page"><div class="wrap">
 
-<header>
-  <div class="eyebrow">3PT · Harness Engineering &amp; Model Wrangling Hackathon · Sep 26</div>
-  <h1>A harness for media-heavy work<br><span class="marker">that rebuilds itself as it learns the business.</span></h1>
-  <p class="lede">3PT is an agent harness for any business that produces a lot of images. It learns from the team's yes and no answers, then rewrites its own rules, context policy, guardrails and tools. For the hackathon we show it on one example: a construction firm's site photos across several jobs and years. The photos are the data. The harness is the product.</p>
-
-  <div class="flow" aria-label="Site photos become records, records answer questions">
-    <div class="strip" id="heroStrip"><div class="code">▸ TOWER B · LEVEL 2 · WEEK 14</div></div>
-    <div class="arrow">→</div>
-    <div class="rec">
-      <div><span class="k">photo:</span> <span class="v">"IMG_2291"</span></div>
-      <div><span class="k">unit:</span> <span class="v">"204"</span></div>
-      <div><span class="k">trade:</span> <span class="v">"plumbing"</span></div>
-      <div><span class="k">wall_state:</span> <span class="hl">"open"</span></div>
-      <div><span class="k">taken:</span> <span class="v">"2026-06-03"</span></div>
-      <div><span class="k">harness:</span> <span class="hl">v2</span></div>
-    </div>
-    <div class="arrow">→</div>
-    <div class="stacks">
-      <div class="srow"><span>framing</span><div class="bars"><i style="height:80%"></i><i style="height:92%"></i><i style="height:60%"></i><i style="height:30%"></i><i style="height:12%"></i><i style="height:5%"></i></div></div>
-      <div class="srow"><span>plumbing</span><div class="bars"><i style="height:5%"></i><i style="height:30%"></i><i style="height:75%"></i><i style="height:90%"></i><i style="height:40%"></i><i style="height:10%"></i></div></div>
-      <div class="srow new"><span>drywall</span><div class="bars"><i style="height:0%"></i><i style="height:2%"></i><i style="height:8%"></i><i style="height:35%"></i><i style="height:80%"></i><i style="height:95%"></i></div></div>
-    </div>
-  </div>
-  <div class="flow-cap"><div>Photos arrive from the site</div><div class="sp"></div><div>Read once, saved as a record</div><div class="sp"></div><div>Work by trade over weeks</div></div>
+<header class="hero">
+  <p class="eyebrow">3PT · Harness Engineering &amp; Model Wrangling Hackathon · Sep 26</p>
+  <span class="tag">Proposal · not yet merged into docs 00–06</span>
+  <h1>A harness for media-heavy work <span class="f">that rebuilds itself as it learns the business.</span></h1>
+  <p class="lede">A harness that rewrites its own rules, context policy, guardrails and tools from yes and no taps. Demo: a construction firm's site photos. The harness is the product.</p>
 </header>
 
-<section>
-  <div class="goal">
-    <div class="eyebrow">Hackathon goal · Statement one, Recursive Harnessing</div>
-    <p>A harness for media-heavy work that starts generic and <span class="marker">rewrites its own rules, context policy, guardrails and tools</span> from feedback. We demo it on a construction firm's lifetime of site photos. Every finished project becomes a retrospective, a ranked list of opportunities, and a playbook for the next job. Every version lives in MongoDB.</p>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Generic core, one example</div>
-    <h2>The harness is general. The demo is construction.</h2>
-    <p class="lede">The proof that it is general: harness v0 knows nothing about construction. It only describes an image, its date and its source. Every construction field, rule and tool in the demo is something the harness added to itself.</p>
-  </div>
-  <div class="core">
-    <div class="core-box">
-      <div class="eyebrow" style="color:var(--film-text)">3PT core, same for every business</div>
-      <div class="core-items">
-        <span>Plan → Build → Instrument loop</span>
-        <span>harness_versions in MongoDB</span>
-        <span>Scores from yes and no taps</span>
-        <span>Guardrails and rollback</span>
-        <span>Stream switches</span>
-      </div>
-    </div>
-    <div class="wl-row">
-      <div class="wl on"><span class="tag ex">Demo today</span><b>Construction firm</b><small>Site photos across jobs and years</small></div>
-      <div class="wl"><b>Interior design studio</b><small>Renders, mood boards, site photos</small></div>
-      <div class="wl"><b>Newsroom photo desk</b><small>Archive that needs to answer today's story</small></div>
-      <div class="wl"><b>Brand marketing team</b><small>Campaign images over seasons</small></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">A firm's lifetime, replayed</div>
-    <h2>What it learns on job 1 is there on day 1 of job 3</h2>
-    <span class="pv a">AUTHORED · example timeline</span>
-  </div>
-  <div class="life">
-    <div class="life-axis"></div>
-    <div class="life-jobs">
-      <div class="job"><div class="job-bar"></div><b>Job 1 · Tower A</b><small>2024 · 9,800 photos</small></div>
-      <div class="job"><div class="job-bar"></div><b>Job 2 · Clinic</b><small>2025 · 6,200 photos</small></div>
-      <div class="job"><div class="job-bar"></div><b>Job 3 · Tower B</b><small>2026 · 11,400 photos</small></div>
-    </div>
-    <div class="life-vers">
-      <div class="lv"><span class="vn">v0</span><small>generic: describe, date, source</small></div>
-      <div class="lv"><span class="vn">v1</span><small>adds unit, level, trade</small></div>
-      <div class="lv"><span class="vn">v2</span><small>adds wall_state after "no" taps</small></div>
-      <div class="lv bad"><span class="vn">v3</span><small>rolled back: score dropped</small></div>
-      <div class="lv"><span class="vn">v4</span><small>writes find_missing_photos</small></div>
-      <div class="lv"><span class="vn">v5</span><small>turns off duplicate burst photos</small></div>
-      <div class="lv"><span class="vn">v6</span><small>job 3 starts with every rule already in place</small></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">How it learns</div>
-    <h2>First the old data. Then every new photo makes it better.</h2>
-  </div>
-  <div class="phases">
-    <div class="phase">
-      <span class="tag ex">Phase 1 · backfill</span>
-      <b>Ingest the firm's old jobs</b>
-      <p>Read every old photo once. Read the old activity log: searches, exports, taps. Organize, score, snapshot. Many versions in a short time.</p>
-      <div class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    </div>
-    <div class="phase-arrow">→</div>
-    <div class="phase">
-      <span class="tag ex">Phase 2 · live</span>
-      <b>Each new photo is a test</b>
-      <p>A new photo arrives. The harness files it with the current version, checks its rules, and sends reminders. Surprises feed the next loop.</p>
-      <div class="ticks live" aria-hidden="true"><i></i><i></i><i></i></div>
-    </div>
-  </div>
-  <p class="lede">Every harness state is a snapshot. A version document never changes after it is saved. Rollback moves a pointer back to an older version.</p>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">What it looks for</div>
-    <h2>Repeats become automations. One-offs become the plan.</h2>
-    <span class="pv a">AUTHORED · example patterns</span>
-  </div>
-  <div class="split">
-    <div class="lane-card">
-      <h3>Repeated tasks</h3>
-      <div class="pattern">"Every Friday the project engineer exports unit photos for the owner report."</div>
-      <div class="ladder">
-        <div class="rung"><span class="rn">1</span><div><b>Notice</b><small>Seen 3 Fridays in a row</small></div></div>
-        <div class="rung"><span class="rn">2</span><div><b>Remind</b><small>"Owner report is due. Your photo pack is ready."</small></div></div>
-        <div class="rung"><span class="rn">3</span><div><b>Automate</b><small>Accepted 3 times, so it offers to build the pack every Friday</small></div></div>
-      </div>
-      <p class="note">Snoozing or dismissing counts as a "no". The harness steps back down the ladder.</p>
-    </div>
-    <div class="lane-card">
-      <h3>One-off tasks</h3>
-      <div class="pattern">"Show water damage near windows." Nobody asked before. Every result got "no".</div>
-      <div class="ladder">
-        <div class="rung"><span class="rn">1</span><div><b>Log it</b><small>A failed one-off is a missing feature</small></div></div>
-        <div class="rung"><span class="rn">2</span><div><b>Plan</b><small>Groups similar one-offs into one plan item</small></div></div>
-        <div class="rung"><span class="rn">3</span><div><b>Build</b><small>Next version adds an <code>issue</code> field and re-reads window photos</small></div></div>
-      </div>
-      <p class="note">One-offs also show what matters. Photos nobody ever opens can move to cheap storage.</p>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Per project</div>
-    <h2>Every job ends in a retrospective. Every retrospective ends in a playbook.</h2>
-    <p class="lede">Media is filed under the project it belongs to. When a job closes, the harness looks back at its photos and its activity, ranks what could have saved time or avoided cost, and writes the reminders and prompts for the next job.</p>
-    <span class="pv a">AUTHORED · example numbers</span>
-  </div>
-  <div class="rp">
-    <div class="rp-col">
-      <div class="rp-h"><span class="rn">1</span>Retrospective · Job 1, Tower A</div>
-      <div class="rp-facts">
-        <div><b>38</b><small>owner reports built by hand</small></div>
-        <div><b>14</b><small>units closed with no open-wall photo</small></div>
-        <div><b>3</b><small>walls reopened later to find a pipe</small></div>
-        <div><b>22</b><small>searches that found nothing useful</small></div>
-      </div>
-    </div>
-    <div class="rp-col">
-      <div class="rp-h"><span class="rn">2</span>Opportunities, ranked</div>
-      <div class="tbl-wrap"><table>
-        <tr><th>Opportunity</th><th>Kind</th><th>Hours / job</th></tr>
-        <tr><td>Build the Friday owner photo pack</td><td>automate</td><td>28</td></tr>
-        <tr><td>Open-wall photo before drywall</td><td>remind</td><td>12 + 3 reopened walls</td></tr>
-        <tr><td>Search by wall state</td><td>harness change</td><td>9</td></tr>
-        <tr><td>Water damage near windows</td><td>feature</td><td>to measure</td></tr>
-      </table></div>
-      <p class="note">Hours per job = times it happened × minutes each. Minutes come from event timestamps where the log has them. Otherwise the user sets them. Cost avoided, such as a reopened wall, uses a cost the user enters.</p>
-    </div>
-    <div class="rp-col">
-      <div class="rp-h"><span class="rn">3</span>Playbook · Job 3, Tower B</div>
-      <ul class="pb">
-        <li><b>On from day 1</b><small>Friday owner photo pack</small></li>
-        <li><b>Reminder</b><small>when drywall starts in a unit: "Take the open-wall photo first."</small></li>
-        <li><b>Prompt at kickoff</b><small>"Which units have window flashing? Tag them so water issues are findable."</small></li>
-        <li><b>Starts on</b><small>harness v6, not v0</small></li>
-      </ul>
-    </div>
-  </div>
-  <p class="lede">Every opportunity has a button that does something: turn on the reminder, build the automation, or send a harness change to the loop. It is an inbox of actions, not a chart. That keeps it clear of the dashboard ban.</p>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Anti-project check</div>
-    <h2>Three banned categories sit close to us. Stay clear of each.</h2>
-  </div>
-  <div class="risks">
-    <div class="risk"><span class="st open">Image analyzer</span><div class="q">Don't open on photos being tagged.</div><p>Open on the harness version history. Photo extraction is one tool the harness uses, and the harness changes that tool.</p></div>
-    <div class="risk"><span class="st open">Basic RAG</span><div class="q">Search is the test, not the product.</div><p>The search question produces the signal. The agent then edits its own context policy and writes a new tool. Plain RAG never changes itself.</p></div>
-    <div class="risk"><span class="st open">Dashboard as the main feature</span><div class="q">The main screen is the harness diff.</div><p>Show version v1 to v2, why the agent proposed it, the score change, and approve or roll back. Photo stacks are a side panel.</p></div>
-    <div class="risk"><span class="st ok">Streamlit</span><div class="q">Not used.</div><p>Next.js on Vercel for the demo link.</p></div>
-  </div>
-  <p class="lede">The agent must also act, not only answer. It sends the missing-photo request to the field team, and it writes and saves the <code style="font-family:var(--mono)">find_missing_photos</code> tool itself.</p>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Which problem statement</div>
-    <h2>Statement one. The harness changes all four parts of itself.</h2>
-    <p class="lede">The brief names what should evolve: rules, context policies, guardrails and tool access. A new extraction field alone covers only the first. Each harness version is one MongoDB document with all four parts, and the loop proposes a diff to it.</p>
-    <span class="pv a">AUTHORED · example version</span>
-  </div>
-  <div class="hv">
-    <div class="hv-row hv-head"><span></span><span>harness v1</span><span>harness v2</span></div>
-    <div class="hv-row"><b>Rules</b><span>extract trade, unit, date</span><span class="add">+ wall_state: open | closed</span></div>
-    <div class="hv-row"><b>Context policy</b><span>send the 20 nearest records to the model</span><span class="add">filter by unit and trade first, then send 8. Look at pixels only when confidence &lt; 0.6</span></div>
-    <div class="hv-row"><b>Guardrails</b><span>none</span><span class="add">roll back if score drops · a person approves new fields · cost cap per backfill</span></div>
-    <div class="hv-row"><b>Tools</b><span>search_records</span><span class="add">+ find_missing_photos · + reread_photo, limited to 50 per run</span></div>
-  </div>
-  <div class="vs">
-    <div class="opt"><div class="big" style="font-size:20px">Why not statement two</div><p>"Billions of tokens in one session" is not something we can show in one day.</p></div>
-    <div class="opt"><div class="big" style="font-size:20px">What we borrow from it</div><p>Hard metric signals. The loop scores each version on useful answers from yes and no taps, plus a labelled set, plus cost.</p></div>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Where we fit</div>
-    <h2>Don't pitch progress tracking. That market is taken.</h2>
-  </div>
-  <div class="vs">
-    <div class="opt drop">
-      <div class="big">Measure progress against the plan</div>
-      <ul>
-        <li>OpenSpace maps 360° photos to the floor plan and computes percent complete per trade.</li>
-        <li>Buildots compares 360° captures with the BIM model and the schedule.</li>
-        <li>DroneDeploy starts at $299 a month for drone progress reports.</li>
-      </ul>
-    </div>
-    <div class="opt pick">
-      <span class="circled">OUR LANE</span>
-      <div class="big">Make old photos answer new questions</div>
-      <ul>
-        <li>Works on the photos the team already takes on phones.</li>
-        <li>Learns what this team asks for, from yes and no answers.</li>
-        <li>Keeps learning across months and across jobs. The contractor owns it.</li>
-        <li>Asks for the missing photo before a wall gets closed.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">The one question the demo answers</div>
-    <h2>"Show me unit 204's plumbing before the drywall went up."</h2>
-    <p class="lede">A leak shows up two years later. Someone has to find the photo of the pipe behind the wall. Today that means scrolling through 40,000 photos.</p>
-    <span class="pv a">AUTHORED · example data</span>
-  </div>
-  <div class="ask">
-    <div class="q-box"><span class="ic">?</span>unit 204 · plumbing · before drywall</div>
-    <div class="answers">
-      <div class="ans bad">
-        <div class="hd"><span>harness v1</span><span>3 of 8 useful</span></div>
-        <div class="grid" id="ansV1"></div>
-        <div class="foot">v1 knows trade and unit. It can't tell an open wall from a finished one.</div>
-      </div>
-      <div class="ans">
-        <div class="hd"><span>harness v2 · adds wall_state</span><span>7 of 8 useful</span></div>
-        <div class="grid" id="ansV2"></div>
-        <div class="foot">The team's "no" answers told the harness what was missing. It added the field and read the old photos again.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">The loop, in site terms</div>
-    <h2>Three points, each with a job</h2>
-  </div>
-  <div class="loopwrap">
-    <svg viewBox="0 0 440 420" role="img" aria-label="Plan, Build, Instrument loop around MongoDB">
+<section id="loop">
+  <h2>The loop <span>Statement 1 · Recursive Harnessing</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 540" role="img" aria-label="Plan, Build, Instrument loop over MongoDB harness versions">
       <defs>
-        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0 0 L10 5 L0 10 z" fill="var(--marker)"/>
-        </marker>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--soft)"/></marker>
+        <marker id="ahf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--flag)"/></marker>
       </defs>
-      <path d="M190 78 A150 150 0 0 1 345 290" fill="none" stroke="var(--marker)" stroke-width="3" marker-end="url(#ah)"/>
-      <path d="M300 340 A150 150 0 0 1 120 340" fill="none" stroke="var(--marker)" stroke-width="3" marker-end="url(#ah)"/>
-      <path d="M78 290 A150 150 0 0 1 160 90" fill="none" stroke="var(--marker)" stroke-width="3" marker-end="url(#ah)"/>
-      <circle cx="220" cy="62" r="50" fill="var(--sheet)" stroke="var(--ink)" stroke-width="2"/>
-      <text x="220" y="68" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="var(--ink)">Plan</text>
-      <circle cx="360" cy="330" r="50" fill="var(--sheet)" stroke="var(--ink)" stroke-width="2"/>
-      <text x="360" y="336" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="var(--ink)">Build</text>
-      <circle cx="80" cy="330" r="50" fill="var(--sheet)" stroke="var(--ink)" stroke-width="2"/>
-      <text x="80" y="336" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="var(--ink)">Instrument</text>
-      <rect x="160" y="190" width="120" height="70" rx="6" fill="var(--film)"/>
-      <text x="220" y="220" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="var(--film-text)">MongoDB</text>
-      <text x="220" y="242" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="var(--ink)">harness v1…v3</text>
+      <rect x="20" y="30" width="300" height="250" rx="10" class="plan"/>
+      <text x="170" y="78" text-anchor="middle" class="t">1 · Plan</text>
+      <text x="170" y="122" text-anchor="middle" class="m">reads no taps, failed</text>
+      <text x="170" y="152" text-anchor="middle" class="m">searches, one-off asks</text>
+      <text x="170" y="196" text-anchor="middle" class="s">groups them → plan items</text>
+      <text x="170" y="226" text-anchor="middle" class="s">picks the one that matters</text>
+
+      <path d="M322 155 L346 155" class="e"/>
+      <rect x="350" y="30" width="300" height="250" rx="10" class="build"/>
+      <text x="500" y="78" text-anchor="middle" class="t">2 · Build</text>
+      <text x="500" y="122" text-anchor="middle" class="m2">ships one change: a rule,</text>
+      <text x="500" y="152" text-anchor="middle" class="m2">context policy, guardrail,</text>
+      <text x="500" y="182" text-anchor="middle" class="m2">tool, or automation</text>
+      <text x="500" y="222" text-anchor="middle" class="s">snapshot → harness v(n+1)</text>
+      <text x="500" y="252" text-anchor="middle" class="s">re-reads affected photos</text>
+
+      <path d="M652 155 L676 155" class="e"/>
+      <rect x="680" y="30" width="300" height="250" rx="10" class="inst"/>
+      <text x="830" y="78" text-anchor="middle" class="t">3 · Instrument</text>
+      <text x="830" y="122" text-anchor="middle" class="m2">scores: useful answers,</text>
+      <text x="830" y="152" text-anchor="middle" class="m2">reminders acted on,</text>
+      <text x="830" y="182" text-anchor="middle" class="m2">automations kept,</text>
+      <text x="830" y="212" text-anchor="middle" class="m2">cost per photo</text>
+      <text x="830" y="254" text-anchor="middle" class="m b f">score drop → roll back</text>
+
+      <path d="M170 282 L170 326" class="e d"/><path d="M500 282 L500 326" class="e d"/><path d="M830 282 L830 326" class="e d"/>
+      <rect x="20" y="330" width="960" height="92" rx="10" class="atlas"/>
+      <text x="500" y="368" text-anchor="middle" class="t mono">MongoDB Atlas · harness_versions</text>
+      <text x="500" y="402" text-anchor="middle" class="s">one immutable document per version · v0 … v6 · rollback moves a pointer</text>
+
+      <path d="M830 424 L830 480 L170 480 L170 428" class="e f"/>
+      <text x="500" y="520" text-anchor="middle" class="m f">backfeed · v(n+1) and its checkpoint are what the next Plan reads</text>
     </svg>
-    <div class="steps">
-      <div class="step"><div class="n">1</div><div><h3>Plan</h3><p>Read one-off requests, failed searches and "no" taps. Group them into plan items. Pick the one that matters most.</p></div></div>
-      <div class="step"><div class="n">2</div><div><h3>Build</h3><p>Ship one change: a rule, the context policy, a guardrail, a tool, or an automation for a repeated task. Snapshot it as a new version. Re-read affected photos once if a rule changed.</p></div></div>
-      <div class="step"><div class="n">3</div><div><h3>Instrument</h3><p>Score it: useful answers, reminders acted on, automations kept, cost per photo. If the score drops, roll back.</p></div></div>
-    </div>
-  </div>
+    <figcaption><span class="pv a">AUTHORED</span> v0 knows nothing about construction: image, date, source. Every construction field, rule and tool below, the harness added to itself.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="tbl-wrap"><table>
+      <tr><th>Part</th><th>harness v1</th><th>harness v2</th></tr>
+      <tr><td><b>Rules</b></td><td>extract trade, unit, date</td><td class="add">+ wall_state: open | closed</td></tr>
+      <tr><td><b>Context policy</b></td><td>send the 20 nearest records</td><td class="add">filter by unit + trade, send 8; pixels only if confidence &lt; 0.6</td></tr>
+      <tr><td><b>Guardrails</b></td><td>none</td><td class="add">roll back on score drop · human approves new fields · cost cap per backfill</td></tr>
+      <tr><td><b>Tools</b></td><td>search_records</td><td class="add">+ find_missing_photos · + reread_photo, 50 per run</td></tr>
+    </table></div>
+    <figcaption><span class="pv a">AUTHORED · example version</span> One document holds all four parts; the loop proposes a diff. Statement 2 is not showable in a day; we borrow its hard metrics: taps, a labelled set, cost.</figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Proactive, the part that sells</div>
-    <h2>It asks for the photo before the wall closes</h2>
-    <span class="pv a">AUTHORED · example data</span>
-  </div>
-  <div class="gapcard">
-    <div class="pics">
-      <div class="cap">UNIT 206 · PLUMBING</div>
-      <div class="slot">no open-wall photo</div>
-      <span class="ph" id="gapPh"></span>
-    </div>
-    <div class="txt">
-      <div class="big">Drywall started in unit 206. No photo of its plumbing with the wall open.</div>
-      <p style="color:var(--muted)">Units 201 to 205 each have one. Ask the field team for a photo today?</p>
-      <div class="btns"><span class="btn pri">Send request</span><span class="btn">Not needed</span></div>
-    </div>
-  </div>
+<section id="core">
+  <h2>One core, one demo <span>generic harness · construction workload</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 470" role="img" aria-label="The generic 3PT core feeding four workloads, construction lit as today's demo">
+      <rect x="20" y="20" width="960" height="125" rx="10" class="atlas"/>
+      <text x="40" y="52" class="k">3PT core · same for every business</text>
+      <text x="40" y="92" class="m">Plan → Build → Instrument loop · harness_versions in MongoDB</text>
+      <text x="40" y="126" class="m">scores from yes / no taps · guardrails + rollback · stream switches</text>
+      <path d="M255 147 L255 186" class="e d"/><path d="M745 147 L745 186" class="e d"/>
+      <rect x="20" y="190" width="470" height="120" rx="8" class="flag"/>
+      <text x="40" y="218" class="k f">Demo today</text>
+      <text x="40" y="254" class="m b">Construction firm</text>
+      <text x="40" y="286" class="s2">site photos across jobs and years</text>
+      <rect x="510" y="190" width="470" height="120" rx="8" class="off"/>
+      <text x="530" y="218" class="k">Later</text>
+      <text x="530" y="254" class="m b">Interior design studio</text>
+      <text x="530" y="286" class="s2">renders, mood boards, site photos</text>
+      <rect x="20" y="330" width="470" height="120" rx="8" class="off"/>
+      <text x="40" y="358" class="k">Later</text>
+      <text x="40" y="394" class="m b">Newsroom photo desk</text>
+      <text x="40" y="426" class="s2">an archive that has to answer today's story</text>
+      <rect x="510" y="330" width="470" height="120" rx="8" class="off"/>
+      <text x="530" y="358" class="k">Later</text>
+      <text x="530" y="394" class="m b">Brand marketing team</text>
+      <text x="530" y="426" class="s2">campaign images over seasons</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Only construction ships today.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 1000 410" role="img" aria-label="Three jobs over three years, the backfill and live phases, and harness versions v0 to v6 with one rollback">
+      <line x1="40" y1="120" x2="960" y2="120" class="ln"/>
+      <text x="40" y="45" class="k">2024</text><text x="350" y="45" class="k">2025</text><text x="640" y="45" class="k">2026</text>
+      <rect x="40" y="62" width="290" height="44" rx="6" class="bx"/><text x="185" y="91" text-anchor="middle" class="m b">Job 1 · Tower A</text>
+      <rect x="350" y="62" width="270" height="44" rx="6" class="bx"/><text x="485" y="91" text-anchor="middle" class="m b">Job 2 · Clinic</text>
+      <rect x="640" y="62" width="320" height="44" rx="6" class="flag"/><text x="800" y="91" text-anchor="middle" class="m b">Job 3 · Tower B</text>
+      <text x="185" y="146" text-anchor="middle" class="s2">9,800 photos</text>
+      <text x="485" y="146" text-anchor="middle" class="s2">6,200 photos</text>
+      <text x="800" y="146" text-anchor="middle" class="s2">11,400 photos · live</text>
+
+      <rect x="40" y="165" width="580" height="32" rx="6" class="warn"/>
+      <text x="330" y="187" text-anchor="middle" class="k">Phase 1 · backfill · many versions, fast</text>
+      <rect x="640" y="165" width="320" height="32" rx="6" class="inst"/>
+      <text x="800" y="187" text-anchor="middle" class="k">Phase 2 · live</text>
+      <text x="330" y="224" text-anchor="middle" class="s2">old photos + old log (searches, exports, taps)</text>
+      <text x="800" y="224" text-anchor="middle" class="s2">each new photo is a test</text>
+
+      <line x1="60" y1="320" x2="720" y2="320" class="ln"/>
+      <path d="M720 320 L940 320" class="e d"/><text x="960" y="327" text-anchor="end" class="s2 mono">v7…</text>
+
+      <text x="170" y="270" text-anchor="middle" class="s2">adds unit,</text><text x="170" y="292" text-anchor="middle" class="s2">level, trade</text>
+      <text x="390" y="270" text-anchor="middle" class="s2 f">rolled back:</text><text x="390" y="292" text-anchor="middle" class="s2 f">score dropped</text>
+      <text x="610" y="270" text-anchor="middle" class="s2">turns off duplicate</text><text x="610" y="292" text-anchor="middle" class="s2">burst photos</text>
+
+      <circle cx="60" cy="320" r="18" class="good"/><text x="60" y="327" text-anchor="middle" class="s2 mono b">v0</text>
+      <circle cx="170" cy="320" r="18" class="good"/><text x="170" y="327" text-anchor="middle" class="s2 mono b">v1</text>
+      <circle cx="280" cy="320" r="18" class="good"/><text x="280" y="327" text-anchor="middle" class="s2 mono b">v2</text>
+      <circle cx="390" cy="320" r="18" class="flag"/><text x="390" y="327" text-anchor="middle" class="s2 mono b">v3</text>
+      <line x1="376" y1="306" x2="404" y2="334" class="strike"/>
+      <circle cx="500" cy="320" r="18" class="good"/><text x="500" y="327" text-anchor="middle" class="s2 mono b">v4</text>
+      <circle cx="610" cy="320" r="18" class="good"/><text x="610" y="327" text-anchor="middle" class="s2 mono b">v5</text>
+      <circle cx="720" cy="320" r="18" class="flag"/><text x="720" y="327" text-anchor="middle" class="s2 mono b">v6</text>
+
+      <text x="42" y="362" class="s2">generic: describe,</text><text x="42" y="384" class="s2">date, source</text>
+      <text x="280" y="362" text-anchor="middle" class="s2">adds wall_state</text><text x="280" y="384" text-anchor="middle" class="s2">after the no taps</text>
+      <text x="500" y="362" text-anchor="middle" class="s2">writes the tool</text><text x="500" y="384" text-anchor="middle" class="s2 mono">find_missing_photos</text>
+      <text x="720" y="362" text-anchor="middle" class="s2 f">job 3 starts here,</text><text x="720" y="384" text-anchor="middle" class="s2 f">every rule in place</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED · example timeline</span>
+      <ul>
+        <li>A saved version never changes; rollback moves a pointer.</li>
+        <li>What job 1 taught is on from day 1 of job 3. Live surprises feed the next loop.</li>
+      </ul>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 1000 440" role="img" aria-label="Two ladders: a repeated task climbs notice, remind, automate; a one-off climbs log, plan, build">
+      <rect x="20" y="20" width="470" height="400" rx="10" class="bx"/>
+      <text x="40" y="55" class="k">Repeated task → automation</text>
+      <text x="40" y="92" class="s">"Every Friday the PE exports unit</text>
+      <text x="40" y="118" class="s">photos for the owner report."</text>
+      <line x1="60" y1="165" x2="60" y2="305" class="ln"/>
+      <circle cx="60" cy="165" r="18" class="good"/><text x="60" y="172" text-anchor="middle" class="s2 mono b">1</text>
+      <text x="95" y="160" class="m b">Notice</text><text x="95" y="186" class="s">seen 3 Fridays in a row</text>
+      <circle cx="60" cy="235" r="18" class="good"/><text x="60" y="242" text-anchor="middle" class="s2 mono b">2</text>
+      <text x="95" y="230" class="m b">Remind</text><text x="95" y="256" class="s">"owner report due; pack ready"</text>
+      <circle cx="60" cy="305" r="18" class="good"/><text x="60" y="312" text-anchor="middle" class="s2 mono b">3</text>
+      <text x="95" y="300" class="m b">Automate</text><text x="95" y="326" class="s">accepted 3× → built every Friday</text>
+      <text x="40" y="385" class="s f">↓ snooze or dismiss = no → one rung down</text>
+
+      <rect x="510" y="20" width="470" height="400" rx="10" class="bx"/>
+      <text x="530" y="55" class="k">One-off task → the plan</text>
+      <text x="530" y="92" class="s">"Show water damage near windows."</text>
+      <text x="530" y="118" class="s">Nobody asked before. Every result: no.</text>
+      <line x1="550" y1="165" x2="550" y2="305" class="ln"/>
+      <circle cx="550" cy="165" r="18" class="plan"/><text x="550" y="172" text-anchor="middle" class="s2 mono b">1</text>
+      <text x="585" y="160" class="m b">Log it</text><text x="585" y="186" class="s">failed one-off = missing feature</text>
+      <circle cx="550" cy="235" r="18" class="plan"/><text x="550" y="242" text-anchor="middle" class="s2 mono b">2</text>
+      <text x="585" y="230" class="m b">Plan</text><text x="585" y="256" class="s">similar one-offs → one plan item</text>
+      <circle cx="550" cy="305" r="18" class="plan"/><text x="550" y="312" text-anchor="middle" class="s2 mono b">3</text>
+      <text x="585" y="300" class="m b">Build</text><text x="585" y="326" class="s">adds issue field; re-reads windows</text>
+      <text x="530" y="385" class="s">photos nobody opens → cheap storage</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED · example patterns</span> Thresholds (3 and 3) are starting values, not tuned.</figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Scope</div>
-    <h2>One stream today. The rest are switches for later.</h2>
-  </div>
-  <div class="streams">
-    <div class="stream on"><div class="sw"></div><b>Site photos</b><small>Phone photos with date and unit. The demo runs on this.</small></div>
-    <div class="stream off"><div class="sw"></div><b>24/7 video</b><small>Later. Sample frames into photos.</small></div>
-    <div class="stream off"><div class="sw"></div><b>LiDAR scans</b><small>Later. Heavy files, needs different tools.</small></div>
-    <div class="stream off"><div class="sw"></div><b>3D and BIM models</b><small>Later. That is where OpenSpace and Buildots compete.</small></div>
-  </div>
-  <p class="lede">The switches are also a harness feature. If nobody ever asks about a stream, the harness proposes to turn it down and save storage.</p>
+<section id="project">
+  <h2>Per project <span>retrospective → opportunities → playbook</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 620" role="img" aria-label="Job 1 retrospective facts, opportunities ranked by hours per job, and the playbook job 3 starts with">
+      <text x="20" y="45" class="k">1 · Retrospective · Job 1, Tower A</text>
+      <rect x="20" y="60" width="220" height="100" rx="8" class="bx"/><text x="36" y="108" class="big">38</text><text x="36" y="132" class="s2">owner reports</text><text x="36" y="152" class="s2">built by hand</text>
+      <rect x="260" y="60" width="220" height="100" rx="8" class="bx"/><text x="276" y="108" class="big">14</text><text x="276" y="132" class="s2">units closed with no</text><text x="276" y="152" class="s2">open-wall photo</text>
+      <rect x="500" y="60" width="220" height="100" rx="8" class="bx"/><text x="516" y="108" class="big">3</text><text x="516" y="132" class="s2">walls reopened</text><text x="516" y="152" class="s2">to find a pipe</text>
+      <rect x="740" y="60" width="220" height="100" rx="8" class="bx"/><text x="756" y="108" class="big">22</text><text x="756" y="132" class="s2">searches that</text><text x="756" y="152" class="s2">found nothing</text>
+
+      <text x="20" y="215" class="k">2 · Opportunities · ranked by hours per job</text>
+      <text x="20" y="256" class="m">Friday owner photo pack</text><text x="20" y="278" class="k">automate</text>
+      <rect x="400" y="234" width="500" height="30" rx="4" class="build"/><text x="912" y="256" class="m b">28 h</text>
+      <text x="20" y="306" class="m">Open-wall photo before drywall</text><text x="20" y="328" class="k">remind</text>
+      <rect x="400" y="284" width="215" height="30" rx="4" class="inst"/><text x="627" y="306" class="m b">12 h + 3 reopened walls</text>
+      <text x="20" y="356" class="m">Search by wall state</text><text x="20" y="378" class="k">harness change</text>
+      <rect x="400" y="334" width="160" height="30" rx="4" class="plan"/><text x="572" y="356" class="m b">9 h</text>
+      <text x="20" y="406" class="m">Water damage near windows</text><text x="20" y="428" class="k">feature</text>
+      <rect x="400" y="384" width="120" height="30" rx="4" class="off"/><text x="532" y="406" class="s">to measure</text>
+
+      <path d="M430 440 L430 478" class="e f"/>
+      <text x="20" y="470" class="k">3 · Playbook · Job 3, Tower B</text>
+      <text x="980" y="470" text-anchor="end" class="s f">every row acts: remind · automate · send to loop</text>
+      <rect x="20" y="490" width="220" height="110" rx="8" class="good"/><text x="36" y="522" class="m b">On from day 1</text><text x="36" y="552" class="s3">Friday owner photo pack</text>
+      <rect x="260" y="490" width="220" height="110" rx="8" class="good"/><text x="276" y="522" class="m b">Reminder</text><text x="276" y="552" class="s3">when drywall starts:</text><text x="276" y="574" class="s3">open-wall photo first</text>
+      <rect x="500" y="490" width="220" height="110" rx="8" class="good"/><text x="516" y="522" class="m b">Kickoff prompt</text><text x="516" y="552" class="s3">which units have</text><text x="516" y="574" class="s3">window flashing? tag them</text>
+      <rect x="740" y="490" width="220" height="110" rx="8" class="good"/><text x="756" y="522" class="m b">Starts on</text><text x="756" y="552" class="s3 mono">harness v6, not v0</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED · example numbers</span>
+      <ul>
+        <li>Hours per job = occurrences × minutes; minutes from event timestamps where logged, else user-set.</li>
+        <li>Cost avoided (a reopened wall) uses a user-entered cost. Never present an estimate as measured.</li>
+        <li>An inbox of actions, not a chart.</li>
+      </ul>
+    </figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Signal and noise, round two</div>
-    <h2>What stays, what goes</h2>
-  </div>
-  <div class="kc">
-    <div class="col keep">
-      <h3><span class="dot"></span>Keep</h3>
-      <div class="pill"><b>Value comes from media the firm already owns</b><small>No outside trend feeds.</small></div>
-      <div class="pill"><b>Yes and no answers drive the harness</b><small>They are the only config a non-technical user needs.</small></div>
-      <div class="pill"><b>Proactive requests to capture the real world</b><small>The missing pre-drywall photo.</small></div>
-      <div class="pill"><b>Location hierarchy</b><small>Project, level, unit, room. Each level gets more specific.</small></div>
-      <div class="pill"><b>Streams turned up or down by use</b><small>Shown as switches. Only photos are on today.</small></div>
-    </div>
-    <div class="col cut">
-      <h3><span class="dot"></span>Cut</h3>
-      <div class="pill"><b>LiDAR, 24/7 video, 3D models</b><small>Images only today.</small></div>
-      <div class="pill"><b>CAD screen capture and input tracing</b><small>A separate product, and a privacy problem.</small></div>
-      <div class="pill"><b>Suggested automations and building blocks</b><small>Too far from photos for one day.</small></div>
-      <div class="pill"><b>Progress percent against BIM</b><small>Competitors already do it well.</small></div>
-      <div class="pill"><b>Building other workloads today</b><small>The core is general. Only construction gets built and shown.</small></div>
-      <div class="pill"><b>Journals and trend feeds</b><small>Parked.</small></div>
-    </div>
-  </div>
+<section id="question">
+  <h2>The demo question <span>"unit 204's plumbing before the drywall went up"</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 400" role="img" aria-label="One search answered by harness v1 with 3 of 8 useful results and by v2 with 7 of 8">
+      <rect x="20" y="20" width="960" height="64" rx="10" class="bx"/>
+      <text x="44" y="63" class="t f">?</text><text x="80" y="62" class="t">unit 204 · plumbing · before drywall</text>
+      <rect x="20" y="110" width="470" height="270" rx="10" class="bx"/>
+      <text x="36" y="140" class="k">harness v1</text><text x="474" y="140" text-anchor="end" class="k f">3 of 8 useful</text>
+      <rect x="30" y="160" width="100" height="100" rx="4" class="off"/><text x="122" y="250" text-anchor="end" class="s2 f">no</text>
+      <rect x="142" y="160" width="100" height="100" rx="4" class="good"/><text x="234" y="250" text-anchor="end" class="s2 g">yes</text>
+      <rect x="254" y="160" width="100" height="100" rx="4" class="off"/><text x="346" y="250" text-anchor="end" class="s2 f">no</text>
+      <rect x="366" y="160" width="100" height="100" rx="4" class="off"/><text x="458" y="250" text-anchor="end" class="s2 f">no</text>
+      <rect x="30" y="272" width="100" height="100" rx="4" class="good"/><text x="122" y="362" text-anchor="end" class="s2 g">yes</text>
+      <rect x="142" y="272" width="100" height="100" rx="4" class="off"/><text x="234" y="362" text-anchor="end" class="s2 f">no</text>
+      <rect x="254" y="272" width="100" height="100" rx="4" class="off"/><text x="346" y="362" text-anchor="end" class="s2 f">no</text>
+      <rect x="366" y="272" width="100" height="100" rx="4" class="good"/><text x="458" y="362" text-anchor="end" class="s2 g">yes</text>
+
+      <rect x="510" y="110" width="470" height="270" rx="10" class="bx"/>
+      <text x="526" y="140" class="k">harness v2 · + wall_state</text><text x="964" y="140" text-anchor="end" class="k g">7 of 8 useful</text>
+      <rect x="520" y="160" width="100" height="100" rx="4" class="good"/><text x="612" y="250" text-anchor="end" class="s2 g">yes</text>
+      <rect x="632" y="160" width="100" height="100" rx="4" class="good"/><text x="724" y="250" text-anchor="end" class="s2 g">yes</text>
+      <rect x="744" y="160" width="100" height="100" rx="4" class="good"/><text x="836" y="250" text-anchor="end" class="s2 g">yes</text>
+      <rect x="856" y="160" width="100" height="100" rx="4" class="good"/><text x="948" y="250" text-anchor="end" class="s2 g">yes</text>
+      <rect x="520" y="272" width="100" height="100" rx="4" class="good"/><text x="612" y="362" text-anchor="end" class="s2 g">yes</text>
+      <rect x="632" y="272" width="100" height="100" rx="4" class="good"/><text x="724" y="362" text-anchor="end" class="s2 g">yes</text>
+      <rect x="744" y="272" width="100" height="100" rx="4" class="good"/><text x="836" y="362" text-anchor="end" class="s2 g">yes</text>
+      <rect x="856" y="272" width="100" height="100" rx="4" class="off"/><text x="948" y="362" text-anchor="end" class="s2 f">no</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED · example data</span>
+      <ul>
+        <li>A leak two years later; the pipe photo is one of 40,000.</li>
+        <li>v1 knows trade and unit, not open wall from finished.</li>
+        <li>The no taps said what was missing; v2 added wall_state and re-read the old photos.</li>
+      </ul>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 1000 250" role="img" aria-label="Proactive request card: drywall started in unit 206 and no open-wall photo exists">
+      <rect x="20" y="20" width="960" height="210" rx="10" class="flag"/>
+      <text x="40" y="50" class="k">unit 206 · plumbing</text>
+      <rect x="40" y="62" width="160" height="150" rx="4" class="off"/>
+      <text x="120" y="130" text-anchor="middle" class="s2">no open-wall</text><text x="120" y="152" text-anchor="middle" class="s2">photo</text>
+      <text x="230" y="80" class="t">Drywall started in unit 206.</text>
+      <text x="230" y="116" class="m">No photo of its plumbing with the wall open.</text>
+      <text x="230" y="150" class="s">Units 201 to 205 each have one. Ask the field team today?</text>
+      <rect x="230" y="172" width="190" height="42" rx="7" class="flagfill"/><text x="325" y="200" text-anchor="middle" class="m b onflag">Send request</text>
+      <rect x="436" y="172" width="150" height="42" rx="7" class="bx"/><text x="511" y="200" text-anchor="middle" class="m">Not needed</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED · example data</span> The part that sells. The agent acts, not only answers: it sends the request to the field team, and it wrote <code>find_missing_photos</code> itself.</figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">MongoDB</div>
-    <h2>The site record</h2>
-  </div>
-  <div class="tree">project: tower-b
- └ level: 2
-    └ unit: 204
-       └ photos ──▶ observations <span class="hl">(one per harness version)</span>
-                      trade, wall_state, issue, taken, embedding</div>
-  <div class="colls">
-    <div class="coll"><div class="nm">photos</div><code>_id, file, taken,
-project, level, unit,
-uploaded_by</code></div>
-    <div class="coll"><div class="nm">observations</div><code>photo_id, harness_v,
-fields, embedding,
-confidence</code></div>
-    <div class="coll"><div class="nm">harness_versions</div><code>v, rules, context_policy,
-guardrails, tools,
-parent_v, score, status</code></div>
-    <div class="coll"><div class="nm">events</div><code>user, action, target,
-result: yes | no | skip,
-harness_v, ts, duration</code></div>
-    <div class="coll"><div class="nm">projects</div><code>name, type, start, end,
-phases, outcomes,
-retro, playbook</code></div>
-    <div class="coll"><div class="nm">opportunities</div><code>project, kind, evidence,
-hours_saved, cost_avoided,
-status: open | on | done</code></div>
-  </div>
-  <div class="uses">
-    <span>Atlas sandbox (required to be a finalist)</span>
-    <span>Vector Search for "photos like this one"</span>
-    <span>Voyage embeddings, 200M free tokens</span>
-    <span>Aggregations find units missing a photo</span>
-  </div>
+<section id="record">
+  <h2>The record <span>MongoDB Atlas</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 480" role="img" aria-label="The site record tree and the six Atlas collections">
+      <rect x="20" y="30" width="340" height="420" rx="10" class="atlas"/>
+      <text x="36" y="60" class="k">site record</text>
+      <text x="36" y="100" class="m mono">project: tower-b</text>
+      <text x="60" y="140" class="m mono">└ level: 2</text>
+      <text x="84" y="180" class="m mono">└ unit: 204</text>
+      <text x="108" y="220" class="m mono">└ photos</text>
+      <text x="132" y="260" class="m mono">└ observations</text>
+      <text x="132" y="290" class="s3 f">one per harness version</text>
+      <text x="132" y="326" class="s3 mono">trade, wall_state,</text>
+      <text x="132" y="350" class="s3 mono">issue, taken,</text>
+      <text x="132" y="374" class="s3 mono">embedding</text>
+
+      <rect x="385" y="30" width="195" height="200" rx="8" class="bx"/>
+      <text x="395" y="60" class="s2 mono b">photos</text>
+      <text x="395" y="92" class="s3 mono">_id, file, taken,</text><text x="395" y="116" class="s3 mono">project, level,</text><text x="395" y="140" class="s3 mono">unit,</text><text x="395" y="164" class="s3 mono">uploaded_by</text>
+      <rect x="585" y="30" width="195" height="200" rx="8" class="bx"/>
+      <text x="595" y="60" class="s2 mono b">observations</text>
+      <text x="595" y="92" class="s3 mono">photo_id,</text><text x="595" y="116" class="s3 mono">harness_v,</text><text x="595" y="140" class="s3 mono">fields,</text><text x="595" y="164" class="s3 mono">embedding,</text><text x="595" y="188" class="s3 mono">confidence</text>
+      <rect x="785" y="30" width="195" height="200" rx="8" class="flag"/>
+      <text x="792" y="60" class="s2 mono b">harness_versions</text>
+      <text x="795" y="92" class="s3 mono">v, rules,</text><text x="795" y="116" class="s3 mono">context_policy,</text><text x="795" y="140" class="s3 mono">guardrails,</text><text x="795" y="164" class="s3 mono">tools, parent_v,</text><text x="795" y="188" class="s3 mono">score, status</text>
+      <rect x="385" y="250" width="195" height="200" rx="8" class="bx"/>
+      <text x="395" y="280" class="s2 mono b">events</text>
+      <text x="395" y="312" class="s3 mono">user, action,</text><text x="395" y="336" class="s3 mono">target, result:</text><text x="395" y="360" class="s3 mono">yes | no | skip,</text><text x="395" y="384" class="s3 mono">harness_v, ts,</text><text x="395" y="408" class="s3 mono">duration</text>
+      <rect x="585" y="250" width="195" height="200" rx="8" class="bx"/>
+      <text x="595" y="280" class="s2 mono b">projects</text>
+      <text x="595" y="312" class="s3 mono">name, type,</text><text x="595" y="336" class="s3 mono">start, end,</text><text x="595" y="360" class="s3 mono">phases, outcomes,</text><text x="595" y="384" class="s3 mono">retro, playbook</text>
+      <rect x="785" y="250" width="195" height="200" rx="8" class="bx"/>
+      <text x="795" y="280" class="s2 mono b">opportunities</text>
+      <text x="795" y="312" class="s3 mono">project, kind,</text><text x="795" y="336" class="s3 mono">evidence,</text><text x="795" y="360" class="s3 mono">hours_saved,</text><text x="795" y="384" class="s3 mono">cost_avoided,</text><text x="795" y="408" class="s3 mono">status: open |</text><text x="795" y="432" class="s3 mono">on | done</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Atlas sandbox (required to be a finalist) · Vector Search for "photos like this one" · Voyage embeddings, 200M free tokens · aggregations find the units missing a photo.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 1000 210" role="img" aria-label="Four media streams as switches: site photos on, video, LiDAR and BIM off">
+      <rect x="20" y="20" width="226" height="170" rx="8" class="good"/>
+      <rect x="36" y="40" width="70" height="34" rx="17" fill="var(--good)"/><circle cx="89" cy="57" r="13" fill="var(--bg)"/>
+      <text x="36" y="106" class="m b">Site photos · on</text>
+      <text x="36" y="132" class="s3">dated phone photos,</text><text x="36" y="154" class="s3">one unit each</text><text x="36" y="176" class="s3">the demo runs on this</text>
+      <rect x="264" y="20" width="226" height="170" rx="8" class="off"/>
+      <rect x="280" y="40" width="70" height="34" rx="17" fill="var(--line-strong)"/><circle cx="297" cy="57" r="13" fill="var(--bg)"/>
+      <text x="280" y="106" class="m b">24/7 video</text>
+      <text x="280" y="132" class="s3">later: sample frames</text><text x="280" y="154" class="s3">into photos</text>
+      <rect x="508" y="20" width="226" height="170" rx="8" class="off"/>
+      <rect x="524" y="40" width="70" height="34" rx="17" fill="var(--line-strong)"/><circle cx="541" cy="57" r="13" fill="var(--bg)"/>
+      <text x="524" y="106" class="m b">LiDAR scans</text>
+      <text x="524" y="132" class="s3">later: heavy files,</text><text x="524" y="154" class="s3">different tools</text>
+      <rect x="752" y="20" width="226" height="170" rx="8" class="off"/>
+      <rect x="768" y="40" width="70" height="34" rx="17" fill="var(--line-strong)"/><circle cx="785" cy="57" r="13" fill="var(--bg)"/>
+      <text x="768" y="106" class="m b">3D + BIM models</text>
+      <text x="768" y="132" class="s3">later: OpenSpace and</text><text x="768" y="154" class="s3">Buildots compete here</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Switches are a harness feature: an unasked-for stream gets turned down to save storage.</figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Stress test</div>
-    <h2>Hard questions about construction</h2>
-  </div>
-  <div class="risks">
-    <div class="risk"><span class="st open">Open</span><div class="q">Where does "time saved" come from?</div><p>From event timestamps where the log has them, such as search start to export. Otherwise a minutes value the user sets. Show which one each number uses. Never present an estimate as measured.</p></div>
-    <div class="risk"><span class="st open">Open</span><div class="q">Can photos alone support a retrospective?</div><p>No. A retrospective needs outcomes: reopened walls, punch-list items, delays. Log them as events. The demo seeds 3 reopened walls on job 1 and labels them synthetic.</p></div>
-    <div class="risk"><span class="st open">Open</span><div class="q">Where does a usage history come from?</div><p>A new install has none. For the demo we seed a past activity log for jobs 1 and 2 and label it synthetic. In a real install, the log starts on day one.</p></div>
-    <div class="risk"><span class="st open">Open</span><div class="q">Is this too much for one day?</div><p>Show one repeat, one one-off and one live photo. The ladder thresholds (3 and 3) are starting values, not tuned.</p></div>
-    <div class="risk"><span class="st ok">Decided</span><div class="q">Will reminders annoy people?</div><p>Every dismiss counts as a "no" and moves the task back down the ladder. Automations need a person's approval.</p></div>
-    <div class="risk"><span class="st open">Open · first 30 min</span><div class="q">Where do real site photos come from?</div><p>Candidates: iVISION-2DCD, a long-term construction change dataset, and ConPR, repeated captures of one active site. We have not checked their licence or download yet. Using data without the rights means disqualification, so the licence check comes before any code. Fallback: Wikimedia Commons photos under public domain, CC0 or CC BY only, credited in the README, with dates and units assigned by us. Say so in the video. A lifetime needs photos from at least two or three different sites, and ConPR covers one.</p></div>
-    <div class="risk"><span class="st open">Open</span><div class="q">How does a photo get its unit and level?</div><p>On real sites this is the hard part. OpenSpace solves it with 360° walks and floor plans. For the demo, the upload form sets the unit. Be honest about it.</p></div>
-    <div class="risk"><span class="st ok">Decided</span><div class="q">Why not just use OpenSpace?</div><p>They measure this job against the plan. We make the photo archive answer questions later, across jobs. Photos from any phone work.</p></div>
-    <div class="risk"><span class="st ok">Decided</span><div class="q">Can the harness wreck the index?</div><p>Every harness version is a checkpoint. A score drop rolls back on its own. A person approves each new field.</p></div>
-    <div class="risk"><span class="st open">Open</span><div class="q">Can a vision model see "open wall" reliably?</div><p>Test it on 20 photos before building the rest. If it fails, pick a field it can see, such as "exposed pipe" or "ceiling open".</p></div>
-    <div class="risk"><span class="st open">Open</span><div class="q">Who pays?</div><p>Guess: a mid-size general contractor. The project engineer runs it, and the ops lead wants lessons across jobs. Nobody has confirmed this yet.</p></div>
-  </div>
+<section id="scope">
+  <h2>Scope and lane <span>keep · cut · not banned</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 460" role="img" aria-label="Keep and cut lists">
+      <rect x="20" y="20" width="470" height="420" rx="10" class="good"/>
+      <text x="40" y="55" class="k g">Keep</text>
+      <text x="40" y="98" class="m b">Media the firm already owns</text><text x="40" y="122" class="s2">no outside trend feeds</text>
+      <text x="40" y="160" class="m b">Yes / no answers drive the harness</text><text x="40" y="184" class="s2">the only config a non-technical user needs</text>
+      <text x="40" y="222" class="m b">Proactive requests to capture</text><text x="40" y="246" class="s2">the missing pre-drywall photo</text>
+      <text x="40" y="284" class="m b">Location hierarchy</text><text x="40" y="308" class="s2">project › level › unit › room</text>
+      <text x="40" y="346" class="m b">Streams turned up or down by use</text><text x="40" y="370" class="s2">only photos on today</text>
+
+      <rect x="510" y="20" width="470" height="420" rx="10" class="warn"/>
+      <text x="530" y="55" class="k w">Cut</text>
+      <text x="530" y="98" class="m b">LiDAR, 24/7 video, 3D models</text><text x="530" y="122" class="s2">images only today</text>
+      <text x="530" y="160" class="m b">CAD screen capture, input tracing</text><text x="530" y="184" class="s2">a separate product, and a privacy problem</text>
+      <text x="530" y="222" class="m b">Suggested automations, blocks</text><text x="530" y="246" class="s2">too far from photos for one day</text>
+      <text x="530" y="284" class="m b">Progress percent against BIM</text><text x="530" y="308" class="s2">competitors already do it well</text>
+      <text x="530" y="346" class="m b">Other workloads today</text><text x="530" y="370" class="s2">the core is general; only construction ships</text>
+      <text x="530" y="408" class="m b">Journals and trend feeds</text><text x="530" y="432" class="s2">parked</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Signal and noise, round two.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Progress tracking, the taken market, struck out; our lane, making old photos answer new questions">
+      <rect x="20" y="20" width="470" height="320" rx="10" class="off"/>
+      <text x="40" y="55" class="k">Taken market · not our pitch</text>
+      <text x="40" y="100" class="t">Measure progress</text><text x="40" y="136" class="t">against the plan</text>
+      <line x1="36" y1="90" x2="300" y2="90" class="strike"/><line x1="36" y1="126" x2="290" y2="126" class="strike"/>
+      <text x="40" y="190" class="s2">OpenSpace · 360° photos on the floor plan,</text><text x="40" y="212" class="s2">percent complete per trade</text>
+      <text x="40" y="248" class="s2">Buildots · 360° captures vs the BIM model</text><text x="40" y="270" class="s2">and the schedule</text>
+      <text x="40" y="306" class="s2">DroneDeploy · drone progress reports</text><text x="40" y="328" class="s2">from $299 a month</text>
+
+      <rect x="510" y="20" width="470" height="320" rx="10" class="flag"/>
+      <text x="530" y="55" class="k f">Our lane</text>
+      <text x="530" y="100" class="t">Make old photos</text><text x="530" y="136" class="t">answer new questions</text>
+      <text x="530" y="190" class="s2">works on phone photos the team already takes</text>
+      <text x="530" y="226" class="s2">learns what this team asks, from yes / no</text>
+      <text x="530" y="262" class="s2">keeps learning across months and jobs;</text><text x="530" y="284" class="s2">the contractor owns it</text>
+      <text x="530" y="320" class="s2">asks for the photo before the wall closes</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Why not just use OpenSpace: they measure this job against the plan; we make the archive answer later, across jobs, from any phone.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Anti-project check: image analyzer, basic RAG and dashboard sit close; Streamlit is not used">
+      <rect x="20" y="20" width="960" height="290" rx="10" class="bx"/>
+      <rect x="40" y="46" width="72" height="28" rx="4" class="flag"/><text x="76" y="66" text-anchor="middle" class="k f">near</text>
+      <text x="126" y="67" class="m b">Image analyzer</text>
+      <text x="360" y="60" class="s2">open on the harness version history, not on tagged photos;</text>
+      <text x="360" y="82" class="s2">extraction is one tool, and the harness changes that tool</text>
+      <rect x="40" y="116" width="72" height="28" rx="4" class="flag"/><text x="76" y="136" text-anchor="middle" class="k f">near</text>
+      <text x="126" y="137" class="m b">Basic RAG</text>
+      <text x="360" y="130" class="s2">search is the test, not the product: it produces the signal;</text>
+      <text x="360" y="152" class="s2">the agent then edits its context policy and writes a new tool</text>
+      <rect x="40" y="186" width="72" height="28" rx="4" class="flag"/><text x="76" y="206" text-anchor="middle" class="k f">near</text>
+      <text x="126" y="207" class="m b">Dashboard</text>
+      <text x="360" y="200" class="s2">main screen is the harness diff: v1 → v2, why, score change,</text>
+      <text x="360" y="222" class="s2">approve or roll back; photo stacks are a side panel</text>
+      <rect x="40" y="256" width="72" height="28" rx="4" class="good"/><text x="76" y="276" text-anchor="middle" class="k g">clear</text>
+      <text x="126" y="277" class="m b">Streamlit</text>
+      <text x="360" y="277" class="s2">not used; Next.js on Vercel for the demo link</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Anti-project check against <code>docs/05-rules.md</code>.</figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Demo video · 60 seconds</div>
-    <h2>Shoot this first, then build to it</h2>
-  </div>
-  <div class="story">
-    <div class="frame"><div class="pic"><span class="t">0:00–0:12</span><b>v0 knows nothing. It backfills jobs 1 and 2 by project.</b></div><p>Versions tick v0 → v3. Voice-over on every frame.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:12–0:26</span><b>Retrospective on job 1. Opportunities ranked by hours saved.</b></div><p>Top row: the Friday owner pack, 28 hours per job.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:26–0:38</span><b>"Send to loop." The harness rewrites itself: v4.</b></div><p>Diff on screen. Score goes up.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:38–0:50</span><b>Job 3 starts with a playbook.</b></div><p>A new photo arrives. Reminder: take the open-wall photo in unit 206.</p></div>
-    <div class="frame"><div class="pic"><span class="t">0:50–1:00</span><b>Version history, one rollback.</b></div><p>"Same core for any media-heavy business."</p></div>
-  </div>
+<section id="stress">
+  <h2>Stress test <span>hard questions about construction</span></h2>
+  <figure>
+    <div class="tbl-wrap"><table>
+      <tr><th>Question</th><th>Status</th><th>Answer</th></tr>
+      <tr><td>Real site photos?</td><td><span class="pv c">TO CONFIRM</span></td><td>iVISION-2DCD or ConPR (one site). Licence check before code. Fallback: Wikimedia Commons PD / CC0 / CC BY, credited, units assigned by us, said in the video. A lifetime needs 2–3 sites.</td></tr>
+      <tr><td>Model sees "open wall"?</td><td>open</td><td>Test 20 photos first; else "exposed pipe" or "ceiling open".</td></tr>
+      <tr><td>"Time saved"?</td><td>open</td><td>Event timestamps where logged, else user-set minutes. Label which.</td></tr>
+      <tr><td>Photos alone → retro?</td><td>open</td><td>No. Outcomes (reopened walls, punch list, delays) are events; 3 seeded, labelled synthetic.</td></tr>
+      <tr><td>Usage history?</td><td>open</td><td>Seeded synthetic log for jobs 1–2. A real install starts day one.</td></tr>
+      <tr><td>Unit and level per photo?</td><td>open</td><td>The upload form sets it (OpenSpace: 360° walks). Say so.</td></tr>
+      <tr><td>Too much for one day?</td><td>open</td><td>One repeat, one one-off, one live photo.</td></tr>
+      <tr><td>Who pays?</td><td>open</td><td>Guess: mid-size GC; project engineer runs it, ops lead wants cross-job lessons. Unconfirmed.</td></tr>
+      <tr><td>Reminders annoy?</td><td class="add">decided</td><td>Dismiss = no, one rung down. Automations need approval.</td></tr>
+      <tr><td>Harness wrecks the index?</td><td class="add">decided</td><td>Every version a checkpoint; score drop auto-rolls back; new fields need approval.</td></tr>
+      <tr><td>Why not OpenSpace?</td><td class="add">decided</td><td>Lane figure above.</td></tr>
+    </table></div>
+    <figcaption><span class="pv a">AUTHORED</span> The photo-set row blocks everything else.</figcaption>
+  </figure>
 </section>
 
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Today</div>
-    <h2>Two lanes, one contract</h2>
-  </div>
-  <div class="lanes">
-    <div class="lane shared"><h3>First hour, together</h3><p>Pick the photo set. Test "open wall" on 20 photos. Agree on the <code style="font-family:var(--mono)">observations</code> document shape and put it in AGENTS.md so both coding agents build against it.</p></div>
-    <div class="lane"><h3>Lane 1 · harness and data</h3><ol>
-      <li>Atlas sandbox and the four collections</li>
-      <li>Seed an activity log for jobs 1 and 2, marked as synthetic</li>
-      <li>Upload with project, level, unit, date</li>
-      <li>Extraction with a vision model, harness v1</li>
-      <li>Label about 50 photos as the eval set</li>
-      <li>Loop: read feedback, propose a harness diff, backfill, score, roll back</li>
-      <li>Pattern finder: repeats and one-offs, as aggregations on events</li>
-      <li>Retro and opportunity scorer per project: hours saved from event timestamps</li>
-      <li>Playbook writer for the next project</li>
-      <li>Live mode: a change stream wakes the harness on each new photo</li>
-    </ol></div>
-    <div class="lane"><h3>Lane 2 · the web app</h3><ol>
-      <li>Deploy on Vercel for the demo link</li>
-      <li>Main screen: harness version diff with approve and roll back</li>
-      <li>Search with yes and no on each result</li>
-      <li>Side panel: photos by trade and week</li>
-      <li>Opportunity inbox: each row has an act button (remind, automate, send to loop)</li>
-      <li>Project view: retrospective and playbook</li>
-      <li>Record the 60-second video</li>
-    </ol></div>
-  </div>
-  <div class="lane shared"><h3>Submission gates, all due today</h3><ol>
-    <li>Create the project and cluster through the Atlas sandbox email link. A cluster made anywhere else does not count.</li>
-    <li>Public GitHub repo, and a demo link that opens without a login.</li>
-    <li>1-minute video recorded on site today. It must show code and the app, with working audio.</li>
-    <li>Submit on the Cerebral Valley platform with a short description. Add every team member.</li>
-    <li>Show only what we built today. The repo started empty this morning, so show the commit history in the video and list any outside code or models in the README.</li>
-    <li>Every photo has a licence that allows reuse. Keep a credits file with the source of each one.</li>
-  </ol></div>
-  <div class="qs">
-    <div>Which photo set: iVISION-2DCD, ConPR, or Wikimedia Commons?</div>
-    <div>Which vision model, and through which credits: OpenRouter or OpenAI?</div>
-    <div>Who attends MongoDB.local NYC on Sep 30? One of us must be there to win.</div>
-  </div>
+<section id="video">
+  <h2>Video, 60 seconds <span>shoot this first, then build to it</span></h2>
+  <figure>
+    <div class="tbl-wrap"><table>
+      <tr><th>#</th><th>In</th><th>Dur</th><th>On screen</th><th>Voice-over</th></tr>
+      <tr><td>1</td><td>0:00</td><td>12 s</td><td>v0 backfills jobs 1–2; versions tick v0 → v3</td><td>"v0 knows nothing."</td></tr>
+      <tr><td>2</td><td>0:12</td><td>14 s</td><td>Job 1 retrospective; opportunities ranked</td><td>"Friday pack: 28 hours a job."</td></tr>
+      <tr><td>3</td><td>0:26</td><td>12 s</td><td>"Send to loop" → diff → v4; score up</td><td>"It rewrites itself."</td></tr>
+      <tr><td>4</td><td>0:38</td><td>12 s</td><td>Job 3 playbook; new photo → reminder, unit 206</td><td>"Open-wall photo first."</td></tr>
+      <tr><td>5</td><td>0:50</td><td>10 s</td><td>Version history, one rollback; commit log</td><td>"Same core, any media business."</td></tr>
+    </table></div>
+    <figcaption><span class="pv a">AUTHORED · shot list</span> Shot on site today; code, app and audio all in.</figcaption>
+  </figure>
 </section>
 
-</div>
+<section id="today">
+  <h2>Today <span>two lanes, six gates</span></h2>
+  <figure>
+    <svg viewBox="0 0 1000 580" role="img" aria-label="The first hour together, then lane 1 harness and data and lane 2 web app as ordered lists">
+      <rect x="20" y="20" width="960" height="90" rx="10" class="atlas"/>
+      <text x="40" y="52" class="k">First hour, together</text>
+      <text x="40" y="88" class="m2">pick the photo set · test "open wall" on 20 photos · observations shape → AGENTS.md</text>
+      <rect x="20" y="130" width="470" height="430" rx="10" class="build"/>
+      <text x="40" y="168" class="m b">Lane 1 · harness and data</text>
+      <text x="40" y="208" class="m2">1 Atlas sandbox + the collections</text>
+      <text x="40" y="242" class="m2">2 seed a synthetic activity log, jobs 1–2</text>
+      <text x="40" y="276" class="m2">3 upload: project, level, unit, date</text>
+      <text x="40" y="310" class="m2">4 vision extraction → harness v1</text>
+      <text x="40" y="344" class="m2">5 label ~50 photos as the eval set</text>
+      <text x="40" y="378" class="m2">6 loop: diff, backfill, score, roll back</text>
+      <text x="40" y="412" class="m2">7 pattern finder: aggregations on events</text>
+      <text x="40" y="446" class="m2">8 retro + opportunity scorer per project</text>
+      <text x="40" y="480" class="m2">9 playbook writer for the next project</text>
+      <text x="40" y="514" class="m2">10 live: change stream wakes the harness</text>
+      <rect x="510" y="130" width="470" height="430" rx="10" class="plan"/>
+      <text x="530" y="168" class="m b">Lane 2 · the web app</text>
+      <text x="530" y="208" class="m2">1 deploy on Vercel for the demo link</text>
+      <text x="530" y="242" class="m2">2 harness diff: approve or roll back</text>
+      <text x="530" y="276" class="m2">3 search, yes / no on each result</text>
+      <text x="530" y="310" class="m2">4 side panel: photos by trade and week</text>
+      <text x="530" y="344" class="m2">5 opportunity inbox with act buttons</text>
+      <text x="530" y="378" class="m2">6 project view: retro + playbook</text>
+      <text x="530" y="412" class="m2">7 record the 60-second video</text>
+    </svg>
+    <figcaption><span class="pv a">AUTHORED</span> Both coding agents build against the <code>observations</code> shape in AGENTS.md.</figcaption>
+  </figure>
 
-</div>
-<script>
-(function(){
-  // Stand-in "photos": seeded gradients so the page needs no external images.
-  var palettes={
-    stud:[[32,45,58],[28,30,40]],     // wood framing
-    pipe:[[22,65,48],[210,10,55]],    // copper against grey
-    dry:[[40,10,82],[210,8,70]],      // drywall
-    conc:[[210,6,55],[200,8,40]]      // concrete
-  };
-  var seed=11;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
-  function ph(kind){
-    var p=palettes[kind],a=p[0],b=p[1],ang=Math.floor(rnd()*360),j=Math.floor(rnd()*10)-5;
-    var el=document.createElement('span');el.className='ph';
-    var lines=kind==='stud'?',repeating-linear-gradient(90deg,hsl(30 40% 62% / .6) 0 6px,transparent 6px 22px)':kind==='pipe'?',linear-gradient('+(rnd()>.5?0:90)+'deg,transparent 44%,hsl(22 70% 45%) 44% 52%,transparent 52%)':'';
-    el.style.background='radial-gradient(circle at '+(25+rnd()*50)+'% '+(25+rnd()*50)+'%, hsl('+(a[0]+j)+' '+a[1]+'% '+(a[2]+12)+'%) 0 18%, transparent 19%)'+lines+',linear-gradient('+ang+'deg,hsl('+(a[0]+j)+' '+a[1]+'% '+a[2]+'%),hsl('+b[0]+' '+b[1]+'% '+b[2]+'%))';
-    return el;
-  }
-  var strip=document.getElementById('heroStrip');
-  ['stud','pipe','pipe','dry','conc','pipe'].forEach(function(k){strip.appendChild(ph(k))});
-  // move the caption to the end so it sits under the frames
-  strip.appendChild(strip.querySelector('.code'));
-  strip.insertBefore(strip.querySelector('.code'),strip.firstChild);
+  <figure>
+    <div class="tbl-wrap"><table>
+      <tr><th>#</th><th>Submission gate · due 5:00 PM ET</th></tr>
+      <tr><td>1</td><td>Cluster created via the Atlas sandbox email link; any other cluster does not count.</td></tr>
+      <tr><td>2</td><td>Public GitHub repo; demo link opens without login.</td></tr>
+      <tr><td>3</td><td>1-minute video shot on site today: code, app, audio.</td></tr>
+      <tr><td>4</td><td>Submit on Cerebral Valley with a description; add every team member.</td></tr>
+      <tr><td>5</td><td>Today's work only: show the commit history; list outside code and models in the README.</td></tr>
+      <tr><td>6</td><td>Every photo licensed for reuse; a credits file names each source.</td></tr>
+    </table></div>
+    <figcaption><span class="pv a">AUTHORED</span> From <code>docs/05-rules.md</code>.</figcaption>
+  </figure>
 
-  function fill(id,kinds,marks){
-    var g=document.getElementById(id);
-    kinds.forEach(function(k,i){
-      var t=document.createElement('div');t.className='tile';t.appendChild(ph(k));
-      var m=document.createElement('span');m.className='mk '+(marks[i]?'y':'n');m.textContent=marks[i]?'yes':'no';t.appendChild(m);
-      g.appendChild(t);
-    });
-  }
-  fill('ansV1',['dry','pipe','dry','conc','pipe','dry','dry','pipe'],[0,1,0,0,1,0,0,1]);
-  fill('ansV2',['pipe','pipe','stud','pipe','pipe','pipe','pipe','dry'],[1,1,1,1,1,1,1,0]);
-  var gp=document.getElementById('gapPh');gp.replaceWith(ph('dry'));
-})();
-</script>
+  <ul class="qs">
+    <li>Which photo set: iVISION-2DCD, ConPR, or Wikimedia Commons?</li>
+    <li>Which vision model, through which credits: OpenRouter or OpenAI?</li>
+    <li>Who attends MongoDB.local NYC on Sep 30? One of us must be there to win.</li>
+  </ul>
+</section>
 
+</div></div>
 </body>
 </html>
