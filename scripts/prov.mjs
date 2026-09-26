@@ -178,8 +178,9 @@ const cites = [];  // {file, line, seg, idea}
     if (st.isDirectory()) { walk(p); continue; }
     if (rel === TRANSCRIPT || rel === OUT_MD || rel === OUT_JS || !TEXT_EXT.has(extname(e))) continue;
     if (st.size > 2_000_000) continue;
-    const text = readFileSync(p, 'utf8');
-    if (!text.includes('@s')) continue;
+    let text = readFileSync(p, 'utf8');
+    if (!text.includes('@s') || text.includes('prov:ignore')) continue;
+    if (extname(e) === '.md') text = text.replace(/```[\s\S]*?```/g, m => m.replace(/@s/g, '@ s')).replace(/`[^`\n]*`/g, m => m.replace(/@s/g, '@ s'));
     text.split('\n').forEach((L, i) => { for (const m of L.matchAll(CITE)) cites.push({ file: rel, line: i + 1, seg: m[1], idea: m[2] || null }); });
   }
 })(REPO);

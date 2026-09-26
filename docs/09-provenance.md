@@ -88,7 +88,9 @@ one line in your own words, not a quote. The transcript already has the quote.
 
 The token is `@s<session>.<nn>` with an optional `:<slug>`. The scanner looks inside every text
 file in the repo except the transcript and the generated outputs, so the comment syntax does not
-matter. Cite the segment where the idea was born unless a later `grow` or `pivot` is what the
+matter. In Markdown, a token inside a code fence or a backtick span is a quotation and is ignored,
+which is how this document can show examples without claiming them. A file containing the literal
+`prov:ignore` anywhere is skipped entirely (test fixtures). Cite the segment where the idea was born unless a later `grow` or `pivot` is what the
 text actually reflects.
 
 ## The loop
