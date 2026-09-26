@@ -1,5 +1,5 @@
 # 3PT · hub workspace targets. The harness's own targets (plan/build/instrument) land here later.
-.PHONY: stage check tersity preview deploy verify
+.PHONY: stage check tersity tersity-check preview deploy verify
 
 stage:            ## build _site/ = hub/ + docs/ + README.md
 	@bash tools/stage.sh
@@ -9,10 +9,13 @@ check: stage      ## lint the IA, the Viewer, the provenance pointers, and the t
 	@node tools/check-view.mjs
 	@node tools/check-diagram.mjs
 	@node ../scripts/prov.mjs --check
-	@node tools/tersity.mjs --check
+	@node tools/tersity.mjs || true   # advisory: reports, never gates (decision 2026-09-26); `make tersity-check` is the hard gate
 
 tersity:          ## words, figures, words-per-figure and longest paragraph for every leaf (site/*.html)
 	@node tools/tersity.mjs
+
+tersity-check:    ## the hard gate: exit 1 when any leaf is over the tersity budget
+	@node tools/tersity.mjs --check
 
 prov:             ## rebuild docs/provenance-index.md + site/prov-data.js from brainstorming.md (repo root)
 	@node ../scripts/prov.mjs

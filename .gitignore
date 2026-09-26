@@ -45,3 +45,6 @@ __pycache__/
 
 # Worktrees (docs/11-worktrees.md) — Claude Code's and ours
 .claude/worktrees/
+
+# Local harness store until the atlas battery is wired (harness/apps/cli/src/store.ts)
+.3pt/

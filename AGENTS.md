@@ -28,7 +28,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 |---|---|
 | What are we building and why | `docs/00-vision.md` |
 | Who is it for | `docs/01-icp.md` |
-| Who owns which lane | `docs/02-lanes.md` |
+| Who owns which lane, term 2 (from 14:15), the checkpoint criterion | `docs/17-term-2-lanes.md` (L1–L7 closed; `docs/02-lanes.md` kept for the record) |
 | How code moves, repo layout, install loop, pipeline skeleton | `docs/03-workflow.md` |
 | Which partner tools and credits exist, and which 3PT slot each fills | `docs/04-resources.md` |
 | Rules, judging weights, banned projects, deadlines | `docs/05-rules.md` |
@@ -45,6 +45,8 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 | Where an idea came from in the brainstorm, and how to cite it | `docs/09-provenance.md`, then `docs/provenance-index.md` |
 | Worktrees: where they live, how they are named, when they are collected | `docs/11-worktrees.md` |
+| Open-sourcing and submission due diligence: admissibility, hygiene, the package, each row with a status | `docs/15-open-source-checklist.md` |
+| Submission: what the platform asks, the filming tool, artifacts, claims with evidence, priority order to 5 PM | `docs/18-submission.md` |
 
 ## Working rules for agents in this repo
 

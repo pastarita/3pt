@@ -12,6 +12,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist"
   },
-  "dependencies": { "@3pt/core": "workspace:*", "@3pt/plan": "workspace:*", "@3pt/build": "workspace:*", "@3pt/instrument": "workspace:*" },
+  "dependencies": { "@3pt/core": "workspace:*", "@3pt/plan": "workspace:*", "@3pt/build": "workspace:*", "@3pt/instrument": "workspace:*", "@3pt/battery-repo": "workspace:*" },
   "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
 }
