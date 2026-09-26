@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ROOT = join(REPO, '_site');
 if (!existsSync(ROOT)) { console.error('FAIL: _site/ missing — run tools/stage.sh first'); process.exit(1); }
+await import(join(ROOT, 'diagram.js'));      // the Viewer hands ```mermaid fences to TPTDIAGRAM when present
 await import(join(ROOT, 'view-render.js'));
 const V = globalThis.TPTVIEW;
 const NUL = String.fromCharCode(0);

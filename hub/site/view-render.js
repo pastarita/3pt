@@ -26,6 +26,13 @@
   function md(src, base){
     var fences = [];
     src = src.replace(/```(\w*)\n([\s\S]*?)```/g, function(_, lang, body){
+      /* ```mermaid → the hub's own reader (diagram.js), typeset in the tokens. A fence the reader
+         cannot parse stays visible as source with the reason, never silently blank. */
+      var D = (typeof globalThis!=='undefined'?globalThis:window).TPTDIAGRAM;
+      if (lang === 'mermaid' && D) {
+        try { return TOK(fences.push('<figure class="diagram">'+D.render(body)+'</figure>') - 1); }
+        catch (e) { return TOK(fences.push('<pre class="diagram-error"><code data-lang="mermaid">'+esc(body)+'</code></pre><p class="cnt">diagram not rendered: '+esc(e.message)+'</p>') - 1); }
+      }
       return TOK(fences.push('<pre><code data-lang="'+lang+'">'+esc(body)+'</code></pre>') - 1);
     });
     src = src.replace(SEG_BLOCK, function(_, id, who, body){ return TOK(fences.push(segChip(id, who, body)) - 1); });

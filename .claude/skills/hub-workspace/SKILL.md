@@ -276,6 +276,13 @@ is the correct move when its inputs do not exist yet; say so on the hub card.
   asserting no NaN geometry, no unresolved edge endpoints, and no source markup leaking into
   output. Exemplar: `~/Documents/Mantafarm/_dev/seaweed-city/kit/diagram.js` +
   `tools/check-diagram.mjs`.
+  The wider-grammar exemplar, for docs that hand-author mermaid rather than generate it:
+  `~/Documents/Code/3pt_dev/3pt/hub/site/diagram.js` — flowchart in four directions with nested
+  subgraphs, cluster endpoints, six node shapes, five edge styles, fan-out, bidirectional edges,
+  self-loops, plus sequenceDiagram, gitGraph, stateDiagram-v2 and classDiagram, all in one
+  node-safe file; the Viewer hands every ```mermaid fence to it and a fence it cannot parse
+  stays visible as source with the reason, never silently blank. Its `check-diagram.mjs`
+  sweeps every fence in the staged artifact.
 
 - **Print-destiny guide sheet**: one record = one US-Letter page, screen view rendered at paper
   proportions (measure in `in`, not `px`) so what you scroll is what prints. Composes the other

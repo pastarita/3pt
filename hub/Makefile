@@ -1,13 +1,18 @@
 # 3PT · hub workspace targets. The harness's own targets (plan/build/instrument) land here later.
-.PHONY: stage check preview deploy verify
+.PHONY: stage check tersity preview deploy verify
 
 stage:            ## build _site/ = hub/ + docs/ + README.md
 	@bash tools/stage.sh
 
-check: stage      ## lint the IA and the Viewer against the staged artifact, and the provenance pointers
+check: stage      ## lint the IA, the Viewer, the provenance pointers, and the tersity budget of every leaf
 	@node tools/check-nav.mjs
 	@node tools/check-view.mjs
+	@node tools/check-diagram.mjs
 	@node ../scripts/prov.mjs --check
+	@node tools/tersity.mjs --check
+
+tersity:          ## words, figures, words-per-figure and longest paragraph for every leaf (site/*.html)
+	@node tools/tersity.mjs
 
 prov:             ## rebuild docs/provenance-index.md + site/prov-data.js from brainstorming.md (repo root)
 	@node ../scripts/prov.mjs

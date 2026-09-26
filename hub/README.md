@@ -16,10 +16,12 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 | `site/3pt-data.js` | The Model: doc Register, lanes, ICP directions, criteria, presets, helpers. |
 | `site/3pt.css` | Design tokens and shared components. Dark base. |
 | `site/view.html` + `site/view-render.js` | The Viewer: renders `.md` / `.csv` / `.json` inside the Shell. |
+| `site/diagram.js` | The mermaid reader: ```` ```mermaid ```` fences in any doc render as SVG in the hub's tokens. Reads flowcharts (subgraphs, six shapes, five edge styles, fan-out, serpentine wrap), sequence, gitGraph, stateDiagram-v2, classDiagram. Colour comes from the class *name* (`:::plan`), never from classDef hex. `tools/check-diagram.mjs` renders every real fence in CI. |
 | `site/lanes.html`, `site/icp-explorer.html`, `site/changelog.html` | Leaves. |
 | `functions/_middleware.js` | The Gate: Tier 0 Basic auth at the edge. |
 | `tools/stage.sh` | Builds `_site/` = `site/` + `../docs/` + `../README.md` + `../brainstorming.md`. |
 | `tools/check-nav.mjs`, `tools/check-view.mjs` | Lints, run against `_site/`. The type-check for the IA. |
+| `tools/tersity.mjs` | The tersity metric: words, figures, words per figure, longest paragraph, per leaf. Gates `make check`. |
 | `tools/serve.py` | Pages-faithful preview server for `_site/`. |
 | `wrangler.jsonc`, `Makefile` | Deploy config and targets. |
 | `_site/` | Generated. Gitignored. |
@@ -29,7 +31,8 @@ working surfaces for the principals: the lane board and the ICP explorer. Live a
 ```sh
 cd hub
 make preview   # stage + serve at http://127.0.0.1:8000/
-make check     # stage + both lints
+make check     # stage + both lints + provenance + tersity budget
+make tersity   # the tersity table for every leaf
 make deploy    # stage + lints + production deploy (from hub/, so functions/ compiles)
 make verify    # anon 401 · valid 200 · wrong-domain 401   (needs ACCESS_PASS in the environment)
 ```
@@ -108,6 +111,24 @@ collaborator is locked out; the pattern is in `.claude/skills/hub-workspace/refe
 `.github/workflows/deploy.yml` at the repo root, scoped to `hub/**`, `docs/**`, `README.md`,
 `brainstorming.md`. Lints on every push and PR; deploys once the repo has `CLOUDFLARE_API_TOKEN`
 and `CLOUDFLARE_ACCOUNT_ID` secrets. Until then, deploy by hand with `make deploy`.
+
+## Tersity
+
+A leaf is a page, not a paper. `tools/tersity.mjs` measures every `site/*.html` except the Viewer
+and `make check` fails when any leaf is over budget:
+
+| Measure | Budget | Why |
+|---|---|---|
+| visible prose words | ≤ 900 | one screenful of reading per leaf |
+| words per figure | ≤ 120 | every ~120 words earns a picture; no figure at all fails |
+| longest `<p>` | ≤ 55 words | one breath |
+| `.lede` | ≤ 30 words | the italic line under the h1 is a sentence |
+
+Words are text nodes after scripts, styles, comments and SVG are stripped. A figure is a
+`<figure>`, a `<table>`, or an inline `<svg>` whose viewBox is at least 100 wide; card glyphs
+do not count. Documents under `docs/` are out of scope: the Viewer renders them, they are not
+articles. When a leaf is over budget, turn the paragraph into a labelled figure, not a shorter
+paragraph.
 
 ## Provenance
 

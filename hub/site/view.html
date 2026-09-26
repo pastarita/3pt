@@ -7,6 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="stylesheet" href="./3pt.css">
 <script src="./3pt-data.js"></script>
+<script src="./diagram.js"></script>
 <script src="./view-render.js"></script>
 <style>
   .doc{max-width:82ch;margin:0 auto;padding:26px 22px 90px}
@@ -22,6 +23,10 @@
   .doc .tbl-wrap{margin:1em 0}
   .doc hr{border:none;border-top:1px solid var(--line);margin:2em 0}
   .doc .cnt{font:11px var(--mono);color:var(--faint)}
+  .doc figure.diagram{margin:1.2em 0;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+  .doc figure.diagram svg{display:block;max-width:100%;height:auto}
+  .doc figure.diagram figcaption{font:10.5px/1.4 var(--mono);color:var(--faint);margin-top:8px}
+  .doc pre.diagram-error{border-color:var(--alert)}
   .doc ul.tasks{list-style:none;padding-left:4px} .doc ul.tasks .box{font-family:var(--mono);margin-right:4px} .doc li.done{color:var(--faint);text-decoration:line-through}
   .doc .seg{display:inline-block;font:700 10px/1 var(--mono);letter-spacing:.08em;color:var(--flag);border:1px solid color-mix(in srgb,var(--flag) 45%,transparent);border-radius:99px;padding:4px 9px;margin:18px 0 2px;text-decoration:none;scroll-margin-top:16px}
   .doc .seg:target{background:color-mix(in srgb,var(--flag) 18%,transparent)}
