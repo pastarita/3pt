@@ -33,6 +33,7 @@ persists every checkpoint to **MongoDB Atlas**. The workload it operates on is m
 | Which partner tools and credits exist, and which 3PT slot each fills | `docs/04-resources.md` |
 | Rules, judging weights, banned projects, deadlines | `docs/05-rules.md` |
 | Goal over time, the interior-design use case, value props, screen-capture onboarding | `docs/06-goal-and-use-case.md` |
+| Theses, hypotheses, the measurement system, partner-incentive mapping, requirement set | `docs/07-assessment-and-measurement.md` |
 | Terms (install loop, backfeed, furnace, left/right triangle) | `docs/glossary.md` |
 
 ## Working rules for agents in this repo

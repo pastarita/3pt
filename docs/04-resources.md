@@ -72,6 +72,9 @@ natural-language prompting guide at hand.
 
 ## Mapping partners onto 3PT
 
+*Slot-level view. The feature-level mapping (one table per partner, R-ids, MoSCoW decisions) is
+in `docs/07-assessment-and-measurement.md` §4.*
+
 | Partner | 3PT slot | Why |
 |---|---|---|
 | **Atlas** (documents, Vector Search, Automated Embeddings, checkpoints) | **Media/Context store + harness memory** | Required. Holds media indexes and transcripts, hot/cold tier metadata, harness policies, checkpoints, retrospectives, measurements. |
