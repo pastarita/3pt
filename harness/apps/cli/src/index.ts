@@ -8,7 +8,7 @@ import { buildStage } from '@3pt/build';
 import { instrumentStage } from '@3pt/instrument';
 import { improve } from '@3pt/improver';
 import { headSha, repoRoot, showAt, snapshot } from '@3pt/battery-repo';
-import { atlasStore } from '@3pt/battery-atlas';
+import { atlasStore, atlasUri } from '@3pt/battery-atlas';
 import { fileStore } from './store.js';
 
 const argv = process.argv.slice(2);
@@ -18,8 +18,8 @@ const [cmd = 'help', arg] = argv.filter(a => !a.startsWith('--'));
 const root = repoRoot() ?? process.cwd();
 const POLICIES = 'harness/policies';
 const CHECKPOINTS = 'harness/checkpoints';
-const atlasUri = process.env.ATLAS_URI && !process.env.ATLAS_URI.includes('<') ? process.env.ATLAS_URI : undefined;   // a placeholder from .env.example is no URI
-const store = atlasUri ? await atlasStore(atlasUri, process.env.ATLAS_DB) : fileStore(join(root, '.3pt/store'));   // the battery is injected here, at the edge
+const uri = atlasUri();
+const store = uri ? await atlasStore(uri, process.env.ATLAS_DB) : fileStore(join(root, '.3pt/store'));   // the battery is injected here, at the edge
 const gitSha = process.env.GIT_SHA ?? headSha(root);  // the improver records the code sha the iteration ran on
 
 /** Highest n among `<prefix><n><suffix>` files in a directory, or -1. */

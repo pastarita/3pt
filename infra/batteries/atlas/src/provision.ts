@@ -2,12 +2,12 @@
  *  Works against the Sandbox cluster and against Atlas Local (both accept createSearchIndex). docs/16-sandbox-provisioning.md §3. */
 import { MongoClient } from 'mongodb';
 import { COLLECTIONS } from '@3pt/core';
-import { INDEXES, VECTOR_INDEX } from './index.js';
+import { INDEXES, VECTOR_INDEX, atlasUri } from './index.js';
 
-const uri = process.env.ATLAS_URI && !process.env.ATLAS_URI.includes('<') ? process.env.ATLAS_URI : undefined;   // a placeholder from .env.example is no URI
+const uri = atlasUri();
 const dbName = process.env.ATLAS_DB ?? '3pt';
 const mask = (u: string) => u.replace(/\/\/[^@]*@/, '//…@');
-console.log(`[atlas] db=${dbName} ${uri ? `uri=${mask(uri)}` : '(ATLAS_URI unset — plan only)'}`);
+console.log(`[atlas] db=${dbName} ${uri ? `uri=${mask(uri)}` : '(no ATLAS_URI or ATLAS_HOST+ATLAS_DBUSER+ATLAS_DBPASS — plan only)'}`);
 for (const c of Object.values(COLLECTIONS)) console.log(`[atlas] ensure collection ${c}`);
 for (const i of INDEXES) console.log(`[atlas] ensure index ${i.collection} ${JSON.stringify(i.keys)}${i.unique ? ' unique' : ''}`);
 console.log(`[atlas] ensure vector index ${VECTOR_INDEX.name} on ${VECTOR_INDEX.collection}.${VECTOR_INDEX.field} (${VECTOR_INDEX.dims}d ${VECTOR_INDEX.similarity})`);
