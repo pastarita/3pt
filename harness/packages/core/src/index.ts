@@ -26,6 +26,7 @@ export const COLLECTIONS = {
   app_state: 'app_state',                // snapshot of the app loop after each change (versions, current, choices)
   app_events: 'app_events',              // every tap the app reported: the loop's evidence
   secrets: 'secrets',                    // API keys, value encrypted client-side (CSFLE); see @3pt/battery-atlas vault.ts
+  health_checks: 'health_checks',        // temporary setup probes, removed after the read/write check
 } as const;
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
 

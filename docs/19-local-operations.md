@@ -84,9 +84,10 @@ of logs and generated service files. A legacy `.env` can be loaded explicitly wi
 
 ```sh
 node scripts/setup.mjs --provision
+node scripts/batteries.mjs --deployed
 ```
 
-This loads configured keys and invokes each provisioner directly, so the Atlas connection parts
+Provisioning loads configured keys and invokes each provisioner directly, so the Atlas connection parts
 are not dropped by Turbo's environment allowlist. It requires a connection and fails if a command
 fails. The provisioners' capabilities still differ:
 

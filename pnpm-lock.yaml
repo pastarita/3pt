@@ -184,6 +184,9 @@ importers:
       '@3pt/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@3pt/setup':
+        specifier: workspace:*
+        version: link:../../packages/setup
     devDependencies:
       '@types/node':
         specifier: ^22.18.0
@@ -215,6 +218,9 @@ importers:
       '@3pt/plan':
         specifier: workspace:*
         version: link:../../packages/plan
+      '@3pt/setup':
+        specifier: workspace:*
+        version: link:../../packages/setup
     devDependencies:
       '@types/node':
         specifier: ^22.18.0
@@ -317,6 +323,15 @@ importers:
       '@3pt/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^22.18.0
+        version: 22.20.4
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
+  harness/packages/setup:
     devDependencies:
       '@types/node':
         specifier: ^22.18.0

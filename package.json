@@ -23,7 +23,8 @@
     "provision": "turbo run provision",
     "clean": "turbo run clean && rm -rf .turbo",
     "graph": "turbo run build --graph=docs/generated/turbo-graph.html",
-    "3pt": "node harness/apps/cli/dist/index.js"
+    "3pt": "node harness/apps/cli/dist/index.js",
+    "batteries": "node scripts/batteries.mjs"
   },
   "devDependencies": {
     "turbo": "^2.5.6",

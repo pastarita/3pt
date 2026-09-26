@@ -20,7 +20,7 @@ const hello = await db.command({ hello: 1 });
 console.log(`[atlas] connected: ${hello.me ?? hello.primary ?? 'ok'}${hello.setName ? ` rs=${hello.setName}` : ''}`);
 const have = new Set((await db.listCollections({}, { nameOnly: true }).toArray()).map(c => c.name));
 for (const c of Object.values(COLLECTIONS)) if (!have.has(c)) { await db.createCollection(c); console.log(`[atlas] created ${c}`); }
-for (const i of INDEXES) await db.collection(i.collection).createIndex(i.keys as any, { unique: i.unique ?? false });
+for (const i of INDEXES) await db.collection(i.collection).createIndex(i.keys as any, { unique: i.unique ?? false, ...(i.expireAfterSeconds === undefined ? {} : { expireAfterSeconds: i.expireAfterSeconds }) });
 console.log(`[atlas] ${INDEXES.length} indexes ensured`);
 try {
   const existing = await db.collection(VECTOR_INDEX.collection).listSearchIndexes().toArray();

@@ -30,6 +30,8 @@ typecheck:
 
 check: build-all typecheck hub-check   ## what CI runs
 	@node scripts/prov.mjs --check
+	@pnpm --filter @3pt/setup test
+	@pnpm --filter @3pt/api test
 
 plan:             ## Plan stage: read checkpoint + measurements, pick a sprint mode, emit a plan
 	@pnpm --filter @3pt/cli run build >/dev/null && node harness/apps/cli/dist/index.js plan

@@ -12,7 +12,7 @@
       "kind": "pages", "provider": "cloudflare", "project": "3pt-web", "account": "kothariwork@gmail.com's Account", "status": "live",
       "source": "dist/web-site", "build": "THREEPT_API_URL=https://3pt-harness.3pt-worker.workers.dev scripts/build-web-site.sh",
       "deploy": "npx wrangler pages deploy dist/web-site --project-name=3pt-web --branch=main", "cwd": ".",
-      "routes": { "/": "ui/apps/live", "/studio/": "ui/apps/web", "/media-pool/": "data/mock/media-pool" },
+      "routes": { "/": "ui/apps/live/landing", "/app/": "ui/apps/live", "/studio/": "ui/apps/web", "/media-pool/": "data/mock/media-pool" },
       "url": "https://3pt-web.pages.dev", "preview": "https://<branch>.3pt-web.pages.dev", "health": "https://3pt-web.pages.dev/",
       "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"], "fallback": "vercel", "workflow": ".github/workflows/ci.yml"
     },
@@ -31,6 +31,13 @@
       "entrypoints": { "fetch": "harness/apps/worker/src/edge.ts → @3pt/api/handler", "scheduled": "@3pt/worker tick() (not wired yet)" }, "compat": { "flags": ["nodejs_compat"], "date": ">=2024-09-23" },
       "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "ATLAS_URI"], "workflow": ".github/workflows/ci.yml",
       "confirm": "MongoDB driver on Workers: smoke-test before the video"
+    },
+    "harness-patrick": {
+      "kind": "worker", "provider": "cloudflare", "project": "3pt-harness", "account": "Patrick", "status": "live",
+      "source": "harness/apps/worker", "cwd": "harness/apps/worker",
+      "url": "https://3pt-harness.patrickastarita.workers.dev", "health": "https://3pt-harness.patrickastarita.workers.dev/health",
+      "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "ATLAS_URI"],
+      "confirm": "Discovered through the authenticated Cloudflare API. An HTTP 200 without store=atlas does not verify database connectivity."
     },
     "macos": {
       "kind": "app", "provider": "install-loop", "status": "local",

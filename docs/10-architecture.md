@@ -6,6 +6,10 @@ architecture is drawn as first-class SVG on the hub leaf `hub/site/architecture.
 changes, change the other. Mermaid here, SVG there, one set of names.*
 
 ## 1. The decision
+
+The shared `harness/packages/setup` package supplies connection checks to the Node setup page
+and CLI. Apps inject the Atlas probe from its battery; the checker imports no battery. Coverage:
+[Connection checks](20-battery-checks.md).
 <!-- @s1.14 @s1.16 -->
 
 Three top-level lanes, and only three. Each lane owns one question.

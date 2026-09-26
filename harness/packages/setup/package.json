@@ -1,0 +1,7 @@
+{
+  "name": "@3pt/setup", "version": "0.0.1", "private": true, "type": "module",
+  "description": "Connection checks shared by the setup page and command line.",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "test": "node --test test/*.test.mjs" },
+  "devDependencies": { "@types/node": "^22.18.0", "typescript": "^5.9.2" }
+}

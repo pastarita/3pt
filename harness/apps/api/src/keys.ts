@@ -4,6 +4,8 @@
  * page's own origin, so no other site in the browser can write a key. No CORS headers on these routes.
  */
 import type { IncomingMessage } from 'node:http';
+import { checkBatteries } from '@3pt/setup';
+import { probeAtlas } from '@3pt/battery-atlas';
 import { KEYCHAIN_NAMES, VAULT_NAMES, keychainEnv, keychainGet, keychainSet, loadKeys, putSecret, vaultStatus, type KeychainName } from '@3pt/battery-atlas';
 
 /** Where to get each key. */
@@ -42,11 +44,15 @@ export async function handleKeys(req: IncomingMessage, url: URL, body: Record<st
   if (!trusted(req, port)) return json(403, { error: `the key page is local only: open http://127.0.0.1:${port}/keys` });
   const env = () => ({ ...keychainEnv(), ...process.env });
   if (url.pathname === '/keys' && req.method === 'GET') return { status: 200, type: 'text/html; charset=utf-8', body: PAGE };
+  if (url.pathname === '/keys/check' && req.method === 'POST') {
+    const keys = await loadKeys();
+    return json(200, await checkBatteries(keys, { atlas: () => probeAtlas(keys) }));
+  }
   if (url.pathname === '/keys/status' && req.method === 'GET') {
     const keychain = KEYCHAIN_NAMES.map((n) => ({ name: n, ...META[n], set: !!keychainGet(n), host: !!process.env[n] }));
     let vault: unknown[], vaultError: string | undefined;
     try { vault = (await vaultStatus(env())).map((s) => ({ ...s, ...META[s.name], host: !!process.env[s.name], test: !!TESTS[s.name] })); }
-    catch (e) { vaultError = (e as Error).message; vault = VAULT_NAMES.map((n) => ({ name: n, ...META[n], set: false, test: !!TESTS[n] })); }
+    catch { vaultError = 'Saved service keys are unavailable. Test the database connection.'; vault = VAULT_NAMES.map((n) => ({ name: n, ...META[n], set: false, test: !!TESTS[n] })); }
     return json(200, { keychain, vault, vaultError });
   }
   if (url.pathname === '/keys/set' && req.method === 'POST') {
@@ -57,7 +63,7 @@ export async function handleKeys(req: IncomingMessage, url: URL, body: Record<st
       else if (VAULT_NAMES.includes(name)) await putSecret(env(), name, value);
       else return json(400, { error: `unknown key ${name}` });
       return json(200, { ok: true });
-    } catch (e) { return json(500, { error: (e as Error).message }); }
+    } catch { return json(500, { error: 'Could not save the connection. Test database access and try again.' }); }
   }
   if (url.pathname === '/keys/test' && req.method === 'POST') {
     const name = String(body.name ?? ''), t = TESTS[name];
@@ -65,13 +71,13 @@ export async function handleKeys(req: IncomingMessage, url: URL, body: Record<st
     const v = (await loadKeys())[name];
     if (!v) return json(200, { ok: false, note: 'not set' });
     try { const r = await t(v); return json(200, { ok: r.ok, note: r.ok ? 'works' : `HTTP ${r.status}` }); }
-    catch (e) { return json(200, { ok: false, note: (e as Error).message }); }
+    catch { return json(200, { ok: false, note: 'Could not reach the service. Try again.' }); }
   }
   return json(404, { error: 'not found' });
 }
 
 const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>3PT keys</title><style>
+<title>3PT setup</title><style>
 :root{--bg:#f6f5f1;--card:#fff;--ink:#1c1b19;--mute:#6b6862;--line:#e3e0d8;--ok:#1f7a4d;--warn:#b25b00;--accent:#2f5bd3}
 @media (prefers-color-scheme:dark){:root{--bg:#141412;--card:#1d1c1a;--ink:#ecebe7;--mute:#9a978f;--line:#2e2d2a;--ok:#4fbf86;--warn:#e39a4a;--accent:#7ea0ff}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,system-ui,sans-serif}
@@ -88,11 +94,11 @@ button,a.get{padding:7px 11px;border-radius:7px;border:1px solid var(--line);bac
 button.save{background:var(--accent);border-color:var(--accent);color:#fff}.msg{font-size:12px;color:var(--mute);align-self:center}
 .err{color:var(--warn);font-size:13px;margin:8px 0}
 </style></head><body><main>
-<h1>Keys</h1><p class="lede">Paste each key once. No file holds a key. A saved value is never shown again.</p>
-<div class="flow"><b>This Mac</b> · Keychain → the Atlas connection and the vault master key</div>
-<div class="flow"><b>Atlas</b> · 3pt.secrets → API keys, encrypted before they leave this Mac (CSFLE)</div>
-<h2>1 · Reach Atlas (Keychain)</h2><div class="card" id="kc"></div>
-<h2>2 · API keys (Atlas vault)</h2><div id="verr" class="err"></div><div class="card" id="vt"></div>
+<h1>Set up your connections</h1><p class="lede">Save your connections here, then test that they work. Saved values stay private.</p>
+<button id="check" class="save">Test connections</button><p class="hint">Checks database access and service keys. Embeddings uses one short test message.</p>
+<p id="summary" role="status" aria-live="polite"></p><div id="checks" class="card"></div>
+<h2>Database connection</h2><div class="card" id="kc"></div>
+<h2>Services</h2><div id="verr" class="err"></div><div class="card" id="vt"></div>
 </main><script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -107,8 +113,21 @@ function row(k){const d=document.createElement('div');d.className='row';
   const t=d.querySelector('.test');if(t)t.onclick=async()=>{m.textContent='testing…';const j=await (await fetch('/keys/test',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:k.name})})).json();m.textContent=(j.ok?'✓ ':'✗ ')+(j.note||j.error);};}
  return d}
 async function load(){const s=await (await fetch('/keys/status')).json();
- $('#kc').replaceChildren(...s.keychain.filter(k=>k.name!=='ATLAS_CLUSTER').map(row));
+ $('#kc').replaceChildren(...s.keychain.filter(k=>!['ATLAS_CLUSTER','THREEPT_MASTER_KEY'].includes(k.name)).map(row));
  $('#vt').replaceChildren(...s.vault.map(row));
- $('#verr').textContent=s.vaultError?'Vault not reachable yet: '+s.vaultError+'. Fill step 1 first.':'';}
+ $('#verr').textContent=s.vaultError?'Saved service keys are not available yet. Test the database connection first.':'';}
+$('#check').onclick=async()=>{
+ const button=$('#check');button.disabled=true;button.textContent='Testing…';$('#summary').textContent='Checking your connections…';
+ try{const response=await fetch('/keys/check',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+  if(!response.ok)throw new Error();const report=await response.json();
+  $('#checks').replaceChildren(...report.checks.map(c=>{const r=document.createElement('div');r.className='row';
+   const text=document.createElement('div'),label=document.createElement('b'),detail=document.createElement('div');
+   label.textContent=c.label;detail.className='hint';detail.textContent=c.detail;text.append(label,detail);
+   const status=document.createElement('span');status.className='state '+(c.status==='pass'?'on':'off');
+   status.textContent=({pass:'Connected',missing:c.required?'Needs setup':'Optional',fail:'Needs attention',unverified:'Try again'})[c.status];r.append(text,status);return r;}));
+  $('#summary').textContent=report.ready?'Your connections are ready.':'Some connections need attention. Update them below and test again.';
+ }catch{$('#summary').textContent='The check could not finish. Try again in a moment.';}
+ finally{button.disabled=false;button.textContent='Test connections';}
+};
 load();
 </script></body></html>`;

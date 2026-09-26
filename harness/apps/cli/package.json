@@ -2,16 +2,33 @@
   "name": "@3pt/cli",
   "version": "0.0.1",
   "private": true,
-  "description": "The 3pt command: plan · build · instrument · loop · rollback.",
+  "description": "The 3pt command: plan \u00b7 build \u00b7 instrument \u00b7 loop \u00b7 rollback.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist"
   },
-  "dependencies": { "@3pt/core": "workspace:*", "@3pt/plan": "workspace:*", "@3pt/build": "workspace:*", "@3pt/instrument": "workspace:*", "@3pt/improver": "workspace:*", "@3pt/battery-repo": "workspace:*", "@3pt/battery-atlas": "workspace:*" },
-  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^22.18.0" }
+  "dependencies": {
+    "@3pt/core": "workspace:*",
+    "@3pt/plan": "workspace:*",
+    "@3pt/build": "workspace:*",
+    "@3pt/instrument": "workspace:*",
+    "@3pt/improver": "workspace:*",
+    "@3pt/battery-repo": "workspace:*",
+    "@3pt/battery-atlas": "workspace:*",
+    "@3pt/setup": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "@types/node": "^22.18.0"
+  }
 }

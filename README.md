@@ -34,6 +34,7 @@ Requires Node 22+ and the pnpm version pinned in `package.json`.
 node scripts/setup.mjs --site       # install dependencies; build workspaces and dist/web-site
 # Configure Atlas through the local key page or host environment, then:
 node scripts/setup.mjs --provision  # provision the configured batteries
+node scripts/batteries.mjs          # verify database access and configured service keys
 node harness/apps/cli/dist/index.js loop
 ```
 

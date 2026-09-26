@@ -7,11 +7,11 @@ import { spawnSync } from 'node:child_process';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const args = new Set(process.argv.slice(2));
-const flags = ['--help', '--site', '--provision'];
+const flags = ['--help', '--site', '--provision', '--check'];
 function fail(message) { console.error(`[setup] ${message}`); process.exit(1); }
 for (const arg of args) if (!flags.includes(arg)) fail(`Unknown option: ${arg}. Use --help.`);
 if (args.has('--help')) {
-  console.log(`Usage: node scripts/setup.mjs [--site] [--provision]
+  console.log(`Usage: node scripts/setup.mjs [--site] [--provision] [--check]
 
 Checks Node and the pinned pnpm version, installs locked dependencies, builds
 the workspaces (except the optional native macOS app). Secrets are loaded from
@@ -21,6 +21,7 @@ the existing Keychain / Atlas vault / host environment when provisioning.
                THREEPT_API_URL can select another API when building.
   --provision  Load configured keys and run Atlas, blob, artifacts, repo and tracing
                provisioners. Requires an Atlas connection; no VM is created.
+  --check      Test the effective database and service connections after building.
 
 Service options and the agent handoff: docs/19-local-operations.md`);
   process.exit(0);
@@ -60,4 +61,5 @@ if (args.has('--provision')) {
   }
   console.log('[setup] Provisioners completed. Check their output: optional providers may report plans only.');
 }
+if (args.has('--check')) run(process.execPath, ['scripts/batteries.mjs']);
 console.log('[setup] Build ready. Local startup and service installation: docs/19-local-operations.md');

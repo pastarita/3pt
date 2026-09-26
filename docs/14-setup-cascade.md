@@ -33,6 +33,10 @@ Bedrock, Lambda and Kiro, of which only Kiro carries a credit today (`docs/04-re
 
 ## The proposed gateway battery
 
+Connection verification is part of the existing local setup page: **Test connections** on `/keys`,
+or `pnpm batteries` after building. `pnpm batteries --deployed` also checks registered live APIs.
+See [Connection checks](20-battery-checks.md) for coverage, failure states and limits.
+
 `infra/batteries/gateway` is the one battery the tree lacks: a descriptor with grants
 `model.plan`, `model.build`, `model.instrument`, an env of one key, and a provision step that
 verifies the key and writes the route table (`{stage → model}`) into the policy document, so

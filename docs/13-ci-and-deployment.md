@@ -7,6 +7,12 @@ Diagrams are Mermaid (GitHub renders them; the hub Viewer shows them as code by 
 
 ## 0. What exists, what does not
 
+**Connection audit, 2026-09-26:** the target register now includes Patrick’s second Worker at
+`https://3pt-harness.patrickastarita.workers.dev`. Its old health response does not prove Atlas
+connectivity. Yash’s Worker initially timed out, then passed the Atlas check at 20:43 UTC. Use
+`pnpm batteries --deployed-only` for current results; see [Connection checks](20-battery-checks.md).
+The web root is now the landing page; the live app is at `/app/`.
+
 | Thing | State today |
 |---|---|
 | Hub CI (`.github/workflows/deploy.yml`) | Live. Push to `main` deploys `hub/_site` to Cloudflare Pages; PRs get `https://<branch>.3pt.pages.dev` and a sticky comment. Lints: nav, view, provenance. Deploy no-ops with a notice until the two Cloudflare secrets exist. |

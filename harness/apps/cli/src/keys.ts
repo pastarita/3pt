@@ -9,6 +9,8 @@ import { readFileSync } from 'node:fs';
 import { parseEnv } from 'node:util';
 import { createInterface } from 'node:readline';
 import { KEYCHAIN_NAMES, VAULT_NAMES, keychainEnv, keychainGet, keychainSet, putSecret, vaultStatus, type KeychainName } from '@3pt/battery-atlas';
+import { loadKeys, probeAtlas } from '@3pt/battery-atlas';
+import { checkBatteries } from '@3pt/setup';
 
 const isKeychain = (n: string): n is KeychainName => (KEYCHAIN_NAMES as readonly string[]).includes(n);
 const env = () => ({ ...keychainEnv(), ...process.env });
@@ -32,6 +34,13 @@ async function store(name: string, value: string) {
 
 export async function keysCommand(args: string[]) {
   const [sub = 'status', name] = args;
+  if (sub === 'test') {
+    const keys = await loadKeys();
+    const report = await checkBatteries(keys, { atlas: () => probeAtlas(keys) });
+    for (const c of report.checks) console.log(`${c.status.toUpperCase().padEnd(10)} ${c.label}: ${c.detail}`);
+    if (!report.ready) process.exitCode = 1;
+    return;
+  }
   if (sub === 'status') {
     for (const n of KEYCHAIN_NAMES) console.log(`keychain  ${n.padEnd(20)} ${keychainGet(n) ? 'set' : '—'}${process.env[n] ? '  (host env overrides)' : ''}`);
     try {
@@ -55,5 +64,5 @@ export async function keysCommand(args: string[]) {
     console.log(`done. Check with \`3pt keys status\`, then delete ${name}.`);
     return;
   }
-  console.log('3pt keys <status | set NAME | import FILE>');
+  console.log('3pt keys <status | test | set NAME | import FILE>');
 }

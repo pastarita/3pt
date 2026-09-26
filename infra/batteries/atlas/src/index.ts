@@ -1,6 +1,7 @@
 /** @3pt/battery-atlas — the only place the Sandbox cluster is named. Stages get a Store; they never see a URI. */
 import { COLLECTIONS, type CollectionName } from '@3pt/core';
 export { atlasStore, type AtlasStore } from './store.js';
+export { probeAtlas } from './probe.js';
 export { keychainGet, keychainSet, keychainDelete, keychainEnv, KEYCHAIN_NAMES, type KeychainName } from './keychain.js';
 export { loadKeys, putSecret, deleteSecret, vaultStatus, vaultRead, VAULT_NAMES, type SecretStatus } from './vault.js';
 
@@ -15,7 +16,7 @@ export function atlasUri(env: NodeJS.ProcessEnv = process.env): string | undefin
   return `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}/${db}?retryWrites=true&w=majority&appName=${env.ATLAS_CLUSTER?.trim() || '3pt'}`;
 }
 
-export interface IndexSpec { collection: CollectionName; keys: Record<string, 1 | -1 | 'text'>; unique?: boolean }
+export interface IndexSpec { collection: CollectionName; keys: Record<string, 1 | -1 | 'text'>; unique?: boolean; expireAfterSeconds?: number }
 export const INDEXES: IndexSpec[] = [
   { collection: COLLECTIONS.policies,     keys: { version: -1 }, unique: true },
   { collection: COLLECTIONS.checkpoints,  keys: { iteration: -1 }, unique: true },
@@ -29,6 +30,7 @@ export const INDEXES: IndexSpec[] = [
   { collection: COLLECTIONS.jobs,         keys: { status: 1, createdAt: 1 } },
   { collection: COLLECTIONS.app_state,    keys: { ts: -1 } },
   { collection: COLLECTIONS.secrets,      keys: { name: 1 }, unique: true },
+  { collection: COLLECTIONS.health_checks, keys: { at: 1 }, expireAfterSeconds: 3600 },
 ];
 /** Atlas Vector Search definition over transcripts (Voyage voyage-3, 1024 dims). Created by provision(). */
 export const VECTOR_INDEX = { name: 'transcripts_vec', collection: COLLECTIONS.transcripts, field: 'embedding', dims: 1024, similarity: 'cosine' } as const;

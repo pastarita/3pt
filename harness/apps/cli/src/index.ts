@@ -20,7 +20,7 @@ const [cmd = 'help', arg] = argv.filter(a => !a.startsWith('--'));
 const root = repoRoot() ?? process.cwd();
 // Key injector: Atlas vault ← macOS Keychain ← host env, merged once by loadKeys(), then
 // readSecrets() → ctx.secrets. No .env. Stages never read process.env.
-if (cmd === 'keys') { await keysCommand(argv.slice(1)); process.exit(0); }
+if (cmd === 'keys') { await keysCommand(argv.slice(1)); process.exit(process.exitCode ?? 0); }
 // A dry run by definition: no keys (Build stays a dry run), a memory store, no Atlas connection opened.
 if (cmd === 'replay') { await replay(join(root, arg ?? 'data/mock/acme-builders'), readSecrets({}), process.env.GIT_SHA ?? headSha(root)); process.exit(0); }
 const keys = await loadKeys((l) => console.log(l));
