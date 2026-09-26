@@ -38,6 +38,8 @@
       epigram:'Banned: image analyzers, dashboards as the feature, basic RAG. Due 5:00 PM.' },
     { id:'D8', slug:'icp-directions', name:'ICP directions',       verb:'Exploring', cluster:'decide', temp:'warm', doc:'docs/08-icp-directions.md',
       epigram:'Five directions, each with focus, use case, company type, and lander messaging.' },
+    { id:'DD', slug:'design-system', name:'Design system',        verb:'Styling',   cluster:'decide', temp:'hot',  doc:'docs/11-design-system.html',
+      epigram:'Six pieces, three canonical directions, the invariants, and the promenade by which the design system for the whole monorepo gets decided.' },
     { id:'D7', slug:'assessment',     name:'Assessment & measurement', verb:'Measuring', cluster:'decide', temp:'warm', doc:'docs/07-assessment-and-measurement.md',
       epigram:'Theses and hypotheses from the transcript, the M-* metric system, and the R-* requirement set mapped to partner incentives.' },
     { id:'D1', slug:'icp',            name:'ICPs',                 verb:'Choosing',  cluster:'decide', temp:'warm', doc:'docs/01-icp.md',

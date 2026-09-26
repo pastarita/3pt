@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3PT Design System</title>
+<meta name="description" content="Proposal: six design pieces, three canonical directions, and the promenade by which Patrick and Yash decide the design system for the whole 3PT monorepo.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3F5">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111317">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Direction fonts are loaded from a CDN for this proposal only. Production self-hosts (see Cross-surface). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* ---------- The document's own chrome: deliberately neutral so it does not vote. ---------- */
+:root{
+  color-scheme:light;
+  --d-canvas:#F2F3F5; --d-surface:#FFFFFF; --d-raised:#FFFFFF; --d-ink:#16191E; --d-muted:#555E6A; --d-faint:#7A838F;
+  --d-line:#D6DAE0; --d-line-strong:#8B95A3; --d-mark:#16191E; --d-soft:#E7E9ED;
+  --d-ok:#1B6E4C; --d-ok-soft:#D8EEE2; --d-warn:#835A0E; --d-warn-soft:#F3E6C4; --d-alert:#B0302A; --d-alert-soft:#F8DAD8;
+  --d-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --d-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --d-canvas:#111317; --d-surface:#181B21; --d-raised:#1F232A; --d-ink:#E7E9EC; --d-muted:#A4ACB7; --d-faint:#7E8791;
+    --d-line:#2B3038; --d-line-strong:#5F6A78; --d-mark:#E7E9EC; --d-soft:#232830;
+    --d-ok:#5CCB98; --d-ok-soft:#16322A; --d-warn:#E8B04A; --d-warn-soft:#3A2E14; --d-alert:#F07A70; --d-alert-soft:#3B1B19;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --d-canvas:#111317; --d-surface:#181B21; --d-raised:#1F232A; --d-ink:#E7E9EC; --d-muted:#A4ACB7; --d-faint:#7E8791;
+  --d-line:#2B3038; --d-line-strong:#5F6A78; --d-mark:#E7E9EC; --d-soft:#232830;
+  --d-ok:#5CCB98; --d-ok-soft:#16322A; --d-warn:#E8B04A; --d-warn-soft:#3A2E14; --d-alert:#F07A70; --d-alert-soft:#3B1B19;
+}
+*{box-sizing:border-box}
+html{background:var(--d-canvas)}
+body{margin:0;background:var(--d-canvas);color:var(--d-ink);font:15px/1.55 var(--d-sans);padding:0 16px 80px}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3,h4{margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:clamp(28px,4.5vw,44px);line-height:1.08;font-weight:800}
+h2{font-size:clamp(21px,2.6vw,28px);line-height:1.15;font-weight:800;margin-top:64px;padding-top:22px;border-top:1px solid var(--d-line);scroll-margin-top:64px}
+h2 small{display:block;font:600 11px/1.4 var(--d-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--d-faint);margin-bottom:8px}
+h3{font-size:17px;font-weight:700;margin-top:26px}
+h4{font-size:14px;font-weight:700;margin-top:14px}
+p{margin:10px 0 0;max-width:76ch}
+.lede{font-size:17px;color:var(--d-muted);max-width:68ch}
+a{color:inherit}
+code{font:12.5px/1.5 var(--d-mono);background:var(--d-soft);border-radius:4px;padding:1px 5px}
+pre{font:12px/1.55 var(--d-mono);background:var(--d-surface);border:1px solid var(--d-line);border-radius:6px;padding:12px 14px;overflow:auto;margin:10px 0 0;white-space:pre}
+ul,ol{margin:8px 0 0;padding-left:22px}li{margin:4px 0;max-width:76ch}
+.eyebrow{font:600 11px/1.4 var(--d-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--d-faint)}
+header.top{padding-top:40px}
+.status{display:inline-flex;gap:8px;align-items:center;font:600 11px/1 var(--d-mono);letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--d-line-strong);border-radius:3px;padding:6px 10px;margin-top:16px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--d-warn);display:inline-block}
+.toc{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:22px;font-size:13px;color:var(--d-muted)}
+.toc a{text-decoration:none;border-bottom:1px solid var(--d-line)}
+.toc a:hover{color:var(--d-ink);border-color:var(--d-ink)}
+.box{background:var(--d-surface);border:1px solid var(--d-line);border-radius:8px;padding:16px 18px;margin-top:14px}
+.box.rule{border-left:4px solid var(--d-warn)}
+.box.rule b{display:block;margin-bottom:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.tbl{overflow-x:auto;border:1px solid var(--d-line);border-radius:8px;background:var(--d-surface);margin-top:14px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 11px;border-bottom:1px solid var(--d-line);text-align:left;vertical-align:top}
+th{font:700 10.5px/1.3 var(--d-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d-faint);background:var(--d-soft);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n{font-family:var(--d-mono);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pv{display:inline-block;font:500 8.5px/1 var(--d-mono);letter-spacing:.1em;padding:3px 6px;border-radius:3px;border:1px solid;white-space:nowrap;vertical-align:middle}
+.pv.d{color:var(--d-ok);border-color:var(--d-ok);background:var(--d-ok-soft)}
+.pv.a{color:var(--d-warn);border-color:var(--d-warn);background:var(--d-warn-soft)}
+.pv.c{color:var(--d-alert);border-color:var(--d-alert);background:var(--d-alert-soft)}
+.ok{color:var(--d-ok);font-weight:700}.bad{color:var(--d-alert);font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--d-mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:3px;background:var(--d-soft);color:var(--d-muted);margin-right:4px}
+.tag.d1{background:#FBE3D6;color:#8A3208}.tag.d2{background:#241F3D;color:#B7ADF9}.tag.d3{background:#DDE4F5;color:#213B78}
+button.ctl,.ctl{font:600 12px/1 var(--d-sans);border:1px solid var(--d-line-strong);background:var(--d-surface);color:var(--d-ink);border-radius:6px;padding:7px 11px;cursor:pointer}
+button.ctl:hover{border-color:var(--d-ink)}
+button.ctl.on{background:var(--d-ink);color:var(--d-canvas);border-color:var(--d-ink)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.bar label{font:600 11px/1 var(--d-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--d-faint)}
+.sticky{position:sticky;top:0;z-index:5;background:var(--d-canvas);padding:10px 0;border-bottom:1px solid var(--d-line);margin-top:8px}
+.sticky .bar{margin:0}
+textarea{width:100%;font:12.5px/1.5 var(--d-mono);border:1px solid var(--d-line-strong);border-radius:6px;padding:8px 10px;background:var(--d-surface);color:var(--d-ink);min-height:90px}
+select{font:13px var(--d-sans);border:1px solid var(--d-line-strong);border-radius:6px;padding:6px 8px;background:var(--d-surface);color:var(--d-ink)}
+footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--d-line);color:var(--d-faint);font-size:12px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin-top:10px}
+.sw{border:1px solid var(--d-line);border-radius:5px;overflow:hidden;font:10.5px/1.3 var(--d-mono)}
+.sw i{display:block;height:34px}
+.sw span{display:block;padding:4px 6px;color:var(--d-muted)}
+.sw b{display:block;color:var(--d-ink);font-weight:500}
+.pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.piece{background:var(--d-surface);border:1px solid var(--d-line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.piece .hd{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.piece .hd b{font-size:14px}
+.piece .note{font-size:13px;color:var(--d-muted)}
+.piece ul{font-size:13px;padding-left:18px}
+.dircard{background:var(--d-surface);border:1px solid var(--d-line);border-radius:10px;padding:18px;margin-top:16px}
+.dircard .head{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline}
+.dircard .head h3{margin:0;font-size:22px}
+.dircard .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;font-size:13px}
+.dircard .meta b{display:block;font:600 10.5px/1.4 var(--d-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--d-faint)}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.specs.one{grid-template-columns:1fr}
+.ballot td{vertical-align:middle}
+.ballot .opts{display:inline-flex;gap:4px}
+.ballot .opts button{font:700 11px/1 var(--d-mono);border:1px solid var(--d-line-strong);background:var(--d-surface);color:var(--d-muted);border-radius:4px;padding:6px 8px;cursor:pointer;min-width:34px}
+.ballot .opts button.on{background:var(--d-ink);color:var(--d-canvas);border-color:var(--d-ink)}
+.ballot .opts button.agree{box-shadow:0 0 0 2px var(--d-ok-soft)}
+.ballot td.piece-name b{display:block}.ballot td.piece-name span{font-size:12px;color:var(--d-muted)}
+.matrix td.s{text-align:center;font-family:var(--d-mono)}
+.matrix td.hi{background:var(--d-ok-soft);color:var(--d-ok);font-weight:700}
+.matrix td.lo{color:var(--d-faint)}
+.gen{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.gen pre{max-height:320px;margin:0}
+.gen h4{margin:0 0 6px}
+.pipe{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center;margin-top:14px;font-size:13px}
+.pipe .node{background:var(--d-surface);border:1px solid var(--d-line);border-radius:8px;padding:12px 14px}
+.pipe .node b{display:block;font-family:var(--d-mono);font-size:12px}
+.pipe .arr{font-family:var(--d-mono);color:var(--d-faint);text-align:center}
+.pipe .node ul{padding-left:16px;margin-top:4px;font-size:12px}
+@media (max-width:900px){.grid3,.pieces,.gen{grid-template-columns:1fr}.dircard .meta{grid-template-columns:1fr 1fr}.pipe{grid-template-columns:1fr}.pipe .arr{transform:rotate(90deg)}}
+@media (max-width:640px){.grid2,.specs{grid-template-columns:1fr}.dircard .meta{grid-template-columns:1fr}}
+
+/* ---------- Specimens: everything inside .sp reads ONLY --t-* tokens, set by script per direction and mode. ---------- */
+.sp{background:var(--t-canvas);color:var(--t-ink);font-family:var(--t-body);font-size:var(--t-base);line-height:var(--t-lh);border:1px solid var(--t-line);border-radius:var(--t-radius-lg);padding:var(--t-pad);display:flex;flex-direction:column;gap:var(--t-gap);min-width:0;position:relative;overflow:hidden}
+.sp *{box-sizing:border-box}
+.sp .lbl{position:absolute;top:8px;right:10px;font:500 9px/1 var(--t-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--t-faint)}
+.sp .eb{font-family:var(--t-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t-muted)}
+.sp .h{font-family:var(--t-display);font-weight:var(--t-dw);letter-spacing:var(--t-track);font-size:calc(var(--t-base) * 1.9);line-height:1.08;margin:4px 0 0}
+.sp.big .h{font-size:calc(var(--t-base) * 2.5)}
+.sp .h em{font-style:normal;color:var(--t-accent)}
+.sp .ld{color:var(--t-muted);font-size:calc(var(--t-base) * .95);max-width:52ch;margin:6px 0 0}
+.sp .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp .btn{font-family:var(--t-body);font-size:calc(var(--t-base) * .85);font-weight:600;padding:8px 14px;border-radius:var(--t-radius);border:var(--t-border) solid var(--t-line-strong);background:var(--t-surface);color:var(--t-ink);cursor:pointer;transition:transform var(--t-dur) var(--t-ease),border-color var(--t-dur) var(--t-ease)}
+.sp .btn:hover{transform:translateY(var(--t-hover));border-color:var(--t-ink)}
+.sp .btn.pri{background:var(--t-accent);border-color:var(--t-accent);color:var(--t-on-accent)}
+.sp .btn.quiet{border-color:transparent;background:transparent;color:var(--t-muted)}
+.sp .btn:focus-visible{outline:2px solid var(--t-accent);outline-offset:2px}
+.sp .chip{font-family:var(--t-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:var(--t-pill);background:var(--t-raised);border:1px solid var(--t-line);color:var(--t-muted)}
+.sp .chip.plan{color:var(--t-plan);border-color:var(--t-plan)}.sp .chip.build{color:var(--t-build);border-color:var(--t-build)}.sp .chip.inst{color:var(--t-instrument);border-color:var(--t-instrument)}
+.sp .pvb{font-family:var(--t-mono);font-size:8.5px;letter-spacing:.1em;padding:3px 6px;border-radius:3px;border:1px solid}
+.sp .pvb.d{color:var(--t-ok);border-color:var(--t-ok);background:var(--t-ok-soft)}
+.sp .pvb.a{color:var(--t-warn);border-color:var(--t-warn);background:var(--t-warn-soft)}
+.sp .pvb.c{color:var(--t-alert);border-color:var(--t-alert);background:var(--t-alert-soft)}
+.sp .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sp .stat{background:var(--t-surface);border:var(--t-border) solid var(--t-line);border-radius:var(--t-radius);padding:10px 12px;box-shadow:var(--t-shadow)}
+.sp .stat .n{font-family:var(--t-display);font-weight:var(--t-dw);font-size:calc(var(--t-base) * 1.6);line-height:1;font-variant-numeric:tabular-nums}
+.sp .stat .l{font-size:calc(var(--t-base) * .75);color:var(--t-muted);margin-top:5px}
+.sp .diff{background:var(--t-surface);border:var(--t-border) solid var(--t-line);border-radius:var(--t-radius);overflow:hidden;box-shadow:var(--t-shadow)}
+.sp .diff .r{display:grid;grid-template-columns:90px 1fr 1.2fr;gap:10px;padding:8px 12px;border-top:1px solid var(--t-line);font-size:calc(var(--t-base) * .82)}
+.sp .diff .r:first-child{border-top:0;font-family:var(--t-mono);font-size:10.5px;color:var(--t-muted);letter-spacing:.06em;text-transform:uppercase;background:var(--t-raised)}
+.sp .diff .r b{font-family:var(--t-display);font-weight:var(--t-dw)}
+.sp .diff .r span{color:var(--t-muted)}
+.sp .diff .r .add{color:var(--t-ok);font-weight:500}
+.sp .diff .r .del{color:var(--t-alert);text-decoration:line-through}
+.sp .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.sp .tile{position:relative;aspect-ratio:1;border-radius:2px;border:1px solid var(--t-line);overflow:hidden}
+.sp .tile i{position:absolute;inset:0;display:block}
+.sp .tile .mk{position:absolute;right:4px;top:4px;font-family:var(--t-mono);font-size:10px;padding:1px 5px;border-radius:3px;background:var(--t-surface);color:var(--t-ok)}
+.sp .tile .mk.n{color:var(--t-alert)}
+.sp .tile.dim i{opacity:.55}
+.sp .sw{display:flex;align-items:center;gap:10px;font-size:calc(var(--t-base) * .85)}
+.sp .sw .k{width:36px;height:20px;border-radius:10px;background:var(--t-line-strong);position:relative;flex:none;transition:background var(--t-dur) var(--t-ease)}
+.sp .sw .k::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--t-surface);transition:left var(--t-dur) var(--t-ease)}
+.sp .sw.on .k{background:var(--t-ok)}.sp .sw.on .k::after{left:19px}
+.sp .sw small{color:var(--t-muted)}
+.sp .rungs{display:flex;flex-direction:column;gap:6px}
+.sp .rung{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start;font-size:calc(var(--t-base) * .85)}
+.sp .rung .rn{width:22px;height:22px;border-radius:50%;background:var(--t-ink);color:var(--t-canvas);display:flex;align-items:center;justify-content:center;font-family:var(--t-mono);font-size:11px}
+.sp .rung small{color:var(--t-muted);display:block}
+.sp .prop{border:2px solid var(--t-accent);border-radius:var(--t-radius);padding:12px 14px;background:var(--t-surface);display:flex;flex-direction:column;gap:8px}
+.sp .prop b{font-family:var(--t-display);font-weight:var(--t-dw);font-size:calc(var(--t-base) * 1.1);line-height:1.2}
+.sp .prop p{margin:0;color:var(--t-muted);font-size:calc(var(--t-base) * .85)}
+.sp .rulebox{border-left:3px solid var(--t-warn);background:var(--t-surface);border-radius:var(--t-radius);padding:10px 12px;font-size:calc(var(--t-base) * .85);color:var(--t-muted)}
+.sp .rulebox b{color:var(--t-ink)}
+.sp table{border-collapse:collapse;width:100%;font-size:calc(var(--t-base) * .8);background:var(--t-surface);border:var(--t-border) solid var(--t-line);border-radius:var(--t-radius);overflow:hidden}
+.sp th{font-family:var(--t-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t-muted);background:var(--t-raised);text-align:left;padding:6px 10px;border-bottom:1px solid var(--t-line)}
+.sp td{padding:6px 10px;border-bottom:1px solid var(--t-line)}
+.sp tr:last-child td{border-bottom:0}
+.sp .deep{background:var(--t-deep);color:var(--t-on-deep);border-radius:var(--t-radius);padding:12px 14px;font-family:var(--t-mono);font-size:11px;letter-spacing:.08em}
+.sp svg.g{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:var(--t-stroke);stroke-linecap:var(--t-cap);stroke-linejoin:var(--t-join)}
+.sp .glyphs{display:flex;gap:12px;align-items:center;color:var(--t-muted)}
+.sp .glyphs .tri{color:var(--t-ink)}
+/* motif ornaments: one shows, chosen by data-motif on .sp */
+.sp .motif{display:none}
+.sp[data-motif="D1"] .motif.m1{display:grid}
+.sp[data-motif="D2"] .motif.m2{display:flex}
+.sp[data-motif="D3"] .motif.m3{display:grid}
+.sp .m1{background:var(--t-deep);border-radius:var(--t-radius);padding:16px 10px;position:relative;grid-template-columns:repeat(4,1fr);gap:8px}
+.sp .m1::before,.sp .m1::after{content:"";position:absolute;left:8px;right:8px;height:6px;background:repeating-linear-gradient(90deg,var(--t-canvas) 0 8px,transparent 8px 18px);opacity:.55}
+.sp .m1::before{top:5px}.sp .m1::after{bottom:5px}
+.sp .m1 i{display:block;aspect-ratio:1;border-radius:2px}
+.sp .m1 .code{grid-column:1/-1;font-family:var(--t-mono);font-size:10px;color:var(--t-on-deep);letter-spacing:.1em}
+.sp .m1 .stamp{position:absolute;right:10px;top:-10px;background:var(--t-accent);color:var(--t-on-accent);font-family:var(--t-mono);font-size:10px;padding:3px 8px;border-radius:3px;letter-spacing:.06em}
+.sp .m2{align-items:center;gap:14px;background:var(--t-deep);color:var(--t-on-deep);border-radius:var(--t-radius);padding:12px 14px}
+.sp .m2 svg{width:44px;height:44px;flex:none}
+.sp .m2 .rail{display:flex;flex-direction:column;gap:6px;font-family:var(--t-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.sp .m2 .rail span{display:flex;gap:8px;align-items:center}
+.sp .m2 .rail i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.sp .m3{grid-template-columns:1fr auto;gap:10px;border:1px solid var(--t-ink);padding:0;background:var(--t-surface)}
+.sp .m3 .dim{padding:12px 14px;position:relative;font-family:var(--t-mono);font-size:10px;color:var(--t-muted);letter-spacing:.08em}
+.sp .m3 .dim::before{content:"";position:absolute;left:14px;right:14px;top:34px;border-top:1px solid var(--t-plan)}
+.sp .m3 .dim::after{content:"";position:absolute;left:14px;right:14px;top:29px;height:10px;border-left:1px solid var(--t-plan);border-right:1px solid var(--t-plan)}
+.sp .m3 .dim b{display:block;color:var(--t-ink);font-family:var(--t-display);font-weight:var(--t-dw);font-size:calc(var(--t-base) * 1.05);letter-spacing:0;text-transform:none;margin-top:16px}
+.sp .m3 .hatch{background:repeating-linear-gradient(45deg,transparent 0 5px,var(--t-line) 5px 6px);width:64px}
+.sp .m3 .tb{border-left:1px solid var(--t-ink);display:grid;grid-template-rows:repeat(3,1fr);font-family:var(--t-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;min-width:120px}
+.sp .m3 .tb div{padding:5px 10px;border-bottom:1px solid var(--t-line);display:flex;justify-content:space-between;gap:10px;color:var(--t-muted)}
+.sp .m3 .tb div:last-child{border-bottom:0}
+.sp .m3 .tb b{color:var(--t-ink);font-weight:500}
+.sp .m3 .tb .red{color:var(--t-alert)}
+.sp.small .stats{grid-template-columns:repeat(3,1fr)}
+.sp.small .tiles{grid-template-columns:repeat(4,1fr)}
+@media (prefers-reduced-motion:reduce){.sp *{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">3PT · docs · 11 · design system · proposal · 2026-09-26</p>
+  <h1 style="margin-top:10px">One design system for the monorepo: six pieces, three directions, one decision.</h1>
+  <p class="lede">This page holds everything Patrick and Yash need to choose the 3PT design system: the invariants that hold under any direction, six pieces with three candidates each, three canonical directions composed from those pieces, the bases for judging motifs against the ICP, and a promenade for deciding. The chosen composition is then compiled into tokens for the hub, the web app and PWA, and the Swift inspector.</p>
+  <div class="status"><i></i> proposal · nothing decided · the decision record is at the bottom</div>
+  <nav class="toc" aria-label="Sections">
+    <a href="#standing">Where we stand</a><a href="#invariants">Invariants</a><a href="#naming">Naming</a><a href="#modes">Dark and light</a><a href="#pieces">Pieces</a><a href="#directions">Three directions</a><a href="#contrast">Contrast</a><a href="#surfaces">Cross-surface</a><a href="#components">Components</a><a href="#icp">Motifs against the ICP</a><a href="#promenade">Promenade</a><a href="#decision">Decision record</a>
+  </nav>
+</header>
+
+<div class="sticky" id="ctl">
+  <div class="bar">
+    <label>Specimens</label>
+    <button class="ctl on" data-mode="split">light + dark</button>
+    <button class="ctl" data-mode="light">light</button>
+    <button class="ctl" data-mode="dark">dark</button>
+    <span style="width:14px"></span>
+    <label>This page</label>
+    <button class="ctl" data-page="system">system</button>
+    <button class="ctl" data-page="light">light</button>
+    <button class="ctl" data-page="dark">dark</button>
+    <span style="flex:1"></span>
+    <span class="eyebrow" id="compiled-line">compiled: —</span>
+  </div>
+</div>
+
+<h2 id="standing"><small>0 · where we stand</small>Two systems already exist. This page ends that.</h2>
+<p>Nothing here starts from zero. The repo already wears two visual systems written on the same day, and neither knows the other. The design system has to absorb both or retire one, and it has to do so with tokens that a Swift app can read, not only a stylesheet.</p>
+<div class="tbl"><table>
+<tr><th>Surface</th><th>Where</th><th>What it is</th><th>Debt</th></tr>
+<tr><td><b>Hub tokens</b></td><td><code>hub/site/3pt.css</code></td><td>Dark-only. Short unprefixed names (<code>--bg</code>, <code>--panel</code>, <code>--card</code>), colour-named accents (<code>--violet</code>, <code>--cyan</code>, <code>--amber</code>, <code>--slate</code>) for the four clusters, three point hues, one flag orange, status triple, provenance badge.</td><td>No light mode. Colour words at the semantic layer. Nothing a Swift target can consume.</td></tr>
+<tr><td><b>Nav shell</b></td><td><code>hub/site/nav.js</code></td><td>The sidebar and the glyph set. The glyphs are the project's only iconography so far: 24 grid, 1.7 stroke, round caps, hand-drawn.</td><td>Hex values hardcoded in the shell CSS (<code>#0b0e12</code>, <code>#ff6b4a</code>, <code>#6b7684</code>). The shell does not read the tokens it sits beside.</td></tr>
+<tr><td><b>Direction page</b></td><td><code>hub/site/direction.html</code></td><td>Light base with a dark set. Material names (<code>--ground</code>, <code>--sheet</code>, <code>--ink</code>, <code>--marker</code>), keep and cut hues, a film-strip motif, Familjen Grotesk and IBM Plex.</td><td>No alert hue, no point hues, no provenance badge. A second vocabulary for the same roles.</td></tr>
+</table></div>
+<div class="box rule"><b>Consequence.</b> The two existing systems become two of the three directions below (Site marking, Instrument panel), re-expressed on one token vocabulary, each completed with the mode it lacks. The third (Drafting sheet) is new. Whatever is chosen, the hub tokens and the nav shell get regenerated from the decision; nothing keeps its private hex values.</div>
+
+<h2 id="invariants"><small>1 · invariants</small>What holds under every direction</h2>
+<p>These are decided by this proposal unless someone objects in the promenade. They are the bases against which every motif and every piece is judged, and they do not change when the direction does.</p>
+<div class="grid2">
+  <div class="box"><h4 style="margin:0">I1 · Three tiers of tokens</h4><p style="font-size:13.5px">Primitive (a hue and a step, never used directly), semantic (a role: what the colour is for), component (which role a part of a component reads). A leaf or a view only ever names the semantic or component tier. Adding a colour means adding a role, not a hex.</p></div>
+  <div class="box"><h4 style="margin:0">I2 · Dark and light are peers</h4><p style="font-size:13.5px">Every semantic token has a value in both sets. A direction that cannot show both is not a candidate. The mode is never part of a token's name; the set is swapped, the names stay.</p></div>
+  <div class="box"><h4 style="margin:0">I3 · The three points keep their slots</h4><p style="font-size:13.5px">Plan, Build, Instrument appear in that order, each with its own hue slot (<code>point.plan</code>, <code>point.build</code>, <code>point.instrument</code>). Those hues never colour anything else. The triangle mark is the wordmark on every surface.</p></div>
+  <div class="box"><h4 style="margin:0">I4 · Status is not category</h4><p style="font-size:13.5px">ok, warn, alert colour provenance and outcomes only. Clusters, phases, trades, and directions never borrow them. Status never relies on hue alone: it pairs with a glyph or a word (the hub's ○ ◐ ● ladder already does this).</p></div>
+  <div class="box"><h4 style="margin:0">I5 · Every figure wears provenance</h4><p style="font-size:13.5px">DERIVED, AUTHORED, TO CONFIRM is a fixed triple aliased onto the status hues. It must be legible at 8.5px mono in every direction and mode; the contrast table below checks it.</p></div>
+  <div class="box"><h4 style="margin:0">I6 · Photos are neutral</h4><p style="font-size:13.5px">A thumbnail gets a one-pixel line frame and no tint, and it is never larger than the record beside it. The hero of any surface is never a photograph. This keeps the product on the right side of the image-analyzer ban and keeps the accent free.</p></div>
+  <div class="box"><h4 style="margin:0">I7 · One accent per screen</h4><p style="font-size:13.5px">One hue says "this is new, this is picked, this is where you are." Everything else is ink, muted, line, and surfaces. The direction chooses the hue; the rule stays.</p></div>
+  <div class="box"><h4 style="margin:0">I8 · One glyph set, three weights</h4><p style="font-size:13.5px">The nav.js glyph paths are the iconography on every surface. A direction changes only stroke weight and caps. In Swift the same paths ship as custom symbols so weight follows text.</p></div>
+  <div class="box"><h4 style="margin:0">I9 · Nothing web-only carries meaning</h4><p style="font-size:13.5px">No backdrop blur, no gradient text, no filter as a signal. Anything that means something must be drawable with a colour, a path, and text, because SwiftUI will have to draw it.</p></div>
+  <div class="box"><h4 style="margin:0">I10 · Tokens have one source</h4><p style="font-size:13.5px">A single tokens file in the repo generates the CSS for the hub and the web app, the asset catalog and Swift enum for the inspector, and the manifest colours for the PWA. Hand-edited hex in any of those is a lint failure.</p></div>
+</div>
+
+<h2 id="naming"><small>2 · naming convention</small>How the colour schema is named</h2>
+<p>Three options were on the table, two of them already in the repo. The recommendation is the third, because it is the only one that survives a change of direction and a change of platform without renaming anything.</p>
+<div class="tbl"><table>
+<tr><th>Option</th><th>Example</th><th>For</th><th>Against</th><th></th></tr>
+<tr><td><b>A · Material metaphor</b><br><span style="color:var(--d-muted)">direction.html (hub leaf)</span></td><td><code>--ground --sheet --ink --marker</code></td><td>Evocative; a designer reads it instantly.</td><td>The metaphor belongs to one direction. "Marker" means nothing on a drafting sheet; "sheet" means nothing in a console.</td><td><span class="tag">not recommended</span></td></tr>
+<tr><td><b>B · Short unprefixed</b><br><span style="color:var(--d-muted)">3pt.css</span></td><td><code>--bg --panel --card --violet</code></td><td>Fast to type in a hand-written leaf.</td><td>No layer signal; colour words (<code>--violet</code>) at the semantic tier force a rename when the hue changes; collides with any third-party CSS in the web app.</td><td><span class="tag">not recommended</span></td></tr>
+<tr><td><b>C · Layer, then role</b></td><td><code>bg.canvas · fg.muted · line.strong · accent.soft · point.plan · status.warn-soft</code></td><td>Direction-neutral, platform-neutral, self-documenting. The same path spells itself in CSS, JSON and Swift.</td><td>Longer to type. The hub's leaves get a one-time mechanical rename.</td><td><span class="tag" style="background:var(--d-ok-soft);color:var(--d-ok)">recommended</span></td></tr>
+</table></div>
+<h3>The semantic vocabulary (option C)</h3>
+<div class="tbl"><table>
+<tr><th>Layer</th><th>Roles</th><th>Meaning</th></tr>
+<tr><td><code>bg</code></td><td>canvas · surface · raised · deep</td><td>Page ground; a panel on it; a panel on a panel (in dark, each step is lighter); the one inverted block (film, console, title block).</td></tr>
+<tr><td><code>fg</code></td><td>default · muted · faint · on-accent · on-deep</td><td>Body ink; secondary; tertiary (labels, never body); text on the accent; text on the deep block.</td></tr>
+<tr><td><code>line</code></td><td>default · strong</td><td>Hairline dividers; borders that must read as a control edge (3:1 against surface).</td></tr>
+<tr><td><code>accent</code></td><td>default · soft</td><td>The one accent (I7) and its tint for chips and fills.</td></tr>
+<tr><td><code>point</code></td><td>plan · build · instrument</td><td>The three points (I3). Reserved.</td></tr>
+<tr><td><code>status</code></td><td>ok · ok-soft · warn · warn-soft · alert · alert-soft</td><td>Outcomes and provenance only (I4).</td></tr>
+<tr><td><code>prov</code></td><td>derived → status.ok · authored → status.warn · confirm → status.alert</td><td>Aliases, so the badge can move off the status hues later without touching a leaf.</td></tr>
+<tr><td><code>cluster</code></td><td>orient · decide · build · record</td><td>Hub-only phase hues. Aliases in the hub's token set; absent from the app sets.</td></tr>
+</table></div>
+<div class="grid3">
+  <div class="box"><h4 style="margin:0">Spelling per surface</h4><ul style="font-size:13px"><li>JSON (source): <code>bg.canvas</code></li><li>CSS: <code>--bg-canvas</code></li><li>Swift: <code>TPT.bg.canvas</code> backed by asset <code>bg/canvas</code> with light and dark appearances</li><li>Tailwind, if the web app uses it: <code>bg-canvas</code> reading the CSS variable</li></ul></div>
+  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>Mode never in the name (no <code>--bg-dark</code>).</li><li>No colour words above the primitive tier.</li><li>Numbers only at the primitive tier (<code>gray.900</code>).</li><li>Components reference semantics, never primitives.</li><li>Type, space, radius, motion tokens follow the same shape: <code>type.display</code>, <code>space.4</code>, <code>radius.card</code>, <code>motion.fast</code>.</li></ul></div>
+  <div class="box"><h4 style="margin:0">Migration cost</h4><ul style="font-size:13px"><li><code>3pt.css</code>: 34 variables renamed once; leaves updated by search and replace.</li><li><code>nav.js</code>: five hardcoded hex values become <code>var()</code> reads.</li><li><code>direction.html</code>: stays as written (it is a dated proposal), or is re-expressed if it becomes the lander.</li></ul></div>
+</div>
+
+<h2 id="modes"><small>3 · dark and light</small>Accessible patterns for both modes</h2>
+<div class="grid2">
+  <div class="box"><h4 style="margin:0">Mode selection</h4><p style="font-size:13.5px"><code>color-scheme</code> on the root. Default follows <code>prefers-color-scheme</code>; a <code>data-theme</code> attribute overrides it and is persisted (<code>tpt_theme</code> in the browser, the same preference key in the app). The PWA declares two <code>theme-color</code> metas, one per scheme. SwiftUI reads the same stored preference into <code>preferredColorScheme</code>. This page does exactly this; try the controls above.</p></div>
+  <div class="box"><h4 style="margin:0">Elevation</h4><p style="font-size:13.5px">In dark, a raised surface is lighter than the one below it, never darker, and shadows are optional. In light, a raised surface is separated by a line, with shadow allowed. <code>bg.canvas → surface → raised</code> encodes this; a component never invents a fourth step.</p></div>
+  <div class="box"><h4 style="margin:0">Accent in the dark set</h4><p style="font-size:13.5px">The dark accent is lighter and less saturated than the light accent, and it carries its own <code>fg.on-accent</code> (dark ink on a light accent). Reusing white from the light set is the most common failure in the two existing systems and the contrast table catches it.</p></div>
+  <div class="box"><h4 style="margin:0">Contrast targets</h4><p style="font-size:13.5px">WCAG 2.x ratios, computed live below: 4.5:1 for body ink, muted ink, accent-as-text and status-on-soft; 3:1 for faint labels, strong lines and the point hues as marks. APCA Lc 60 for body is the stricter check to add once the tokens file exists.</p></div>
+  <div class="box"><h4 style="margin:0">Focus, motion, forced colours</h4><p style="font-size:13.5px">Focus ring: 2px accent, 2px offset, both modes. <code>prefers-reduced-motion</code> zeroes every duration. <code>forced-colors: active</code> brings borders back on anything that relied on a fill. Hit targets 44pt on the PWA and iOS.</p></div>
+  <div class="box"><h4 style="margin:0">Never colour alone</h4><p style="font-size:13.5px">Every status has a glyph or a word beside the hue. Yes and no marks on tiles are text. Keep and cut are labelled. The version diff uses added and struck text, not green and red fills alone.</p></div>
+</div>
+
+<h2 id="pieces"><small>4 · pieces</small>Six pieces, three candidates each</h2>
+<p>A direction is a composition of six pieces. Each piece has three candidates, one per direction, and they can be recombined: the compiled specimen further down takes any mix. Pieces are the unit of decision in the promenade; directions are the shortcut for taking all six from one source.</p>
+<div id="pieces-grid"></div>
+
+<h2 id="directions"><small>5 · three canonical directions</small>The major directives, composed</h2>
+<p>Each direction below is all six pieces from one source. The specimen is the same markup every time: only tokens change. Read them with the ICP lens in mind: the working synthesis in <code>docs/08-icp-directions.md</code> is to build the harness for the pipeline team and dress the lander for the interior studio, which pulls in two different visual directions at once.</p>
+<div id="dir-cards"></div>
+
+<h2 id="contrast"><small>6 · contrast</small>Every pair, every direction, every mode</h2>
+<p><span class="pv d">DERIVED</span> Ratios computed at load from the token values above with the WCAG 2.x relative-luminance formula. A direction fails the mode gate if any pair is below its threshold. Thresholds: 4.5 for text, 3 for large text, UI edges and marks, 1.3 for hairlines (a visibility floor, not a WCAG rule).</p>
+<div id="contrast"></div>
+
+<h2 id="surfaces"><small>7 · cross-surface</small>One source, three surfaces</h2>
+<p>The design system has to hold across the web app, the same code installed as a PWA on a superintendent's or a designer's phone, and the native Swift inspector on macOS and iOS. The rule is that tokens have one source in the repo and every surface is generated from it. The paths below are proposed, not yet built.</p>
+<div class="pipe">
+  <div class="node"><b>design/tokens.json</b>DTCG format. Primitive, semantic, component tiers; light and dark sets; type, space, radius, motion.<ul><li>The decision in this page, compiled</li><li>Linted: no hex outside this file</li></ul></div>
+  <div class="arr">→ design/build.mjs →</div>
+  <div class="node"><b>hub/site/3pt.css · apps/web/tokens.css</b>CSS custom properties, both sets, <code>color-scheme</code>, focus ring, reduced-motion.<ul><li>Hub leaves and the nav shell read only these</li><li>Web app and PWA share the file</li></ul></div>
+  <div class="arr">→</div>
+  <div class="node"><b>apps/3PT/Tokens.xcassets · Tokens.swift</b>Colour sets with light and dark appearances; a namespaced enum; glyph paths as custom symbols.<ul><li><code>Color("bg/canvas")</code> never a literal</li><li>Type mapped to Dynamic Type styles</li></ul></div>
+</div>
+<div class="tbl"><table>
+<tr><th>Concern</th><th>Web app (Next.js on Vercel)</th><th>PWA (same code, installed)</th><th>Swift inspector (macOS, iOS)</th></tr>
+<tr><td><b>Colour</b></td><td>CSS variables from the tokens file; <code>data-theme</code> override.</td><td>Same, plus two <code>theme-color</code> metas and a maskable icon cut from the triangle mark.</td><td>Generated asset catalog; every colour set has both appearances; <code>TPT.bg.canvas</code>.</td></tr>
+<tr><td><b>Type</b></td><td>Display and body fonts self-hosted as woff2 under <code>design/fonts/</code>, sizes in rem on a fixed scale.</td><td>Same files, <code>font-display: swap</code>, subset to Latin, metric-compatible fallbacks so offline first paint does not shift.</td><td>Display font bundled only if the direction demands it (Familjen Grotesk, Instrument Serif); body maps to SF Pro through Dynamic Type: display → largeTitle, h2 → title2, body → body, eyebrow → caption monospaced. No point sizes in Swift.</td></tr>
+<tr><td><b>Space</b></td><td>4px grid, <code>space.1 … space.8</code> = 4, 8, 12, 16, 24, 32, 48, 64.</td><td>Same, plus <code>env(safe-area-inset-*)</code> on the shell.</td><td>Same numbers as points; <code>TPT.space.4</code>.</td></tr>
+<tr><td><b>Radius</b></td><td><code>radius.control · card · pill</code>, values per direction.</td><td>Same.</td><td><code>RoundedRectangle(cornerRadius: TPT.radius.card, style: .continuous)</code>.</td></tr>
+<tr><td><b>Icons</b></td><td>The nav.js glyph paths, <code>currentColor</code>, stroke per direction.</td><td>Same.</td><td>Each glyph exported as a custom SF Symbol template so weight follows the text style; the direction sets stroke weight once.</td></tr>
+<tr><td><b>Motion</b></td><td><code>motion.fast</code> and <code>motion.ease</code>; reduced-motion zeroes them.</td><td>Same.</td><td><code>withAnimation(.easeOut(duration:))</code> from the same numbers; <code>accessibilityReduceMotion</code> respected.</td></tr>
+<tr><td><b>Density</b></td><td>Default density; the inspector's dense tables use <code>space.2</code>.</td><td>Compact rows below 560px; 44px hit targets always.</td><td>macOS default; iOS 44pt targets; tables use the same row heights as the web.</td></tr>
+<tr><td><b>Photos</b></td><td>Neutral one-pixel frame, no tint, never the hero (I6).</td><td>Same; lazy, sized by the record beside them.</td><td>Same rule in a <code>TPTTile</code> view.</td></tr>
+</table></div>
+<h3>What the compiled selection generates</h3>
+<p><span class="pv d">DERIVED</span> Rendered from the compile row in the promenade. Change the row and these regenerate. The JSON is abbreviated to the semantic colour tier; the real file carries every tier.</p>
+<div class="gen">
+  <div><h4>tokens.css</h4><pre id="gen-css"></pre></div>
+  <div><h4>tokens.json (DTCG, excerpt)</h4><pre id="gen-json"></pre></div>
+  <div><h4>Tokens.swift (stub)</h4><pre id="gen-swift"></pre></div>
+</div>
+
+<h2 id="components"><small>8 · component library</small>Our own components, and what they read</h2>
+<p>We build our own library rather than adopting one, because the inspector, the hub and the app share a small vocabulary that no third-party kit has: provenance badges, the version diff, the ladder, the stream switch, the proposal card. Twelve components cover everything the demo needs. Each is a record: anatomy, tokens consumed, states, and its Swift twin.</p>
+<div class="grid2">
+  <div class="box"><h4 style="margin:0">Naming</h4><ul style="font-size:13px"><li>CSS: <code>.tpt-button</code>, <code>.tpt-button.primary</code>; parts as <code>.tpt-card-title</code>. Flat, no BEM underscores.</li><li>Swift: <code>TPTButton</code>, <code>TPTCard</code>; variants as enums, <code>TPTButton(.primary)</code>.</li><li>Every component lives in <code>design/components/</code> as one HTML fragment plus one Swift file with the same name. The hub renders the fragments as its own component sheet.</li></ul></div>
+  <div class="box"><h4 style="margin:0">Rules</h4><ul style="font-size:13px"><li>A component reads component-tier tokens, which read semantics. It never names a hue.</li><li>Every component has a light and a dark screenshot in its record before it is used on a surface.</li><li>States are enumerated: default, hover, focus, active, disabled, and for provenance and status the three fixed values.</li><li>A new component needs a reason the twelve cannot cover, written in its record.</li></ul></div>
+</div>
+<div class="tbl"><table>
+<tr><th>#</th><th>Component</th><th>Anatomy</th><th>Reads</th><th>Swift</th></tr>
+<tr><td class="n">1</td><td><b>Button</b> primary · secondary · quiet</td><td>label, optional glyph; 44pt target on touch</td><td>accent, fg.on-accent, line.strong, bg.surface</td><td><code>TPTButton</code></td></tr>
+<tr><td class="n">2</td><td><b>Chip</b></td><td>mono uppercase label; point and cluster variants</td><td>bg.raised, line, point.*</td><td><code>TPTChip</code></td></tr>
+<tr><td class="n">3</td><td><b>Provenance badge</b></td><td>DERIVED · AUTHORED · TO CONFIRM; 8.5px mono</td><td>prov.* (status aliases)</td><td><code>TPTProvenance</code></td></tr>
+<tr><td class="n">4</td><td><b>Card</b></td><td>glyph, title, one sentence, go-verb, optional id and temp</td><td>bg.surface, line, accent for the verb</td><td><code>TPTCard</code></td></tr>
+<tr><td class="n">5</td><td><b>Stat tile</b></td><td>number (display face, tabular), label, provenance</td><td>bg.surface, fg.muted</td><td><code>TPTStat</code></td></tr>
+<tr><td class="n">6</td><td><b>Version diff row</b></td><td>part name, v(n), v(n+1); added and struck text</td><td>status.ok, status.alert as text only</td><td><code>TPTDiffRow</code></td></tr>
+<tr><td class="n">7</td><td><b>Photo tile</b></td><td>square, one-pixel frame, yes or no mark as text</td><td>line, status.ok, status.alert</td><td><code>TPTTile</code></td></tr>
+<tr><td class="n">8</td><td><b>Stream switch</b></td><td>track, knob, name, one line</td><td>line.strong, status.ok</td><td><code>TPTSwitch</code> (native Toggle, tinted)</td></tr>
+<tr><td class="n">9</td><td><b>Ladder rung</b></td><td>numbered disc, verb, one line</td><td>fg.default on bg.canvas inverted</td><td><code>TPTRung</code></td></tr>
+<tr><td class="n">10</td><td><b>Proposal card</b></td><td>accent border, claim, reason, approve and decline buttons</td><td>accent, bg.surface</td><td><code>TPTProposal</code></td></tr>
+<tr><td class="n">11</td><td><b>Rulebox</b></td><td>warn edge, bold lead, muted body</td><td>status.warn, bg.surface</td><td><code>TPTCallout</code></td></tr>
+<tr><td class="n">12</td><td><b>Table</b></td><td>mono uppercase head, hairline rows, tabular numbers</td><td>bg.raised, line</td><td><code>TPTTable</code> (List with sections)</td></tr>
+</table></div>
+<h3>Compiled specimen</h3>
+<p>All twelve components on the composition currently in the compile row of the promenade. This is what the monorepo would look like if the ballot closed now.</p>
+<div id="compiled-spec" class="specs one"></div>
+
+<h2 id="icp"><small>9 · motifs against the ICP</small>What is acceptable, and on what basis</h2>
+<p>The ICP is still being dialled in (<code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>). Motifs speak to industries: marking paint reads as a jobsite, a title block reads as a studio, a rail of coloured points reads as an engineer's console. The bases below say what any motif must satisfy regardless of industry; the matrix says how each direction speaks to each ICP direction, so the design decision can follow the ICP decision instead of preceding it.</p>
+<h3>Bases: every motif must pass all seven</h3>
+<div class="tbl"><table>
+<tr><th>#</th><th>Basis</th><th>Why</th></tr>
+<tr><td class="n">B1</td><td>The hero is never a photograph, and no photo is larger than the record beside it.</td><td>Image analyzers are banned. The eye must land on the harness, not the corpus.</td></tr>
+<tr><td class="n">B2</td><td>One accent per screen; status hues never colour categories; the three points keep their slots.</td><td>I3, I4, I7. A motif that needs a second accent is two motifs.</td></tr>
+<tr><td class="n">B3</td><td>Provenance badges legible in the motif's own colours, both modes.</td><td>Tallies are never typed. The badge is the credibility of every number.</td></tr>
+<tr><td class="n">B4</td><td>Same glyph paths on every surface; the motif may change stroke only.</td><td>I8. Swift gets the same symbols.</td></tr>
+<tr><td class="n">B5</td><td>Drawable with colour, path and text.</td><td>I9. The inspector is native.</td></tr>
+<tr><td class="n">B6</td><td>Buildable today: fonts available now and self-hostable; no custom illustration.</td><td>Due 5:00 PM. A motif that needs an illustrator is a roadmap item.</td></tr>
+<tr><td class="n">B7</td><td>Distinct from the partners in the room: no MongoDB green accent, no black-on-black Vercel base.</td><td>The judges see forty submissions on those two palettes.</td></tr>
+</table></div>
+<h3>Fit matrix</h3>
+<p><span class="pv a">AUTHORED</span> 0 to 5: how naturally the direction's motif speaks to that ICP direction's company type, as estimated by the agent on 2026-09-26 for the principals to correct. <span class="pv d">DERIVED</span> the weighted fit under the chosen lens.</p>
+<div class="bar"><label>ICP lens</label><select id="lens"></select><span style="font-size:12.5px;color:var(--d-muted)" id="lens-note"></span></div>
+<div id="fit"></div>
+
+<h2 id="promenade"><small>10 · the promenade</small>How Patrick and Yash decide</h2>
+<p>A promenade, not a vote: walk the pieces in order, record a pick per piece, then compile. The ballot is stored in this browser under <code>tpt_ds_v1</code>; it does not sync. Export as text and paste it to the other person, or fill both columns together on one screen.</p>
+<div class="grid2">
+  <div class="box"><h4 style="margin:0">Gates (must pass, in order)</h4><ol style="font-size:13.5px"><li>Both modes pass the contrast table.</li><li>All seven bases in section 9.</li><li>Every piece has a Swift translation in section 7 that costs less than an hour.</li><li>Fonts load from a CDN now and can be self-hosted before the PWA goes offline.</li></ol></div>
+  <div class="box"><h4 style="margin:0">Criteria (score 1 to 5, weighted)</h4><ol style="font-size:13.5px"><li>Fit to the ICP we choose (the matrix, ×3)</li><li>Reads as harness, not analyzer, not dashboard (×3)</li><li>Holds up dense: the inspector is tables and diffs (×2)</li><li>Warmth in a three-minute demo (×2)</li><li>Both modes hold without a redesign (×2)</li><li>Distinct from the partners in the room (×1)</li><li>Build cost before 5:00 PM (×1)</li></ol></div>
+</div>
+<div class="box"><h4 style="margin:0">Procedure</h4><ol style="font-size:13.5px">
+<li><b>Round 1, ten minutes, apart.</b> Each principal fills their column: one pick per piece, an overall direction, one sentence of reasoning. Score, do not describe taste.</li>
+<li><b>Round 2, ten minutes, together.</b> Lock every piece where the columns agree. For each disagreement, each side names the criterion number that decides it. If still split, the lane owner decides: shape, motion and iconography go with the Swift and shell lane; colour, type and motif go with the ICP and lander lane. This tie-break is itself a proposal; strike it if it is wrong.</li>
+<li><b>Round 3, five minutes.</b> Set the compile row to the locked picks, read the compiled specimen once in each mode, export, and paste the export into the decision record at the bottom. Commit as <code>docs: design system decision</code> with both names.</li>
+<li><b>After.</b> Write <code>design/tokens.json</code> from the export, generate <code>hub/site/3pt.css</code> and move the nav shell onto tokens, start <code>Tokens.xcassets</code> for the Swift lane. Update this page's status line from proposal to decided.</li>
+</ol></div>
+<h3>Ballot</h3>
+<div class="tbl ballot"><table id="ballot"></table></div>
+<div class="grid2" id="notes"></div>
+<div class="bar">
+  <button class="ctl" id="btn-export">Export as text</button>
+  <button class="ctl" id="btn-compile-p">Compile from Patrick</button>
+  <button class="ctl" id="btn-compile-y">Compile from Yash</button>
+  <button class="ctl" id="btn-clear">Clear this browser's ballot</button>
+</div>
+<textarea id="export" hidden placeholder="Export appears here"></textarea>
+
+<h2 id="decision"><small>11 · decision record</small>To be filled at the end of the promenade</h2>
+<p><span class="pv c">TO CONFIRM</span> Nothing below is decided. When the promenade closes, replace the cells from the export, change the status line at the top of this page, and add a row to the changelog.</p>
+<div class="tbl"><table>
+<tr><th>Piece</th><th>Decision</th><th>Source direction</th><th>Decided by</th><th>Date</th></tr>
+<tr><td>Colour</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Type</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Shape</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Motif</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Motion</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Iconography</td><td>TO CONFIRM</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Naming convention</td><td>Option C, layer then role (proposed)</td><td>this page</td><td>—</td><td>—</td></tr>
+<tr><td>Invariants I1 to I10</td><td>as written (proposed)</td><td>this page</td><td>—</td><td>—</td></tr>
+</table></div>
+
+<footer>
+  <p style="margin:0"><b>3PT</b> · design system proposal · <code>docs/11-design-system.html</code> · written 2026-09-26 for the promenade between Patrick and Yash. Sources: <code>hub/site/3pt.css</code>, <code>hub/site/nav.js</code>, <code>hub/site/direction.html</code>, <code>docs/01-icp.md</code>, <code>docs/08-icp-directions.md</code>. Direction fonts on this page load from Google Fonts for review only.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+/* ---------- Data. Colour sets were tuned against WCAG thresholds before this page was written; the table in section 6 recomputes them at load. ---------- */
+var COLOR = {"D1":{"light":{"canvas":"#E9EDF1","surface":"#F7F9FB","raised":"#FFFFFF","deep":"#232A33","onDeep":"#E8B04A","ink":"#18202B","muted":"#5A6676","faint":"#7D8896","line":"#C9D1DB","lineStrong":"#7F8C9B","accent":"#B8400C","accentSoft":"#FBE3D6","onAccent":"#FFFFFF","ok":"#1B6E4C","okSoft":"#D6EEE3","warn":"#8A5A00","warnSoft":"#F5E6C4","alert":"#B3261E","alertSoft":"#F8DAD7","plan":"#2F5FB3","build":"#B8400C","instrument":"#1F7A55"},"dark":{"canvas":"#12161B","surface":"#1B2129","raised":"#232A33","deep":"#0B0E12","onDeep":"#E8B04A","ink":"#E6EBF1","muted":"#98A4B3","faint":"#7C8797","line":"#2E3743","lineStrong":"#66748A","accent":"#FF8A4C","accentSoft":"#3A2418","onAccent":"#1A0E08","ok":"#5CCB98","okSoft":"#17332A","warn":"#E8B04A","warnSoft":"#3A2E14","alert":"#F0796F","alertSoft":"#3B1B19","plan":"#7FA6E8","build":"#FF8A4C","instrument":"#5CCB98"}},"D2":{"dark":{"canvas":"#0F1216","surface":"#151A21","raised":"#1A2029","deep":"#0B0E12","onDeep":"#E6E9EE","ink":"#E6E9EE","muted":"#A3ADBB","faint":"#7B8694","line":"#2A323D","lineStrong":"#5E6C85","accent":"#FF6B4A","accentSoft":"#3A1F18","onAccent":"#14100E","ok":"#3FB886","okSoft":"#14302A","warn":"#E0A33A","warnSoft":"#3A2C12","alert":"#F06A61","alertSoft":"#3A1A19","plan":"#8B7CF6","build":"#E0A33A","instrument":"#3FB886"},"light":{"canvas":"#F3F5F8","surface":"#FFFFFF","raised":"#FFFFFF","deep":"#141A22","onDeep":"#E6E9EE","ink":"#141A22","muted":"#4F5B69","faint":"#6B7684","line":"#D5DBE3","lineStrong":"#8794A3","accent":"#C43E16","accentSoft":"#FBE1D9","onAccent":"#FFFFFF","ok":"#1A6E4C","okSoft":"#D6EFE3","warn":"#8A5A00","warnSoft":"#F6E7C5","alert":"#B8302A","alertSoft":"#F9DAD8","plan":"#5B47D6","build":"#8A5A00","instrument":"#1D7A55"}},"D3":{"light":{"canvas":"#F4F1EA","surface":"#FBF9F4","raised":"#FFFFFF","deep":"#1F1D1A","onDeep":"#EDE8DD","ink":"#1F1D1A","muted":"#5E5A52","faint":"#7C776D","line":"#D8D2C4","lineStrong":"#8E877A","accent":"#2E4E9E","accentSoft":"#DDE4F5","onAccent":"#FFFFFF","ok":"#3A6B3F","okSoft":"#DCE9DA","warn":"#835A0E","warnSoft":"#F1E5C3","alert":"#B8321F","alertSoft":"#F6DCD6","plan":"#2E4E9E","build":"#8F6210","instrument":"#3A6B3F"},"dark":{"canvas":"#1B1A17","surface":"#24221E","raised":"#2E2B26","deep":"#121110","onDeep":"#EDE8DD","ink":"#EDE8DD","muted":"#A8A196","faint":"#857F74","line":"#3A362F","lineStrong":"#7A7264","accent":"#8FA9E8","accentSoft":"#22304D","onAccent":"#0F1526","ok":"#7FC48F","okSoft":"#1E3A26","warn":"#E0B45A","warnSoft":"#3E2F12","alert":"#E8776A","alertSoft":"#4A1F1A","plan":"#8FA9E8","build":"#E0B45A","instrument":"#7FC48F"}}}
+;
+var DIR = {
+  D1:{ name:'Site marking', short:'Site marking', tagline:'Lightbox glass and marking paint.', origin:'hub/site/direction.html · raised by Patrick', who:'Patrick',
+    thesis:'The page is a photo wall on a jobsite and the harness marks it up the way a superintendent circles a detail: paint orange for the pick, a strike for the drop, keep and cut in green and ochre. Warm, physical, and honest about photos while keeping them small.',
+    favors:'Construction first, architecture second.', risk:'The film strip in the hero drifts toward "image analyzer" the moment it grows larger than the record beside it (B1). Marker orange and MongoDB green sit close on a projector; the ok hue must stay dark.', cost:'Low. Exists; needs the alert hue, the point hues and the strong line added, and the badge.',
+    type:{ display:'"Familjen Grotesk","Helvetica Neue",Arial,sans-serif', body:'"IBM Plex Sans",system-ui,-apple-system,sans-serif', mono:'"IBM Plex Mono",ui-monospace,Menlo,monospace', dw:700, track:'-0.01em', base:'16px', lh:1.5, label:'Familjen Grotesk · IBM Plex Sans · IBM Plex Mono', note:'Grotesk display, tight; Plex body at 16; mono eyebrows. Roomy line spacing, big section gaps.' },
+    shape:{ radius:'6px', radiusLg:'10px', pill:'3px', shadow:'none', gap:'16px', pad:'22px', border:'1px', label:'6 / 10 · square tags · no shadow', note:'Rectangular tags like tape, six-pixel cards, edges instead of shadows. Things look placed, not floated.' },
+    motif:{ name:'Film strip and marking paint', elements:['Sprocket rule above and below a strip of small frames','A circled stamp in marker on the picked option','A strike-through on the dropped option','Keep and cut pills'], note:'Everything on the page looks put there by a hand with a paint pen.' },
+    motion:{ dur:'160ms', ease:'ease-out', hover:'0px', label:'160ms ease-out · fills only', note:'Ticks and bars fill; nothing translates. A wall does not move.' },
+    icon:{ stroke:1.7, cap:'round', join:'round', label:'1.7 stroke · round caps', note:'The nav.js set as drawn.' } },
+  D2:{ name:'Instrument panel', short:'Instrument panel', tagline:'A console with three coloured points on a rail.', origin:'hub/site/3pt.css + nav.js · the hub as built', who:'Hub',
+    thesis:'Dark base, terse system type, a fixed rail of glyphs, four cluster hues and the three points on a triangle. It reads as telemetry: the harness is an instrument and this is its panel. The hub already wears it; the light set is new here.',
+    favors:'Pipeline team first, agency second.', risk:'Reads as a dashboard, which is a banned headline. The inspector must open on the version diff, never on tiles. Colour-named tokens must be renamed (section 2).', cost:'Lowest. Exists; needs the light set below and the nav shell moved onto tokens.',
+    type:{ display:'system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif', body:'system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif', mono:'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace', dw:800, track:'-0.01em', base:'14.5px', lh:1.55, label:'System sans 800 · system mono', note:'No web fonts at all. Heavy display weight, 14.5 body, tracked mono eyebrows. Dense.' },
+    shape:{ radius:'7px', radiusLg:'10px', pill:'99px', shadow:'0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25)', gap:'12px', pad:'16px', border:'1px', label:'7 / 10 · pills · soft shadow', note:'Rounded controls, pill chips, cards that float a little on a shadow. Twelve-pixel gaps.' },
+    motif:{ name:'Triangle mark and rail', elements:['The three-point triangle with coloured vertices as the wordmark','A cluster dot before every heading','A fixed left rail with one glyph per leaf','A provenance badge on every figure'], note:'The console has a place for everything and every number says where it came from.' },
+    motion:{ dur:'120ms', ease:'ease', hover:'-1px', label:'120ms · hover lifts 1px', note:'Fast. Cards lift a pixel on hover; the rail collapses in 150ms.' },
+    icon:{ stroke:1.7, cap:'round', join:'round', label:'1.7 stroke · round caps', note:'Identical to D1: this is the set the hub ships.' } },
+  D3:{ name:'Drafting sheet', short:'Drafting sheet', tagline:'Warm paper, graphite, one pencil-blue mark, red only for the redline.', origin:'New in this proposal', who:'Agent',
+    thesis:'The harness is a set of drawings that keeps revising itself. A title block in the corner carries sheet, revision and date; dimension lines sit under headings; hatching stands for cold storage and placeholders; a redline marks anything the harness changed. A serif display face says studio, not startup.',
+    favors:'Interior studio first, architecture second.', risk:'Most build cost. A serif display needs a self-hosted file before offline; hatching is easy to overdo; graphite on paper needs care to reach 4.5:1 for muted text (it does, see section 6).', cost:'Medium. Nothing exists; the title block, the dimension rule and the fonts are new.',
+    type:{ display:'"Instrument Serif",Georgia,"Times New Roman",serif', body:'"Instrument Sans",system-ui,-apple-system,sans-serif', mono:'"JetBrains Mono",ui-monospace,Menlo,monospace', dw:400, track:'0', base:'16px', lh:1.55, label:'Instrument Serif · Instrument Sans · JetBrains Mono', note:'Serif display at regular weight, a quiet sans body, a drafting mono. The names are a happy accident.' },
+    shape:{ radius:'2px', radiusLg:'4px', pill:'2px', shadow:'none', gap:'18px', pad:'22px', border:'1px', label:'2 / 4 · near square · hairlines', note:'A sheet, not a card. Two-pixel corners, hairline rules, no shadows, generous margins.' },
+    motif:{ name:'Title block and redline', elements:['A title block in the corner of every surface: sheet, revision, date','Dimension lines with tick ends under headings','45° hatch for placeholders and cold storage','A redline on anything the harness changed'], note:'Revision is the subject, so the sheet shows its own revision.' },
+    motion:{ dur:'220ms', ease:'ease-in-out', hover:'0px', label:'220ms cross-fade · no transforms', note:'Paper is redrawn, never animated. Cross-fades only.' },
+    icon:{ stroke:1.25, cap:'square', join:'miter', label:'1.25 stroke · square caps', note:'Same paths, drafted: hairline, square caps, mitred joins.' } }
+};
+var PIECES = [
+  ['color','Colour','the two sets, one accent, three points, status triple'],
+  ['type','Type','display, body, mono, weight, base size'],
+  ['shape','Shape','radius, edges, shadow, density'],
+  ['motif','Motif','the ornament that says which industry this is'],
+  ['motion','Motion','durations, easing, what moves'],
+  ['icon','Iconography','stroke weight and caps on the shared glyph paths']
+];
+var KEYS = ['D1','D2','D3'];
+var ICP = [
+  ['interior','Interior design studio','Yash'],['construction','Construction GC / sub','Patrick'],['agency','Agency creative ops','Yash'],['architecture','Architecture / AEC','Both'],['pipeline','Media-pipeline team','Both']
+];
+/* AUTHORED 0–5: how naturally the direction's motif speaks to that company type. Correct these in the promenade. */
+var FIT = { D1:{interior:2,construction:5,agency:2,architecture:4,pipeline:2}, D2:{interior:1,construction:2,agency:3,architecture:2,pipeline:5}, D3:{interior:5,construction:2,agency:2,architecture:5,pipeline:1} };
+var LENSES = [
+  ['synthesis','Working synthesis (build E, dress A)',{interior:.4,pipeline:.4,construction:.1,architecture:.1,agency:0},'From docs/08: the harness is the pipeline team’s, the lander is the studio’s. Two directions pull at once.'],
+  ['interior','Interior design studio only',{interior:1},'Direction A in docs/08.'],
+  ['construction','Construction only',{construction:1},'Direction B in docs/08.'],
+  ['agency','Agency only',{agency:1},'Direction C in docs/08; highest rule risk.'],
+  ['architecture','Architecture only',{architecture:1},'Direction D in docs/08; the venture story.'],
+  ['pipeline','Pipeline team only',{pipeline:1},'Direction E in docs/08; the harness’s own identity.']
+];
+
+/* ---------- Tokens ---------- */
+function tokens(picks, mode){
+  var c = COLOR[picks.color][mode], ty = DIR[picks.type].type, sh = DIR[picks.shape].shape, mo = DIR[picks.motion].motion, ic = DIR[picks.icon].icon;
+  return {
+    '--t-canvas':c.canvas,'--t-surface':c.surface,'--t-raised':c.raised,'--t-deep':c.deep,'--t-on-deep':c.onDeep,'--t-ink':c.ink,'--t-muted':c.muted,'--t-faint':c.faint,
+    '--t-line':c.line,'--t-line-strong':c.lineStrong,'--t-accent':c.accent,'--t-accent-soft':c.accentSoft,'--t-on-accent':c.onAccent,
+    '--t-ok':c.ok,'--t-ok-soft':c.okSoft,'--t-warn':c.warn,'--t-warn-soft':c.warnSoft,'--t-alert':c.alert,'--t-alert-soft':c.alertSoft,
+    '--t-plan':c.plan,'--t-build':c.build,'--t-instrument':c.instrument,
+    '--t-display':ty.display,'--t-body':ty.body,'--t-mono':ty.mono,'--t-dw':ty.dw,'--t-track':ty.track,'--t-base':ty.base,'--t-lh':ty.lh,
+    '--t-radius':sh.radius,'--t-radius-lg':sh.radiusLg,'--t-pill':sh.pill,'--t-shadow':sh.shadow,'--t-gap':sh.gap,'--t-pad':sh.pad,'--t-border':sh.border,
+    '--t-dur':mo.dur,'--t-ease':mo.ease,'--t-hover':mo.hover,
+    '--t-stroke':ic.stroke,'--t-cap':ic.cap,'--t-join':ic.join
+  };
+}
+function apply(el, picks, mode){
+  var t = tokens(picks, mode); for (var k in t) el.style.setProperty(k, t[k]);
+  el.setAttribute('data-motif', picks.motif); el.style.colorScheme = mode;
+}
+function allOf(d){ return {color:d,type:d,shape:d,motif:d,motion:d,icon:d}; }
+
+/* ---------- Specimen markup: identical every time; only tokens differ ---------- */
+var seed = 7; function rnd(){ seed=(seed*9301+49297)%233280; return seed/233280; }
+function ph(kind){
+  var P={stud:[[32,45,58],[28,30,40]],pipe:[[22,65,48],[210,10,55]],dry:[[40,10,82],[210,8,70]],conc:[[210,6,55],[200,8,40]]}[kind], a=P[0], b=P[1], ang=Math.floor(rnd()*360);
+  var lines = kind==='stud' ? ',repeating-linear-gradient(90deg,hsl(30 40% 62% / .6) 0 6px,transparent 6px 22px)' : kind==='pipe' ? ',linear-gradient('+(rnd()>.5?0:90)+'deg,transparent 44%,hsl(22 70% 45%) 44% 52%,transparent 52%)' : '';
+  return 'background:radial-gradient(circle at '+(25+rnd()*50)+'% '+(25+rnd()*50)+'%, hsl('+a[0]+' '+a[1]+'% '+(a[2]+12)+'%) 0 18%, transparent 19%)'+lines+',linear-gradient('+ang+'deg,hsl('+a[0]+' '+a[1]+'% '+a[2]+'%),hsl('+b[0]+' '+b[1]+'% '+b[2]+'%))';
+}
+var TRI = '<svg class="g" viewBox="0 0 24 24"><path d="M12 3.5l8.5 15h-17Z"/><circle cx="12" cy="3.5" r="1.4"/><circle cx="20.5" cy="18.5" r="1.4"/><circle cx="3.5" cy="18.5" r="1.4"/></svg>';
+var GL = {
+  vision:'<svg class="g" viewBox="0 0 24 24"><path d="M3 12s3.5-6.5 9-6.5 9 6.5 9 6.5-3.5 6.5-9 6.5S3 12 3 12Z"/><path d="M12 3v2.5M12 18.5V21"/><circle cx="12" cy="12" r="2.4"/></svg>',
+  lanes:'<svg class="g" viewBox="0 0 24 24"><path d="M4 4v16M10 4v16M16 4v16M22 4v16"/><path d="M6 8h2M12 12h2M18 16h2"/></svg>',
+  workflow:'<svg class="g" viewBox="0 0 24 24"><path d="M4 6h5v5H4ZM15 6h5v5h-5ZM9.5 15h5v5h-5Z"/><path d="M9 8.5h6M6.5 11v2.5a1.5 1.5 0 0 0 1.5 1.5h1.5M17.5 11v2.5a1.5 1.5 0 0 1-1.5 1.5h-1.5"/></svg>',
+  provenance:'<svg class="g" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M7.6 16.4L16.4 7.6M8.2 18h7.6"/><path d="M6 15.8V9a3 3 0 0 1 3-3h6.8"/></svg>'
+};
+function specimen(label, small){
+  var tiles=[['pipe',1],['pipe',1],['stud',1],['dry',0]].map(function(t){ return '<div class="tile'+(t[1]?'':' dim')+'"><i style="'+ph(t[0])+'"></i><span class="mk'+(t[1]?'':' n')+'">'+(t[1]?'yes':'no')+'</span></div>'; }).join('');
+  var strip=['stud','pipe','dry','conc'].map(function(k){ return '<i style="'+ph(k)+'"></i>'; }).join('');
+  return '<div class="sp'+(small?' small':' big')+'">'
+   +'<span class="lbl">'+label+'</span>'
+   +'<div><div class="eb">Harness · v2 → v3 · proposal</div><h3 class="h">Every site photo becomes a lesson <em>your next job already knows.</em></h3><p class="ld">The harness read the team’s no answers, added a field, and re-read the old photos once. Approve the version or roll it back.</p></div>'
+   +'<div class="motif m1"><span class="stamp">PICKED</span>'+strip+'<div class="code">▸ TOWER B · LEVEL 2 · WEEK 14</div></div>'
+   +'<div class="motif m2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5l7.5 13h-15Z"/><circle cx="12" cy="4.5" r="2" fill="var(--t-plan)" stroke="none"/><circle cx="19.5" cy="17.5" r="2" fill="var(--t-build)" stroke="none"/><circle cx="4.5" cy="17.5" r="2" fill="var(--t-instrument)" stroke="none"/></svg><div class="rail"><span><i style="background:var(--t-plan)"></i>Plan</span><span><i style="background:var(--t-build)"></i>Build</span><span><i style="background:var(--t-instrument)"></i>Instrument</span></div></div>'
+   +'<div class="motif m3"><div class="dim">2 400 · unit 204 · plumbing<b>Sheet A-204 · wall_state added</b></div><div class="hatch"></div><div class="tb"><div>sheet <b>A-204</b></div><div>rev <b class="red">v3</b></div><div>date <b>2026-09-26</b></div></div></div>'
+   +'<div class="row"><button class="btn pri">Approve v3</button><button class="btn">Roll back</button><button class="btn quiet">Later</button><span class="chip plan">Plan</span><span class="chip build">Build</span><span class="chip inst">Instrument</span></div>'
+   +'<div class="row"><span class="pvb d">DERIVED</span><span class="pvb a">AUTHORED</span><span class="pvb c">TO CONFIRM</span><span class="glyphs"><span class="tri">'+TRI+'</span>'+GL.vision+GL.lanes+GL.workflow+GL.provenance+'</span></div>'
+   +'<div class="stats"><div class="stat"><div class="n">7 / 8</div><div class="l">useful answers · v2 <span class="pvb d">DERIVED</span></div></div><div class="stat"><div class="n">−38%</div><div class="l">tokens per query <span class="pvb d">DERIVED</span></div></div><div class="stat"><div class="n">$0.11</div><div class="l">per photo, backfill <span class="pvb a">AUTHORED</span></div></div></div>'
+   +'<div class="diff"><div class="r"><span></span><span>harness v2</span><span>harness v3</span></div><div class="r"><b>Rules</b><span>trade, unit, date, wall_state</span><span class="add">+ issue: water | crack | none</span></div><div class="r"><b>Context</b><span>filter by unit and trade, send 8</span><span><span class="del">send 8</span> <span class="add">send 5, pixels only below 0.6</span></span></div><div class="r"><b>Tools</b><span>search_records · find_missing_photos</span><span class="add">+ reread_photo, 50 per run</span></div></div>'
+   +(small?'':'<div class="tiles">'+tiles+'</div>')
+   +'<div class="row" style="gap:18px"><div class="sw on"><span class="k"></span><span>Site photos <small>on · the demo runs on this</small></span></div><div class="sw"><span class="k"></span><span>Drone captures <small>off · nobody asked in 6 weeks</small></span></div></div>'
+   +(small?'':'<div class="rungs"><div class="rung"><span class="rn">1</span><div>Notice<small>Seen three Fridays in a row</small></div></div><div class="rung"><span class="rn">2</span><div>Remind<small>Owner report is due; your photo pack is ready</small></div></div><div class="rung"><span class="rn">3</span><div>Automate<small>Accepted three times, so it offers to build the pack</small></div></div></div>')
+   +'<div class="prop"><b>Drywall started in unit 206. No photo of its plumbing with the wall open.</b><p>Units 201 to 205 each have one. Ask the field team for a photo today?</p><div class="row"><button class="btn pri">Send request</button><button class="btn">Not needed</button></div></div>'
+   +(small?'':'<div class="rulebox"><b>Where the model ends.</b> A weighted sum cannot say disqualified. Read the banned-list column as a gate first, then the ranking.</div>'
+   +'<table><tr><th>Version</th><th>Change</th><th>Score</th><th>Status</th></tr><tr><td>v1</td><td>adds unit, level, trade</td><td>0.38</td><td>kept</td></tr><tr><td>v2</td><td>adds wall_state</td><td>0.71</td><td>kept</td></tr><tr><td>v3</td><td>adds issue</td><td>—</td><td>proposed</td></tr></table>'
+   +'<div class="deep">MONGODB · harness_versions · v0 … v3 · parent_v · score · status</div>')
+   +'</div>';
+}
+
+/* ---------- State ---------- */
+var NS='tpt_ds_v1';
+function load(){ try{ return JSON.parse(localStorage.getItem(NS)||'{}'); }catch(e){ return {}; } }
+function save(s){ try{ localStorage.setItem(NS, JSON.stringify(s)); }catch(e){} }
+var S = load();
+S.patrick = S.patrick||{}; S.yash = S.yash||{}; S.compiled = S.compiled||allOf('D2'); S.notes = S.notes||{patrick:'',yash:''};
+var MODE = 'split';
+
+/* ---------- Render: pieces ---------- */
+function pieceCard(piece, d){
+  var D = DIR[d], body='';
+  if (piece==='color'){
+    body = ['light','dark'].map(function(m){ var c=COLOR[d][m]; return '<div class="eyebrow" style="margin-top:6px">'+m+'</div><div class="swatches">'+['canvas','surface','ink','muted','accent','onAccent','plan','build','instrument','ok','warn','alert'].map(function(k){ return '<div class="sw"><i style="background:'+c[k]+'"></i><span><b>'+k.replace('onAccent','on-accent')+'</b>'+c[k]+'</span></div>'; }).join('')+'</div>'; }).join('');
+  } else if (piece==='type'){
+    body = '<div style="font-family:'+D.type.display+';font-weight:'+D.type.dw+';letter-spacing:'+D.type.track+';font-size:30px;line-height:1.05;margin-top:6px">Plan it. Build it. Instrument it.</div><div style="font-family:'+D.type.body+';font-size:'+D.type.base+';line-height:'+D.type.lh+';margin-top:8px;color:var(--d-muted)">Then let it rewrite itself. Every version lives in MongoDB.</div><div style="font-family:'+D.type.mono+';font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-top:8px">harness · v2 → v3 · 2026-09-26</div><div class="note" style="margin-top:8px">'+D.type.label+'</div>';
+  } else if (piece==='shape'){
+    var s=D.shape;
+    body = '<div style="display:flex;gap:10px;align-items:center;margin-top:8px"><div style="width:74px;height:50px;border:'+s.border+' solid var(--d-line-strong);border-radius:'+s.radiusLg+';box-shadow:'+s.shadow+';background:var(--d-raised)"></div><div style="padding:7px 12px;border:'+s.border+' solid var(--d-line-strong);border-radius:'+s.radius+';font-size:12px;font-weight:600">Button</div><div style="padding:4px 9px;border:1px solid var(--d-line-strong);border-radius:'+s.pill+';font:600 10px/1 var(--d-mono);letter-spacing:.08em">CHIP</div></div><div class="note" style="margin-top:8px">'+s.label+'</div>';
+  } else if (piece==='motif'){
+    body = '<div class="sp small" data-motif="'+d+'" style="padding:10px;gap:0;margin-top:6px" id="mp-'+d+'"><div class="motif m1"><span class="stamp">PICKED</span>'+['stud','pipe','dry','conc'].map(function(k){ return '<i style="'+ph(k)+'"></i>'; }).join('')+'<div class="code">▸ TOWER B · LEVEL 2</div></div><div class="motif m2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 4.5l7.5 13h-15Z"/><circle cx="12" cy="4.5" r="2" fill="var(--t-plan)" stroke="none"/><circle cx="19.5" cy="17.5" r="2" fill="var(--t-build)" stroke="none"/><circle cx="4.5" cy="17.5" r="2" fill="var(--t-instrument)" stroke="none"/></svg><div class="rail"><span><i style="background:var(--t-plan)"></i>Plan</span><span><i style="background:var(--t-build)"></i>Build</span><span><i style="background:var(--t-instrument)"></i>Instrument</span></div></div><div class="motif m3"><div class="dim">2 400 · unit 204<b>Sheet A-204</b></div><div class="hatch"></div><div class="tb"><div>sheet <b>A-204</b></div><div>rev <b class="red">v3</b></div><div>date <b>09-26</b></div></div></div></div><ul>'+D.motif.elements.map(function(e){ return '<li>'+e+'</li>'; }).join('')+'</ul>';
+  } else if (piece==='motion'){
+    body = '<div class="note" style="margin-top:6px"><b style="color:var(--d-ink)">'+D.motion.label+'</b></div><div style="margin-top:8px"><button class="ctl" style="transition:transform '+D.motion.dur+' '+D.motion.ease+', background '+D.motion.dur+' '+D.motion.ease+'" onmouseover="this.style.transform=\'translateY('+D.motion.hover+')\';this.style.background=\'var(--d-soft)\'" onmouseout="this.style.transform=\'\';this.style.background=\'\'">hover me</button></div>';
+  } else if (piece==='icon'){
+    var i=D.icon;
+    body = '<div style="display:flex;gap:14px;margin-top:8px;color:var(--d-ink)"><span style="display:inline-flex;gap:10px" class="sp" data-x="1"></span></div>';
+    body = '<div class="sp small" style="padding:10px;flex-direction:row;gap:12px;margin-top:6px;--t-stroke:'+i.stroke+';--t-cap:'+i.cap+';--t-join:'+i.join+';background:var(--d-raised);border-color:var(--d-line);color:var(--d-ink)">'+TRI+GL.vision+GL.lanes+GL.workflow+GL.provenance+'</div><div class="note" style="margin-top:6px">'+i.label+'</div>';
+  }
+  var name = piece==='motif' ? D.motif.name : D.short;
+  return '<div class="piece"><div class="hd"><b><span class="tag '+d.toLowerCase()+'">'+d+'</span>'+name+'</b></div>'+body+'<div class="note">'+(D[piece==='icon'?'icon':piece]&&D[piece==='icon'?'icon':piece].note||'')+'</div></div>';
+}
+function renderPieces(){
+  var g=document.getElementById('pieces-grid'); g.innerHTML = PIECES.map(function(p){
+    return '<h3>'+p[1]+' <span style="font-weight:400;color:var(--d-muted);font-size:13px">· '+p[2]+'</span></h3><div class="pieces">'+KEYS.map(function(d){ return pieceCard(p[0], d); }).join('')+'</div>';
+  }).join('');
+  KEYS.forEach(function(d){ var el=document.getElementById('mp-'+d); if(el) apply(el, allOf(d), pageMode()); });
+}
+
+/* ---------- Render: direction cards + compiled ---------- */
+function specimens(picks, label, small){
+  var modes = MODE==='split' ? ['light','dark'] : [MODE];
+  var html = '<div class="specs'+(modes.length===1?' one':'')+'">'+modes.map(function(m){ return '<div data-m="'+m+'">'+specimen(label+' · '+m, small)+'</div>'; }).join('')+'</div>';
+  var wrap=document.createElement('div'); wrap.innerHTML=html;
+  wrap.querySelectorAll('[data-m]').forEach(function(w){ apply(w.firstChild, picks, w.getAttribute('data-m')); });
+  return wrap.firstChild;
+}
+function renderDirs(){
+  var host=document.getElementById('dir-cards'); host.innerHTML='';
+  KEYS.forEach(function(d){
+    var D=DIR[d], card=document.createElement('div'); card.className='dircard';
+    card.innerHTML='<div class="head"><h3><span class="tag '+d.toLowerCase()+'">'+d+'</span>'+D.name+'</h3><span style="color:var(--d-muted);font-size:13px">'+D.tagline+'</span></div>'
+      +'<p style="font-size:14px">'+D.thesis+'</p>'
+      +'<div class="meta"><div><b>Origin</b>'+D.origin+'</div><div><b>Favours</b>'+D.favors+'</div><div><b>Risk</b>'+D.risk+'</div><div><b>Cost today</b>'+D.cost+'</div></div>'
+      +'<div class="meta" style="grid-template-columns:repeat(6,1fr)"><div><b>Colour</b>'+d+'</div><div><b>Type</b>'+D.type.label+'</div><div><b>Shape</b>'+D.shape.label+'</div><div><b>Motif</b>'+D.motif.name+'</div><div><b>Motion</b>'+D.motion.label+'</div><div><b>Icons</b>'+D.icon.label+'</div></div>';
+    card.appendChild(specimens(allOf(d), d+' · '+D.name, true));
+    var b=document.createElement('div'); b.className='bar'; b.innerHTML='<button class="ctl" data-compile="'+d+'">Compile all six from '+d+'</button>'; card.appendChild(b);
+    host.appendChild(card);
+  });
+}
+function renderCompiled(){
+  var host=document.getElementById('compiled-spec'); host.innerHTML='';
+  host.appendChild(specimens(S.compiled, 'compiled', false));
+  var mix = PIECES.map(function(p){ return p[1].toLowerCase()+' '+S.compiled[p[0]]; }).join(' · ');
+  document.getElementById('compiled-line').textContent = 'compiled: '+mix;
+  renderGen();
+}
+
+/* ---------- Contrast (DERIVED) ---------- */
+function lum(h){ var c=h.replace('#',''); var v=[0,2,4].map(function(i){ var x=parseInt(c.slice(i,i+2),16)/255; return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4); }); return .2126*v[0]+.7152*v[1]+.0722*v[2]; }
+function cr(a,b){ var x=lum(a),y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); }
+var PAIRS=[['ink','canvas',4.5,'body on canvas'],['ink','surface',4.5,'body on surface'],['muted','surface',4.5,'muted on surface'],['faint','surface',3,'faint label'],['accent','surface',4.5,'accent as text'],['onAccent','accent',4.5,'text on accent'],['onDeep','deep',4.5,'text on deep'],['ok','okSoft',4.5,'DERIVED badge'],['warn','warnSoft',4.5,'AUTHORED badge'],['alert','alertSoft',4.5,'TO CONFIRM badge'],['ok','surface',4.5,'ok as text'],['warn','surface',4.5,'warn as text'],['alert','surface',4.5,'alert as text'],['plan','surface',3,'plan mark'],['build','surface',3,'build mark'],['instrument','surface',3,'instrument mark'],['lineStrong','surface',3,'strong line'],['line','surface',1.3,'hairline']];
+function renderContrast(){
+  var cols=[]; KEYS.forEach(function(d){ ['light','dark'].forEach(function(m){ cols.push([d,m]); }); });
+  var h='<div class="tbl"><table><tr><th>Pair</th><th>Min</th>'+cols.map(function(c){ return '<th>'+c[0]+' '+c[1]+'</th>'; }).join('')+'</tr>';
+  var fails={}; cols.forEach(function(c){ fails[c.join(' ')]=0; });
+  PAIRS.forEach(function(p){
+    h+='<tr><td>'+p[3]+' <span style="color:var(--d-faint);font-family:var(--d-mono);font-size:11px">'+p[0]+' / '+p[1]+'</span></td><td class="n">'+p[2]+'</td>';
+    cols.forEach(function(c){ var s=COLOR[c[0]][c[1]], r=cr(s[p[0]],s[p[1]]), ok=r>=p[2]; if(!ok) fails[c.join(' ')]++; h+='<td class="n '+(ok?'ok':'bad')+'">'+r.toFixed(2)+'</td>'; });
+    h+='</tr>';
+  });
+  h+='<tr><td><b>Gate</b></td><td></td>'+cols.map(function(c){ var f=fails[c.join(' ')]; return '<td class="n '+(f?'bad':'ok')+'">'+(f?f+' fail':'pass')+'</td>'; }).join('')+'</tr></table></div>';
+  document.getElementById('contrast').innerHTML=h;
+}
+
+/* ---------- Fit matrix ---------- */
+function renderFit(){
+  var sel=document.getElementById('lens'); if(!sel.options.length){ sel.innerHTML=LENSES.map(function(l){ return '<option value="'+l[0]+'">'+l[1]+'</option>'; }).join(''); sel.value=S.lens||'synthesis'; }
+  var L=LENSES.filter(function(l){ return l[0]===sel.value; })[0]; document.getElementById('lens-note').textContent=L[3];
+  var h='<div class="tbl matrix"><table><tr><th>Direction</th>'+ICP.map(function(i){ return '<th>'+i[1]+'<br><span style="font-weight:400;text-transform:none;letter-spacing:0">raised by '+i[2]+' · w '+(L[2][i[0]]||0)+'</span></th>'; }).join('')+'<th>Weighted fit</th></tr>';
+  var rows=KEYS.map(function(d){ var num=0,den=0; ICP.forEach(function(i){ var w=L[2][i[0]]||0; num+=w*FIT[d][i[0]]; den+=w*5; }); return [d, den?num/den:0]; });
+  var best=Math.max.apply(null, rows.map(function(r){ return r[1]; }));
+  rows.forEach(function(r){ var d=r[0]; h+='<tr><td><b><span class="tag '+d.toLowerCase()+'">'+d+'</span>'+DIR[d].name+'</b><br><span style="font-size:12px;color:var(--d-muted)">'+DIR[d].motif.name+'</span></td>'+ICP.map(function(i){ var s=FIT[d][i[0]]; return '<td class="s'+(s>=4?' hi':s<=2?' lo':'')+'">'+s+'</td>'; }).join('')+'<td class="n'+(r[1]===best?' ok':'')+'">'+(r[1]*100).toFixed(0)+' <span class="pv d">DERIVED</span></td></tr>'; });
+  h+='</table></div>';
+  document.getElementById('fit').innerHTML=h;
+}
+
+/* ---------- Ballot ---------- */
+function renderBallot(){
+  var t=document.getElementById('ballot');
+  var rows=PIECES.map(function(p){ return [p[0],p[1],p[2]]; }); rows.push(['overall','Overall direction','the one to take whole, if any']);
+  var h='<tr><th>Piece</th><th>Patrick</th><th>Yash</th><th>Compiled</th></tr>';
+  rows.forEach(function(r){
+    var k=r[0], pa=S.patrick[k], ya=S.yash[k], agree=pa&&ya&&pa===ya;
+    function opts(who){ var cur=who==='compiled'?S.compiled[k]:S[who][k]; return '<span class="opts">'+KEYS.map(function(d){ return '<button data-who="'+who+'" data-k="'+k+'" data-d="'+d+'" class="'+(cur===d?'on':'')+(agree&&who!=='compiled'?' agree':'')+'">'+d+'</button>'; }).join('')+'</span>'; }
+    h+='<tr><td class="piece-name"><b>'+r[1]+'</b><span>'+r[2]+'</span></td><td>'+opts('patrick')+'</td><td>'+opts('yash')+'</td><td>'+(k==='overall'?'<span style="font-size:12px;color:var(--d-muted)">'+(agree?'<span class="ok">agreed</span>':'mix or split')+'</span>':opts('compiled'))+'</td></tr>';
+  });
+  t.innerHTML=h;
+  var n=document.getElementById('notes'); n.innerHTML=['patrick','yash'].map(function(w){ return '<div><div class="eyebrow" style="margin-bottom:6px">'+w+' · one sentence of reasoning</div><textarea data-note="'+w+'">'+(S.notes[w]||'').replace(/</g,'&lt;')+'</textarea></div>'; }).join('');
+}
+function exportText(){
+  var lines=['# 3PT design system ballot · '+new Date().toISOString().slice(0,10),'','| Piece | Patrick | Yash | Compiled |','|---|---|---|---|'];
+  PIECES.forEach(function(p){ lines.push('| '+p[1]+' | '+(S.patrick[p[0]]||'—')+' | '+(S.yash[p[0]]||'—')+' | '+S.compiled[p[0]]+' |'); });
+  lines.push('| Overall | '+(S.patrick.overall||'—')+' | '+(S.yash.overall||'—')+' | mix |','','Patrick: '+(S.notes.patrick||'—'),'Yash: '+(S.notes.yash||'—'),'','## Compiled tokens (light)','',genCSS());
+  return lines.join('\n');
+}
+
+/* ---------- Generated code (DERIVED from the compile row) ---------- */
+var SEM=[['bg.canvas','canvas'],['bg.surface','surface'],['bg.raised','raised'],['bg.deep','deep'],['fg.default','ink'],['fg.muted','muted'],['fg.faint','faint'],['fg.on-accent','onAccent'],['fg.on-deep','onDeep'],['line.default','line'],['line.strong','lineStrong'],['accent.default','accent'],['accent.soft','accentSoft'],['point.plan','plan'],['point.build','build'],['point.instrument','instrument'],['status.ok','ok'],['status.ok-soft','okSoft'],['status.warn','warn'],['status.warn-soft','warnSoft'],['status.alert','alert'],['status.alert-soft','alertSoft']];
+function genCSS(){
+  var p=S.compiled, L=COLOR[p.color].light, D=COLOR[p.color].dark, ty=DIR[p.type].type, sh=DIR[p.shape].shape, mo=DIR[p.motion].motion;
+  var set=function(c){ return SEM.map(function(s){ return '  --'+s[0].replace('.','-')+': '+c[s[1]]+';'; }).join('\n'); };
+  return '/* generated from design/tokens.json · colour '+p.color+' · type '+p.type+' · shape '+p.shape+' · motion '+p.motion+' */\n:root {\n  color-scheme: light;\n'+set(L)+'\n  --type-display: '+ty.display+';\n  --type-body: '+ty.body+';\n  --type-mono: '+ty.mono+';\n  --type-display-weight: '+ty.dw+';\n  --type-base: '+ty.base+';\n  --radius-control: '+sh.radius+';\n  --radius-card: '+sh.radiusLg+';\n  --radius-pill: '+sh.pill+';\n  --shadow-card: '+sh.shadow+';\n  --motion-fast: '+mo.dur+';\n  --motion-ease: '+mo.ease+';\n  --focus: 2px solid var(--accent-default);\n}\n@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {\n  color-scheme: dark;\n'+set(D)+'\n} }\n:root[data-theme="dark"] {\n  color-scheme: dark;\n'+set(D)+'\n}\n@media (prefers-reduced-motion: reduce) { :root { --motion-fast: 0ms; } }';
+}
+function genJSON(){
+  var p=S.compiled, L=COLOR[p.color].light, D=COLOR[p.color].dark, o={ $schema:'https://tr.designtokens.org/format/', color:{ semantic:{} } };
+  SEM.slice(0,8).forEach(function(s){ var path=s[0].split('.'); o.color.semantic[path[0]]=o.color.semantic[path[0]]||{}; o.color.semantic[path[0]][path[1]]={ $type:'color', $value:{ light:L[s[1]], dark:D[s[1]] } }; });
+  o.color.semantic['…']='+'+(SEM.length-8)+' more roles';
+  o.type={ display:{ $type:'fontFamily', $value:DIR[p.type].type.display.split(',')[0].replace(/"/g,'') }, body:{ $type:'fontFamily', $value:DIR[p.type].type.body.split(',')[0].replace(/"/g,'') } };
+  o.radius={ control:{ $type:'dimension', $value:DIR[p.shape].shape.radius }, card:{ $type:'dimension', $value:DIR[p.shape].shape.radiusLg } };
+  o.motion={ fast:{ $type:'duration', $value:DIR[p.motion].motion.dur } };
+  o.icon={ stroke:{ $type:'number', $value:DIR[p.icon].icon.stroke }, cap:{ $value:DIR[p.icon].icon.cap } };
+  return JSON.stringify(o,null,2);
+}
+function genSwift(){
+  var p=S.compiled, sh=DIR[p.shape].shape, mo=DIR[p.motion].motion, ic=DIR[p.icon].icon;
+  var groups={}; SEM.forEach(function(s){ var path=s[0].split('.'); (groups[path[0]]=groups[path[0]]||[]).push(path[1]); });
+  var body=Object.keys(groups).map(function(g){ return '  enum '+g+' {\n'+groups[g].map(function(r){ var n=r.replace(/-([a-z])/g,function(_,c){ return c.toUpperCase(); }); return '    static let '+n+' = Color("'+g+'/'+r+'", bundle: .tokens)'; }).join('\n')+'\n  }'; }).join('\n');
+  return '// generated from design/tokens.json · do not edit\n// Tokens.xcassets carries light and dark appearances for every colour set.\nimport SwiftUI\n\nenum TPT {\n'+body+'\n  enum radius {\n    static let control: CGFloat = '+parseFloat(sh.radius)+'\n    static let card: CGFloat = '+parseFloat(sh.radiusLg)+'\n  }\n  enum space { static let s1: CGFloat = 4, s2: CGFloat = 8, s3: CGFloat = 12, s4: CGFloat = 16, s5: CGFloat = 24, s6: CGFloat = 32 }\n  enum motion { static let fast: Double = '+(parseFloat(mo.dur)/1000)+' }\n  enum icon { static let stroke: CGFloat = '+ic.stroke+'; static let cap: CGLineCap = .'+(ic.cap==='round'?'round':'square')+' }\n  enum type {\n    // Dynamic Type only; the display face is bundled when the direction demands it.\n    static let display = Font.largeTitle.weight(.'+(DIR[p.type].type.dw>=800?'heavy':DIR[p.type].type.dw>=700?'bold':'regular')+')\n    static let body = Font.body\n    static let eyebrow = Font.caption.monospaced()\n  }\n}';
+}
+function renderGen(){ document.getElementById('gen-css').textContent=genCSS(); document.getElementById('gen-json').textContent=genJSON(); document.getElementById('gen-swift').textContent=genSwift(); }
+
+/* ---------- Page theme + controls ---------- */
+function pageMode(){ var t=document.documentElement.getAttribute('data-theme'); if(t) return t; return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; }
+function setPage(v){ if(v==='system'){ document.documentElement.removeAttribute('data-theme'); try{ localStorage.removeItem('tpt_theme'); }catch(e){} } else { document.documentElement.setAttribute('data-theme', v); try{ localStorage.setItem('tpt_theme', v); }catch(e){} }
+  document.querySelectorAll('[data-page]').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-page')===v); }); renderPieces(); }
+try{ var saved=localStorage.getItem('tpt_theme'); setPage(saved||'system'); }catch(e){ setPage('system'); }
+document.getElementById('ctl').addEventListener('click', function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  if(b.hasAttribute('data-mode')){ MODE=b.getAttribute('data-mode'); document.querySelectorAll('[data-mode]').forEach(function(x){ x.classList.toggle('on', x===b); }); renderDirs(); renderCompiled(); }
+  if(b.hasAttribute('data-page')) setPage(b.getAttribute('data-page'));
+});
+document.addEventListener('click', function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  if(b.hasAttribute('data-compile')){ S.compiled=allOf(b.getAttribute('data-compile')); save(S); renderBallot(); renderCompiled(); document.getElementById('components').scrollIntoView({behavior:'smooth'}); }
+  if(b.hasAttribute('data-who')){ var who=b.getAttribute('data-who'), k=b.getAttribute('data-k'), d=b.getAttribute('data-d');
+    if(who==='compiled'){ S.compiled[k]=d; } else { S[who][k]= S[who][k]===d ? undefined : d; if(k==='overall' && S[who][k]) PIECES.forEach(function(p){ if(!S[who][p[0]]) S[who][p[0]]=d; }); }
+    save(S); renderBallot(); if(who==='compiled') renderCompiled(); }
+  if(b.id==='btn-export'){ var t=document.getElementById('export'); t.hidden=false; t.value=exportText(); t.style.minHeight='260px'; t.focus(); t.select(); }
+  if(b.id==='btn-compile-p'||b.id==='btn-compile-y'){ var src=b.id==='btn-compile-p'?S.patrick:S.yash; PIECES.forEach(function(p){ if(src[p[0]]) S.compiled[p[0]]=src[p[0]]; }); save(S); renderBallot(); renderCompiled(); }
+  if(b.id==='btn-clear'){ S={patrick:{},yash:{},compiled:allOf('D2'),notes:{patrick:'',yash:''}}; save(S); renderBallot(); renderCompiled(); }
+});
+document.addEventListener('input', function(e){ var n=e.target.getAttribute&&e.target.getAttribute('data-note'); if(n){ S.notes[n]=e.target.value; save(S); } });
+document.getElementById('lens').addEventListener('change', function(){ S.lens=this.value; save(S); renderFit(); });
+
+renderPieces(); renderDirs(); renderContrast(); renderFit(); renderBallot(); renderCompiled();
+})();
+</script>
+</body>
+</html>
