@@ -15,7 +15,11 @@ export interface Screen {
 /** kind: suggest = the app asks a person (`to`); automate = the app does a task people did by hand; improve = better answers */
 export type ChangeKind = 'suggest' | 'automate' | 'improve';
 export interface HarnessVersion { v: number; when: string; by: string; changes: string[]; why: string; fields: string[]; layout: Record<string, string[]>; rolledBack?: boolean; score: number | null; kind?: ChangeKind; to?: string }
-export interface HarnessState { current: number; fields: string[]; layouts: Record<string, string[]>; versions: HarnessVersion[]; events: number }
+/** The last media scan (harness/apps/api/src/app.ts scan()): when it ran, what it read, what each check found. */
+export interface MediaScan { at: string; photos: number; uploads: number; found: { check: string; n: number; note: string }[] }
+export interface HarnessState { current: number; fields: string[]; layouts: Record<string, string[]>; versions: HarnessVersion[]; events: number; scan: MediaScan | null }
+/** A new photo: the uploader's tags and note. `file` is a small data: URL thumbnail (under 200 kB). */
+export interface Upload { role: string; project: string; unit?: number | null; trade: string; wall?: 'open' | 'closed' | null; note?: string; file?: string | null }
 export interface FirmProject { id: string; name: string; type: string; neighborhood: string; status: 'live' | 'closed' | 'planned'; phase: string | null; start: string; end: string; photos: number; cover: Photo | null; retro: { facts: [number, string][]; lessons: string[] } | null }
 export interface FirmState { week: number; date: string; max_live: number; harness: { version: number; changes: string[]; why: string }; hours_saved: number; projects: FirmProject[] }
 export interface NewsItem { v: number; when: string; by: string; changes: string[]; why: string; kind?: ChangeKind; to?: string }
@@ -37,6 +41,10 @@ export interface InspectorClient {
   event(e: AppEvent): Promise<{ ok: boolean } & LoopTurn>;
   rollback(v: number): Promise<{ version: number; rolled_back: number }>;
   harness(): Promise<HarnessState>;
+  /** Add a photo. The harness tags it from its note, then scans every photo so far for patterns. */
+  upload(u: Upload): Promise<{ ok: boolean; photo: Photo & { note?: string; upload?: boolean }; scan: MediaScan } & LoopTurn>;
+  /** Run the media scan alone (the Worker's cron does this every 30 minutes). */
+  scan(): Promise<{ ok: boolean; shipped: LoopTurn['shipped']; scan: MediaScan }>;
   /** Versions the harness shipped after `since` that are still live, newest first. Drives the bulb. */
   news(since: number): Promise<News>;
   reset(): Promise<{ ok: boolean }>;
@@ -61,6 +69,8 @@ export function createClient(baseUrl: string, f: typeof fetch = fetch): Inspecto
     event: (e) => post('/app/events', e),
     rollback: (v) => post('/app/rollback', { v }),
     harness: () => get('/app/harness'),
+    upload: (u) => post('/app/photos', u),
+    scan: () => post('/app/scan', {}),
     news: (since) => get('/app/news' + qs({ since })),
     reset: () => post('/app/reset', {}),
     media: (path) => (path ? (path.startsWith('http') ? path : baseUrl + path) : null),

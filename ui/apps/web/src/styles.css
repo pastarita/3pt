@@ -345,3 +345,20 @@ h1{font-size:var(--fs-xxl);line-height:1.15;font-weight:700;letter-spacing:-.02e
 @media (max-width:900px){.loop{grid-template-columns:1fr}.ver{flex-wrap:wrap}
   .topbar{flex-wrap:wrap;row-gap:var(--s-1)}.topnav{order:3;flex-basis:100%;margin:0 calc(-1 * var(--s-2))}
   .bulb-panel{position:fixed;top:64px;right:var(--s-4)}}
+
+/* ---------- add a photo, and the pattern checks ---------- */
+.crumbs{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2)}
+.upload{padding:0}
+.up-drop{display:block;cursor:pointer;background:var(--sunk);height:200px;position:relative;overflow:hidden}
+.up-prev{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-1);color:var(--soft);text-align:center;padding:var(--s-4)}
+.up-prev small{font-size:var(--fs-xs)}
+.up-prev .art{position:absolute;inset:0}
+.up-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3);padding:var(--s-4)}
+.up-fields label{display:flex;flex-direction:column;gap:var(--s-1);font-size:var(--fs-xs);font-weight:600;color:var(--soft)}
+.up-fields .wide{grid-column:1/-1}
+.up-fields input,.up-fields select,.up-fields textarea{font:inherit;font-size:var(--fs-md);color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3)}
+.upload .row-btns{justify-content:flex-end;padding:0 var(--s-4) var(--s-4)}
+.scan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);display:flex;flex-direction:column;gap:var(--s-2);align-items:flex-start}
+.scan-row{display:flex;align-items:center;gap:var(--s-3);font-size:var(--fs-sm)}
+.scan-row .pill{min-width:96px;justify-content:center}
+@media (max-width:900px){.up-fields{grid-template-columns:1fr 1fr}}

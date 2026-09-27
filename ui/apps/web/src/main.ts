@@ -23,7 +23,7 @@ import { icon, mark, photoArt } from './art';
 import { flags, on, resetFlags, setFlag, DEFAULTS, type Flag } from './flags';
 import { autostart, endTour, resetTours, startTour, tourActive, tourStep, TOURS } from './tour';
 import { reply, type Msg } from './agent';
-import { api, loadLive, send, setTurnHandler } from './live';
+import { addPhoto, api, loadLive, refreshHarness, send, setTurnHandler } from './live';
 import { bulb, kindLabel } from './bulb';
 import type { HarnessState } from '@3pt/inspector-client';
 
@@ -229,7 +229,9 @@ function projectScreen(id: string): string {
   const first = openAll ? all : all.slice(0, 3);
   const rest = all.length - first.length;
   const c = coverPhoto(p);
-  return `<nav class="crumbs"><a href="#/" class="back" data-region="back">${icon('back', 'ic sm')} Projects</a></nav>
+  const canAdd = LIVE.source === 'api' && p.status === 'live';
+  return `<nav class="crumbs"><a href="#/" class="back" data-region="back">${icon('back', 'ic sm')} Projects</a>
+      ${canAdd ? `<button class="btn primary small" data-act="add-photo" data-id="${p.id}" data-region="add-photo">${icon('camera', 'ic sm')} Add a photo</button>` : ''}</nav>
     <header class="banner" data-region="banner">${photoArt(c, `${p.name} photo`)}
       <div class="banner-text">${statusPill(p)}<h1>${p.name}</h1><span>${p.kind} · ${p.where} · ${p.when}</span></div>
       <span class="who">${icon(r.icon, 'ic sm')} You are the ${r.name.toLowerCase()}</span></header>
@@ -304,6 +306,12 @@ function harnessScreen(): string {
       ${pt('build', 'Build', cur?.changes[0] ?? 'Nothing built yet.')}
       ${pt('instrument', 'Check', cur?.score != null ? `${cur.score}% of actions were useful in this version.` : 'Scores each version on useful actions. A drop means undo.')}
     </section>
+    <h2 class="section">Pattern checks <small class="muted">${HS.scan ? `last run ${new Date(HS.scan.at).toLocaleString()} · ${HS.scan.photos} photos, ${HS.scan.uploads} added here` : 'not run yet'}</small></h2>
+    <div class="scan" data-region="scan">
+      ${(HS.scan?.found ?? []).map(f => `<div class="scan-row"><span class="pill ${f.n ? 'warn' : 'quiet'}">${esc(f.check)}</span><span>${esc(f.note)}</span></div>`).join('')}
+      <p class="muted">3PT reads every photo so far every 30 minutes, and each time someone adds one. A pattern that asks for a change ships as a new version.</p>
+      <button class="btn ghost small" data-act="scan">${icon('search', 'ic sm')} Check all photos now</button>
+    </div>
     <h2 class="section">What it reads from each photo</h2>
     <div class="fields">${HS.fields.map(f => `<span class="pill quiet">${esc(f)}</span>`).join('')}</div>
     <h2 class="section">Every version <small class="muted">newest first · never edited</small></h2>
@@ -375,7 +383,8 @@ setTurnHandler(t => {
   if (t.shipped) toast(`3PT shipped version ${t.shipped.version}: ${t.shipped.changes[0]}`);
   else if (t.rolled_back) toast(`3PT undid version ${t.rolled_back.version}. ${t.rolled_back.why}.`);
   HS = null; void news.refresh(!!t.shipped);
-  if (route().screen === 'harness') render();
+  /* the harness changed its screen for this role: read it, then draw the cards in its new order */
+  void refreshHarness().then(render).catch(() => undefined);
 });
 /** Photo note. The bundled photos are public domain or CC0 (no credit needed). Live photos from the API
  *  come from data/mock/media-pool, where some are CC BY / CC BY-SA, so the link to the credits stays. */
@@ -432,6 +441,51 @@ function toast(msg: string) {
   setTimeout(() => d.remove(), 2400);
 }
 
+/** Add a photo: the person's tags and a note. 3PT does not look inside the image. It learns from the tags and
+ *  the note, then checks every photo so far for patterns (harness/apps/api/src/app.ts scan()). */
+const TRADE_OPTS = ['plumbing', 'electrical', 'framing', 'drywall', 'finishes', 'exterior', 'concrete', 'hvac'];
+async function thumb(file: File): Promise<string | null> {
+  try {
+    const bmp = await createImageBitmap(file), k = Math.min(1, 360 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext('2d')!.drawImage(bmp, 0, 0, c.width, c.height);
+    const url = c.toDataURL('image/jpeg', 0.6); return url.length < 190_000 ? url : null;
+  } catch { return null; }
+}
+function openUpload(pid: string) {
+  const p = project(pid); if (!p) return;
+  const m = document.createElement('div');
+  m.className = 'modal'; m.setAttribute('data-region', 'upload');
+  m.innerHTML = `<form class="modal-box upload" role="dialog" aria-label="Add a photo">
+    <label class="up-drop"><input type="file" name="file" accept="image/*" capture="environment" hidden><span class="up-prev">${icon('camera', 'ic lg')}<b>Choose or take a photo</b><small>Optional. 3PT learns from the tags and the note.</small></span></label>
+    <div class="up-fields">
+      <label>Unit<input name="unit" inputmode="numeric" placeholder="903"></label>
+      <label>Trade<select name="trade">${TRADE_OPTS.map(t => `<option>${t}</option>`).join('')}</select></label>
+      <label>Wall<select name="wall"><option value="">—</option><option value="open">open</option><option value="closed">closed</option></select></label>
+      <label class="wide">What does it show?<textarea name="note" rows="2" placeholder="Hairline crack along the ceiling joint"></textarea></label>
+    </div>
+    <div class="row-btns"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" type="submit">Add to ${esc(p.name)}</button></div></form>`;
+  let file: string | null = null;
+  const inp = m.querySelector<HTMLInputElement>('input[type=file]')!, prev = m.querySelector<HTMLElement>('.up-prev')!;
+  inp.addEventListener('change', async () => { const f = inp.files?.[0]; if (!f) return; file = await thumb(f); if (file) prev.innerHTML = `<img class="art" src="${file}" alt="New photo">`; });
+  m.addEventListener('click', e => { if (e.target === m || (e.target as HTMLElement).closest('[data-close]')) m.remove(); });
+  m.querySelector('form')!.addEventListener('submit', async e => {
+    e.preventDefault();
+    const fd = new FormData(e.target as HTMLFormElement), btn = m.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    btn.disabled = true; btn.textContent = 'Adding…';
+    try {
+      const r = await api.upload({ role: S.role ?? 'super', project: pid, unit: fd.get('unit') ? Number(fd.get('unit')) : null, trade: String(fd.get('trade')), wall: (fd.get('wall') || null) as 'open' | 'closed' | null, note: String(fd.get('note') ?? ''), file });
+      addPhoto(r.photo, pid); m.remove(); log('upload', r.photo.id);
+      const flag = r.photo.hazard ? ` It may show a hazard (${r.photo.hazard}).` : r.photo.water ? ' It may show water.' : '';
+      if (r.shipped) { toast(`3PT shipped version ${r.shipped.version}: ${r.shipped.changes[0]}`); HS = null; void news.refresh(true); void refreshHarness().then(render); }
+      else toast(`Photo filed.${flag} 3PT checked ${r.scan.photos} photos for patterns.`);
+      render();
+    } catch { btn.disabled = false; btn.textContent = 'Try again'; toast('3PT is not reachable right now.'); }
+  });
+  document.body.appendChild(m);
+  m.querySelector<HTMLTextAreaElement>('textarea')!.focus();
+}
+
 function openPhoto(id: string) {
   const p = photo(id);
   if (!p) return;
@@ -460,6 +514,8 @@ app.addEventListener('click', e => {
     case 'dismiss': S.dismissed[id] = true; log('insight-no', id); save(); render(); toast('Hidden. 3PT will show fewer like this.'); break;
     case 'saver-on': S.savers[id] = 'on'; log('saver-on', id); save(); render(); toast('Turned on. You can undo it any time.'); break;
     case 'saver-no': S.savers[id] = 'no'; log('saver-no', id); save(); render(); break;
+    case 'add-photo': openUpload(id); break;
+    case 'scan': void api.scan().then(r => { HS = null; toast(r.shipped ? `3PT shipped version ${r.shipped.version}: ${r.shipped.changes[0]}` : `Checked ${r.scan.photos} photos. Nothing new to change.`); if (r.shipped) { void news.refresh(true); void refreshHarness(); } render(); }).catch(() => toast('3PT is not reachable right now.')); break;
     case 'rollback': void api.rollback(+id).then(() => { toast(`Back to version ${id}.`); HS = null; void news.refresh(); render(); }).catch(() => toast('3PT is not reachable right now.')); break;
     case 'undo': S.undone[+id] = true; log('undo', id); save(); render(); toast('Undone. The assistant went back one step.'); break;
     case 'help': { const rt = route(); const t = TOURS.find(x => x.screen === rt.screen && x.flag === 'tour'); if (!t || !startTour(t.id)) toast('No tips for this screen yet.'); break; }

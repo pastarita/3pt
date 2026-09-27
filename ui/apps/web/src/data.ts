@@ -283,9 +283,27 @@ export const photo = (id: string) => PHOTOS.find(p => p.id === id);
 export const projectsFor = (r: RoleId) => PROJECTS.filter(p => p.team.includes(r));
 export const todosFor = (r: RoleId) => TODOS.filter(t => t.roles.includes(r));
 export const saversFor = (r: RoleId) => SAVERS.filter(s => s.roles.includes(r));
+/** The harness block (harness/apps/api/src/app.ts BLOCKS) each card stands for. Taps on a card reach the loop
+ *  as that block, and the harness's layout for the role orders the cards. `learned` is the harness itself. */
+export const BLOCK_OF: Partial<Record<CardId, string>> = {
+  week: 'photos_week', savers: 'timesavers', lookback: 'retro', upcoming: 'lessons',
+  dailylog: 'photos_week', predrywall: 'beforeclose', punch: 'needs',
+  openitems: 'needs', ownerreport: 'progress', changeorders: 'needs',
+  weekly: 'progress', payapp: 'progress', closeout: 'closeout',
+  mytasks: 'needs', roughin: 'beforeclose', timecards: 'needs',
+  observations: 'hazards', inspections: 'hazards', jha: 'hazards',
+};
+/** The harness's screen per role, from @3pt/api (live.ts). `layout`: blocks in order on the version on duty.
+ *  `removed`: blocks that were on the role's screen in an earlier version and are not now (the harness took them off). */
+export const HARNESS: { layout: Record<string, string[]>; removed: Record<string, string[]> } = { layout: {}, removed: {} };
+
 export const cardsFor = (r: RoleId, p: Project) => {
   const fit = FITS[p.status];
-  const mine = LAYOUT[r].filter(c => fit.includes(c));
+  const lay = HARNESS.layout[r], gone = HARNESS.removed[r] ?? [];
+  const block = (c: CardId) => BLOCK_OF[c] ?? '';
+  let mine = LAYOUT[r].filter(c => fit.includes(c) && !gone.includes(block(c)));
+  /* the harness's order first (stable sort), the cards it has no block for keep their place after */
+  if (lay?.length) { const rank = (c: CardId) => { const i = lay.indexOf(block(c)); return i < 0 ? lay.length : i; }; mine = mine.slice().sort((a, b) => rank(a) - rank(b)); }
   const extra = fit.filter(c => !mine.includes(c) && (c === 'upcoming' || c === 'lookback'));
   return [...extra, ...mine];
 };

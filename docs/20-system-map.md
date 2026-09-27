@@ -662,6 +662,15 @@ Derived from `harness/apps/api/src/app.ts`, `ui/apps/web/src/{main,live,bulb}.ts
 The app at `/app/` is `ui/apps/web` since 2026-09-26 evening; `ui/apps/live` spoke the same endpoints and is no longer served.
 `MIN_SIGNALS 4` · `DROP 20`. Status: wired; state in `app_state` and `app_events` when the Worker has Atlas.
 
+**New photos and the media scan.** `POST /app/photos` files a photo with the uploader's tags (unit, trade, wall) and a
+note. 3PT does not look inside the image: it reads the note for water and hazard words. Then `scan()` reads every photo
+of every live job plus every upload and runs five checks: a word in 3 or more notes (becomes a tag and a search), water
+with no `issue` field, a hazard with no hazards block for the safety manager, 3 or more units closed with no pipe photo,
+and bursts of 3 or more shots. The first finding that asks for a change ships as a version, and `guard()` can undo it.
+The Worker's cron (`*/30 * * * *`) runs `POST /app/scan`, so slow patterns are found with nobody tapping. The app shows
+the last scan on "How it learns". Taps from the app reach the loop as Worker blocks (`BLOCK_OF` in `ui/apps/web/src/data.ts`);
+`plan()` ignores any id that is not in `BLOCKS`.
+
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#0f1216","primaryColor":"#1a2029","primaryTextColor":"#e6e9ee","primaryBorderColor":"#3a4552","lineColor":"#a3adbb","fontFamily":"ui-monospace, Menlo, monospace","fontSize":"12px"}}}%%
 sequenceDiagram
@@ -923,7 +932,7 @@ two exist for cp/1 and cp/2 and the third does not; `3pt rollback` still works f
 | Blob, tracing, artifacts batteries | stub | `battery.provides` only |
 | Box battery | written | VM stopped; `3pt-worker` unit sources `.env` through bash |
 | Media package, worker `tick()` | written | no assets in `media_index`, no job consumer |
-| Worker `scheduled` | planned | `targets.json` says "not wired yet" |
+| Worker `scheduled` | wired | cron `*/30 * * * *` runs the media scan (`POST /app/scan`) |
 | API app loop | wired | live at the Worker, state in Atlas |
 | API `/policies/latest`, `/checkpoints` | written | served from a memory store seeded with v0, not Atlas |
 | API key page | wired | node only, loopback only |

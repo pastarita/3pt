@@ -12,6 +12,9 @@
  *    POST /app/rollback      {v}                  a person can still undo a version; the harness will not re-ship it
  *    GET  /app/harness                            versions, fields, layouts by role, loop status
  *    GET  /app/news?since=4                        versions shipped after v4 and still live (the surfaces' bulb)
+ *    POST /app/photos        {role, project, unit?, trade, wall?, note?, file?}   a new photo; the harness tags it from its
+ *                            note, then checks every photo so far for patterns (media scan) → {photo, shipped?}
+ *    POST /app/scan                               the media scan alone; the Worker's cron runs it every 30 minutes
  *    POST /app/reset                              back to the seeded state
  *
  *  State: in memory, and after every change a snapshot in app_state plus each tap in app_events when a host
@@ -49,7 +52,9 @@ const QUERIES: Record<string, { label: string; field?: string }> = {
 };
 
 /* ---------------- state ---------------- */
-let S: { versions: Version[]; cur: number; events: Ev[]; rejected: Record<string, boolean>; reviewed: Record<string, boolean>; extra: Json[] };
+let S: { versions: Version[]; cur: number; events: Ev[]; rejected: Record<string, boolean>; reviewed: Record<string, boolean>; extra: Json[]; scan?: Scan };
+/** The last media scan: when it ran, how many photos it read, and what each check found. */
+interface Scan { at: string; photos: number; uploads: number; found: { check: string; n: number; note: string }[] }
 
 /* The replay's grants as app versions. hub/site/replay-data.js (globalThis.REPLAY, written by scripts/replay-data.mjs
    from `3pt replay`) holds every grant and revoke of the 92 replayed months. Each grant becomes one version; a revoke
@@ -124,7 +129,7 @@ let store: Store | null = null;
 export function persistTo(s: Store | null): void { store = s; }   /* null: stop persisting (the Worker's fallback) */
 async function snapshot(why: string) {
   if (!store) return;
-  try { await store.insert(COLLECTIONS.app_state, { ts: Date.now(), why, versions: S.versions, cur: S.cur, rejected: S.rejected, reviewed: S.reviewed, extra: S.extra, events: S.events.slice(-500) }); }
+  try { await store.insert(COLLECTIONS.app_state, { ts: Date.now(), why, versions: S.versions, cur: S.cur, rejected: S.rejected, reviewed: S.reviewed, extra: S.extra, events: S.events.slice(-500), scan: S.scan }); }
   catch (e) { console.error('[app] snapshot not saved:', (e as Error).message); }
 }
 async function record(e: Ev) { if (store) try { await store.insert(COLLECTIONS.app_events, { ...e }); } catch { /* the snapshot still carries it */ } }
@@ -133,7 +138,7 @@ async function state() {
   if (store) {
     try {
       const last = await store.latest<any>(COLLECTIONS.app_state, 'ts');
-      if (last?.versions?.length) { S = { versions: last.versions, cur: last.cur, events: last.events ?? [], rejected: last.rejected ?? {}, reviewed: last.reviewed ?? {}, extra: last.extra ?? [] }; return S; }
+      if (last?.versions?.length) { S = { versions: last.versions, cur: last.cur, events: last.events ?? [], rejected: last.rejected ?? {}, reviewed: last.reviewed ?? {}, extra: last.extra ?? [], scan: last.scan }; return S; }
     } catch (e) { console.error('[app] could not read the last snapshot:', (e as Error).message); }
   }
   await seed(); await snapshot('seed'); return S;
@@ -222,7 +227,9 @@ async function fill(id: string, pid: string, role: string) {
 function plan(role: string): Json | null {
   const lay = layoutFor(role), ev = S.events.filter(e => e.role === role && e.v === S.cur);
   const use: Record<string, number> = {};
-  ev.filter(e => e.action === 'use' && e.block).forEach(e => { use[e.block!] = (use[e.block!] ?? 0) + 1; });
+  /* only ids in BLOCKS count: a client that sends any other id (a project id, a card of its own) must never reach
+     BLOCKS[b].title below, or every later tap by this role fails on the same saved events */
+  ev.filter(e => e.action === 'use' && e.block && BLOCKS[e.block]).forEach(e => { use[e.block!] = (use[e.block!] ?? 0) + 1; });
   for (const b of Object.keys(use)) {
     const i = lay.indexOf(b), key = `${role}:top:${b}`;
     if (use[b] >= 3 && i > 0 && !S.rejected[key]) return { key, kind: 'layout', text: `Move "${BLOCKS[b].title}" to the top of this screen?`, why: `Used ${use[b]} times in this version. It sits at position ${i + 1}.`, apply: { move: b, role } };
@@ -231,7 +238,7 @@ function plan(role: string): Json | null {
     const key = `${role}:add:${b}`;
     if (use[b] >= 2 && !lay.includes(b) && !S.rejected[key]) return { key, kind: 'layout', text: `Add "${BLOCKS[b].title}" to this screen?`, why: `Opened from "Add to my screen" ${use[b]} times.`, apply: { add: b, role } };
   }
-  const hid = ev.filter(e => e.action === 'hide');
+  const hid = ev.filter(e => e.action === 'hide' && e.block && BLOCKS[e.block]);
   if (hid.length) { const b = hid[hid.length - 1].block!, key = `${role}:rm:${b}`; if (lay.includes(b) && !S.rejected[key]) return { key, kind: 'layout', text: `Remove "${BLOCKS[b].title}" from this screen?`, why: 'You closed it.', apply: { remove: b, role } }; }
   for (const [q, def] of Object.entries(QUERIES)) {
     if (!def.field || ver().fields.includes(def.field)) continue;
@@ -271,6 +278,8 @@ function build(p: Json, by: string) {
   if (a.add) { lay.push(a.add); nv.layout[a.role] = lay; nv.changes = [`Added "${BLOCKS[a.add].title}" for ${a.role}`]; }
   if (a.remove) { lay.splice(lay.indexOf(a.remove), 1); nv.layout[a.role] = lay; nv.changes = [`Removed "${BLOCKS[a.remove].title}" for ${a.role}`]; }
   if (a.field) { nv.fields.push(a.field); nv.changes = [`Added field: ${a.field}`, 'Read the matching photos again, once']; }
+  if (p.say) nv.changes = [p.say];
+  if (p.who) { nv.kind = p.who; if (p.to) nv.to = p.to; }
   S.versions.push(nv); S.cur = nv.v; return nv;
 }
 
@@ -279,7 +288,71 @@ async function ask(pid: string, q: string) {
   if (q === 'plumb') { const has = f.includes('wall'); return { note: has ? 'Uses the "open or closed wall" field.' : 'This version cannot tell open walls from closed.', photos: ps.filter(p => p.trade === 'plumbing' || (!has && p.trade === 'drywall')).filter(p => !has || p.wall === 'open').slice(0, 12) }; }
   if (q === 'water') { const has = f.includes('issue'); return { note: has ? 'Uses the "issue" field.' : 'No field for water yet. Tap 👎 on wrong ones.', photos: has ? ps.filter(p => p.water) : ps.filter(p => p.trade === 'drywall').slice(0, 12) }; }
   if (q === 'window') { const has = f.includes('near_window'); return { note: has ? 'Uses the "near_window" field.' : 'No field for windows yet. These are guesses. Tap 👎 on wrong ones.', photos: has ? ps.filter(p => p.near_window) : ps.filter(p => p.focus).slice(0, 12) }; }
+  if (q.startsWith('tag:') && f.includes(q)) { const ws = q.slice(4).split(' '); return { note: `Uses the "${ws.join(' ')}" tag the media scan added.`, photos: ps.filter(p => ws.every(w => String(p.note ?? '').toLowerCase().includes(w))).slice(0, 12) }; }
   return { note: 'Everything filed this week.', photos: ps.filter(p => p.week === TW).slice(0, 12) };
+}
+
+/* ---------------- media: learn from new photos, and keep checking every photo so far ----------------
+   3PT does not look inside an image (no vision model here). A new photo arrives with the uploader's tags (unit,
+   trade, wall) and a free-text note; tag() reads the note for water and hazard words. scan() then reads every photo
+   of every live job plus every upload and runs the media checks below. The first finding that asks for a change
+   ships as a version, the same way plan() ships one, and guard() can undo it. The Worker's cron runs scan() every
+   30 minutes, so patterns that build up slowly are found without a tap. Bars are demo settings, one per check. */
+const WATER = /\b(leak\w*|stain\w*|wet|damp|water|drip\w*|mou?ld)\b/i;
+const HAZARD = /\b(no rail|guard ?rail|open edge|ladder|unguarded|fall|harness|tripping|trip hazard|exposed wire\w*)\b/i;
+const STOP = new Set('this that with from have there their about photo photos unit wall floor level today after before where which still into over some more very just been were they them then than what when will also only along near next under above behind around'.split(' '));
+const TRADES = new Set(['framing', 'plumbing', 'electrical', 'drywall', 'finishes', 'exterior', 'paint', 'concrete', 'steel', 'hvac', 'insulation', 'site']);
+const KEEP_FILES = 12;   /* uploads keep their thumbnail in the snapshot; older ones fall back to a pool photo of the trade */
+
+function tag(note: string) { return { water: WATER.test(note), hazard: HAZARD.test(note) ? (note.match(HAZARD)![0].toLowerCase()) : null }; }
+function words(note: string) { return [...new Set(note.toLowerCase().match(/[a-z]{4,}/g) ?? [])].filter(w => !STOP.has(w) && !TRADES.has(w)); }
+
+async function scan(): Promise<Json | null> {
+  const F = await firm(new URLSearchParams()), TW = F.TODAY_WEEK, f = ver().fields;
+  const live = F.projects.filter((p: any) => F.status(p, TW) === 'live');
+  const all: Json[] = [], missing: string[] = [];
+  for (const sp of live) { const ps = await photosOf(sp.id); all.push(...ps); units(ps, sp).filter(u => u.missing).forEach(u => missing.push(`${sp.name} ${u.unit}`)); }
+  const ups = S.extra.filter(x => x.upload), found: Scan['found'] = [];
+  const cand: Json[] = [];
+
+  /* 1 · words that keep coming back in notes become one tag and a search. Words that always come together
+     ("hairline crack") are one tag, in the order the first note wrote them. */
+  const seen: Record<string, string[]> = {};
+  ups.forEach(x => words(x.note ?? '').forEach(w => { (seen[w] ??= []).push(x.id); }));
+  const tagged = new Set(f.filter(t => t.startsWith('tag:')).flatMap(t => t.slice(4).split(' ')));
+  const top = Object.entries(seen).sort((a, b) => b[1].length - a[1].length).find(([w, ids]) => ids.length >= 3 && !tagged.has(w) && !S.rejected['media:tag:' + w]);
+  const group = top ? words(ups.find(x => x.id === top[1][0])!.note).filter(w => seen[w].join() === top[1].join() && !tagged.has(w)) : [];
+  const label = group.join(' '), n = top?.[1].length ?? 0;
+  found.push({ check: 'repeat-word', n, note: top ? `"${label}" in ${n} new photos` : 'no word in 3 or more new photos' });
+  if (top) cand.push({ key: 'media:tag:' + top[0], apply: { field: 'tag:' + label }, say: `Tag photos that mention "${label}" and let people search for them`, why: `${n} new photos mention "${label}". No field held it.`, who: 'improve' });
+
+  /* 2 · water in new photos, and no field for it yet */
+  const wet = all.filter(x => x.water && x.week >= TW - 2);
+  found.push({ check: 'water', n: wet.length, note: `${wet.length} water photos in 3 weeks` });
+  if (wet.length >= 3 && !f.includes('issue') && !S.rejected['media:issue']) cand.push({ key: 'media:issue', apply: { field: 'issue' }, say: 'Flag water stains the day the photo arrives', why: `${wet.length} photos in 3 weeks show water. Nothing flagged them.`, who: 'suggest', to: 'the super' });
+
+  /* 3 · a hazard in a recent photo, and the safety manager's screen has no hazards block */
+  const hz = all.filter(x => x.hazard && x.week >= TW - 2);
+  found.push({ check: 'hazard', n: hz.length, note: `${hz.length} hazard photos in 3 weeks` });
+  if (hz.length >= 1 && !layoutFor('safety').includes('hazards') && !S.rejected['safety:add:hazards']) cand.push({ key: 'safety:add:hazards', apply: { add: 'hazards', role: 'safety' }, say: 'Flag these photos to the safety manager the same day', why: `${hz.length} recent photos show a hazard (${hz[0].hazard}).`, who: 'suggest', to: 'the safety manager' });
+
+  /* 4 · walls close without the pipe photo, across jobs: the super's screen opens on the units closing */
+  found.push({ check: 'wall-gap', n: missing.length, note: missing.length ? `${missing.length} unit${missing.length === 1 ? '' : 's'} closed with no pipe photo` : 'every closed wall has its pipe photo' });
+  if (missing.length >= 3 && layoutFor('super')[0] !== 'beforeclose' && !S.rejected['super:top:beforeclose']) cand.push({ key: 'super:top:beforeclose', apply: { move: 'beforeclose', role: 'super' }, say: 'Open the super\'s screen on the units about to close', why: `${missing.length} units closed with no open-wall photo: ${missing.slice(0, 3).join(', ')}.`, who: 'suggest', to: 'the super' });
+
+  /* 5 · bursts: three or more uploads of one unit and trade in one week */
+  const burst: Record<string, number> = {};
+  ups.forEach(x => { const k = `${x.project}:${x.unit}:${x.trade}:${x.week}`; burst[k] = (burst[k] ?? 0) + 1; });
+  const b = Object.values(burst).filter(n => n >= 3).length;
+  found.push({ check: 'bursts', n: b, note: b ? `${b} bursts of 3 or more shots` : 'no bursts' });
+  if (b && !S.reviewed['media:bursts'] && !S.rejected['media:bursts']) cand.push({ key: 'media:bursts', apply: {}, say: 'Keep one shot per burst after 24 hours', why: `${b} bursts of 3 or more shots of the same unit and trade.`, who: 'automate', mark: 'media:bursts' });
+
+  S.scan = { at: new Date().toISOString(), photos: all.length, uploads: ups.length, found };
+  const p = cand[0];
+  if (!p) return null;
+  if (p.mark) S.reviewed[p.mark] = true;
+  const nv = build(p, 'harness'); nv.key = p.key;
+  return { version: nv.v, changes: nv.changes, why: nv.why };
 }
 
 /* ---------------- routes ---------------- */
@@ -336,7 +409,7 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
   }
   if (path === '/app/harness' && method === 'GET') {
     const v = ver();
-    return { status: 200, body: { current: v.v, fields: v.fields, layouts: v.layout, versions: S.versions.slice().reverse().map(x => ({ ...x, score: score(x.v) })), events: S.events.length } };
+    return { status: 200, body: { current: v.v, fields: v.fields, layouts: v.layout, versions: S.versions.slice().reverse().map(x => ({ ...x, score: score(x.v) })), events: S.events.length, scan: S.scan ?? null } };
   }
   /* the bulb: a version counts as news once build() saved it and it is still live. A rolled-back version drops out,
      so a failed change never shows up as a feature. The surface keeps "since" (the last version it showed). */
@@ -345,6 +418,29 @@ export async function handleApp(url: URL, method = 'GET', body: Json = {}, db?: 
     const items = S.versions.filter(v => v.v > 0 && v.v > since && !v.rolledBack).reverse().slice(0, 12)
       .map(v => ({ v: v.v, when: v.when, by: v.by, changes: v.changes, why: v.why, kind: v.kind, to: v.to }));
     return { status: 200, body: { current: S.cur, items } };
+  }
+  if (path === '/app/photos' && method === 'POST') {
+    const F = await firm(new URLSearchParams()), TW = F.TODAY_WEEK, sp = F.projects.find((x: any) => x.id === body.project);
+    if (!sp) return { status: 404, body: { error: 'no such project' } };
+    const note = String(body.note ?? '').slice(0, 280), unit = body.unit == null || body.unit === '' ? null : Number(body.unit);
+    const trade = TRADES.has(String(body.trade)) ? String(body.trade) : 'site';
+    const file = typeof body.file === 'string' && body.file.startsWith('data:image/') && body.file.length < 200_000 ? body.file : null;
+    const photo: Json = { project: sp.id, id: `up-${S.extra.length}`, upload: true, unit, level: unit ? Math.floor(unit / 100) : null, trade, wall: body.wall === 'open' || body.wall === 'closed' ? body.wall : null,
+      week: TW, note, focus: unit != null, ...tag(note), file: file ?? pool(trade, S.extra.length) };
+    S.extra.push(photo);
+    /* only the newest uploads keep their own thumbnail, so the snapshot stays small */
+    const ups = S.extra.filter(x => x.upload && String(x.file ?? '').startsWith('data:'));
+    ups.slice(0, Math.max(0, ups.length - KEEP_FILES)).forEach(x => { x.file = pool(x.trade, 0); });
+    const e: Ev = { t: Date.now(), v: S.cur, role: String(body.role ?? 'super'), action: 'upload', photo: photo.id };
+    S.events.push(e); await record(e);
+    const bad = guard(), shipped = bad ? null : await scan();
+    await snapshot(shipped ? `media scan v${shipped.version}` : bad ? `self-rollback v${bad.v}` : 'upload ' + photo.id);
+    return { status: 200, body: { ok: true, photo, shipped, rolled_back: bad ? { version: bad.v, to: S.cur, why: `Scored ${score(bad.v)}% useful against ${score(S.cur)}% before it` } : null, scan: S.scan } };
+  }
+  if (path === '/app/scan' && method === 'POST') {
+    const shipped = await scan();
+    await snapshot(shipped ? `media scan v${shipped.version}` : 'media scan');
+    return { status: 200, body: { ok: true, shipped, scan: S.scan } };
   }
   if (path === '/app/reset' && method === 'POST') { await seed(); await snapshot('reset'); return { status: 200, body: { ok: true } }; }
   return { status: 404, body: { error: 'not found' } };

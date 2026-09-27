@@ -20,6 +20,13 @@ let atlasDownUntil = 0, atlasError = '';
 const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' };
 
 export default {
+  /* the cron (wrangler.jsonc triggers) keeps checking every photo so far for patterns, with nobody tapping */
+  async scheduled(_c: unknown, env: Env, ctx: Ctx): Promise<void> {
+    if (!env.ATLAS_URI) return;
+    const db = await atlasStore(env.ATLAS_URI, env.ATLAS_DB || '3pt', 3000);
+    try { const r = await handle(new URL('https://harness.local/app/scan'), 'POST', {}, db); console.log('[cron] media scan', JSON.stringify((r.body as any)?.shipped ?? null)); }
+    finally { ctx.waitUntil(db.close()); }
+  },
   async fetch(req: Request, env: Env, ctx: Ctx): Promise<Response> {
     const url = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });

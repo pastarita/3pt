@@ -28,7 +28,7 @@
       "source": "harness/apps/worker", "build": "pnpm turbo run build --filter=@3pt/worker --filter=@3pt/api",
       "deploy": "npx wrangler deploy", "cwd": "harness/apps/worker",
       "url": "https://3pt-harness.3pt-worker.workers.dev", "health": "https://3pt-harness.3pt-worker.workers.dev/health",
-      "entrypoints": { "fetch": "harness/apps/worker/src/edge.ts → @3pt/api/handler", "scheduled": "@3pt/worker tick() (not wired yet)" }, "compat": { "flags": ["nodejs_compat"], "date": ">=2024-09-23" },
+      "entrypoints": { "fetch": "harness/apps/worker/src/edge.ts → @3pt/api/handler", "scheduled": "edge.ts scheduled() → POST /app/scan, cron */30 * * * * (media scan)" }, "compat": { "flags": ["nodejs_compat"], "date": ">=2024-09-23" },
       "gated": false, "secrets": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "ATLAS_URI"], "workflow": ".github/workflows/ci.yml",
       "confirm": "MongoDB driver on Workers: smoke-test before the video"
     },

@@ -5,7 +5,7 @@
  * If the API does not answer in 1.5 s, or the flag `live.api` is off (?ff=-live.api), the sample data stays.
  */
 import { createClient, type LoopTurn, type Photo as ApiPhoto } from '@3pt/inspector-client';
-import { FILES_BY_ID, LESSONS, LIVE, PHOTOS, PROJECTS, ROLES, SAVERS, TODOS, WIDGETS, type PhotoKind, type Project, type RoleId, type Todo } from './data';
+import { BLOCK_OF, FILES_BY_ID, HARNESS, LESSONS, LIVE, PHOTOS, PROJECTS, ROLES, SAVERS, TODOS, WIDGETS, type PhotoKind, type CardId, type Project, type RoleId, type Todo } from './data';
 
 export const api = createClient(import.meta.env.VITE_THREEPT_API_URL ?? 'http://127.0.0.1:8787');
 const KIND: Record<string, PhotoKind> = {
@@ -17,10 +17,10 @@ const ICON: Record<string, string> = { photo: 'camera', water: 'drop', hazard: '
 const within = <T>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<never>((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
 let current = 0;
 
-function addPhoto(x: ApiPhoto & { focus?: boolean }, project: string) {
+export function addPhoto(x: ApiPhoto & { focus?: boolean }, project: string) {
   if (PHOTOS.some(p => p.id === x.id)) return;
   PHOTOS.push({ id: x.id, project, unit: x.unit, kind: KIND[x.trade] ?? 'exterior', week: x.week, flag: x.water ? 'water' : x.hazard ? 'hazard' : undefined, file: x.file, focus: x.focus });
-  if (x.file) FILES_BY_ID[x.id] = api.media(x.file)!;
+  if (x.file) FILES_BY_ID[x.id] = x.file.startsWith('data:') ? x.file : api.media(x.file)!;
 }
 
 export async function loadLive(): Promise<boolean> {
@@ -75,6 +75,7 @@ export async function loadLive(): Promise<boolean> {
   SAVERS.splice(0, SAVERS.length, ...savers.map(s => ({ id: s.id, title: s.title, why: `${s.kind}${s.on ? ' · already on' : ''} · found in past jobs`, hours: s.hours, from: 'past jobs', roles: ALL })));
   LESSONS.splice(0, LESSONS.length, ...harness.versions.slice().reverse().filter(v => v.v > 0).map(v => ({ v: v.v, when: v.when.slice(0, 7), by: v.by === 'harness' ? 'The assistant' : v.by, plain: v.changes[0], undone: !!v.rolledBack })));
   current = harness.current;
+  readLayouts(harness);
 
   /* the pre-drywall widget speaks about the level the harness is watching, not the sample level */
   if (units.level && units.units?.length) {
@@ -110,6 +111,22 @@ export async function loadLive(): Promise<boolean> {
 /** The harness's own action for each to-do (take photo, look, send). */
 export const DO: Record<string, string> = {};
 
+/** The harness's screen per role on the version on duty, and the blocks it took off since an earlier version. */
+function readLayouts(h: Awaited<ReturnType<typeof api.harness>>) {
+  HARNESS.layout = h.layouts;
+  const removed: Record<string, string[]> = {};
+  for (const [role, lay] of Object.entries(h.layouts)) {
+    const once = new Set(h.versions.filter(v => v.v <= h.current && !v.rolledBack).flatMap(v => v.layout[role] ?? []));
+    removed[role] = [...once].filter(b => !lay.includes(b));
+  }
+  HARNESS.removed = removed;
+}
+/** Read the harness again after it shipped or undid a version, so the next render uses its new screen. */
+export async function refreshHarness(): Promise<void> {
+  const h = await api.harness(); current = h.current; readLayouts(h);
+  LESSONS.splice(0, LESSONS.length, ...h.versions.slice().reverse().filter(v => v.v > 0).map(v => ({ v: v.v, when: v.when.slice(0, 7), by: v.by === 'harness' ? 'The assistant' : v.by, plain: v.changes[0], undone: !!v.rolledBack })));
+}
+
 /** What the loop did in answer to a tap (shipped or undid a version). main.ts sets it to ring the bulb. */
 let onTurn: (t: LoopTurn) => void = () => undefined;
 export function setTurnHandler(fn: (t: LoopTurn) => void): void { onTurn = fn; }
@@ -121,13 +138,20 @@ export function send(action: string, detail: string | undefined, role: RoleId | 
   const post = (x: Parameters<typeof api.event>[0]) => { void api.event(x).then(t => { if (t.shipped || t.rolled_back) onTurn(t); }).catch(() => undefined); };
   switch (action) {
     case 'photo': return post({ ...e, action: 'use', block: 'photos_week', photo: detail });
-    case 'not-helpful': return post({ ...e, action: 'fb_down', block: 'ask', q: 'week', photo: detail });
+    case 'not-helpful': {
+      /* a "no" on a plumbing or water photo is a "no" on that photo search: three of them ask for a new field */
+      const p = PHOTOS.find(x => x.id === detail);
+      const q = p?.flag === 'water' ? 'water' : p?.kind === 'plumbing' ? 'plumb' : undefined;
+      return post({ ...e, action: 'fb_down', block: q ? 'ask' : 'photos_week', q, photo: detail });
+    }
     case 'ask': return post({ ...e, action: 'use', block: 'ask', q: detail });
     case 'saver-on': return post({ ...e, action: 'act', block: 'timesavers', do: `opp:${detail}` });
-    case 'insight-yes': return post({ ...e, action: 'act', block: detail });
-    case 'insight-no': return post({ ...e, action: 'hide', block: detail });
+    case 'saver-no': return post({ ...e, action: 'fb_down', block: 'timesavers' });
+    case 'insight-yes': return post({ ...e, action: 'act', block: BLOCK_OF[detail as CardId] });
+    case 'insight-no': { const b = BLOCK_OF[detail as CardId]; return b ? post({ ...e, action: 'hide', block: b }) : undefined; }
     case 'todo': return post({ ...e, action: 'act', block: 'needs', do: DO[detail ?? ''] ?? '' });
     case 'undo': if (Number(detail) === current) void api.rollback(Math.max(0, current - 1)).then(r => { current = r.version; onTurn({ shipped: null, rolled_back: { version: Number(detail), to: r.version, why: 'You pressed Undo' } }); }).catch(() => undefined); return post({ ...e, action: 'hide', block: 'learned' });
-    default: return post({ ...e, action: 'use', block: detail });
+    /* setup, role, more: not a block, so not a signal the loop can plan from */
+    default: return;
   }
 }
